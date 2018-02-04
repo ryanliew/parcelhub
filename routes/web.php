@@ -14,3 +14,12 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::group(['prefix' => 'lot'], function() {
+	Route::get('index', 'LotController@index');
+});
+
+Route::group(['prefix' => 'category'], function() {
+	Route::get('index', 'LotCategoryController@index');
+	Route::post('store', 'LotCategoryController@create');
+});

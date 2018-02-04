@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Lot extends Model
 {
+	protected $guarded = [];
+	
     public function user(){
     	return $this->belongsTo('App\User');
     }
