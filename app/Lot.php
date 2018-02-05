@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Lot extends Model
 {
+	protected $guarded = [];
+	
     public function user(){
     	return $this->belongsTo('App\User');
     }
@@ -14,7 +16,7 @@ class Lot extends Model
     	return $this->hasMany('App\Product');
     }
 
-    public function lot_category(){
-    	return $this->hasOne('App\Lot_Category');
+    public function category(){
+    	return $this->belongsTo('App\Category');
     }
 }

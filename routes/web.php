@@ -18,3 +18,15 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::group(['prefix' => 'lot'], function() {
+	Route::get('index', 'LotController@index');
+	Route::post('store', 'LotController@store');
+});
+
+Route::group(['prefix' => 'category'], function() {
+	Route::get('index', 'CategoryController@index');
+	Route::get('delete/{id}', 'CategoryController@destroy');
+	Route::post('store', 'CategoryController@store');
+	Route::post('update', 'CategoryController@update');
+});
