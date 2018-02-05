@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Category;
 use Illuminate\Http\Request;
 
-class LotCategoryController extends Controller
+class CategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -13,7 +14,9 @@ class LotCategoryController extends Controller
      */
     public function index()
     {
-        return view('category.index');
+        $categories = category::where('status', 'true')->get();
+
+        return view('category.index')->with('categories', $categories);
     }
 
     /**
@@ -34,7 +37,13 @@ class LotCategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $category = new category;
+        $category->name = $request->name;
+        $category->volume = $request->volume;
+        $category->status = 'true';
+        $category->save();
+
+        return redirect()->back()->withSuccess($category->name . " created successfully.");
     }
 
     /**
@@ -66,9 +75,14 @@ class LotCategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        $category = category::find($request->id);
+        $category->name = $request->name;
+        $category->volume = $request->volume;
+        $category->save();
+
+        return redirect()->back()->withSuccess($category->name . ' updated successfully.');
     }
 
     /**
@@ -79,6 +93,10 @@ class LotCategoryController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $category = category::find($id);
+        $category->status = "false";
+        $category->save();
+
+        return redirect()->back()->withSuccess($category->name . ' deleted successfully.');
     }
 }

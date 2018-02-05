@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Lot;
+use App\Category;
 use Illuminate\Http\Request;
 
 class LotController extends Controller
@@ -13,7 +15,10 @@ class LotController extends Controller
      */
     public function index()
     {
-        return view('lot.index');
+        $categories = category::where('status', 'true')->get();
+        $lots = lot::where('status', 'true')->get();
+
+        return view('lot.index')->with('categories', $categories)->with('lots', $lots);
     }
 
     /**
@@ -34,7 +39,14 @@ class LotController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $lot = new lot;
+        $lot->name = $request->name;
+        $lot->volume = $request->volume;
+        $lot->category_id = $request->category;
+        $lot->status = "true";
+        $lot->save();
+
+        return redirect()->back()->withSuccess($request->name . " created successfully.");
     }
 
     /**
