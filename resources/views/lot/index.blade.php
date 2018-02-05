@@ -60,7 +60,7 @@
               </div>
               <div>
               <label>Category: </label>
-              <select id="category-edit" name="category">
+              <select id="category-edit-{{$lot->id}}" name="category"  onchange="changeVolume({{$lot->id}})">
                 @forelse($categories as $category)
                   @if($category->id == $lot->category_id)
                     <option id="{{$category->volume}}" value="{{$category->id}}" selected>{{$category->name}}</option>
@@ -74,7 +74,7 @@
             </div>
               <div>
                 <label>Volume(cm3): </label>
-                <input type="number" id="volume-edit" name="volume" value="{{$lot->volume}}"/>
+                <input type="number" id="volume-edit-{{$lot->id}}" name="volume" value="{{$lot->volume}}"/>
               </div>
               <input type="hidden" name="id" value="{{$lot->id}}" />
               <div class="modal-footer">
@@ -142,8 +142,8 @@
     $("#volume").val($(this).find("option:selected").attr("id"));
   });
 
-  $("#category-edit").change(function() {
-    $("#volume-edit").val($(this).find("option:selected").attr("id"));
-  });
+  function changeVolume(lotID){
+    $("#volume-edit-"+lotID).val($("#category-edit-"+lotID).find("option:selected").attr("id"));
+  }
 </script>
 @endsection

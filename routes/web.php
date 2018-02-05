@@ -17,7 +17,9 @@ Route::get('/', function () {
 
 Route::group(['prefix' => 'lot'], function() {
 	Route::get('index', 'LotController@index');
+	Route::get('delete/{id}', 'LotController@destroy');
 	Route::post('store', 'LotController@store');
+	Route::post('update', 'LotController@update');
 });
 
 Route::group(['prefix' => 'category'], function() {
