@@ -17,6 +17,11 @@ Route::get('/', function () {
 
 Auth::routes();
 
+/* Socialite authenticate */
+$s = 'social.';
+Route::get('social/{provider}', 			['as' => $s . 'redirect', 'uses'=> 'Auth\SocialController@redirectToProvider']);
+Route::get('social/{provider}/callback',  	['as' => $s . 'callback', 'uses'=> 'Auth\SocialController@handleProviderCallback']);
+
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::group(['prefix' => 'lot'], function() {

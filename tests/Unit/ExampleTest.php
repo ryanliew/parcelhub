@@ -10,7 +10,7 @@ class ExampleTest extends TestCase
 {
 	public function setUp()
 	{   
-		parent::setUp(); //this is reqired 
+		parent::setUp();
 
 		$this->artisan('migrate');
 	}
@@ -27,6 +27,5 @@ class ExampleTest extends TestCase
 		$users = \App\User::all();
 		
 		$this->assertCount(1, $users);
-		
     }
 }
