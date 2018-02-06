@@ -28,3 +28,10 @@ Route::group(['prefix' => 'category'], function() {
 	Route::post('store', 'CategoryController@store');
 	Route::post('update', 'CategoryController@update');
 });
+
+Route::group(['prefix' => 'product'], function() {
+	Route::get('index', 'ProductController@index');
+	Route::get('delete/{id}', 'ProductController@destroy');
+	Route::post('store', 'ProductController@store');
+	Route::post('update', 'ProductController@update');
+});
