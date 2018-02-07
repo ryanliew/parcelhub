@@ -26,7 +26,7 @@
         <td>{{$category->id}}</td>
         <td>{{$category->name}}</td>
         <td>{{$category->volume}}</td>
-        <td><button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#lotModification-{{$category->id}}">Edit</button></td>
+        <td><button type="button" class="openEditModal btn btn-info btn-lg" data-toggle="modal" data-target="#categoryEdit">Edit</button></td>
         <td><a href="delete/{{$category->id}}" /><button type="button" class="btn btn-info btn-lg">Delete</button></td>
       <tr>
     @empty
@@ -37,8 +37,7 @@
   </table>
 
 <!-- MODAL EDIT START -->
-@foreach($categories as $category)
-  <div class="modal fade" id="lotModification-{{$category->id}}" role="dialog">
+  <div class="modal fade" id="categoryEdit" role="dialog">
     <div class="modal-dialog">
     
       <div class="modal-content">
@@ -51,13 +50,13 @@
             <input type="hidden" name="_token" value="{{csrf_token()}}"/>
             <div>
               <label>Name: </label>
-              <input type="text" name="name" value="{{$category->name}}"/>
+              <input type="text" id="name" name="name" />
             </div>
             <div>
               <label>Volume(cm3): </label>
-              <input type="number" name="volume" value="{{$category->volume}}"/>
+              <input type="number" id="volume" name="volume" />
             </div>
-            <input type="hidden" name="id" value="{{$category->id}}" />
+            <input type="hidden" id="id" name="id" />
             <div class="modal-footer">
               <input type="submit" value="Submit">
             </div>
@@ -66,7 +65,6 @@
       </div> 
     </div>
   </div>
-@endforeach
 <!-- MODAL EDIT END -->
 
 <!-- MODAL CREATION START -->
@@ -99,4 +97,17 @@
   </div>
 <!-- MODAL CREATION END -->
 </div>
+
+<script>
+$(document).on("click", ".openEditModal", function () {
+    var $row = $(this).closest('tr');
+    var $columns = $row.find('td');
+
+    $columns.addClass('row-highlight');
+    $("#id").val($columns[0].innerHTML);
+    $("#name").val($columns[1].innerHTML);
+    $("#volume").val($columns[2].innerHTML);
+});
+</script>
+
 @endsection

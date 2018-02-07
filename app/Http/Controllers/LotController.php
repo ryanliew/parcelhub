@@ -78,9 +78,15 @@ class LotController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        $lot = lot::find($request->id);
+        $lot->name = $request->name;
+        $lot->category_id = $request->category;
+        $lot->volume = $request->volume;
+        $lot->save();
+
+        return redirect()->back()->withSuccess($lot->name . ' updated successfully.');
     }
 
     /**
@@ -91,6 +97,10 @@ class LotController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $lot = lot::find($id);
+        $lot->status = "false";
+        $lot->save();
+
+        return redirect()->back()->withSuccess($lot->name . ' deleted successfully.');
     }
 }

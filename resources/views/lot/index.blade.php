@@ -29,9 +29,10 @@
       <tr>
         <td>{{$lot->id}}</td>
         <td>{{$lot->name}}</td>
-        <td>{{$lot->category->name}}</td>
+        <td id="{{$lot->category_id}}">{{$lot->category->name}}</td>
         <td>{{$lot->volume}}</td>
-        <td><button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#lotModification-{{$lot->id}}">Edit</button></td>
+        <!-- <td><button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#lotModification-{{$lot->id}}">Edit</button></td> -->
+        <td><button type="button" class="openEditModal btn btn-info btn-lg" data-toggle="modal" data-target="#lotModification">Edit</button></td>
         <td><a href="delete/{{$lot->id}}" /><button type="button" class="btn btn-info btn-lg">Delete</button></td>
       <tr>
     @empty
@@ -42,8 +43,7 @@
   </table>
 
   <!-- MODAL EDIT START -->
-  @foreach($lots as $lot)
-    <div class="modal fade" id="lotModification-{{$lot->id}}" role="dialog">
+    <div class="modal fade" id="lotModification" role="dialog">
       <div class="modal-dialog">
       
         <div class="modal-content">
@@ -56,17 +56,13 @@
               <input type="hidden" name="_token" value="{{csrf_token()}}"/>
               <div>
                 <label>Name: </label>
-                <input type="text" name="name" value="{{$lot->name}}"/>
+                <input type="text" id="name" name="name"/>
               </div>
               <div>
               <label>Category: </label>
-              <select id="category-edit" name="category">
+              <select id="category" name="category" onchange="changeVolume({{$lot->id}})">
                 @forelse($categories as $category)
-                  @if($category->id == $lot->category_id)
-                    <option id="{{$category->volume}}" value="{{$category->id}}" selected>{{$category->name}}</option>
-                  @else
                     <option id="{{$category->volume}}" value="{{$category->id}}" >{{$category->name}}</option>
-                  @endif
                 @empty
                   <option disabled>No category is found. Please click "Create Category" to create new category.</option>
                 @endforelse
@@ -74,9 +70,9 @@
             </div>
               <div>
                 <label>Volume(cm3): </label>
-                <input type="number" id="volume-edit" name="volume" value="{{$lot->volume}}"/>
+                <input type="number" id="volume" name="volume"/>
               </div>
-              <input type="hidden" name="id" value="{{$lot->id}}" />
+              <input type="hidden" id="id" name="id" />
               <div class="modal-footer">
                 <input type="submit" value="Submit">
               </div>
@@ -85,7 +81,6 @@
         </div> 
       </div>
     </div>
-  @endforeach
   <!-- MODAL EDIT END -->
 
   <!-- MODAL CREATION START -->
@@ -142,8 +137,19 @@
     $("#volume").val($(this).find("option:selected").attr("id"));
   });
 
-  $("#category-edit").change(function() {
-    $("#volume-edit").val($(this).find("option:selected").attr("id"));
+  function changeVolume(lotID){
+    $("#volume-edit-"+lotID).val($("#category-edit-"+lotID).find("option:selected").attr("id"));
+  }
+
+  $(document).on("click", ".openEditModal", function () {
+    var $row = $(this).closest('tr');
+    var $columns = $row.find('td');
+
+    $columns.addClass('row-highlight');
+    $("#id").val($columns[0].innerHTML);
+    $("#name").val($columns[1].innerHTML);
+    $("#category").val($columns[2].id);
+    $("#volume").val($columns[3].innerHTML);
   });
 </script>
 @endsection
