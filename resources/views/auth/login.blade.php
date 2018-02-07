@@ -51,10 +51,10 @@
 
 						<div class="form-group">
 							<div class="col-md-6 col-sm-6 col-xs-6 btn-list">
-								<a href="{{ route('social.redirect', ['provider' => 'facebook']) }}" class="btn btn-lg btn-primary btn-block facebook" role="button">Facebook</a>
+								<a href="{{ route('auth.social.redirect', ['provider' => 'facebook']) }}" class="btn btn-lg btn-primary btn-block facebook" role="button">Facebook</a>
 							</div>
 							<div class="col-md-6 col-sm-6 col-xs-6 btn-list">
-								<a href="{{ route('social.redirect', ['provider' => 'google']) }}" class="btn btn-lg btn-danger btn-block google" role="button">Google+</a>
+								<a href="{{ route('auth.social.redirect', ['provider' => 'google']) }}" class="btn btn-lg btn-danger btn-block google" role="button">Google+</a>
 							</div>
                         </div>
 						

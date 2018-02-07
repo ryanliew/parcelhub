@@ -3,11 +3,9 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Database\Eloquent\Model;
 
 use App\User;
-
 use Socialite;
 
 class SocialController extends Controller
@@ -29,25 +27,24 @@ class SocialController extends Controller
      */
     public function handleProviderCallback($provider)
     {
-        $user = Socialite::driver($provider)->scopes(['profile', 'email', 'openid'])->user();
+        $socialUser = Socialite::driver($provider)->user();
 
-		$socialUser = null;
-		
-		$existUser = User::where('email', '=', $user->email)->first();
-		
-		if (!empty($existUser)) 
-		{
-			$socialUser = $existUser;
-		}
-		else
-		{
-			$socialUser = factory(\App\User::class)->create(['email' => $user->getEmail()]);	
-		}
+        $authUser = $this->findOrCreateUser($socialUser);
 
-        auth()->login($socialUser, true);
+        auth()->login($authUser);
 		
-        return redirect('/home');
-		
-        // return abort(500, 'User has no Role assigned, role is obligatory! You did not seed the database with the roles.');
+        return redirect()->action('HomeController@index');
+    }
+
+    public function findOrCreateUser($user)
+    {
+        if($authUser = User::where('email', '=', $user->email)->first()) {
+            return $authUser;
+        }
+
+        return User::create([
+            'name' => $user->name,
+            'email' => $user->email,
+        ]);
     }
 }
