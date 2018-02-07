@@ -44,3 +44,10 @@ Route::group(['prefix' => 'product'], function() {
 	Route::post('store', 'ProductController@store');
 	Route::post('update', 'ProductController@update');
 });
+
+Route::group(['prefix' => 'setting'], function() {
+	Route::get('index', 'SettingController@index');
+	Route::get('delete/{id}', 'ProductController@destroy');
+	Route::post('store', 'ProductController@store');
+	Route::post('update', 'SettingController@update');
+});

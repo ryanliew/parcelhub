@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "516a74b758145667d88c9d105512d748",
+    "content-hash": "93412b228d973b5efac3f26c69a674ea",
     "packages": [
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -514,6 +514,56 @@
                 "parser"
             ],
             "time": "2014-09-09T13:34:57+00:00"
+        },
+        {
+            "name": "efriandika/laravel-settings",
+            "version": "v1.2.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/efriandika/laravel-settings.git",
+                "reference": "6d3bb6505808f677c7a56fa08fffbd4c430a9aa7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/efriandika/laravel-settings/zipball/6d3bb6505808f677c7a56fa08fffbd4c430a9aa7",
+                "reference": "6d3bb6505808f677c7a56fa08fffbd4c430a9aa7",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "5.*",
+                "php": ">=5.5.9"
+            },
+            "require-dev": {
+                "illuminate/database": ">=5.1 <6.0",
+                "illuminate/events": ">=4.1 <6.0",
+                "phpunit/phpunit": "4.6.*"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/helpers.php"
+                ],
+                "psr-4": {
+                    "Efriandika\\LaravelSettings\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Efriandika Pratama",
+                    "email": "efriandika@gmail.com"
+                }
+            ],
+            "description": "Laravel 5 Persistent Settings",
+            "keywords": [
+                "Settings",
+                "laravel",
+                "persistent"
+            ],
+            "time": "2017-01-26T01:24:22+00:00"
         },
         {
             "name": "erusev/parsedown",
@@ -1454,6 +1504,56 @@
                 "php"
             ],
             "time": "2018-01-25T21:31:33+00:00"
+        },
+        {
+            "name": "oriceon/laravel-settings",
+            "version": "1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/oriceon/laravel-settings.git",
+                "reference": "23e783520906da6cf20e9de090cd41569fcb862f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/oriceon/laravel-settings/zipball/23e783520906da6cf20e9de090cd41569fcb862f",
+                "reference": "23e783520906da6cf20e9de090cd41569fcb862f",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/dbal": "^2.5",
+                "illuminate/support": "5.4.*|5.5.*",
+                "php": ">=5.5.9"
+            },
+            "require-dev": {
+                "illuminate/database": "5.4.*|5.5.*",
+                "illuminate/events": "5.4.*|5.5.*",
+                "phpunit/phpunit": "6.0.7"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Oriceon\\Settings\\": "src/"
+                },
+                "files": [
+                    "src/helpers.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3"
+            ],
+            "authors": [
+                {
+                    "name": "Valentin Ivașcu"
+                }
+            ],
+            "description": "Laravel 5 persistent settings",
+            "keywords": [
+                "Settings",
+                "laravel",
+                "persistent"
+            ],
+            "time": "2017-08-31T13:21:50+00:00"
         },
         {
             "name": "paragonie/random_compat",
