@@ -13,7 +13,7 @@ use Socialite;
 class SocialController extends Controller
 {
     /**
-     * Redirect the user to the GitHub authentication page.
+     * Redirect the user to the social provider authentication page.
      *
      * @return \Illuminate\Http\Response
      */
@@ -23,13 +23,13 @@ class SocialController extends Controller
     }
 
     /**
-     * Obtain the user information from GitHub.
+     * Obtain the user information from social provider.
      *
      * @return \Illuminate\Http\Response
      */
     public function handleProviderCallback($provider)
     {
-        $user = Socialite::driver($provider)->user();
+        $user = Socialite::driver($provider)->scopes(['profile', 'email', 'openid'])->user();
 
 		$socialUser = null;
 		
