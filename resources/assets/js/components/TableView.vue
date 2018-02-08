@@ -10,7 +10,8 @@
 	    		:append-params="params"
 	    		pagination-path=""
 	    		@vuetable:pagination-data="onPaginationData"
-	    		@vuetable:loaded="onLoaded">	
+	    		@vuetable:loaded="onLoaded"
+	    		@vuetable-refresh="refreshTable">	
 	    </vuetable>
 	    <div class="level">
 	    	<div class="level-left">
@@ -57,6 +58,11 @@
 		},
 
 		methods: {
+			refreshTable() {
+				this.loading = true;
+				this.$refs.vuetable.refresh();
+			},
+
 			onPaginationData(paginationData) {
 				this.$refs.pagination.setPaginationData(paginationData);
 				this.$refs.paginationInfo.setPaginationData(paginationData);

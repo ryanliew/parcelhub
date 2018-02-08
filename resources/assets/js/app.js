@@ -31,6 +31,9 @@ Vue.component('text-input', require('./components/TextInput.vue'));
 Vue.component('checkbox-input', require('./components/CheckboxInput.vue'));
 Vue.component('select-input', require('./components/SelectInput.vue'));
 
+// Pages components
+Vue.component('categories-page', require('./pages/Categories.vue'));
+
 window.flash = function(message, level = 'success'){
  	window.events.$emit('flash', {message, level});
 };

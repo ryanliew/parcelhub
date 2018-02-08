@@ -1,9 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-@extends('layouts.app')
-
-@section('content')
 <section class="hero is-primary is-fullheight">
     <div class="hero-body">
         <div class="container">

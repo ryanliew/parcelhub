@@ -32,6 +32,8 @@ Route::group(['prefix' => 'lot'], function() {
 	Route::post('update', 'LotController@update');
 });
 
+Route::get('categories', 'CategoryController@page')->name('lots.categories');
+
 Route::group(['prefix' => 'category'], function() {
 	Route::get('index', 'CategoryController@index');
 	Route::get('delete/{id}', 'CategoryController@destroy');
@@ -44,4 +46,9 @@ Route::group(['prefix' => 'product'], function() {
 	Route::get('delete/{id}', 'ProductController@destroy');
 	Route::post('store', 'ProductController@store');
 	Route::post('update', 'ProductController@update');
+});
+
+
+Route::group(['prefix' => 'internal'], function() {
+	Route::get('categories', 'CategoryController@index');
 });
