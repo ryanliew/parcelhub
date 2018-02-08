@@ -59,15 +59,15 @@
                 <input type="text" id="name" name="name"/>
               </div>
               <div>
-              <label>Category: </label>
-              <select id="category" name="category" onchange="changeVolume({{$lot->id}})">
-                @forelse($categories as $category)
-                    <option id="{{$category->volume}}" value="{{$category->id}}" >{{$category->name}}</option>
-                @empty
-                  <option disabled>No category is found. Please click "Create Category" to create new category.</option>
-                @endforelse
-              </select>
-            </div>
+                <label>Category: </label>
+                <select id="category" name="category">
+                  @forelse($categories as $category)
+                      <option id="{{$category->volume}}" value="{{$category->id}}" >{{$category->name}}</option>
+                  @empty
+                    <option disabled>No category is found. Please click "Create Category" to create new category.</option>
+                  @endforelse
+                </select>
+              </div>
               <div>
                 <label>Volume(cm3): </label>
                 <input type="number" id="volume" name="volume"/>
@@ -136,10 +136,6 @@
   $("#category").change(function() {
     $("#volume").val($(this).find("option:selected").attr("id"));
   });
-
-  function changeVolume(lotID){
-    $("#volume-edit-"+lotID).val($("#category-edit-"+lotID).find("option:selected").attr("id"));
-  }
 
   $(document).on("click", ".openEditModal", function () {
     var $row = $(this).closest('tr');
