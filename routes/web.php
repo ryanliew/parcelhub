@@ -15,14 +15,15 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/home', 'HomeController@index')->name('home');
+
 Auth::routes();
 
-/* Socialite authenticate */
-$s = 'social.';
-Route::get('social/{provider}', 			['as' => $s . 'redirect', 'uses'=> 'Auth\SocialController@redirectToProvider']);
-Route::get('social/{provider}/callback',  	['as' => $s . 'callback', 'uses'=> 'Auth\SocialController@handleProviderCallback']);
-
-Route::get('/home', 'HomeController@index')->name('home');
+/* Route for Socialite authentication */
+Route::group(['prefix' => 'auth', 'as' => 'auth.social.'], function() {
+    Route::get('social/{provider}', ['as' => 'redirect', 'uses'=> 'Auth\SocialController@redirectToProvider']);
+    Route::get('social/{provider}/callback', ['as' => 'callback', 'uses'=> 'Auth\SocialController@handleProviderCallback']);
+});
 
 Route::group(['prefix' => 'lot'], function() {
 	Route::get('index', 'LotController@index');
