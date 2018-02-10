@@ -8,12 +8,27 @@ use Illuminate\Http\Request;
 class CategoryController extends Controller
 {
     /**
+     * Returns the categories page
+     * @return view categories page blade
+     */
+    public function page()
+    {
+        return view('category.page');    
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
+        if(request()->wantsJson())
+        {
+            // Ryan 09022018 If this is an internal API request
+            return Controller::VueTableListResult(Category::where('status', 'true'));
+        }
+
         $categories = category::where('status', 'true')->get();
 
         return view('category.index')->with('categories', $categories);
@@ -43,6 +58,10 @@ class CategoryController extends Controller
         $category->status = 'true';
         $category->save();
 
+        if(request()->wantsJson())
+        {   
+            return ["message" => $category->name . " created successfully."];
+        }
         return redirect()->back()->withSuccess($category->name . " created successfully.");
     }
 
@@ -81,6 +100,11 @@ class CategoryController extends Controller
         $category->name = $request->name;
         $category->volume = $request->volume;
         $category->save();
+
+        if(request()->wantsJson())
+        {   
+            return ["message" => "Category " . $category->name . " edited successfully."];
+        }
 
         return redirect()->back()->withSuccess($category->name . ' updated successfully.');
     }

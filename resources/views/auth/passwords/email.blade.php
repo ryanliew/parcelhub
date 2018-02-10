@@ -1,41 +1,34 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
-                <div class="panel-heading">Reset Password</div>
-
-                <div class="panel-body">
-                    @if (session('status'))
-                        <div class="alert alert-success">
-                            {{ session('status') }}
-                        </div>
-                    @endif
-
-                    <form class="form-horizontal" method="POST" action="{{ route('password.email') }}">
+<section class="hero is-primary is-fullheight">
+    <div class="hero-body">
+        <div class="container">
+            <div class="column is-4 is-offset-4">
+                <div class="box">
+                    <div class="has-text-centered">
+                        <h2 class="is-size-4">
+                            ParcelHub
+                        </h2>
+                    </div>
+                    <form method="POST" action="{{ route('password.email') }}">
                         {{ csrf_field() }}
 
-                        <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-                            <label for="email" class="col-md-4 control-label">E-Mail Address</label>
-
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" required>
-
-                                @if ($errors->has('email'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('email') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
+                        <div class="field">
+                            <text-input 
+                                label="E-Mail Address" 
+                                required="true"
+                                name="email"
+                                error="{{ $errors->first('email') }}"
+                                defaultValue="{{ old('email') }}"
+                                editable="true"
+                                >
+                            </text-input>
                         </div>
 
-                        <div class="form-group">
-                            <div class="col-md-6 col-md-offset-4">
-                                <button type="submit" class="btn btn-primary">
-                                    Send Password Reset Link
-                                </button>
+                         <div class="field">
+                            <div class="has-text-centered">
+                                <button type="submit" class="button is-danger">Reset password</button>
                             </div>
                         </div>
                     </form>
@@ -43,5 +36,5 @@
             </div>
         </div>
     </div>
-</div>
+</section>
 @endsection

@@ -1,9 +1,173 @@
-
-// Fonts
-@import url("https://fonts.googleapis.com/css?family=Raleway:300,400,600");
-
 // Variables
 @import "variables";
 
-// Bootstrap
-@import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+// Source sans pro font
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro');
+
+// Lato font
+@import url('https://fonts.googleapis.com/css?family=Lato:700');
+
+// Font awesome
+@import url("https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css");
+
+// Bulma
+@import "~bulma";
+
+// Css for toast notification
+@import '~vuejs-noty/dist/vuejs-noty.css';
+
+// Css for checkboxes
+@import '~cool-checkboxes-for-bulma.io/dist/css/bulma-radio-checkbox.min.css';
+
+.nav-container {
+	width: 100%;
+	border-bottom: 1px solid #ccc;
+}
+
+.card-header-title, input, th {
+	font-family: 'Lato';
+}
+
+/* Custom helper classes */
+
+.mt-5 {
+	margin-top: 5px;
+}
+
+.mt-10 {
+	margin-top: 10px;
+}
+
+.mt-15 {
+	margin-top: 15px;
+}
+
+.mt-20 {
+  	margin-top: 20px;
+}
+
+.mt-30 {
+  	margin-top: 30px;
+}
+
+.pl-5 {
+	padding-left: 5px;
+}
+.is-danger {
+	color: #ff3860;
+}
+
+.button.is-facebook {
+  background-color: #3b5998;
+  border-color: transparent;
+  color: #fff;
+}
+
+.button.is-google-plus {
+  background-color: #d34836;
+  border-color: transparent;
+  color: #fff;
+}
+
+.select-label {
+	font-size: 90.25%;
+    font-weight: 700;
+    padding-left: 2px;
+    margin-bottom: 5px;
+	margin-top: 30px;
+	display:block;
+}
+
+.v-select, .v-select .dropdown-toggle {
+	width: 100%;
+  text-transform: capitalize;
+}
+
+// Animations
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
+
+// Responsive table css
+@media screen and (max-width: 800px) {
+	.is-responsive {
+	    width: 100%;
+	    border-collapse: collapse;
+	    border-spacing: 0;
+	    display: block;
+	    position: relative;
+	}
+
+    td:empty:before {
+      	content: '\00a0';
+    }
+
+    th,
+    td {
+      	margin: 0;
+      	vertical-align: top;
+    }
+
+    th {
+      	text-align: left;
+    }
+
+    thead {
+	    border-right: solid 2px $grey-lighter;
+	    display: block;
+	    float: left;
+    }
+
+    thead tr {
+        display: block;
+        padding: 0 10px 0 0;
+    }
+    
+    thead th::before {
+          content: "\00a0";
+    }
+
+    thead td, thead th {
+        border-width: 0 0 1px;
+    }
+
+    tbody {
+      	display: block;
+      	width: auto;
+      	position: relative;
+      	overflow-x: auto;
+      	white-space: nowrap;
+    }
+
+   	tbody tr {
+        display: inline-block;
+        vertical-align: top;
+    }
+
+    th {
+      display: block;
+      text-align: right;
+    }
+
+    td {
+      display: block;
+      min-height: 1.25em;
+      text-align: left;
+    }
+
+    th,
+    td
+      &:last-child {
+        border-bottom-width: 0;
+    }
+
+    tr
+      &:last-child
+        td:not(:last-child){
+          border: $table-cell-border;
+          border-width: $table-cell-border-width;
+    }
+}

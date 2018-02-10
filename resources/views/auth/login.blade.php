@@ -1,78 +1,77 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
-                <div class="panel-heading">Login</div>
-
-                <div class="panel-body">
-                    <form class="form-horizontal" method="POST" action="{{ route('login') }}">
+<section class="hero is-primary is-fullheight">
+    <div class="hero-body">
+        <div class="container">
+            <div class="column is-4 is-offset-4">
+                <div class="box">
+                    <div class="has-text-centered">
+                        <h2 class="is-size-4">
+                            ParcelHub
+                        </h2>
+                    </div>
+                    <form method="POST" action="{{ route('login') }}">
                         {{ csrf_field() }}
-
-                        <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-                            <label for="email" class="col-md-4 control-label">E-Mail Address</label>
-
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" required autofocus>
-
-                                @if ($errors->has('email'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('email') }}</strong>
-                                    </span>
-                                @endif
+                        <div class="field">
+                            <text-input 
+                                label="Email" 
+                                required="true"
+                                name="email"
+                                editable="true"
+                                error="{{ $errors->first('email') }}"
+                                >
+                            </text-input>
+                        </div>
+                        
+                        <div class="field">
+                            <text-input 
+                                label="Password" 
+                                required="true"
+                                name="password"
+                                type="password"
+                                editable="true"
+                                error="{{ $errors->first('password') }}"
+                                >
+                            </text-input>
+                        </div>
+                                
+                        <div class="field">
+                            <checkbox-input
+                                label="Keep me logged in"
+                                name="remember"
+                                editable="true">
+                            </checkbox-input>
+                        </div>
+                        
+                        <div class="field">
+                            <div class="has-text-centered">
+                                <button type="submit" class="button is-primary">Sign in</button>
                             </div>
                         </div>
-
-                        <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
-                            <label for="password" class="col-md-4 control-label">Password</label>
-
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control" name="password" required>
-
-                                @if ($errors->has('password'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('password') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="col-md-6 col-md-offset-4">
-                                <div class="checkbox">
-                                    <label>
-                                        <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}> Remember Me
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
-						<div class="form-group">
-							<div class="col-md-6 col-sm-6 col-xs-6 btn-list">
-								<a href="{{ route('auth.social.redirect', ['provider' => 'facebook']) }}" class="btn btn-lg btn-primary btn-block facebook" role="button">Facebook</a>
-							</div>
-							<div class="col-md-6 col-sm-6 col-xs-6 btn-list">
-								<a href="{{ route('auth.social.redirect', ['provider' => 'google']) }}" class="btn btn-lg btn-danger btn-block google" role="button">Google+</a>
-							</div>
-                        </div>
-						
-                        <div class="form-group">
-                            <div class="col-md-8 col-md-offset-4">
-                                <button type="submit" class="btn btn-primary">
-                                    Login
-                                </button>
-
-                                <a class="btn btn-link" href="{{ route('password.request') }}">
-                                    Forgot Your Password?
+                        <div class="field">
+                            <div class="has-text-centered">
+                                <a href="{{ route('auth.social.redirect', ['provider' => 'facebook']) }}" class="button is-facebook">
+                                    <i class="fab fa-facebook"></i>
+                                    <span class="pl-5">Facebook Login</span>
+                                </a>
+                                <a href="{{ route('auth.social.redirect', ['provider' => 'google']) }}" class="button is-google-plus">
+                                    <i class="fab fa-google"></i> 
+                                    <span class="pl-5">Google+ Login</span>
                                 </a>
                             </div>
+                        </div>
+                        <div class="has-text-centered">
+                            <a href="{{ route('register') }}" class="mt-10">Don't have an account?</a>
+                        </div>
+
+                        <div class="has-text-centered">
+                            <a href="{{ route('password.request') }}" class="mt-10">Forgot Your Password?</a>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</section>
 @endsection
