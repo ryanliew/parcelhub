@@ -43,6 +43,10 @@ class Outbound extends Model
     	return $this->belongsTo('App\User');
     }
 
+    public function products(){
+    	return $this->belongsToMany('App\Product');
+    }
+
     public function courier(){
     	return $this->hasOne('App\courier');
     }
