@@ -2,10 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Payment;
+use App\User;
+use function foo\func;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Storage;
 
 class PaymentController extends Controller
 {
+    protected $rules = [
+        'bankPaymentSlip' => 'required'
+    ];
+
     /**
      * Display a listing of the resource.
      *
@@ -13,7 +22,14 @@ class PaymentController extends Controller
      */
     public function index()
     {
-        //
+        if(\Entrust::hasRole('admin')) {
+            $payments = Payment::all()->filter(function ($payment) {
+                return $payment->status === 'false';
+            });
+            return view("payment.admin")->with('payments', $payments);
+        } else {
+            return view("payment.user");
+        }
     }
 
     /**
@@ -34,7 +50,17 @@ class PaymentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, $this->rules);
+
+        //Store image file
+        $path = $request->file('bankPaymentSlip')->store('public');
+
+        $payment = new Payment();
+        $payment->user_id = auth()->user()->id;
+        $payment->picture = $path;
+        $payment->save();
+
+        return redirect()->back()->withSuccess('Upload successfully');
     }
 
     /**
@@ -45,7 +71,6 @@ class PaymentController extends Controller
      */
     public function show($id)
     {
-        //
     }
 
     /**
@@ -80,5 +105,14 @@ class PaymentController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function approve(Request $request)
+    {
+        foreach ($request->input('payments') as $key => $value) {
+            Payment::where('id', '=', $value)->update(['status' => 'true']);
+        }
+
+        return redirect()->back();
     }
 }

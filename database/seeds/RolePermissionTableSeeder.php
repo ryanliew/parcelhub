@@ -41,6 +41,14 @@ class RolePermissionTableSeeder extends Seeder
             $adminRole->attachPermission(Permission::create($value));
         }
 
+        $admin = \App\User::create([
+            'name' => 'admin',
+            'email' => 'admin@gmail.com',
+            'password' => bcrypt('P@ssw0rd')
+        ]);
+
+        $admin->attachRole($adminRole);
+
         $userPermissions = Permission::create([
             'name' => 'purchase-order',
             'display_name' => 'Purchase Order',

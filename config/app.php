@@ -167,7 +167,8 @@ return [
          * Package Service Providers...
          */
         Laravel\Tinker\TinkerServiceProvider::class,
-		Laravel\Socialite\SocialiteServiceProvider::class,
+        Laravel\Socialite\SocialiteServiceProvider::class,
+        Oriceon\Settings\SettingsServiceProvider::class,
         Zizaco\Entrust\EntrustServiceProvider::class,
 
         /*
@@ -178,8 +179,6 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        Oriceon\Settings\SettingsServiceProvider::class,
-
     ],
 
     /*
@@ -230,8 +229,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 		'Socialite' => Laravel\Socialite\Facades\Socialite::class,
         'Settings' => Oriceon\Settings\Facades\Settings::class,
-        'Entrust'   => Zizaco\Entrust\EntrustFacade::class,
-
+        'Entrust' => Zizaco\Entrust\EntrustFacade::class,
     ],
 
 ];

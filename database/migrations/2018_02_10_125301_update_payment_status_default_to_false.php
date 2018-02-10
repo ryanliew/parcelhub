@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddUserIdToProductsTable extends Migration
+class UpdatePaymentStatusDefaultToFalse extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddUserIdToProductsTable extends Migration
      */
     public function up()
     {
-        Schema::table('products', function (Blueprint $table) {
-            $table->integer('user_id')->nullable();
+        Schema::table('payments', function (Blueprint $table) {
+            $table->string('status')->default('false')->change();
         });
     }
 
@@ -25,8 +25,8 @@ class AddUserIdToProductsTable extends Migration
      */
     public function down()
     {
-        Schema::table('products', function (Blueprint $table) {
-            $table->dropColumn('user_id');
+        Schema::table('payments', function (Blueprint $table) {
+            $table->string('status')->change();
         });
     }
 }

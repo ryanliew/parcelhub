@@ -1,7 +1,7 @@
 <?php
 /**
  * A helper file for Laravel 5, to provide autocomplete information to your IDE
- * Generated for Laravel 5.4.36 on 2018-02-08 16:04:13.
+ * Generated for Laravel 5.4.36 on 2018-02-10 11:53:10.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -11704,6 +11704,98 @@ namespace Laravel\Socialite\Facades {
  
 }
 
+namespace Oriceon\Settings\Facades { 
+
+    class Settings {
+        
+        /**
+         * Store value into registry
+         *
+         * @param string $key
+         * @param mixed $value
+         * @return mixed 
+         * @static 
+         */ 
+        public static function set($key, $value)
+        {
+            return \Oriceon\Settings\Repositories\DatabaseRepository::set($key, $value);
+        }
+        
+        /**
+         * Gets a value
+         *
+         * @param string $key
+         * @param string $default
+         * @return mixed 
+         * @static 
+         */ 
+        public static function get($key, $default = null)
+        {
+            return \Oriceon\Settings\Repositories\DatabaseRepository::get($key, $default);
+        }
+        
+        /**
+         * Fetch all values
+         *
+         * @param $cache
+         * @return mixed 
+         * @static 
+         */ 
+        public static function getAll($cache = true)
+        {
+            return \Oriceon\Settings\Repositories\DatabaseRepository::getAll($cache);
+        }
+        
+        /**
+         * Checks if setting exists
+         *
+         * @param $key
+         * @return bool 
+         * @static 
+         */ 
+        public static function has($key)
+        {
+            return \Oriceon\Settings\Repositories\DatabaseRepository::has($key);
+        }
+        
+        /**
+         * Remove a setting
+         *
+         * @param string $key
+         * @return void 
+         * @static 
+         */ 
+        public static function forget($key)
+        {
+            \Oriceon\Settings\Repositories\DatabaseRepository::forget($key);
+        }
+        
+        /**
+         * Clean unused settings
+         *
+         * @param $params
+         * @static 
+         */ 
+        public static function clean($params = array())
+        {
+            return \Oriceon\Settings\Repositories\DatabaseRepository::clean($params);
+        }
+        
+        /**
+         * Remove all settings
+         *
+         * @return bool 
+         * @static 
+         */ 
+        public static function flush()
+        {
+            return \Oriceon\Settings\Repositories\DatabaseRepository::flush();
+        }
+         
+    }
+ 
+}
+
 namespace Zizaco\Entrust { 
 
     class EntrustFacade {
@@ -13906,6 +13998,8 @@ namespace  {
     class View extends \Illuminate\Support\Facades\View {}
 
     class Socialite extends \Laravel\Socialite\Facades\Socialite {}
+
+    class Settings extends \Oriceon\Settings\Facades\Settings {}
 
     class Entrust extends \Zizaco\Entrust\EntrustFacade {}
  
