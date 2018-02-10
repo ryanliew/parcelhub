@@ -36,8 +36,16 @@ class Product extends Model
 {
 	protected $guarded = [];
 	
-    public function lot(){
-    	return $this->belongsTo('App\Lot');
+    public function lots(){
+    	return $this->belongsToMany('App\Lot');
+    }
+
+    public function inbounds(){
+    	return $this->belongsToMany('App\Inbound');
+    }
+
+    public function outbounds(){
+    	return $this->belongsToMany('App\Outbound');
     }
 
     public function user(){

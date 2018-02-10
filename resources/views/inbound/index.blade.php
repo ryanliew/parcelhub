@@ -28,8 +28,8 @@
         <td>{{$inbound->quantity}}</td>
         <td>{{$inbound->arrival_date}}</td>
         <td>{{$inbound->total_carton}}</td>
-        <td><button type="button" class="openEditModal btn btn-info btn-lg" data-toggle="modal" data-target="#inboundEdit">Edit</button></td>
-        <td><a href="delete/{{$inbound->id}}" /><button type="button" class="btn btn-info btn-lg">Delete</button></td>
+        <!-- <td><button type="button" class="openEditModal btn btn-info btn-lg" data-toggle="modal" data-target="#inboundEdit">Edit</button></td>
+        <td><a href="delete/{{$inbound->id}}" /><button type="button" class="btn btn-info btn-lg">Delete</button></td> -->
       <tr>
     @empty
       <tr>

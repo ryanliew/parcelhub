@@ -37,7 +37,7 @@ class Lot extends Model
     }
 
     public function products(){
-    	return $this->hasMany('App\Product');
+    	return $this->belongsToMany('App\Product');
     }
 
     public function category(){
