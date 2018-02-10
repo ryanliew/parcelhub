@@ -98,9 +98,17 @@ class LotController extends Controller
     public function destroy($id)
     {
         $lot = lot::find($id);
-        $lot->status = "false";
-        $lot->save();
 
-        return redirect()->back()->withSuccess($lot->name . ' deleted successfully.');
+        $lotAssigned = $lot->products;
+        
+        if(!sizeof($lotAssigned) > 0){
+            // not assigned then here
+            $lot->status = "false";
+            $lot->save();
+            return redirect()->back()->withSuccess($lot->name . ' deleted successfully.');
+        } else {
+            // assigned then here
+            return redirect()->back()->withErrors($lot->name . ' cannot be deleted because this lot is assigned to product.');
+        }
     }
 }

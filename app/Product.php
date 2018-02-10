@@ -39,4 +39,8 @@ class Product extends Model
     public function lot(){
     	return $this->belongsTo('App\Lot');
     }
+
+    public function user(){
+    	return $this->belongsTo('App\User');
+    }
 }

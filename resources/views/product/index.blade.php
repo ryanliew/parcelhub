@@ -29,7 +29,11 @@
     </tr>
     @forelse($products as $product)
       <tr>
-        <td>{{$product->lot->name}}</td>
+        @if(count($product->lot_id) > 0)
+          <td>{{$product->lot->name}}</td>
+        @else
+          <td>Product is not assigned to lot yet.</td>
+        @endif
         <td>{{$product->name}}</td>
         <td>{{($product->height)*($product->width)*($product->length)}}</td>
         <td>{{$product->sku}}</td>

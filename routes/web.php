@@ -45,3 +45,22 @@ Route::group(['prefix' => 'product'], function() {
 	Route::post('store', 'ProductController@store');
 	Route::post('update', 'ProductController@update');
 });
+
+Route::group(['prefix' => 'setting'], function() {
+	Route::get('index', 'SettingController@index');
+	Route::post('update', 'SettingController@update');
+});
+
+Route::group(['prefix' => 'courier'], function() {
+	Route::get('index', 'CourierController@index');
+	Route::get('delete/{id}', 'CourierController@destroy');
+	Route::post('store', 'CourierController@store');
+	Route::post('update', 'CourierController@update');
+});
+
+Route::group(['prefix' => 'inbound'], function() {
+	Route::get('index', 'InboundController@index');
+	Route::get('delete/{id}', 'InboundController@destroy');
+	Route::post('store', 'InboundController@store');
+	Route::post('update', 'InboundController@update');
+});
