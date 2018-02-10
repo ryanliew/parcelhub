@@ -12,7 +12,7 @@
         "laravel/framework": "5.4.*",
         "laravel/socialite": "^3.0",
         "laravel/tinker": "~1.0",
-        "oriceon/laravel-settings": "^1.2"
+        "oriceon/laravel-settings": "^1.2",
         "zizaco/entrust": "^1.9"
     },
     "require-dev": {
@@ -22,7 +22,9 @@
     },
     "autoload": {
         "classmap": [
-            "database"
+            "database",
+            "database/seeds",
+            "database/migrations"
         ],
         "psr-4": {
             "App\\": "app/"

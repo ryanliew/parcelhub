@@ -1,13 +1,64 @@
 <template>
-	<div class="card">
-		<div class="card-header">
-			<div class="card-header-title">
-				Lot categories
+	<div>
+		<div class="card">
+			<div class="card-header">
+				<div class="card-header-title level">
+					<div class="level-left">
+						<div class="level-item">
+							Lots categories
+						</div>
+					</div>
+					<div class="level-right">
+						<div class="level-item">
+							<button class="button is-primary" @click="dialogActive = true">
+								<i class="fa fa-plus-circle"></i>
+								<span class="pl-5">Create new category</span>
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="card-content">
+				<table-view ref="categories" 
+							:fields="fields" url="/internal/categories">
+					
+				</table-view>
 			</div>
 		</div>
-		<div class="card-content">
-			<table-view :fields="fields" url="/internal/categories"></table-view>
-		</div>
+
+		<modal :active="dialogActive" @close="dialogActive = false">
+			<template slot="header">{{ dialogTitle }}</template>
+
+			<form @submit.prevent="onSubmit" 
+					@keydown="form.errors.clear($event.target.name)" 
+					@input="form.errors.clear($event.target.name)">
+
+	          	<div class="field">
+	          		<text-input v-model="form.name" :defaultValue="form.name" 
+								label="Name" 
+								:required="true"
+								name="name"
+								type="text"
+								:editable="true"
+								:error="form.errors.get('name')">
+					</text-input>
+	          	</div>
+	          	<div class="field">
+	          		<text-input v-model="form.volume" :defaultValue="form.volume" 
+								label="Volume(cm³)" 
+								:required="true"
+								name="volume"
+								type="text"
+								:editable="true"
+								:error="form.errors.get('volume')">
+					</text-input>
+	          	</div>
+          	</form>
+
+          	<template slot="footer">
+				<button class="button is-primary" @click="submit">Submit</button>
+          	</template>
+		</modal>
 	</div>
 </template>
 
@@ -24,13 +75,22 @@
 				categories: '',
 				fields: [
 					{name: 'name', sortField: 'name'},
-					{name: 'volume', sortFiled: 'volume', title: 'Volume (cm³)'}	
-				]
+					{name: 'volume', sortFiled: 'volume', title: 'Volume (cm³)'},
+					{name: '__component:categories-actions', title: 'Actions'}	
+				],
+				selectedCategory: '',
+				dialogActive: false,
+				form: new Form({
+					id: '',
+					name: '',
+					volume: ''
+				}),
 			};
 		},
 
 		mounted() {
 			this.fetchCategories();
+			this.$events.on('edit', data => this.edit(data));
 		},
 
 		methods: {
@@ -41,7 +101,40 @@
 
 			setCategories(response) {
 				this.categories = response.data;
+			},
+
+			submit() {
+				this.submitting = true;
+				this.form.post(this.action)
+					.then(this.onSuccess());
+			},
+
+			onSuccess() {
+				this.submitted = true;
+				this.dialogActive = false;
+				this.$refs.categories.refreshTable();
+			},
+
+			edit(data){
+				this.selectedCategory = data;
+				this.form.id = data.id;
+				this.form.name = data.name;
+				this.form.volume = data.volume;
+				this.dialogActive = true;
 			}
-		}	
+		},
+
+		computed: {
+			dialogTitle() {
+				return this.selectedCategory 
+						? "Edit " + this.selectedCategory.name
+						: "Create new category";
+			},
+
+			action() {
+				let action = this.selectedCategory ? "update" : "store";
+				return "/category/" + action;
+			}
+		}
 	}
 </script>

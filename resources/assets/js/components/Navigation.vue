@@ -4,7 +4,7 @@
 			<nav class="navbar" role="navigation" aria-label="main navigation">
 			  	<div class="navbar-brand">
 			    	<a class="navbar-item is-size-4" href="/">
-			      		KANGAROO
+			      		<span v-text="title"></span>
 			    	</a>
 
 				    <button class="button navbar-burger">
@@ -19,14 +19,11 @@
 			  			<!-- Todo Search component here -->
 			  		</div>
 			  		<div class="navbar-end">
-			  			<a class="navbar-item" href="/">Dashboard</a>
-			  			<a class="navbar-item" href="/customers">Customers</a>
-			  			<a class="navbar-item" href="/operators">Operators</a>
 			  			<div class="navbar-item has-dropdown is-hoverable">
-			  				<a class="navbar-link" href="/units">Units</a>
+			  				<a class="navbar-link" href="/units">Lots</a>
 			  				<div class="navbar-dropdown is-boxed">
-			  					<a class="navbar-item" href="/units/create">Create unit</a>
-			  					<a class="navbar-item" href="/transactions/create">Create transactions</a>
+			  					<a class="navbar-item" href="/units/create">Lot categories</a>
+			  					<a class="navbar-item" href="/transactions/create">All lots</a>
 			  				</div>
 			  			</div>
 			  			<a class="navbar-item" @click="logout">Logout</a>
@@ -39,7 +36,7 @@
 
 <script>
 	export default {
-		props: ['current'],
+		props: ['current', 'title'],
 		data() {
 			return {
 

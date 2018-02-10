@@ -26,7 +26,7 @@ class AddUserIdToProductsTable extends Migration
     public function down()
     {
         Schema::table('products', function (Blueprint $table) {
-            Schema::dropColumnIfExists('user_id');
+            $table->dropColumn('user_id');
         });
     }
 }

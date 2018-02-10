@@ -58,6 +58,10 @@ class CategoryController extends Controller
         $category->status = 'true';
         $category->save();
 
+        if(request()->wantsJson())
+        {   
+            return ["message" => $category->name . " created successfully."];
+        }
         return redirect()->back()->withSuccess($category->name . " created successfully.");
     }
 
@@ -96,6 +100,11 @@ class CategoryController extends Controller
         $category->name = $request->name;
         $category->volume = $request->volume;
         $category->save();
+
+        if(request()->wantsJson())
+        {   
+            return ["message" => "Category " . $category->name . " edited successfully."];
+        }
 
         return redirect()->back()->withSuccess($category->name . ' updated successfully.');
     }
