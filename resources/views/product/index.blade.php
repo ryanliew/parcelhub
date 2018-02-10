@@ -37,7 +37,11 @@
         <td>{{$product->name}}</td>
         <td>{{($product->height)*($product->width)*($product->length)}}</td>
         <td>{{$product->sku}}</td>
-        <td id="{{$product->picture}}"><img src="/images/{{$product->picture}}" height="200"></td>
+        @if(count($product->picture) > 0)
+          <td id="{{$product->picture}}"><img src="/images/{{$product->picture}}" height="200"></td>
+        @else
+          <td>No image is uploaded for this product.</td>
+        @endif
         <td style="display:none">{{$product->height}}</td>
         <td style="display:none">{{$product->width}}</td>
         <td style="display:none">{{$product->length}}</td>

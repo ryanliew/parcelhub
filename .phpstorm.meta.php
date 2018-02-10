@@ -3,7 +3,7 @@ namespace PHPSTORM_META {
 
    /**
     * PhpStorm Meta file, to provide autocomplete information for PhpStorm
-    * Generated on 2018-02-08 16:03:54.
+    * Generated on 2018-02-10 11:45:24.
     *
     * @author Barry vd. Heuvel <barryvdh@gmail.com>
     * @see https://github.com/barryvdh/laravel-ide-helper
@@ -38,6 +38,7 @@ namespace PHPSTORM_META {
         'view' => \Illuminate\View\Factory::class,
         'view.finder' => \Illuminate\View\FileViewFinder::class,
         'view.engine.resolver' => \Illuminate\View\Engines\EngineResolver::class,
+        'settings' => \Oriceon\Settings\Repositories\DatabaseRepository::class,
         'entrust' => \Zizaco\Entrust\Entrust::class,
         'command.entrust.migration' => \Zizaco\Entrust\MigrationCommand::class,
         'command.ide-helper.generate' => \Barryvdh\LaravelIdeHelper\Console\GeneratorCommand::class,
@@ -162,6 +163,7 @@ namespace PHPSTORM_META {
         'view' => \Illuminate\View\Factory::class,
         'view.finder' => \Illuminate\View\FileViewFinder::class,
         'view.engine.resolver' => \Illuminate\View\Engines\EngineResolver::class,
+        'settings' => \Oriceon\Settings\Repositories\DatabaseRepository::class,
         'entrust' => \Zizaco\Entrust\Entrust::class,
         'command.entrust.migration' => \Zizaco\Entrust\MigrationCommand::class,
         'command.ide-helper.generate' => \Barryvdh\LaravelIdeHelper\Console\GeneratorCommand::class,
@@ -286,6 +288,7 @@ namespace PHPSTORM_META {
         'view' => \Illuminate\View\Factory::class,
         'view.finder' => \Illuminate\View\FileViewFinder::class,
         'view.engine.resolver' => \Illuminate\View\Engines\EngineResolver::class,
+        'settings' => \Oriceon\Settings\Repositories\DatabaseRepository::class,
         'entrust' => \Zizaco\Entrust\Entrust::class,
         'command.entrust.migration' => \Zizaco\Entrust\MigrationCommand::class,
         'command.ide-helper.generate' => \Barryvdh\LaravelIdeHelper\Console\GeneratorCommand::class,
@@ -410,6 +413,7 @@ namespace PHPSTORM_META {
         'view' => \Illuminate\View\Factory::class,
         'view.finder' => \Illuminate\View\FileViewFinder::class,
         'view.engine.resolver' => \Illuminate\View\Engines\EngineResolver::class,
+        'settings' => \Oriceon\Settings\Repositories\DatabaseRepository::class,
         'entrust' => \Zizaco\Entrust\Entrust::class,
         'command.entrust.migration' => \Zizaco\Entrust\MigrationCommand::class,
         'command.ide-helper.generate' => \Barryvdh\LaravelIdeHelper\Console\GeneratorCommand::class,
@@ -534,6 +538,7 @@ namespace PHPSTORM_META {
         'view' => \Illuminate\View\Factory::class,
         'view.finder' => \Illuminate\View\FileViewFinder::class,
         'view.engine.resolver' => \Illuminate\View\Engines\EngineResolver::class,
+        'settings' => \Oriceon\Settings\Repositories\DatabaseRepository::class,
         'entrust' => \Zizaco\Entrust\Entrust::class,
         'command.entrust.migration' => \Zizaco\Entrust\MigrationCommand::class,
         'command.ide-helper.generate' => \Barryvdh\LaravelIdeHelper\Console\GeneratorCommand::class,
@@ -658,6 +663,7 @@ namespace PHPSTORM_META {
         'view' => \Illuminate\View\Factory::class,
         'view.finder' => \Illuminate\View\FileViewFinder::class,
         'view.engine.resolver' => \Illuminate\View\Engines\EngineResolver::class,
+        'settings' => \Oriceon\Settings\Repositories\DatabaseRepository::class,
         'entrust' => \Zizaco\Entrust\Entrust::class,
         'command.entrust.migration' => \Zizaco\Entrust\MigrationCommand::class,
         'command.ide-helper.generate' => \Barryvdh\LaravelIdeHelper\Console\GeneratorCommand::class,
@@ -782,6 +788,7 @@ namespace PHPSTORM_META {
         'view' => \Illuminate\View\Factory::class,
         'view.finder' => \Illuminate\View\FileViewFinder::class,
         'view.engine.resolver' => \Illuminate\View\Engines\EngineResolver::class,
+        'settings' => \Oriceon\Settings\Repositories\DatabaseRepository::class,
         'entrust' => \Zizaco\Entrust\Entrust::class,
         'command.entrust.migration' => \Zizaco\Entrust\MigrationCommand::class,
         'command.ide-helper.generate' => \Barryvdh\LaravelIdeHelper\Console\GeneratorCommand::class,

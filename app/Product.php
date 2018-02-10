@@ -31,13 +31,24 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Product whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Product whereWidth($value)
  * @mixin \Eloquent
+ * @property int|null $user_id
+ * @property-read \App\User|null $user
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Product whereUserId($value)
  */
 class Product extends Model
 {
 	protected $guarded = [];
 	
-    public function lot(){
-    	return $this->belongsTo('App\Lot');
+    public function lots(){
+    	return $this->belongsToMany('App\Lot');
+    }
+
+    public function inbounds(){
+    	return $this->belongsToMany('App\Inbound');
+    }
+
+    public function outbounds(){
+    	return $this->belongsToMany('App\Outbound');
     }
 
     public function user(){

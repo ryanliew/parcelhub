@@ -110,7 +110,7 @@
           	</div>
             <div>
               <label>Volume(cm3): </label>
-              <input type="number" id="volume" name="volume" />
+              <input type="number" id="volume-creation" name="volume" />
             </div>
             <div class="modal-footer">
             @if(count($categories) > 0)
@@ -130,7 +130,7 @@
 
 <script>
   $(document).ready(function() {
-    $("#volume").val($("#category").find("option:selected").attr("id"));
+    $("#volume-creation").val($("#category").find("option:selected").attr("id"));
   });
   
   $("#category").change(function() {

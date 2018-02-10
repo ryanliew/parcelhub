@@ -56,7 +56,6 @@ class ProductController extends Controller
             $product->picture = $auth_id.$pictureNames[0].$product->id.".JPG";
             $product->save();
         }
-        
 
         return redirect()->back()->withSuccess($product->name . " created successfully.");
     }

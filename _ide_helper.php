@@ -1,7 +1,9 @@
 <?php
 /**
  * A helper file for Laravel 5, to provide autocomplete information to your IDE
- * Generated for Laravel 5.4.36 on 2018-02-07 14:57:46.
+
+ * Generated for Laravel 5.4.36 on 2018-02-10 11:53:10.
+
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -11704,6 +11706,209 @@ namespace Laravel\Socialite\Facades {
  
 }
 
+namespace Oriceon\Settings\Facades { 
+
+    class Settings {
+        
+        /**
+         * Store value into registry
+         *
+         * @param string $key
+         * @param mixed $value
+         * @return mixed 
+         * @static 
+         */ 
+        public static function set($key, $value)
+        {
+            return \Oriceon\Settings\Repositories\DatabaseRepository::set($key, $value);
+        }
+        
+        /**
+         * Gets a value
+         *
+         * @param string $key
+         * @param string $default
+         * @return mixed 
+         * @static 
+         */ 
+        public static function get($key, $default = null)
+        {
+            return \Oriceon\Settings\Repositories\DatabaseRepository::get($key, $default);
+        }
+        
+        /**
+         * Fetch all values
+         *
+         * @param $cache
+         * @return mixed 
+         * @static 
+         */ 
+        public static function getAll($cache = true)
+        {
+            return \Oriceon\Settings\Repositories\DatabaseRepository::getAll($cache);
+        }
+        
+        /**
+         * Checks if setting exists
+         *
+         * @param $key
+         * @return bool 
+         * @static 
+         */ 
+        public static function has($key)
+        {
+            return \Oriceon\Settings\Repositories\DatabaseRepository::has($key);
+        }
+        
+        /**
+         * Remove a setting
+         *
+         * @param string $key
+         * @return void 
+         * @static 
+         */ 
+        public static function forget($key)
+        {
+            \Oriceon\Settings\Repositories\DatabaseRepository::forget($key);
+        }
+        
+        /**
+         * Clean unused settings
+         *
+         * @param $params
+         * @static 
+         */ 
+        public static function clean($params = array())
+        {
+            return \Oriceon\Settings\Repositories\DatabaseRepository::clean($params);
+        }
+        
+        /**
+         * Remove all settings
+         *
+         * @return bool 
+         * @static 
+         */ 
+        public static function flush()
+        {
+            return \Oriceon\Settings\Repositories\DatabaseRepository::flush();
+        }
+         
+    }
+ 
+}
+
+namespace Zizaco\Entrust { 
+
+    class EntrustFacade {
+        
+        /**
+         * Checks if the current user has a role by its name
+         *
+         * @param string $name Role name.
+         * @return bool 
+         * @static 
+         */ 
+        public static function hasRole($role, $requireAll = false)
+        {
+            return \Zizaco\Entrust\Entrust::hasRole($role, $requireAll);
+        }
+        
+        /**
+         * Check if the current user has a permission by its name
+         *
+         * @param string $permission Permission string.
+         * @return bool 
+         * @static 
+         */ 
+        public static function can($permission, $requireAll = false)
+        {
+            return \Zizaco\Entrust\Entrust::can($permission, $requireAll);
+        }
+        
+        /**
+         * Check if the current user has a role or permission by its name
+         *
+         * @param array|string $roles The role(s) needed.
+         * @param array|string $permissions The permission(s) needed.
+         * @param array $options The Options.
+         * @return bool 
+         * @static 
+         */ 
+        public static function ability($roles, $permissions, $options = array())
+        {
+            return \Zizaco\Entrust\Entrust::ability($roles, $permissions, $options);
+        }
+        
+        /**
+         * Get the currently authenticated user or null.
+         *
+         * @return \Zizaco\Entrust\Illuminate\Auth\UserInterface|null 
+         * @static 
+         */ 
+        public static function user()
+        {
+            return \Zizaco\Entrust\Entrust::user();
+        }
+        
+        /**
+         * Filters a route for a role or set of roles.
+         * 
+         * If the third parameter is null then abort with status code 403.
+         * Otherwise the $result is returned.
+         *
+         * @param string $route Route pattern. i.e: "admin/*"
+         * @param array|string $roles The role(s) needed
+         * @param mixed $result i.e: Redirect::to('/')
+         * @param bool $requireAll User must have all roles
+         * @return mixed 
+         * @static 
+         */ 
+        public static function routeNeedsRole($route, $roles, $result = null, $requireAll = true)
+        {
+            return \Zizaco\Entrust\Entrust::routeNeedsRole($route, $roles, $result, $requireAll);
+        }
+        
+        /**
+         * Filters a route for a permission or set of permissions.
+         * 
+         * If the third parameter is null then abort with status code 403.
+         * Otherwise the $result is returned.
+         *
+         * @param string $route Route pattern. i.e: "admin/*"
+         * @param array|string $permissions The permission(s) needed
+         * @param mixed $result i.e: Redirect::to('/')
+         * @param bool $requireAll User must have all permissions
+         * @return mixed 
+         * @static 
+         */ 
+        public static function routeNeedsPermission($route, $permissions, $result = null, $requireAll = true)
+        {
+            return \Zizaco\Entrust\Entrust::routeNeedsPermission($route, $permissions, $result, $requireAll);
+        }
+        
+        /**
+         * Filters a route for role(s) and/or permission(s).
+         * 
+         * If the third parameter is null then abort with status code 403.
+         * Otherwise the $result is returned.
+         *
+         * @param string $route Route pattern. i.e: "admin/*"
+         * @param array|string $roles The role(s) needed
+         * @param array|string $permissions The permission(s) needed
+         * @param mixed $result i.e: Redirect::to('/')
+         * @param bool $requireAll User must have all roles and permissions
+         * @return void 
+         * @static 
+         */ 
+        public static function routeNeedsRoleOrPermission($route, $roles, $permissions, $result = null, $requireAll = false)
+        {
+            \Zizaco\Entrust\Entrust::routeNeedsRoleOrPermission($route, $roles, $permissions, $result, $requireAll);
+        }
+         
+    }
+ 
+}
 
 namespace  { 
 
@@ -13794,6 +13999,10 @@ namespace  {
     class View extends \Illuminate\Support\Facades\View {}
 
     class Socialite extends \Laravel\Socialite\Facades\Socialite {}
+
+    class Settings extends \Oriceon\Settings\Facades\Settings {}
+
+    class Entrust extends \Zizaco\Entrust\EntrustFacade {}
  
 }
 

@@ -70,3 +70,9 @@ Route::group(['prefix' => 'inbound'], function() {
 	Route::post('store', 'InboundController@store');
 	Route::post('update', 'InboundController@update');
 });
+
+Route::group(['prefix' => 'payment'], function() {
+    Route::get('index', 'PaymentController@index');
+    Route::post('approve', 'PaymentController@approve');
+    Route::post('store', 'PaymentController@store');
+});
