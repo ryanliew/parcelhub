@@ -16,7 +16,7 @@
                 </tr>
                 @foreach($payments as $payment)
                     <tr>
-                        <td><label><input type="checkbox" name="payments[{{ $payment->id }}]" value="{{ $payment->id }}"></label></td>
+                        <td><label><input type="checkbox" name="payments[]" value="{{ $payment->id }}"></label></td>
                         <td>{{ $payment->user->name }}</td>
                         <td>{{ $payment->user->email }}</td>
                         <td><img src="{{ Storage::url($payment->picture) }}" width="50px" height="50px"></td>

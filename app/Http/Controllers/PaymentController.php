@@ -3,11 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Payment;
-use App\User;
-use function foo\func;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\Storage;
 
 class PaymentController extends Controller
 {
