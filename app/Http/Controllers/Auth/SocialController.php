@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Role;
 use Illuminate\Database\Eloquent\Model;
 
 use App\User;
@@ -42,9 +43,15 @@ class SocialController extends Controller
             return $authUser;
         }
 
-        return User::create([
+        $user = User::create([
             'name' => $user->name,
             'email' => $user->email,
         ]);
+
+        $role = Role::where('name', '=', 'user')->first();
+
+        $user->attachRole($role);
+
+        return $user;
     }
 }

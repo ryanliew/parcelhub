@@ -38,22 +38,22 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        // waiting for auth id to be completed
+        $auth_id = auth()->user()->id;
         $product = new product;
-        $product->lot_id = 1;
         $product->name = $request->name;
         $product->height = $request->height;
         $product->length = $request->length;
         $product->width = $request->width;
-        $product->sku = $request->sku;        
+        $product->sku = $request->sku;  
+        $product->user_id = $auth_id;      
         $product->status = 'true';
         $product->save();
 
         if(Input::hasFile('picture')){
             $file = Input::file('picture');
             $pictureNames = explode(".", $file->getClientOriginalName());
-            $file->move('images', "1".$pictureNames[0].$product->id.".JPG");
-            $product->picture = "1".$pictureNames[0].$product->id.".JPG";
+            $file->move('images', $auth_id.$pictureNames[0].$product->id.".JPG");
+            $product->picture = $auth_id.$pictureNames[0].$product->id.".JPG";
             $product->save();
         }
         
@@ -92,6 +92,7 @@ class ProductController extends Controller
      */
     public function update(Request $request)
     {
+        $auth_id = auth()->user()->id;
         $product = product::find($request->id);
         $product->name = $request->name;
         $product->height = $request->height;
@@ -101,8 +102,8 @@ class ProductController extends Controller
         if(Input::hasFile('picture')){
             $file = Input::file('picture');
             $pictureNames = explode(".", $file->getClientOriginalName());
-            $file->move('images', "1".$pictureNames[0].$product->id.".JPG");
-            $product->picture = "1".$pictureNames[0].$product->id.".JPG";
+            $file->move('images', $auth_id.$pictureNames[0].$product->id.".JPG");
+            $product->picture = $auth_id.$pictureNames[0].$product->id.".JPG";
         }
         $product->save();
 

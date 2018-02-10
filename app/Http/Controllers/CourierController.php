@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Courier;
 use Illuminate\Http\Request;
 
 class CourierController extends Controller
@@ -13,7 +14,9 @@ class CourierController extends Controller
      */
     public function index()
     {
-        //
+        $couriers = courier::where('status', 'true')->get();
+
+        return view('courier.index')->with('couriers', $couriers);
     }
 
     /**
@@ -34,7 +37,12 @@ class CourierController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $courier = new courier;
+        $courier->name = $request->name;
+        $courier->status = 'true';
+        $courier->save();
+
+        return redirect()->back()->withSuccess($courier->name . " created successfully.");
     }
 
     /**
@@ -66,9 +74,13 @@ class CourierController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        $courier = courier::find($request->id);
+        $courier->name = $request->name;
+        $courier->save();
+
+        return redirect()->back()->withSuccess($courier->name . ' updated successfully.');
     }
 
     /**
@@ -79,6 +91,17 @@ class CourierController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $courier = courier::find($id);
+        $courierAssigned = $courier->outbound;
+        
+        if(!sizeof($courierAssigned) > 0){
+            // not assigned then here
+            $courier->status = "false";
+            $courier->save();
+            return redirect()->back()->withSuccess($courier->name . ' deleted successfully.');
+        } else {
+            // assigned then here
+            return redirect()->back()->withErrors($courier->name . ' cannot be deleted because this courier is assigned to outbound.');
+        }
     }
 }
