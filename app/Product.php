@@ -54,4 +54,9 @@ class Product extends Model
     public function user(){
     	return $this->belongsTo('App\User');
     }
+
+    // Custom accessor
+    public function getVolumeAttribute(){
+        return $this->height * $this->width * $this->length;
+    }
 }
