@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddPaymentsRentalDuration extends Migration
+class RenameLotsLeftvolumeToLeftVolume extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddPaymentsRentalDuration extends Migration
      */
     public function up()
     {
-        Schema::table('payments', function (Blueprint $table) {
-            $table->integer('rental_duration');
+        Schema::table('lots', function (Blueprint $table) {
+            $table->renameColumn('leftvolume', 'left_volume');
         });
     }
 
@@ -25,8 +25,8 @@ class AddPaymentsRentalDuration extends Migration
      */
     public function down()
     {
-        Schema::table('payments', function (Blueprint $table) {
-            $table->dropColumn('rental_duration');
+        Schema::table('lots', function (Blueprint $table) {
+            $table->renameColumn('left_volume', 'leftvolume');
         });
     }
 }
