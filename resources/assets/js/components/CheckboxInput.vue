@@ -6,7 +6,7 @@
 		            <input :id="name" 
 		            		class="styled" 
 		            		type="checkbox" 
-		            		:checked="value" @input="updateValue($event.target.checked)">
+		            		:checked="defaultChecked" @input="updateValue($event.target.checked)">
 		            <label :for="name" v-text="label"></label>
 		        </div>
 		    </p>
@@ -19,24 +19,18 @@
 		props: ['defaultChecked', 'editable', 'label', 'name'],
 		data() {
 			return {
-				finalValue: ''
+				
 			};
 		},
 
 		methods: {
 			updateValue(value) {
-				//console.log(value);
-				this.finalValue = value;
 				this.$emit('input', value);
 			}
 		},
 
 		computed: {
-			value() {
-				return this.finalValue == '' 
-						? this.defaultValue 
-						: this.finalValue;
-			}
+			
 		}	
 	}
 </script>

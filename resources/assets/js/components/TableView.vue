@@ -35,6 +35,7 @@
 	import VuetableFilterBar from './VuetableFilterBar';
 	import moment from 'moment';
 	import Loader from './Loader';
+
 	export default {
 		props: ['user', 'fields', 'url', 'searchables'],
 
@@ -60,7 +61,9 @@
 		methods: {
 			refreshTable() {
 				this.loading = true;
-				this.$refs.vuetable.refresh();
+				setTimeout(function(){
+					this.$refs.vuetable.refresh();
+				}.bind(this), 1000);
 			},
 
 			onPaginationData(paginationData) {

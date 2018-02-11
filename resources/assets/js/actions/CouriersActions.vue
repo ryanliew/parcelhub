@@ -8,6 +8,12 @@
                     </span>
                     <span>Edit</span>
                 </button>
+                <button class="button is-danger" @click="itemAction('delete', rowData, rowIndex)">
+                    <span class="icon">
+                        <i class="fa fa-times-circle"></i>
+                    </span>
+                    <span>Delete</span>
+                </button>
             </div>
         </div>
     </div>
@@ -26,7 +32,7 @@ export default {
     },
     methods: {
         itemAction(action, data, index){
-            this.$events.fire('edit', data);            
+            this.$events.fire(action, data);            
         }
     }
   }

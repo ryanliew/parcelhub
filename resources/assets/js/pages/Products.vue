@@ -1,0 +1,208 @@
+<template>
+	<div>
+		<div class="card">
+			<div class="card-header">
+				<div class="card-header-title level">
+					<div class="level-left">
+						<div class="level-item">
+							Products
+						</div>
+					</div>
+					<div class="level-right">
+						<div class="level-item">
+							<button class="button is-primary" @click="modalOpen()">
+								<i class="fa fa-plus-circle"></i>
+								<span class="pl-5">Create new product</span>
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="card-content">
+				<table-view ref="products" 
+							:fields="fields" 
+							url="/internal/products"
+							:searchables="searchables">	
+				</table-view>
+			</div>
+		</div>
+
+		<modal :active="dialogActive" @close="dialogActive = false">
+			<template slot="header">{{ dialogTitle }}</template>
+
+			<form @submit.prevent="onSubmit" 
+					@keydown="form.errors.clear($event.target.name)" 
+					@input="form.errors.clear($event.target.name)">
+				
+				<div class="field">
+	          		<text-input v-model="form.sku" :defaultValue="form.sku" 
+								label="SKU" 
+								:required="true"
+								name="sku"
+								type="text"
+								:editable="true"
+								:error="form.errors.get('sku')">
+					</text-input>
+	          	</div>
+
+	          	<div class="field">
+	          		<text-input v-model="form.name" :defaultValue="form.name" 
+								label="Name" 
+								:required="true"
+								name="name"
+								type="text"
+								:editable="true"
+								:error="form.errors.get('name')">
+					</text-input>
+	          	</div>
+
+	          	<div class="columns">
+	          		<div class="column">
+			          	<div class="field">
+			          		<text-input v-model="form.height" :defaultValue="form.height" 
+										label="Height" 
+										:required="true"
+										name="height"
+										type="text"
+										:editable="true"
+										:error="form.errors.get('height')">
+							</text-input>
+			          	</div>
+			        </div>
+			        <div class="column">
+			          	<div class="field">
+			          		<text-input v-model="form.width" :defaultValue="form.width" 
+										label="Width" 
+										:required="true"
+										name="width"
+										type="text"
+										:editable="true"
+										:error="form.errors.get('width')">
+							</text-input>
+			          	</div>
+			        </div>
+			        <div class="column">
+			          	<div class="field">
+			          		<text-input v-model="form.length" :defaultValue="form.length" 
+										label="length" 
+										:required="true"
+										name="length"
+										type="text"
+										:editable="true"
+										:error="form.errors.get('length')">
+							</text-input>
+			          	</div>
+			        </div>
+			    </div>
+				
+			    <div class="field">
+			    	<image-input v-model="productImage" :defaultImage="productImage"
+			    				@loaded="changeProductImage"
+			    				label="product image"
+			    				name="picture"
+			    				:error="form.errors.get('picture')">
+			    	</image-input>
+			    </div>
+          	</form>
+
+          	<template slot="footer">
+				<button class="button is-primary" @click="submit">Submit</button>
+          	</template>
+		</modal>
+	</div>
+</template>
+
+<script>
+	import TableView from '../components/TableView.vue';
+
+	export default {
+		props: [''],
+
+		components: { TableView },
+
+		data() {
+			return {
+				fields: [
+					{name: 'sku', sortField: 'sku'},
+					{name: 'name', sortField: 'name'},
+					{name: 'height', sortField: 'height'},
+					{name: 'width', sortField: 'width'},
+					{name: 'length', sortField: 'length'},
+					{name: '__component:products-actions', title: 'Actions'}	
+				],
+				searchables: "name,sku",
+				selectedProduct: '',
+				dialogActive: false,
+				override: false,
+				productImage: {name: 'No file selected'},
+				form: new Form({
+					id: '',
+					name: '',
+					height: '',
+					width: '',
+					length: '',
+					sku: '',
+					picture: ''
+				}),
+			};
+		},
+
+		mounted() {
+			this.$events.on('edit', data => this.edit(data));
+		},
+
+		methods: {
+			
+
+			submit() {
+				this.form.post(this.action)
+					.then(this.onSuccess());
+			},
+
+			onSuccess() {
+				this.dialogActive = false;
+				this.$refs.products.refreshTable();
+			},
+
+			edit(data) {
+				this.selectedProduct = data;
+				this.form.id = data.id;
+				this.form.sku = data.sku;
+				this.form.name = data.name;
+				this.form.height = data.height;
+				this.form.width = data.width;
+				this.form.length = data.length;
+
+				this.productImage = {name: data.picture, src: data.picture};
+				
+				this.dialogActive = true;
+			},
+
+			changeProductImage(e) {
+				//console.log(e);
+				this.productImage = { src: e.src, file: e.file };
+				this.form.picture = e.file;	
+			},
+
+			modalOpen() {
+				this.form.reset();
+				this.productImage = {name: 'No file selected'};
+				this.selectedProduct = '';
+				this.dialogActive = true;
+			}
+		},
+
+		computed: {
+			dialogTitle() {
+				return this.selectedProduct
+						? "Edit " + this.selectedProduct.name
+						: "Create new product";
+			},
+
+			action() {
+				let action = this.selectedProduct ? "update" : "store";
+				return "/product/" + action;
+			}
+		}
+	}
+</script>

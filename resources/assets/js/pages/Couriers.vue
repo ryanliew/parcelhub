@@ -5,23 +5,23 @@
 				<div class="card-header-title level">
 					<div class="level-left">
 						<div class="level-item">
-							Lots categories
+							Couriers
 						</div>
 					</div>
 					<div class="level-right">
 						<div class="level-item">
 							<button class="button is-primary" @click="modalOpen()">
 								<i class="fa fa-plus-circle"></i>
-								<span class="pl-5">Create new category</span>
+								<span class="pl-5">Create new courier</span>
 							</button>
 						</div>
 					</div>
 				</div>
 			</div>
 			<div class="card-content">
-				<table-view ref="categories" 
-							:fields="fields" url="/internal/categories">
-					
+				<table-view ref="couriers" 
+							:fields="fields" 
+							url="/internal/couriers">	
 				</table-view>
 			</div>
 		</div>
@@ -43,22 +43,22 @@
 								:error="form.errors.get('name')">
 					</text-input>
 	          	</div>
-	          	<div class="field">
-	          		<text-input v-model="form.volume" :defaultValue="form.volume" 
-								label="Volume(cm³)" 
-								:required="true"
-								name="volume"
-								type="text"
-								:editable="true"
-								:error="form.errors.get('volume')">
-					</text-input>
-	          	</div>
           	</form>
 
           	<template slot="footer">
 				<button class="button is-primary" @click="submit">Submit</button>
           	</template>
 		</modal>
+
+		<modal :active="isDeleting" @close="isDeleting = false">
+			<template slot="header">Delete courier</template>
+			
+			Are you sure you want to delete <span v-text="selectedCourier.name"></span>?
+
+			<template slot="footer">
+				<button class="button is-primary" @click="confirmDeletion">Confirm</button>
+          	</template>
+        </modal>
 	</div>
 </template>
 
@@ -74,22 +74,22 @@
 			return {
 				fields: [
 					{name: 'name', sortField: 'name'},
-					{name: 'volume', sortFiled: 'volume', title: 'Volume (cm³)'},
-					{name: '__component:categories-actions', title: 'Actions'}	
+					{name: '__component:couriers-actions', title: 'Actions'}	
 				],
-				selectedCategory: '',
+				selectedCourier: '',
 				dialogActive: false,
+				override: false,
 				form: new Form({
 					id: '',
 					name: '',
-					volume: ''
 				}),
+				isDeleting: false
 			};
 		},
 
 		mounted() {
-			this.fetchCategories();
 			this.$events.on('edit', data => this.edit(data));
+			this.$events.on('delete', data => this.delete(data));
 		},
 
 		methods: {
@@ -100,34 +100,50 @@
 
 			onSuccess() {
 				this.dialogActive = false;
-				this.$refs.categories.refreshTable();
+				this.$refs.couriers.refreshTable();
 			},
 
-			edit(data){
-				this.selectedCategory = data;
+			edit(data) {
+				this.selectedCourier = data;
 				this.form.id = data.id;
 				this.form.name = data.name;
-				this.form.volume = data.volume;
+				
 				this.dialogActive = true;
+			},
+
+			delete(data) {
+				this.selectedCourier = data;
+				this.isDeleting = true;
+			},
+
+			confirmDeletion() {
+				axios.get('/courier/delete/' + this.selectedCourier.id)
+					.then(response => this.deleteSuccess(response));
+			},
+
+			deleteSuccess(response) {
+				this.isDeleting = false;
+				flash(response.message);
+				this.$refs.couriers.refreshTable();
 			},
 
 			modalOpen() {
 				this.form.reset();
-				this.selectedCategory = '';
+				this.selectedCourier = '';
 				this.dialogActive = true;
 			}
 		},
 
 		computed: {
 			dialogTitle() {
-				return this.selectedCategory 
-						? "Edit " + this.selectedCategory.name
-						: "Create new category";
+				return this.selectedCourier
+						? "Edit " + this.selectedCourier.name
+						: "Create new courier";
 			},
 
 			action() {
-				let action = this.selectedCategory ? "update" : "store";
-				return "/category/" + action;
+				let action = this.selectedCourier ? "update" : "store";
+				return "/courier/" + action;
 			}
 		}
 	}

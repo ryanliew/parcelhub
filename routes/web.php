@@ -19,10 +19,24 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Auth::routes();
 
+// Pages route
+Route::get('couriers', 'CourierController@page')->name('couriers');
+Route::get('lots/categories', 'CategoryController@page')->name('lots.categories');
+Route::get('lots', 'LotController@page')->name('lots');
+Route::get('products', 'ProductController@page')->name('products');
+
 /* Route for Socialite authentication */
 Route::group(['prefix' => 'auth', 'as' => 'auth.social.'], function() {
     Route::get('social/{provider}', ['as' => 'redirect', 'uses'=> 'Auth\SocialController@redirectToProvider']);
     Route::get('social/{provider}/callback', ['as' => 'callback', 'uses'=> 'Auth\SocialController@handleProviderCallback']);
+});
+
+
+Route::group(['prefix' => 'lot'], function() {
+	Route::get('index', 'LotController@index');
+	Route::get('delete/{id}', 'LotController@destroy');
+	Route::post('store', 'LotController@store');
+	Route::post('update', 'LotController@update');
 });
 
 Route::get('categories', 'CategoryController@page')->name('lots.categories');
@@ -43,6 +57,9 @@ Route::group(['prefix' => 'product'], function() {
 
 Route::group(['prefix' => 'internal'], function() {
 	Route::get('categories', 'CategoryController@index');
+	Route::get('lots', 'LotController@index');
+	Route::get('couriers', 'CourierController@index');
+	Route::get('products', 'ProductController@index');
 });
 
 Route::group(['prefix' => 'setting'], function() {

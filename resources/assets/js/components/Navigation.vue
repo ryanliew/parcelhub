@@ -19,13 +19,7 @@
 			  			<!-- Todo Search component here -->
 			  		</div>
 			  		<div class="navbar-end">
-			  			<div class="navbar-item has-dropdown is-hoverable">
-			  				<a class="navbar-link" href="/units">Lots</a>
-			  				<div class="navbar-dropdown is-boxed">
-			  					<a class="navbar-item" href="/units/create">Lot categories</a>
-			  					<a class="navbar-item" href="/transactions/create">All lots</a>
-			  				</div>
-			  			</div>
+			  			<a class="navbar-item" href="/lots">Admin panel</a>
 			  			<a class="navbar-item" @click="logout">Logout</a>
 			  		</div>
 			  	</div>
