@@ -100,8 +100,20 @@ return [
     */
 
     'custom' => [
-        'attribute-name' => [
-            'rule-name' => 'custom-message',
+        'paymentSlip' => [
+            'required' => 'Please upload bank transfer slip',
+        ],
+        'payments' => [
+            'required' => 'Please select at least one of the payment to approve',
+        ],
+        'lots.*.name' => [
+            'required' => 'Please enter name for lot',
+        ],
+        'lots.*.categories' => [
+            'required' => 'Please select one of the categories',
+        ],
+        'lots.*.volume' => [
+            'required' => 'Volume can\'t empty',
         ],
     ],
 

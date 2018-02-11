@@ -25,13 +25,6 @@ Route::group(['prefix' => 'auth', 'as' => 'auth.social.'], function() {
     Route::get('social/{provider}/callback', ['as' => 'callback', 'uses'=> 'Auth\SocialController@handleProviderCallback']);
 });
 
-Route::group(['prefix' => 'lot'], function() {
-	Route::get('index', 'LotController@index');
-	Route::get('delete/{id}', 'LotController@destroy');
-	Route::post('store', 'LotController@store');
-	Route::post('update', 'LotController@update');
-});
-
 Route::get('categories', 'CategoryController@page')->name('lots.categories');
 
 Route::group(['prefix' => 'category'], function() {
@@ -71,8 +64,22 @@ Route::group(['prefix' => 'inbound'], function() {
 	Route::post('update', 'InboundController@update');
 });
 
-Route::group(['prefix' => 'payment'], function() {
-    Route::get('index', 'PaymentController@index');
-    Route::post('approve', 'PaymentController@approve');
-    Route::post('store', 'PaymentController@store');
+Route::group(['middleware' => 'auth'], function () {
+
+    Route::get('json/categories', 'CategoryController@categories')->name('json.categories');
+
+    Route::group(['prefix' => 'lot'], function() {
+        Route::get('index', 'LotController@index');
+        Route::get('delete/{id}', 'LotController@destroy');
+        Route::post('store', 'LotController@store');
+        Route::post('update', 'LotController@update');
+        Route::post('purchase', 'LotController@purchase');
+    });
+
+    Route::group(['prefix' => 'payment'], function() {
+        Route::get('index', 'PaymentController@index');
+        Route::post('approve', 'PaymentController@approve');
+        Route::post('store', 'PaymentController@store');
+    });
+
 });

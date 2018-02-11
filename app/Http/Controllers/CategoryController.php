@@ -109,6 +109,10 @@ class CategoryController extends Controller
         return redirect()->back()->withSuccess($category->name . ' updated successfully.');
     }
 
+    public function categories() {
+        return Category::where('status', '=', 'true')->get()->toJson();
+    }
+
     /**
      * Remove the specified resource from storage.
      *
