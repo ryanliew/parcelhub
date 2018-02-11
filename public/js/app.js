@@ -19008,16 +19008,19 @@ Vue.component('table-view', __webpack_require__(43));
 Vue.component('text-input', __webpack_require__(290));
 Vue.component('checkbox-input', __webpack_require__(295));
 Vue.component('selector-input', __webpack_require__(323));
+Vue.component('image-input', __webpack_require__(332));
 
 // Actions components
 Vue.component('CategoriesActions', __webpack_require__(302));
 Vue.component('LotsActions', __webpack_require__(317));
 Vue.component('CouriersActions', __webpack_require__(326));
+Vue.component('ProductsActions', __webpack_require__(335));
 
 // Pages components
 Vue.component('categories-page', __webpack_require__(305));
 Vue.component('lots-page', __webpack_require__(314));
 Vue.component('couriers-page', __webpack_require__(320));
+Vue.component('products-page', __webpack_require__(329));
 
 window.flash = function (message) {
   var level = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'success';
@@ -54356,6 +54359,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			this.form.name = data.name;
 			this.form.volume = data.volume;
 			this.dialogActive = true;
+		},
+		modalOpen: function modalOpen() {
+			this.form.reset();
+			this.selectedCategory = '';
+			this.dialogActive = true;
 		}
 	},
 
@@ -54394,7 +54402,7 @@ var render = function() {
                     staticClass: "button is-primary",
                     on: {
                       click: function($event) {
-                        _vm.dialogActive = true
+                        _vm.modalOpen()
                       }
                     }
                   },
@@ -54782,6 +54790,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			this.form.volume = data.volume;
 		},
 		modalOpen: function modalOpen() {
+			this.form.reset();
+			this.selectedCategory = '';
+			this.selectedLot = '';
 			this.dialogActive = true;
 			this.override = false;
 		}
@@ -55297,9 +55308,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 	data: function data() {
 		return {
-			categories: [],
-			categoriesOptions: [],
-			couriers: '',
 			fields: [{ name: 'name', sortField: 'name' }, { name: '__component:couriers-actions', title: 'Actions' }],
 			selectedCourier: '',
 			dialogActive: false,
@@ -55355,6 +55363,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			this.$refs.couriers.refreshTable();
 		},
 		modalOpen: function modalOpen() {
+			this.form.reset();
+			this.selectedCourier = '';
 			this.dialogActive = true;
 		}
 	},
@@ -55845,6 +55855,845 @@ if (false) {
   module.hot.accept()
   if (module.hot.data) {
     require("vue-hot-reload-api")      .rerender("data-v-63d21809", module.exports)
+  }
+}
+
+/***/ }),
+/* 329 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(330)
+/* template */
+var __vue_template__ = __webpack_require__(331)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources\\assets\\js\\pages\\Products.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-a1d17a4a", Component.options)
+  } else {
+    hotAPI.reload("data-v-a1d17a4a", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 330 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_TableView_vue__ = __webpack_require__(43);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_TableView_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__components_TableView_vue__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+	props: [''],
+
+	components: { TableView: __WEBPACK_IMPORTED_MODULE_0__components_TableView_vue___default.a },
+
+	data: function data() {
+		return {
+			fields: [{ name: 'sku', sortField: 'sku' }, { name: 'name', sortField: 'name' }, { name: 'height', sortField: 'height' }, { name: 'width', sortField: 'width' }, { name: 'length', sortField: 'length' }, { name: '__component:products-actions', title: 'Actions' }],
+			searchables: "name,sku",
+			selectedProduct: '',
+			dialogActive: false,
+			override: false,
+			productImage: { name: 'No file selected' },
+			form: new Form({
+				id: '',
+				name: '',
+				height: '',
+				width: '',
+				length: '',
+				sku: '',
+				picture: ''
+			})
+		};
+	},
+	mounted: function mounted() {
+		var _this = this;
+
+		this.$events.on('edit', function (data) {
+			return _this.edit(data);
+		});
+	},
+
+
+	methods: {
+		submit: function submit() {
+			this.form.post(this.action).then(this.onSuccess());
+		},
+		onSuccess: function onSuccess() {
+			this.dialogActive = false;
+			this.$refs.products.refreshTable();
+		},
+		edit: function edit(data) {
+			this.selectedProduct = data;
+			this.form.id = data.id;
+			this.form.sku = data.sku;
+			this.form.name = data.name;
+			this.form.height = data.height;
+			this.form.width = data.width;
+			this.form.length = data.length;
+
+			this.productImage = { name: data.picture, src: data.picture };
+
+			this.dialogActive = true;
+		},
+		changeProductImage: function changeProductImage(e) {
+			//console.log(e);
+			this.productImage = { src: e.src, file: e.file };
+			this.form.picture = e.file;
+		},
+		modalOpen: function modalOpen() {
+			this.form.reset();
+			this.productImage = { name: 'No file selected' };
+			this.selectedProduct = '';
+			this.dialogActive = true;
+		}
+	},
+
+	computed: {
+		dialogTitle: function dialogTitle() {
+			return this.selectedProduct ? "Edit " + this.selectedProduct.name : "Create new product";
+		},
+		action: function action() {
+			var action = this.selectedProduct ? "update" : "store";
+			return "/product/" + action;
+		}
+	}
+});
+
+/***/ }),
+/* 331 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    [
+      _c("div", { staticClass: "card" }, [
+        _c("div", { staticClass: "card-header" }, [
+          _c("div", { staticClass: "card-header-title level" }, [
+            _vm._m(0),
+            _vm._v(" "),
+            _c("div", { staticClass: "level-right" }, [
+              _c("div", { staticClass: "level-item" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "button is-primary",
+                    on: {
+                      click: function($event) {
+                        _vm.modalOpen()
+                      }
+                    }
+                  },
+                  [
+                    _c("i", { staticClass: "fa fa-plus-circle" }),
+                    _vm._v(" "),
+                    _c("span", { staticClass: "pl-5" }, [
+                      _vm._v("Create new product")
+                    ])
+                  ]
+                )
+              ])
+            ])
+          ])
+        ]),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "card-content" },
+          [
+            _c("table-view", {
+              ref: "products",
+              attrs: {
+                fields: _vm.fields,
+                url: "/internal/products",
+                searchables: _vm.searchables
+              }
+            })
+          ],
+          1
+        )
+      ]),
+      _vm._v(" "),
+      _c(
+        "modal",
+        {
+          attrs: { active: _vm.dialogActive },
+          on: {
+            close: function($event) {
+              _vm.dialogActive = false
+            }
+          }
+        },
+        [
+          _c("template", { slot: "header" }, [_vm._v(_vm._s(_vm.dialogTitle))]),
+          _vm._v(" "),
+          _c(
+            "form",
+            {
+              on: {
+                submit: function($event) {
+                  $event.preventDefault()
+                  _vm.onSubmit($event)
+                },
+                keydown: function($event) {
+                  _vm.form.errors.clear($event.target.name)
+                },
+                input: function($event) {
+                  _vm.form.errors.clear($event.target.name)
+                }
+              }
+            },
+            [
+              _c(
+                "div",
+                { staticClass: "field" },
+                [
+                  _c("text-input", {
+                    attrs: {
+                      defaultValue: _vm.form.sku,
+                      label: "SKU",
+                      required: true,
+                      name: "sku",
+                      type: "text",
+                      editable: true,
+                      error: _vm.form.errors.get("sku")
+                    },
+                    model: {
+                      value: _vm.form.sku,
+                      callback: function($$v) {
+                        _vm.$set(_vm.form, "sku", $$v)
+                      },
+                      expression: "form.sku"
+                    }
+                  })
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "field" },
+                [
+                  _c("text-input", {
+                    attrs: {
+                      defaultValue: _vm.form.name,
+                      label: "Name",
+                      required: true,
+                      name: "name",
+                      type: "text",
+                      editable: true,
+                      error: _vm.form.errors.get("name")
+                    },
+                    model: {
+                      value: _vm.form.name,
+                      callback: function($$v) {
+                        _vm.$set(_vm.form, "name", $$v)
+                      },
+                      expression: "form.name"
+                    }
+                  })
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c("div", { staticClass: "columns" }, [
+                _c("div", { staticClass: "column" }, [
+                  _c(
+                    "div",
+                    { staticClass: "field" },
+                    [
+                      _c("text-input", {
+                        attrs: {
+                          defaultValue: _vm.form.height,
+                          label: "Height",
+                          required: true,
+                          name: "height",
+                          type: "text",
+                          editable: true,
+                          error: _vm.form.errors.get("height")
+                        },
+                        model: {
+                          value: _vm.form.height,
+                          callback: function($$v) {
+                            _vm.$set(_vm.form, "height", $$v)
+                          },
+                          expression: "form.height"
+                        }
+                      })
+                    ],
+                    1
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "column" }, [
+                  _c(
+                    "div",
+                    { staticClass: "field" },
+                    [
+                      _c("text-input", {
+                        attrs: {
+                          defaultValue: _vm.form.width,
+                          label: "Width",
+                          required: true,
+                          name: "width",
+                          type: "text",
+                          editable: true,
+                          error: _vm.form.errors.get("width")
+                        },
+                        model: {
+                          value: _vm.form.width,
+                          callback: function($$v) {
+                            _vm.$set(_vm.form, "width", $$v)
+                          },
+                          expression: "form.width"
+                        }
+                      })
+                    ],
+                    1
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "column" }, [
+                  _c(
+                    "div",
+                    { staticClass: "field" },
+                    [
+                      _c("text-input", {
+                        attrs: {
+                          defaultValue: _vm.form.length,
+                          label: "length",
+                          required: true,
+                          name: "length",
+                          type: "text",
+                          editable: true,
+                          error: _vm.form.errors.get("length")
+                        },
+                        model: {
+                          value: _vm.form.length,
+                          callback: function($$v) {
+                            _vm.$set(_vm.form, "length", $$v)
+                          },
+                          expression: "form.length"
+                        }
+                      })
+                    ],
+                    1
+                  )
+                ])
+              ]),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "field" },
+                [
+                  _c("image-input", {
+                    attrs: {
+                      defaultImage: _vm.productImage,
+                      label: "product image",
+                      name: "picture",
+                      error: _vm.form.errors.get("picture")
+                    },
+                    on: { loaded: _vm.changeProductImage },
+                    model: {
+                      value: _vm.productImage,
+                      callback: function($$v) {
+                        _vm.productImage = $$v
+                      },
+                      expression: "productImage"
+                    }
+                  })
+                ],
+                1
+              )
+            ]
+          ),
+          _vm._v(" "),
+          _c("template", { slot: "footer" }, [
+            _c(
+              "button",
+              { staticClass: "button is-primary", on: { click: _vm.submit } },
+              [_vm._v("Submit")]
+            )
+          ])
+        ],
+        2
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "level-left" }, [
+      _c("div", { staticClass: "level-item" }, [
+        _vm._v("\n\t\t\t\t\t\t\tProducts\n\t\t\t\t\t\t")
+      ])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-a1d17a4a", module.exports)
+  }
+}
+
+/***/ }),
+/* 332 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(333)
+/* template */
+var __vue_template__ = __webpack_require__(334)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources\\assets\\js\\components\\ImageInput.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-234c4b34", Component.options)
+  } else {
+    hotAPI.reload("data-v-234c4b34", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 333 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+	props: ['label', 'name', 'required', 'defaultImage'],
+	data: function data() {
+		return {};
+	},
+
+	methods: {
+		onChange: function onChange(e) {
+			var _this = this;
+
+			if (!e.target.files.length) return;
+
+			var file = e.target.files[0];
+
+			var reader = new FileReader();
+
+			reader.readAsDataURL(file);
+
+			reader.onload = function (e) {
+				var src = e.target.result;
+
+				_this.$emit('loaded', { src: src, file: file });
+			};
+		}
+	},
+
+	computed: {
+		fileName: function fileName() {
+			return this.defaultImage.name;
+		},
+		fileLabel: function fileLabel() {
+			return (this.defaultImage.src ? 'Change ' : 'Upload ') + this.label;
+		}
+	}
+});
+
+/***/ }),
+/* 334 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "file has-name is-boxed" }, [
+    _vm.defaultImage.src
+      ? _c("figure", { staticClass: "image is-128x128" }, [
+          _c("img", { attrs: { src: _vm.defaultImage.src } })
+        ])
+      : _vm._e(),
+    _vm._v(" "),
+    _c("label", { staticClass: "file-label pl-5" }, [
+      _c("input", {
+        staticClass: "file-input",
+        attrs: { type: "file", name: _vm.name },
+        on: { change: _vm.onChange }
+      }),
+      _vm._v(" "),
+      _c("span", { staticClass: "file-cta" }, [
+        _vm._m(0),
+        _vm._v(" "),
+        _c("span", {
+          staticClass: "file-label",
+          domProps: { textContent: _vm._s(_vm.fileLabel) }
+        })
+      ]),
+      _vm._v(" "),
+      _c("span", {
+        staticClass: "file-name",
+        domProps: {
+          textContent: _vm._s(
+            _vm.defaultImage.name || _vm.defaultImage.file.name
+          )
+        }
+      })
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "file-icon" }, [
+      _c("i", { staticClass: "fas fa-image" })
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-234c4b34", module.exports)
+  }
+}
+
+/***/ }),
+/* 335 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(336)
+/* template */
+var __vue_template__ = __webpack_require__(337)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources\\assets\\js\\actions\\ProductsActions.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-38ccd3cb", Component.options)
+  } else {
+    hotAPI.reload("data-v-38ccd3cb", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 336 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        rowData: {
+            type: Object,
+            required: true
+        },
+        rowIndex: {
+            type: Number
+        }
+    },
+    methods: {
+        itemAction: function itemAction(action, data, index) {
+            this.$events.fire('edit', data);
+        }
+    }
+});
+
+/***/ }),
+/* 337 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("div", { staticClass: "columns is-gapless" }, [
+      _c("div", { staticClass: "column" }, [
+        _c(
+          "button",
+          {
+            staticClass: "button is-warning",
+            on: {
+              click: function($event) {
+                _vm.itemAction("edit", _vm.rowData, _vm.rowIndex)
+              }
+            }
+          },
+          [_vm._m(0), _vm._v(" "), _c("span", [_vm._v("Edit")])]
+        )
+      ])
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "icon" }, [
+      _c("i", { staticClass: "fa fa-edit" })
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-38ccd3cb", module.exports)
   }
 }
 

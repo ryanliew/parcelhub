@@ -54,4 +54,9 @@ class Product extends Model
     public function user(){
     	return $this->belongsTo('App\User');
     }
+
+    public function getPictureAttribute($value)
+    {
+        return asset('images/' . $value);
+    }
 }

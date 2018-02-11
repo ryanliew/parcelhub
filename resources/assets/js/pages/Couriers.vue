@@ -72,9 +72,6 @@
 
 		data() {
 			return {
-				categories: [],
-				categoriesOptions: [],
-				couriers: '',
 				fields: [
 					{name: 'name', sortField: 'name'},
 					{name: '__component:couriers-actions', title: 'Actions'}	
@@ -131,6 +128,8 @@
 			},
 
 			modalOpen() {
+				this.form.reset();
+				this.selectedCourier = '';
 				this.dialogActive = true;
 			}
 		},

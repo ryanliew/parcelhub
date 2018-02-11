@@ -177,6 +177,9 @@
 			},
 
 			modalOpen() {
+				this.form.reset();
+				this.selectedCategory = '';
+				this.selectedLot = '';
 				this.dialogActive = true;
 				this.override = false;
 			}

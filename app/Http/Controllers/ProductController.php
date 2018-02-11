@@ -9,12 +9,26 @@ use Illuminate\Support\Facades\Input;
 class ProductController extends Controller
 {
     /**
+     * Return the view which contains the vue page for product
+     * @return \Illuminate\Http\Response
+     */
+    public function page()
+    {
+        return view('product.page');
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
+        if(request()->wantsJson())
+        {
+            return Controller::VueTableListResult(product::where('status', 'true'));
+        }
+
         $products = product::where('status', 'true')->get();
 
         return view('product.index')->with('products', $products);
@@ -55,6 +69,11 @@ class ProductController extends Controller
             $file->move('images', $auth_id.$pictureNames[0].$product->id.".JPG");
             $product->picture = $auth_id.$pictureNames[0].$product->id.".JPG";
             $product->save();
+        }
+
+        if(request()->wantsJson())
+        {   
+            return ["message" => $product->name . " created successfully."];
         }
 
         return redirect()->back()->withSuccess($product->name . " created successfully.");
@@ -105,6 +124,11 @@ class ProductController extends Controller
             $product->picture = $auth_id.$pictureNames[0].$product->id.".JPG";
         }
         $product->save();
+
+        if(request()->wantsJson())
+        {   
+            return ["message" => $product->name . ' updated successfully.'];
+        }
 
         return redirect()->back()->withSuccess($product->name . ' updated successfully.');
     }

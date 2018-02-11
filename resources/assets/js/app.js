@@ -31,16 +31,20 @@ Vue.component('table-view', require('./components/TableView.vue'));
 Vue.component('text-input', require('./components/TextInput.vue'));
 Vue.component('checkbox-input', require('./components/CheckboxInput.vue'));
 Vue.component('selector-input', require('./components/SelectorInput.vue'));
+Vue.component('image-input', require('./components/ImageInput.vue'));
 
 // Actions components
 Vue.component('CategoriesActions', require('./actions/CategoriesActions.vue'));
 Vue.component('LotsActions', require('./actions/LotsActions.vue'));
 Vue.component('CouriersActions', require('./actions/CouriersActions.vue'))
+Vue.component('ProductsActions', require('./actions/ProductsActions.vue'))
 
 // Pages components
 Vue.component('categories-page', require('./pages/Categories.vue'));
 Vue.component('lots-page', require('./pages/Lots.vue'));
 Vue.component('couriers-page', require('./pages/Couriers.vue'));
+Vue.component('products-page', require('./pages/Products.vue'));
+
 
 window.flash = function(message, level = 'success'){
  	window.events.$emit('flash', {message, level});

@@ -10,7 +10,7 @@
 					</div>
 					<div class="level-right">
 						<div class="level-item">
-							<button class="button is-primary" @click="dialogActive = true">
+							<button class="button is-primary" @click="modalOpen()">
 								<i class="fa fa-plus-circle"></i>
 								<span class="pl-5">Create new category</span>
 							</button>
@@ -108,6 +108,12 @@
 				this.form.id = data.id;
 				this.form.name = data.name;
 				this.form.volume = data.volume;
+				this.dialogActive = true;
+			},
+
+			modalOpen() {
+				this.form.reset();
+				this.selectedCategory = '';
 				this.dialogActive = true;
 			}
 		},

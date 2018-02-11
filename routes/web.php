@@ -23,6 +23,7 @@ Auth::routes();
 Route::get('couriers', 'CourierController@page')->name('couriers');
 Route::get('lots/categories', 'CategoryController@page')->name('lots.categories');
 Route::get('lots', 'LotController@page')->name('lots');
+Route::get('products', 'ProductController@page')->name('products');
 
 /* Route for Socialite authentication */
 Route::group(['prefix' => 'auth', 'as' => 'auth.social.'], function() {
@@ -55,6 +56,7 @@ Route::group(['prefix' => 'internal'], function() {
 	Route::get('categories', 'CategoryController@index');
 	Route::get('lots', 'LotController@index');
 	Route::get('couriers', 'CourierController@index');
+	Route::get('products', 'ProductController@index');
 });
 
 Route::group(['prefix' => 'setting'], function() {
