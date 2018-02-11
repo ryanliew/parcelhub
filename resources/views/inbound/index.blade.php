@@ -9,12 +9,6 @@
         <label>ID</label>
       </th>
       <th>
-        <label>Product</label>
-      </th>
-      <th>
-        <label>Quantity</label>
-      </th>
-      <th>
         <label>Arrival Date</label>
       </th>
       <th>
@@ -24,12 +18,11 @@
     @forelse($inbounds as $inbound)
       <tr>
         <td>{{$inbound->id}}</td>
-        <td>{{$inbound->product}}</td>
-        <td>{{$inbound->quantity}}</td>
         <td>{{$inbound->arrival_date}}</td>
         <td>{{$inbound->total_carton}}</td>
         <!-- <td><button type="button" class="openEditModal btn btn-info btn-lg" data-toggle="modal" data-target="#inboundEdit">Edit</button></td>
         <td><a href="delete/{{$inbound->id}}" /><button type="button" class="btn btn-info btn-lg">Delete</button></td> -->
+        <td><a href="show/{{$inbound->id}}" /><button type="button" class="btn btn-info btn-lg">View</button></td>
       <tr>
     @empty
       <tr>

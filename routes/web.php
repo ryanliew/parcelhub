@@ -60,6 +60,7 @@ Route::group(['prefix' => 'courier'], function() {
 
 Route::group(['prefix' => 'inbound'], function() {
 	Route::get('index', 'InboundController@index');
+	Route::get('show/{id}', 'InboundController@show');
 	Route::get('delete/{id}', 'InboundController@destroy');
 	Route::post('store', 'InboundController@store');
 	Route::post('update', 'InboundController@update');

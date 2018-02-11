@@ -42,6 +42,7 @@ class LotController extends Controller
         $lot = new lot;
         $lot->name = $request->name;
         $lot->volume = $request->volume;
+        $lot->leftvolume = $request->volume;
         $lot->category_id = $request->category;
         $lot->status = "true";
         $lot->save();
@@ -84,6 +85,7 @@ class LotController extends Controller
         $lot->name = $request->name;
         $lot->category_id = $request->category;
         $lot->volume = $request->volume;
+        $lot->leftvolume = $request->volume;
         $lot->save();
 
         return redirect()->back()->withSuccess($lot->name . ' updated successfully.');
