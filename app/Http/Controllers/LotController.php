@@ -9,12 +9,36 @@ use Illuminate\Http\Request;
 class LotController extends Controller
 {
     /**
+     * Display the Vue page for lots
+     * @return \Illuminate\Http\Response
+     */
+    public function page()
+    {
+        return view('lot.page');
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
+        if(request()->wantsJson() )
+        {
+            return Controller::VueTableListResult(
+                Lot::select('lots.id as id', 
+                            'lots.name as name', 
+                            'categories.name as category_name', 
+                            'categories.id as category_id',
+                            'categories.volume as category_volume',
+                            'lots.volume as volume', 
+                            'users.name as user_name')
+                    ->join('categories', 'categories.id', '=', 'category_id')
+                    ->leftJoin('users', 'users.id', '=', 'user_id')
+                );
+        }
+
         $categories = category::where('status', 'true')->get();
         $lots = lot::where('status', 'true')->get();
 
@@ -45,6 +69,11 @@ class LotController extends Controller
         $lot->category_id = $request->category;
         $lot->status = "true";
         $lot->save();
+
+        if(request()->wantsJson())
+        {   
+            return ["message" => $request->name . " created successfully."];
+        }
 
         return redirect()->back()->withSuccess($request->name . " created successfully.");
     }
@@ -85,6 +114,11 @@ class LotController extends Controller
         $lot->category_id = $request->category;
         $lot->volume = $request->volume;
         $lot->save();
+
+        if(request()->wantsJson())
+        {   
+            return ["message" => "Lot " . $lot->name . ' updated successfully.'];
+        }
 
         return redirect()->back()->withSuccess($lot->name . ' updated successfully.');
     }

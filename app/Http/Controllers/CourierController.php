@@ -8,12 +8,24 @@ use Illuminate\Http\Request;
 class CourierController extends Controller
 {
     /**
+     * Return the page view for couriers
+     * @return \Illuminate\Http\Response
+     */
+    public function page()
+    {
+        return view('courier.page');
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
+        if(request()->wantsJson())
+            return Controller::VueTableListResult(Courier::where('status', 'true'));
+
         $couriers = courier::where('status', 'true')->get();
 
         return view('courier.index')->with('couriers', $couriers);
@@ -41,6 +53,11 @@ class CourierController extends Controller
         $courier->name = $request->name;
         $courier->status = 'true';
         $courier->save();
+
+        if(request()->wantsJson())
+        {   
+            return ["message" => $request->name . " created successfully."];
+        }
 
         return redirect()->back()->withSuccess($courier->name . " created successfully.");
     }
@@ -80,6 +97,11 @@ class CourierController extends Controller
         $courier->name = $request->name;
         $courier->save();
 
+        if(request()->wantsJson())
+        {   
+            return ["message" => "Courier " . $courier->name . ' updated successfully.'];
+        }
+
         return redirect()->back()->withSuccess($courier->name . ' updated successfully.');
     }
 
@@ -98,6 +120,10 @@ class CourierController extends Controller
             // not assigned then here
             $courier->status = "false";
             $courier->save();
+
+            if(request()->wantsJson())
+                return ["message" => "Courier " . $courier->name . ' deleted successfully.'];
+            
             return redirect()->back()->withSuccess($courier->name . ' deleted successfully.');
         } else {
             // assigned then here
