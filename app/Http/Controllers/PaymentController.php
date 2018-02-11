@@ -3,18 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Payment;
-use App\User;
-use function foo\func;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\Storage;
 
 class PaymentController extends Controller
 {
-    protected $rules = [
-        'bankPaymentSlip' => 'required'
-    ];
-
     /**
      * Display a listing of the resource.
      *
@@ -26,10 +18,15 @@ class PaymentController extends Controller
             $payments = Payment::all()->filter(function ($payment) {
                 return $payment->status === 'false';
             });
+
+            $cat = Payment::all()->filter(function ($payment) {
+                return $payment->status === 'false';
+            });
+
             return view("payment.admin")->with('payments', $payments);
-        } else {
-            return view("payment.user");
         }
+
+        return view("payment.user");
     }
 
     /**
@@ -50,10 +47,12 @@ class PaymentController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, $this->rules);
+        $this->validate($request, [
+            'paymentSlip' => 'required',
+        ]);
 
         //Store image file
-        $path = $request->file('bankPaymentSlip')->store('public');
+        $path = $request->file('paymentSlip')->store('public');
 
         $payment = new Payment();
         $payment->user_id = auth()->user()->id;
@@ -109,6 +108,10 @@ class PaymentController extends Controller
 
     public function approve(Request $request)
     {
+        $this->validate($request, [
+            'payments' => 'required'
+        ]);
+
         foreach ($request->input('payments') as $key => $value) {
             Payment::where('id', '=', $value)->update(['status' => 'true']);
         }

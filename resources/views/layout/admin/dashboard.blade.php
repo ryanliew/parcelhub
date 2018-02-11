@@ -12,10 +12,6 @@
 <body>
 
 <div class="container">
-	@if(session('success'))
-		<h2>{{session('success')}}</h2>
-	@elseif($errors->any())
-		<h2>{{$errors->first()}}</h2>
-	@endif
-	@yield('body')  
+	@yield('body')
+    @component('components.alert') @endcomponent
 </div>

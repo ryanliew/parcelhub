@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Lot;
 use App\Category;
+use App\Payment;
 use Illuminate\Http\Request;
 
 class LotController extends Controller
@@ -24,25 +25,30 @@ class LotController extends Controller
      */
     public function index()
     {
-        if(request()->wantsJson() )
-        {
-            return Controller::VueTableListResult(
-                Lot::select('lots.id as id', 
-                            'lots.name as name', 
-                            'categories.name as category_name', 
-                            'categories.id as category_id',
-                            'categories.volume as category_volume',
-                            'lots.volume as volume', 
-                            'users.name as user_name')
-                    ->join('categories', 'categories.id', '=', 'category_id')
-                    ->leftJoin('users', 'users.id', '=', 'user_id')
-                );
+        if(\Entrust::hasRole('admin')) {
+            if(request()->wantsJson() )
+            {
+                return Controller::VueTableListResult(
+                    Lot::select('lots.id as id', 
+                                'lots.name as name', 
+                                'categories.name as category_name', 
+                                'categories.id as category_id',
+                                'categories.volume as category_volume',
+                                'lots.volume as volume', 
+                                'users.name as user_name')
+                        ->join('categories', 'categories.id', '=', 'category_id')
+                        ->leftJoin('users', 'users.id', '=', 'user_id')
+                    );
+            }
+
+            $categories = category::where('status', 'true')->get();
+            $lots = lot::where('status', 'true')->get();
+
+            $lots = Lot::all();
+            return view('lot.admin')->with('lots', $lots);
         }
 
-        $categories = category::where('status', 'true')->get();
-        $lots = lot::where('status', 'true')->get();
-
-        return view('lot.index')->with('categories', $categories)->with('lots', $lots);
+        return view('lot.user');
     }
 
     /**
@@ -66,6 +72,7 @@ class LotController extends Controller
         $lot = new lot;
         $lot->name = $request->name;
         $lot->volume = $request->volume;
+        $lot->leftvolume = $request->volume;
         $lot->category_id = $request->category;
         $lot->status = "true";
         $lot->save();
@@ -113,6 +120,7 @@ class LotController extends Controller
         $lot->name = $request->name;
         $lot->category_id = $request->category;
         $lot->volume = $request->volume;
+        $lot->leftvolume = $request->volume;
         $lot->save();
 
         if(request()->wantsJson())
@@ -122,6 +130,31 @@ class LotController extends Controller
 
         return redirect()->back()->withSuccess($lot->name . ' updated successfully.');
     }
+
+    public function purchase(Request $request) {
+
+        $this->validate($request, [
+            'lots.*' => 'required',
+            'lots.*.name' => 'required',
+            'lots.*.categories' => 'required',
+            'lots.*.volume' => 'required',
+        ]);
+
+        $lots = $request->input('lots');
+
+        foreach($lots as $l) {
+            $lot = new Lot();
+            $lot->name = $l['name'];
+            $lot->user_id = auth()->id();
+            $lot->category_id = $l['categories'];
+            $lot->volume = $l['volume'];
+            $lot->status = "false";
+            $lot->save();
+        }
+
+        return redirect()->back();
+    }
+
 
     /**
      * Remove the specified resource from storage.
