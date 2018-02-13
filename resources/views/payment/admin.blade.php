@@ -3,12 +3,13 @@
 
     <h1>Admin Payment Management</h1>
 
-    <form action="{{ action('PaymentController@approve') }}" method="post">
+    <form action="{{ route('payment.approve') }}" method="post">
 
         {{ csrf_field() }}
 
         <table class="table">
             <tr>
+                <th>Select</th>
                 <th>Name</th>
                 <th>Email</th>
                 <th>Bank Payment Slip</th>
@@ -22,6 +23,20 @@
                     <td>{{ $payment->user->email }}</td>
                     <td><img src="{{ Storage::url($payment->picture) }}" width="50px" height="50px"></td>
                     <td>{{ $payment->created_at }}</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td>
+                        <h5>Purchased items :</h5>
+                        <ul>
+                            @foreach($payment->user->lots as $lot)
+                                <li>{{ $lot->name }} , {{ $lot->category->name }} , {{ $lot->volume }}</li>
+                            @endforeach
+                        </ul>
+                    </td>
+                    <td></td>
+                    <td></td>
                 </tr>
             @endforeach
 

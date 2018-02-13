@@ -34,6 +34,10 @@ use Illuminate\Database\Eloquent\Model;
  * @property int|null $user_id
  * @property-read \App\User|null $user
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Product whereUserId($value)
+ * @property-read mixed $volume
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Inbound[] $inbounds
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Lot[] $lots
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Outbound[] $outbounds
  */
 class Product extends Model
 {

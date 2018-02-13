@@ -27,6 +27,13 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Lot whereUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Lot whereVolume($value)
  * @mixin \Eloquent
+ * @property int|null $left_volume
+ * @property string|null $expired_at
+ * @property int $rental_duration
+ * @property-read \App\Payment $payment
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Lot whereExpiredAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Lot whereLeftVolume($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Lot whereRentalDuration($value)
  */
 class Lot extends Model
 {

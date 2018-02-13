@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Payment;
 use App\Lot;
+use App\User;
 use Illuminate\Http\Request;
 
 class PaymentController extends Controller
@@ -17,16 +18,22 @@ class PaymentController extends Controller
     {
         if(\Entrust::hasRole('admin')) {
 
-            $payments = Payment::all()->filter(function ($payment) {
-                return $payment->status === 'false';
-            });
+            // Retrieve all users purchased lot without being approve
+            $payments = Payment::all();
+//            $payments = Payment::whereStatus('false')->get()->filter(function ($payment) {
+//                $purchased = $payment->user->lots->filter(function ($lot) {
+//                    return $lot->status === 'false';
+//                });
+//                return $purchased->count() > 0;
+//            });
 
             return view("payment.admin")->with('payments', $payments);
 
         } else {
 
-            $lots = Lot::where('status', '=', 'false')->get();
-            // dd($lots);
+            $lots = Lot::whereNull('user_id')
+                ->where('status', '=', 'false')
+                ->get();
 
             return view("payment.user")->with('lots', $lots);
 
@@ -43,29 +50,26 @@ class PaymentController extends Controller
         //
     }
 
-    // public function purchase(Request $request) {
+    public function purchase(Request $request) {
 
-    //     $this->validate($request, [
-    //         'lots.*' => 'required',
-    //         'lots.*.name' => 'required',
-    //         'lots.*.categories' => 'required',
-    //         'lots.*.volume' => 'required',
-    //     ]);
+        $this->validate($request, [
+            'lots_purchase' => 'required',
+            'payment_slip' => 'required|image',
+        ]);
 
-    //     $lots = $request->input('lots');
+        $lots = $request->input('lots_purchase');
 
-    //     foreach($lots as $l) {
-    //         $lot = new Lot();
-    //         $lot->name = $l['name'];
-    //         $lot->user_id = auth()->id();
-    //         $lot->category_id = $l['categories'];
-    //         $lot->volume = $l['volume'];
-    //         $lot->status = "false";
-    //         $lot->save();
-    //     }
+        $payment = new Payment();
+        $payment->user_id = auth()->user()->id;
+        $payment->picture = $request->file('payment_slip')->store('public');
+        $payment->save();
 
-    //     return redirect()->back();
-    // }    
+        foreach($lots as $lot) {
+             Lot::whereId($lot['id'])->update(['user_id' => auth()->id()]);
+         }
+
+         return redirect()->back()->withSuccess('Successfully purchase');
+     }
 
     /**
      * Store a newly created resource in storage.
@@ -75,19 +79,6 @@ class PaymentController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'paymentSlip' => 'required',
-        ]);
-
-        //Store image file
-        $path = $request->file('paymentSlip')->store('public');
-
-        $payment = new Payment();
-        $payment->user_id = auth()->user()->id;
-        $payment->picture = $path;
-        $payment->save();
-
-        return redirect()->back()->withSuccess('Upload successfully');
     }
 
     /**
