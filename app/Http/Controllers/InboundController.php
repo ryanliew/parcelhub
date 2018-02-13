@@ -78,7 +78,7 @@ class InboundController extends Controller
         products[1] = requiredVolume
         products[2] = eachVolume */
 
-        if($product_total_volume <= $user_lots->sum('leftvolume')){
+        if($product_total_volume <= $user_lots->sum('left_volume')){
             if($compare->diffInDays($now) > Settings::get('days_before_order') ){
                 $inbound = new inbound;
                 $inbound->user_id = $auth->id;
@@ -94,21 +94,21 @@ class InboundController extends Controller
                 foreach($user_lots as $lot){   // 1, 2
                     echo "<br>: " . $lot->id;
                     foreach($products as $key => $product){ //1, 2
-                        if($lot->leftvolume > $product[1] && $product[1] > 0 && $product[0] > 0 && $lot->leftvolume > 0){
+                        if($lot->left_volume > $product[1] && $product[1] > 0 && $product[0] > 0 && $lot->left_volume > 0){
                             echo "<br> all in";
                             $lot->products()->attach($key, ['quantity' => $product[0]]);
-                            $lot->leftvolume = $lot->leftvolume - $product[1];
+                            $lot->left_volume = $lot->left_volume - $product[1];
                             $lot->save();
                             $products[$key][0] = 0;
                             $products[$key][1] = 0;
                         } else {
                             if($product[1] > 0 && $product[0] > 0){
-                                $potentialQuantity = round($lot->leftvolume / $product[1] * $product[0], 0, PHP_ROUND_HALF_DOWN);
+                                $potentialQuantity = round($lot->left_volume / $product[1] * $product[0], 0, PHP_ROUND_HALF_DOWN);
                                 echo "<br> potentialQuantity: " . $potentialQuantity;
                                 if($potentialQuantity > 0){
                                     echo "<br> here:";
                                     $lot->products()->attach($key, ['quantity' => $potentialQuantity]);
-                                    $lot->leftvolume = $lot->leftvolume - ($potentialQuantity * $product[2]);
+                                    $lot->left_volume = $lot->left_volume - ($potentialQuantity * $product[2]);
                                     $lot->save();
                                     $products[$key][1] = $product[1] - $product[2] * $potentialQuantity;
                                     $products[$key][0] = $product[0] - $potentialQuantity;
