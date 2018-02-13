@@ -93,10 +93,11 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('update', 'LotController@update');
     });
 
-    Route::group(['prefix' => 'payment'], function() {
-        Route::get('index', 'PaymentController@index');
-        Route::post('approve', 'PaymentController@approve');
-        Route::post('store', 'PaymentController@store');
+    Route::group(['prefix' => 'payment', 'as' => 'payment.'], function() {
+        Route::get('index', ['as' => 'index', 'uses' => 'PaymentController@index']);
+        Route::post('store', ['as' => 'store', 'uses' => 'PaymentController@store']);
+        Route::post('approve', ['as' => 'approve', 'uses' => 'PaymentController@approve']);
+        Route::post('purchase', ['as' => 'purchase', 'uses' => 'PaymentController@purchase']);
     });
 
 });

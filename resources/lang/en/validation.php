@@ -100,20 +100,14 @@ return [
     */
 
     'custom' => [
-        'paymentSlip' => [
+        'payment_slip' => [
             'required' => 'Please upload bank transfer slip',
         ],
         'payments' => [
             'required' => 'Please select at least one of the payment to approve',
         ],
-        'lots.*.name' => [
-            'required' => 'Please enter name for lot',
-        ],
-        'lots.*.categories' => [
-            'required' => 'Please select one of the categories',
-        ],
-        'lots.*.volume' => [
-            'required' => 'Volume can\'t empty',
+        'lots_purchase' => [
+            'required' => 'Please select at least one lot to purchase',
         ],
     ],
 

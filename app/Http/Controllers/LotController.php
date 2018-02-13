@@ -9,6 +9,11 @@ use Illuminate\Http\Request;
 
 class LotController extends Controller
 {
+    protected $rule = [
+        'name' => 'required',
+        'volume' => 'required'
+    ];
+
     /**
      * Display the Vue page for lots
      * @return \Illuminate\Http\Response
@@ -67,10 +72,7 @@ class LotController extends Controller
      */
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'name' => 'required',
-            'volume' => 'required'
-        ]);
+        $this->validate($request, $this->rule);
 
         $lot = new lot;
         $lot->name = $request->name;
@@ -119,10 +121,7 @@ class LotController extends Controller
      */
     public function update(Request $request)
     {
-        $validatedData = $request->validate([
-            'name' => 'required',
-            'volume' => 'required'
-        ]);
+        $this->validate($request, $this->rule);
         
         $lot = lot::find($request->id);
         $lot->name = $request->name;

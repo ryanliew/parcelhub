@@ -27,6 +27,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Inbound whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Inbound whereUserId($value)
  * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Product[] $products
  */
 class Inbound extends Model
 {

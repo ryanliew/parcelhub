@@ -21,10 +21,13 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Payment whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Payment whereUserId($value)
  * @mixin \Eloquent
+ * @property int $lot_id
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Lot[] $lot
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Payment whereLotId($value)
  */
 class Payment extends Model
 {
-	protected $guarded = [];
+	protected $guarded = ['user_id'];
 
     public function user() {
     	return $this->belongsTo('App\User');

@@ -34,6 +34,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Outbound whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Outbound whereUserId($value)
  * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Product[] $products
  */
 class Outbound extends Model
 {
