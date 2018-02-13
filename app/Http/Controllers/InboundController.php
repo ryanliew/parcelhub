@@ -11,6 +11,12 @@ use Illuminate\Http\Request;
 
 class InboundController extends Controller
 {
+    protected $rules = [
+        'product' => 'required',
+        'quantity' => 'required',
+        'arrival_date' => 'required',
+        'total_carton' => 'required'
+    ];
     /**
      * Display a listing of the resource.
      *
@@ -46,12 +52,7 @@ class InboundController extends Controller
      */
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'product' => 'required',
-            'quantity' => 'required',
-            'arrival_date' => 'required',
-            'total_carton' => 'required'
-        ]);
+        $this->validate($request, $this->rules);
 
         $auth = auth()->user();
         $now = Carbon::today();

@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 
 class LotController extends Controller
 {
-    protected $rule = [
+    protected $rules = [
         'name' => 'required',
         'volume' => 'required'
     ];
@@ -72,7 +72,7 @@ class LotController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, $this->rule);
+        $this->validate($request, $this->rules);
 
         $lot = new lot;
         $lot->name = $request->name;
@@ -121,7 +121,7 @@ class LotController extends Controller
      */
     public function update(Request $request)
     {
-        $this->validate($request, $this->rule);
+        $this->validate($request, $this->rules);
         
         $lot = lot::find($request->id);
         $lot->name = $request->name;

@@ -18,14 +18,16 @@ class PaymentController extends Controller
     {
         if(\Entrust::hasRole('admin')) {
 
+            $payments = Payment::whereStatus('false')->get();
+
             // Retrieve all users purchased lot without being approve
-            $payments = Payment::all();
-//            $payments = Payment::whereStatus('false')->get()->filter(function ($payment) {
-//                $purchased = $payment->user->lots->filter(function ($lot) {
-//                    return $lot->status === 'false';
-//                });
-//                return $purchased->count() > 0;
-//            });
+            $purchased = $payments->filter(function ($payment) {
+                $lots = $payment->lots->filter(function ($lot) {
+                    return $lot->status === 'false';
+                });
+            });
+
+            dd($payments->user->lots);
 
             return view("payment.admin")->with('payments', $payments);
 

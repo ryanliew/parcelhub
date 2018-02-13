@@ -8,6 +8,14 @@ use Illuminate\Support\Facades\Input;
 
 class ProductController extends Controller
 {
+    protected $rules = [
+        'name' => 'required',
+        'height' => 'required',
+        'length' => 'required',
+        'width' => 'required',
+        'sku' => 'required',
+    ];
+
     /**
      * Return the view which contains the vue page for product
      * @return \Illuminate\Http\Response
@@ -52,13 +60,7 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'name' => 'required',
-            'height' => 'required',
-            'length' => 'required',
-            'width' => 'required',
-            'sku' => 'required',
-        ]);
+        $this->validate($request, $this->rules);
 
         $auth_id = auth()->user()->id;
         $product = new product;
@@ -118,13 +120,7 @@ class ProductController extends Controller
      */
     public function update(Request $request)
     {
-        $validatedData = $request->validate([
-            'name' => 'required',
-            'height' => 'required',
-            'length' => 'required',
-            'width' => 'required',
-            'sku' => 'required',
-        ]);
+        $this->validate($request, $this->rules);
         
         $auth_id = auth()->user()->id;
         $product = product::find($request->id);
