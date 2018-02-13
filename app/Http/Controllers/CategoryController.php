@@ -52,6 +52,11 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
+        $this->validate($request, [
+            'name' => 'required',
+            'volume' => 'required',
+        ]);
+
         $category = new category;
         $category->name = $request->name;
         $category->volume = $request->volume;
@@ -96,6 +101,11 @@ class CategoryController extends Controller
      */
     public function update(Request $request)
     {
+        $validatedData = $request->validate([
+            'name' => 'required',
+            'volume' => 'required',
+        ]);
+
         $category = category::find($request->id);
         $category->name = $request->name;
         $category->volume = $request->volume;
@@ -122,17 +132,9 @@ class CategoryController extends Controller
     public function destroy($id)
     {
         $category = category::find($id);
-        $categoryAssigned = $category->lots;
-        
-        if(!sizeof($categoryAssigned) > 0){
-            // not assigned then here
-            $category->status = "false";
-            $category->save();
-            return redirect()->back()->withSuccess($category->name . ' deleted successfully.');
-        } else {
-            // assigned then here
-            return redirect()->back()->withErrors($category->name . ' cannot be deleted because this category is assigned to lot.');
-        }
-        
+        $category->status = "false";
+        $category->save();
+
+        return redirect()->back()->withSuccess($category->name . ' deleted successfully.');
     }
 }

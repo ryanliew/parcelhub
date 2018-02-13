@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Payment;
+use App\Lot;
 use Illuminate\Http\Request;
 
 class PaymentController extends Controller
@@ -15,18 +16,21 @@ class PaymentController extends Controller
     public function index()
     {
         if(\Entrust::hasRole('admin')) {
+
             $payments = Payment::all()->filter(function ($payment) {
                 return $payment->status === 'false';
             });
 
-            $cat = Payment::all()->filter(function ($payment) {
-                return $payment->status === 'false';
-            });
-
             return view("payment.admin")->with('payments', $payments);
-        }
 
-        return view("payment.user");
+        } else {
+
+            $lots = Lot::where('status', '=', 'false')->get();
+            // dd($lots);
+
+            return view("payment.user")->with('lots', $lots);
+
+        }
     }
 
     /**
@@ -38,6 +42,30 @@ class PaymentController extends Controller
     {
         //
     }
+
+    // public function purchase(Request $request) {
+
+    //     $this->validate($request, [
+    //         'lots.*' => 'required',
+    //         'lots.*.name' => 'required',
+    //         'lots.*.categories' => 'required',
+    //         'lots.*.volume' => 'required',
+    //     ]);
+
+    //     $lots = $request->input('lots');
+
+    //     foreach($lots as $l) {
+    //         $lot = new Lot();
+    //         $lot->name = $l['name'];
+    //         $lot->user_id = auth()->id();
+    //         $lot->category_id = $l['categories'];
+    //         $lot->volume = $l['volume'];
+    //         $lot->status = "false";
+    //         $lot->save();
+    //     }
+
+    //     return redirect()->back();
+    // }    
 
     /**
      * Store a newly created resource in storage.

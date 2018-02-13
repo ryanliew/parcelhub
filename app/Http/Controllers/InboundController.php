@@ -18,6 +18,10 @@ class InboundController extends Controller
      */
     public function index()
     {
+        if(request()->wantsJson())
+        {
+            return Controller::VueTableListResult(inbound::where('status', 'true'));
+        }
         $inbounds = inbound::where('status', 'true')->get();
         $products = product::where('user_id', auth()->user()->id)->where('status', 'true')->get();
 
@@ -42,6 +46,13 @@ class InboundController extends Controller
      */
     public function store(Request $request)
     {
+        $validatedData = $request->validate([
+            'product' => 'required',
+            'quantity' => 'required',
+            'arrival_date' => 'required',
+            'total_carton' => 'required'
+        ]);
+
         $auth = auth()->user();
         $now = Carbon::today();
         $compare = Carbon::parse($request->date);

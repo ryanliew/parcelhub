@@ -15,6 +15,7 @@ class AddLotsExpiredAt extends Migration
     {
         Schema::table('lots', function (Blueprint $table) {
             $table->timestamp('expired_at')->nullable();
+            $table->integer('rental_duration');
         });
     }
 
@@ -27,6 +28,7 @@ class AddLotsExpiredAt extends Migration
     {
         Schema::table('lots', function (Blueprint $table) {
             $table->dropColumn('expired_at');
+            $table->dropColumn('rental_duration');
         });
     }
 }
