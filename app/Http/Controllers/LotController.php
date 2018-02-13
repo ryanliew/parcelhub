@@ -42,13 +42,11 @@ class LotController extends Controller
             }
 
             $categories = category::where('status', 'true')->get();
+            
             $lots = lot::where('status', 'true')->get();
 
-            $lots = Lot::all();
-            return view('lot.admin')->with('lots', $lots);
+            return view('lot.admin')->with(compact('categories', 'lots'));
         }
-
-        return view('lot.user');
     }
 
     /**
@@ -139,30 +137,6 @@ class LotController extends Controller
         }
 
         return redirect()->back()->withSuccess($lot->name . ' updated successfully.');
-    }
-
-    public function purchase(Request $request) {
-
-        $this->validate($request, [
-            'lots.*' => 'required',
-            'lots.*.name' => 'required',
-            'lots.*.categories' => 'required',
-            'lots.*.volume' => 'required',
-        ]);
-
-        $lots = $request->input('lots');
-
-        foreach($lots as $l) {
-            $lot = new Lot();
-            $lot->name = $l['name'];
-            $lot->user_id = auth()->id();
-            $lot->category_id = $l['categories'];
-            $lot->volume = $l['volume'];
-            $lot->status = "false";
-            $lot->save();
-        }
-
-        return redirect()->back();
     }
 
 
