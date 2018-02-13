@@ -20,16 +20,10 @@ class PaymentController extends Controller
 
             $payments = Payment::whereStatus('false')->get();
 
-            // Retrieve all users purchased lot without being approve
-            $purchased = $payments->filter(function ($payment) {
-                $lots = $payment->lots->filter(function ($lot) {
-                    return $lot->status === 'false';
-                });
-            });
+            // Retrieve all purchased lot without being approve
+            $lots = Lot::whereStatus('false')->get();
 
-            dd($payments->user->lots);
-
-            return view("payment.admin")->with('payments', $payments);
+            return view("payment.admin")->with(compact('payments', 'lots'));
 
         } else {
 
@@ -137,6 +131,6 @@ class PaymentController extends Controller
             Payment::where('id', '=', $value)->update(['status' => 'true']);
         }
 
-        return redirect()->back();
+        return redirect()->back()->withSuccess('Payment approved');
     }
 }
