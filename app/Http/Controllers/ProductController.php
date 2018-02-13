@@ -52,6 +52,14 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+        $validatedData = $request->validate([
+            'name' => 'required',
+            'height' => 'required',
+            'length' => 'required',
+            'width' => 'required',
+            'sku' => 'required',
+        ]);
+
         $auth_id = auth()->user()->id;
         $product = new product;
         $product->name = $request->name;
@@ -110,6 +118,14 @@ class ProductController extends Controller
      */
     public function update(Request $request)
     {
+        $validatedData = $request->validate([
+            'name' => 'required',
+            'height' => 'required',
+            'length' => 'required',
+            'width' => 'required',
+            'sku' => 'required',
+        ]);
+        
         $auth_id = auth()->user()->id;
         $product = product::find($request->id);
         $product->name = $request->name;

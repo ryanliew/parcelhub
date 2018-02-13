@@ -49,6 +49,10 @@ class CourierController extends Controller
      */
     public function store(Request $request)
     {
+        $validatedData = $request->validate([
+            'name' => 'required'
+        ]);
+
         $courier = new courier;
         $courier->name = $request->name;
         $courier->status = 'true';
@@ -93,6 +97,10 @@ class CourierController extends Controller
      */
     public function update(Request $request)
     {
+        $validatedData = $request->validate([
+            'name' => 'required'
+        ]);
+        
         $courier = courier::find($request->id);
         $courier->name = $request->name;
         $courier->save();

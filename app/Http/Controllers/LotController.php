@@ -69,6 +69,11 @@ class LotController extends Controller
      */
     public function store(Request $request)
     {
+        $validatedData = $request->validate([
+            'name' => 'required',
+            'volume' => 'required'
+        ]);
+
         $lot = new lot;
         $lot->name = $request->name;
         $lot->volume = $request->volume;
@@ -116,6 +121,11 @@ class LotController extends Controller
      */
     public function update(Request $request)
     {
+        $validatedData = $request->validate([
+            'name' => 'required',
+            'volume' => 'required'
+        ]);
+        
         $lot = lot::find($request->id);
         $lot->name = $request->name;
         $lot->category_id = $request->category;
