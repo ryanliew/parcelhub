@@ -62,11 +62,6 @@ Route::group(['prefix' => 'internal'], function() {
 	Route::get('products', 'ProductController@index');
 });
 
-Route::group(['prefix' => 'setting'], function() {
-	Route::get('index', 'SettingController@index');
-	Route::post('update', 'SettingController@update');
-});
-
 Route::group(['prefix' => 'courier'], function() {
 	Route::get('index', 'CourierController@index');
 	Route::get('delete/{id}', 'CourierController@destroy');
@@ -80,6 +75,13 @@ Route::group(['prefix' => 'inbound'], function() {
 	Route::get('delete/{id}', 'InboundController@destroy');
 	Route::post('store', 'InboundController@store');
 	Route::post('update', 'InboundController@update');
+});
+
+Route::group(['middleware' => ['auth', 'role:admin']], function () {
+    Route::group(['prefix' => 'setting'], function() {
+        Route::get('index', 'SettingsController@index')->name('setting.index');
+        Route::post('update', 'SettingsController@update')->name('setting.update');
+    });
 });
 
 Route::group(['middleware' => 'auth'], function () {
