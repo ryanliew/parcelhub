@@ -91,7 +91,6 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('delete/{id}', 'LotController@destroy');
         Route::post('store', 'LotController@store');
         Route::post('update', 'LotController@update');
-        Route::post('purchase', 'LotController@purchase');
     });
 
     Route::group(['prefix' => 'payment'], function() {
