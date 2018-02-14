@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Lot;
 use App\Category;
 use App\Payment;
+use App\Settings;
 use Illuminate\Http\Request;
 
 class LotController extends Controller
@@ -79,7 +80,8 @@ class LotController extends Controller
         $lot->volume = $request->volume;
         $lot->left_volume = $request->volume;
         $lot->category_id = $request->category;
-        $lot->status = "true";
+        $lot->status = "false";
+        $lot->rental_duration = (int)Settings::where('key', '=', 'rental_duration')->value('value');
         $lot->save();
 
         if(request()->wantsJson())

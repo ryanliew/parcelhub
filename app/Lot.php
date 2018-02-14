@@ -50,4 +50,8 @@ class Lot extends Model
     public function category(){
     	return $this->belongsTo('App\Category');
     }
+
+    public function payments() {
+        return $this->belongsToMany('App\Payment');
+    }
 }

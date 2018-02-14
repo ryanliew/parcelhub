@@ -30,10 +30,13 @@
                     <td>
                         <h5>Purchased items :</h5>
                         <ul>
-                            {{-- Retrieve all the purchased lots by this payment --}}
-                            @foreach($lots as $lot)
+                            @foreach($payment->lots as $lot)
                                 @if($lot->user->id == $payment->user->id)
-                                    <li>{{ $lot->name }} , {{ $lot->category->name }} , {{ $lot->volume }}</li>
+                                    <li>Lot Name : {{ $lot->name }}</li>
+                                    <li>Lot Category : {{ $lot->category->name }}</li>
+                                    <li>Lot Volume : {{ $lot->volume }}</li>
+                                    <li>Lot Rental Duration : {{ $lot->rental_duration }}</li>
+                                    <li></li>
                                 @endif
                             @endforeach
                         </ul>
