@@ -30,8 +30,14 @@
                     <td>
                         <h5>Purchased items :</h5>
                         <ul>
-                            @foreach($payment->user->lots as $lot)
-                                <li>{{ $lot->name }} , {{ $lot->category->name }} , {{ $lot->volume }}</li>
+                            @foreach($payment->lots as $lot)
+                                @if($lot->user->id == $payment->user->id)
+                                    <li>Lot Name : {{ $lot->name }}</li>
+                                    <li>Lot Category : {{ $lot->category->name }}</li>
+                                    <li>Lot Volume : {{ $lot->volume }}</li>
+                                    <li>Lot Rental Duration : {{ $lot->rental_duration }}</li>
+                                    <li></li>
+                                @endif
                             @endforeach
                         </ul>
                     </td>
@@ -43,15 +49,8 @@
         </table>
 
         <div class="form-group text-center">
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#approvePayment">
-                Approve
-            </button>
+            <button type="submit" class="btn btn-primary">Approve</button>
         </div>
-
-        @component('payment.approve')
-            <strong>Whoops!</strong> Something went wrong!
-        @endcomponent
-
     </form>
 
 @endsection

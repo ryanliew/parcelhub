@@ -7,6 +7,11 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
+    protected $rules = [
+        'name' => 'required',
+        'volume' => 'required',
+    ];
+
     /**
      * Returns the categories page
      * @return view categories page blade
@@ -52,10 +57,7 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'name' => 'required',
-            'volume' => 'required',
-        ]);
+        $this->validate($request, $this->rules);
 
         $category = new category;
         $category->name = $request->name;
@@ -101,10 +103,7 @@ class CategoryController extends Controller
      */
     public function update(Request $request)
     {
-        $validatedData = $request->validate([
-            'name' => 'required',
-            'volume' => 'required',
-        ]);
+        $this->validate($request, $this->rules);
 
         $category = category::find($request->id);
         $category->name = $request->name;

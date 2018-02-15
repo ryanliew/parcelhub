@@ -109,6 +109,10 @@ return [
         'lots_purchase' => [
             'required' => 'Please select at least one lot to purchase',
         ],
+        'lots_purchase.*.rental_duration' => [
+            'min' => 'Minimum rental duration must not least than :min days',
+        ],
+
     ],
 
     /*

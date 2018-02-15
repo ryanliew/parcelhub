@@ -1,8 +1,6 @@
 @extends('layout.admin.dashboard')
 @section('body')
 
-    <h1>Payment Section</h1>
-
 <h2>Purchase Lots</h2>
 
     <form action="{{ route('payment.purchase') }}" method="post" enctype="multipart/form-data">
@@ -15,8 +13,13 @@
                 <th>Name</th>
                 <th>Category</th>
                 <th>Volume</th>
+                <th>Rental Duration (Min 90 days)</th>
             </tr>
             <tr>
+
+            {{--Post Data Structure Requirement--}}
+            {{--Data must be in array of object consist of lots_purchase[0][id], lots_purchase[0][rental_duration] and payment_slip--}}
+            {{--Only selected item is required--}}
             @foreach($lots as $index => $lot)
                 <tr>
                     <td>
@@ -39,14 +42,19 @@
                             <input type="text" id="volume_{{ $index }}" name="volume" value="{{ $lot->volume }}" disabled>
                         </label>
                     </td>
+                    <td>
+                        <label>
+                            <input type="number" id="rental_duration_{{ $index }}" name="lots_purchase[{{ $index }}][rental_duration]"
+                                   value="{{ $lot->rental_duration }}">
+                        </label>
+                    </td>
                 </tr>
             @endforeach
         </table>
         <div class="form-group">
             <label for="payment_slip">Bank transfer slip</label>
-            <input type="file" name="payment_slip">
+            <input type="file" name="payment_slip" id="payment_slip">
         </div>
-        <input type="submit" name="purchase" id="purchase" value="Purchase">
+        <button name="purchase" id="purchase">Purchase</button>
     </form>
-
 @endsection

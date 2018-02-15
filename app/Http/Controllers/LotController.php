@@ -5,11 +5,12 @@ namespace App\Http\Controllers;
 use App\Lot;
 use App\Category;
 use App\Payment;
+use App\Settings;
 use Illuminate\Http\Request;
 
 class LotController extends Controller
 {
-    protected $rule = [
+    protected $rules = [
         'name' => 'required',
         'volume' => 'required'
     ];
@@ -72,14 +73,15 @@ class LotController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, $this->rule);
+        $this->validate($request, $this->rules);
 
         $lot = new lot;
         $lot->name = $request->name;
         $lot->volume = $request->volume;
-        $lot->leftvolume = $request->volume;
+        $lot->left_volume = $request->volume;
         $lot->category_id = $request->category;
-        $lot->status = "true";
+        $lot->status = "false";
+        $lot->rental_duration = (int)Settings::where('key', '=', 'rental_duration')->value('value');
         $lot->save();
 
         if(request()->wantsJson())
@@ -121,13 +123,13 @@ class LotController extends Controller
      */
     public function update(Request $request)
     {
-        $this->validate($request, $this->rule);
+        $this->validate($request, $this->rules);
         
         $lot = lot::find($request->id);
         $lot->name = $request->name;
         $lot->category_id = $request->category;
         $lot->volume = $request->volume;
-        $lot->leftvolume = $request->volume;
+        $lot->left_volume = $request->volume;
         $lot->save();
 
         if(request()->wantsJson())

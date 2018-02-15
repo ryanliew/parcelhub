@@ -11,29 +11,26 @@
         <label>Value</label>
       </th>
     </tr>
-	<tr>
-	  <td id="rental_duration">Rental Duration</td>
-      <td>{{$rental_duration}}</td>
-	  <td><button type="button" class="openEditModal btn btn-info btn-lg" data-toggle="modal" data-target="#settingEdit">Edit</button></td>
-	<tr>
-	<tr>
-	  <td id="days_before_order">Days before order</td>
-      <td>{{$days_before_order}}</td>
-	  <td><button type="button" class="openEditModal btn btn-info btn-lg" data-toggle="modal" data-target="#settingEdit">Edit</button></td>
-	<tr>
+    @foreach($settings as $setting)
+      <tr>
+        <td id="{{ $setting->key }}">{{ $setting->name }}</td>
+        <td>{{ $setting->value }}</td>
+        <td><button type="button" class="openEditModal btn btn-info btn-lg" data-toggle="modal" data-target="#settingEdit">Edit</button></td>
+      <tr>
+    @endforeach
   </table>
 
 <!-- MODAL EDIT START -->
   <div class="modal fade" id="settingEdit" role="dialog">
     <div class="modal-dialog">
-    
+
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
           <h4 class="modal-title">Setting Edit</h4>
         </div>
         <div class="modal-body">
-          <form action="update" method="post">
+          <form action="{{ route('setting.update') }}" method="post">
             <input type="hidden" name="_token" value="{{csrf_token()}}"/>
             <div>
               <label id="displaySetting"></label>
@@ -45,7 +42,7 @@
             </div>
           </form>
         </div>
-      </div> 
+      </div>
     </div>
   </div>
 <!-- MODAL EDIT END -->

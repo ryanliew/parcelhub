@@ -7,6 +7,10 @@ use Illuminate\Http\Request;
 
 class CourierController extends Controller
 {
+    protected $rules = [
+        'name' => 'required'
+    ];
+
     /**
      * Return the page view for couriers
      * @return \Illuminate\Http\Response
@@ -49,9 +53,7 @@ class CourierController extends Controller
      */
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'name' => 'required'
-        ]);
+        $this->validate($request, $this->rules);
 
         $courier = new courier;
         $courier->name = $request->name;
@@ -97,9 +99,7 @@ class CourierController extends Controller
      */
     public function update(Request $request)
     {
-        $validatedData = $request->validate([
-            'name' => 'required'
-        ]);
+        $this->validate($request, $this->rules);
         
         $courier = courier::find($request->id);
         $courier->name = $request->name;

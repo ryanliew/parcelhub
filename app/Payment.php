@@ -32,4 +32,8 @@ class Payment extends Model
     public function user() {
     	return $this->belongsTo('App\User');
     }
+
+    public function lots() {
+        return $this->belongsToMany('App\Lot');
+    }
 }

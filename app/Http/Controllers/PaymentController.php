@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Payment;
 use App\Lot;
+use App\Settings;
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Input;
 
 class PaymentController extends Controller
 {
@@ -18,16 +21,9 @@ class PaymentController extends Controller
     {
         if(\Entrust::hasRole('admin')) {
 
-            // Retrieve all users purchased lot without being approve
-            $payments = Payment::all();
-//            $payments = Payment::whereStatus('false')->get()->filter(function ($payment) {
-//                $purchased = $payment->user->lots->filter(function ($lot) {
-//                    return $lot->status === 'false';
-//                });
-//                return $purchased->count() > 0;
-//            });
+            $payments = Payment::whereStatus('false')->get();
 
-            return view("payment.admin")->with('payments', $payments);
+            return view("payment.admin")->with(compact('payments', 'lots'));
 
         } else {
 
@@ -35,7 +31,9 @@ class PaymentController extends Controller
                 ->where('status', '=', 'false')
                 ->get();
 
-            return view("payment.user")->with('lots', $lots);
+            $rental_duration = (int)Settings::where('key', '=', 'rental_duration')->value('value');
+
+            return view("payment.user")->with(compact('lots', 'rental_duration'));
 
         }
     }
@@ -52,11 +50,15 @@ class PaymentController extends Controller
 
     public function purchase(Request $request) {
 
+        $rental_duration = (int)Settings::where('key', '=', 'rental_duration')->value('value');
+
         $this->validate($request, [
             'lots_purchase' => 'required',
+            'lots_purchase.*.rental_duration' => 'required|numeric|min:'.$rental_duration,
             'payment_slip' => 'required|image',
         ]);
 
+        dd(Input::file('cat.jpg'));
         $lots = $request->input('lots_purchase');
 
         $payment = new Payment();
@@ -65,7 +67,11 @@ class PaymentController extends Controller
         $payment->save();
 
         foreach($lots as $lot) {
-             Lot::whereId($lot['id'])->update(['user_id' => auth()->id()]);
+            if(isset($lot['id'])) {
+                $purchasedLot = Lot::find($lot['id']);
+                $purchasedLot->update(['user_id' => auth()->id(), 'rental_duration' => $lot['rental_duration']]);
+                $purchasedLot->payments()->attach([$payment->id]);
+            }
          }
 
          return redirect()->back()->withSuccess('Successfully purchase');
@@ -132,9 +138,22 @@ class PaymentController extends Controller
         ]);
 
         foreach ($request->input('payments') as $key => $value) {
-            Payment::where('id', '=', $value)->update(['status' => 'true']);
+
+            $payment = Payment::find($value);
+            $payment->update(['status' => 'true']);
+
+            $lotIds = $payment->lots()->pluck('lot_id')->toArray();
+
+            foreach($lotIds as $_key => $_value) {
+                $lot = Lot::find($_value);
+
+                $carbon = new Carbon();
+                $carbon->addDays($lot->rental_duration);
+
+                $lot->update(['status' => 'true', 'expired_at' => $carbon->toDateTimeString()]);
+            }
         }
 
-        return redirect()->back();
+        return redirect()->back()->withSuccess('Payment approved');
     }
 }
