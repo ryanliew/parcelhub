@@ -60,7 +60,7 @@
 	          		<div class="column">
 			          	<div class="field">
 			          		<text-input v-model="form.height" :defaultValue="form.height" 
-										label="Height" 
+										label="Height (cm)" 
 										:required="true"
 										name="height"
 										type="text"
@@ -72,7 +72,7 @@
 			        <div class="column">
 			          	<div class="field">
 			          		<text-input v-model="form.width" :defaultValue="form.width" 
-										label="Width" 
+										label="Width (cm)" 
 										:required="true"
 										name="width"
 										type="text"
@@ -84,7 +84,7 @@
 			        <div class="column">
 			          	<div class="field">
 			          		<text-input v-model="form.length" :defaultValue="form.length" 
-										label="length" 
+										label="Length (cm)" 
 										:required="true"
 										name="length"
 										type="text"
@@ -123,11 +123,10 @@
 		data() {
 			return {
 				fields: [
-					{name: 'sku', sortField: 'sku'},
+					{name: 'picture', callback: 'image', title: 'Image'},
+					{name: 'sku', sortField: 'sku', title: 'SKU'},
 					{name: 'name', sortField: 'name'},
-					{name: 'height', sortField: 'height'},
-					{name: 'width', sortField: 'width'},
-					{name: 'length', sortField: 'length'},
+					{name: 'volume', title: 'Volume(cm³)'},
 					{name: '__component:products-actions', title: 'Actions'}	
 				],
 				searchables: "name,sku",

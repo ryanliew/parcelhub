@@ -113,6 +113,10 @@
 				return value === 1
 					? '<span class="tag is-info">By revenue</span>'
 					: '<span class="tag is-warning">By profit</span>';
+			},
+
+			image(value) {
+				return '<figure class="image is-48x48"><img src="'+ value +'"></figure>';
 			}	
 
 
