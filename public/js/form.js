@@ -43,7 +43,7 @@ class Errors {
      * @param {object} errors
      */
     record(errors) {
-        this.errors = errors.errors;
+        this.errors = errors;
     }
 
 
@@ -90,7 +90,12 @@ class Form {
         let data = new FormData();
 
         for (let property in this.originalData) {
-            data.append(property, this[property]);
+
+            let value = this[property];
+            if(Array.isArray(this[property]))
+                value = JSON.stringify(this[property]);
+
+            data.append(property, value);
         }
 
         return data;
@@ -193,7 +198,12 @@ class Form {
      * @param {object} errors
      */
     onFail(errors) {
-        flash('Oops. Something went wrong. Please check your input', 'danger');
+        let error = 'Oops! Something went wrong. Please check your input.';
+
+        if(errors.message) error = errors.message;
+
+        flash(error, 'danger');
+        //console.log(errors);
         this.errors.record(errors);
 
         this.submitting = false;

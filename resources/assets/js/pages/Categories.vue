@@ -40,7 +40,8 @@
 								name="name"
 								type="text"
 								:editable="true"
-								:error="form.errors.get('name')">
+								:error="form.errors.get('name')"
+								:focus="true">
 					</text-input>
 	          	</div>
 	          	<div class="field">
@@ -95,12 +96,17 @@
 		methods: {
 			submit() {
 				this.form.post(this.action)
-					.then(this.onSuccess());
+					.then(data => this.onSuccess())
+					.catch(error => this.onFail(error));;
 			},
 
 			onSuccess() {
 				this.dialogActive = false;
 				this.$refs.categories.refreshTable();
+			},
+
+			onFail() {
+
 			},
 
 			edit(data){

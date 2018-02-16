@@ -8,6 +8,11 @@
                 Products
             </a>
         </li>
+        <li>
+            <a @if( url()->current() == route('inbounds') ) class="is-active" @endif href="{{ route('inbounds') }}">
+                Inbounds
+            </a>
+        </li>
     </ul>
     <ul class="menu-list">
         

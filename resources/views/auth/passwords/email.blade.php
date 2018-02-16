@@ -22,6 +22,7 @@
                                 error="{{ $errors->first('email') }}"
                                 defaultValue="{{ old('email') }}"
                                 editable="true"
+                                focus="true"
                                 >
                             </text-input>
                         </div>
@@ -30,6 +31,9 @@
                             <div class="has-text-centered">
                                 <button type="submit" class="button is-danger">Reset password</button>
                             </div>
+                        </div>
+                        <div class="has-text-centered">
+                            <a href="/login" class="mt-10">Back to login page</a>
                         </div>
                     </form>
                 </div>

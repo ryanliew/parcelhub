@@ -20,6 +20,7 @@
                                 name="email"
                                 editable="true"
                                 error="{{ $errors->first('email') }}"
+                                :focus="true"
                                 >
                             </text-input>
                         </div>
@@ -32,6 +33,7 @@
                                 type="password"
                                 editable="true"
                                 error="{{ $errors->first('password') }}"
+                                :focus=false
                                 >
                             </text-input>
                         </div>

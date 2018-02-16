@@ -115,6 +115,22 @@
 					: '<span class="tag is-warning">By profit</span>';
 			},
 
+			inboundStatusLabel(value) {
+				let color = 'is-success';
+				let text = 'completed';
+				switch(value) {
+					case 'true':
+						color = 'is-info';
+						text = 'Processing';
+						break;
+					case 'false':
+						color = 'is-danger';
+						text = 'Error processing';
+						break;
+				}
+				return '<span class="tag '+ color +'">'+ text +'</span>';
+			},
+
 			image(value) {
 				return '<figure class="image is-48x48"><img src="'+ value +'"></figure>';
 			}	
