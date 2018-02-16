@@ -12176,6 +12176,15 @@ th {
   overflow: visible;
 }
 
+.modal-card {
+  overflow: visible;
+}
+
+.field.product-list {
+  overflow-y: scroll;
+  max-height: 300px;
+}
+
 /* Custom helper classes */
 
 .mt-5 {

@@ -32,6 +32,7 @@ Vue.component('text-input', require('./components/TextInput.vue'));
 Vue.component('checkbox-input', require('./components/CheckboxInput.vue'));
 Vue.component('selector-input', require('./components/SelectorInput.vue'));
 Vue.component('image-input', require('./components/ImageInput.vue'));
+Vue.component('products-selector-input', require('./components/ProductsSelectorInput.vue'));
 
 // Actions components
 Vue.component('CategoriesActions', require('./actions/CategoriesActions.vue'));
@@ -44,6 +45,7 @@ Vue.component('categories-page', require('./pages/Categories.vue'));
 Vue.component('lots-page', require('./pages/Lots.vue'));
 Vue.component('couriers-page', require('./pages/Couriers.vue'));
 Vue.component('products-page', require('./pages/Products.vue'));
+Vue.component('inbounds-page', require('./pages/Inbounds.vue'));
 
 
 window.flash = function(message, level = 'success'){

@@ -12,11 +12,19 @@ use Illuminate\Http\Request;
 class InboundController extends Controller
 {
     protected $rules = [
-        'product' => 'required',
-        'quantity' => 'required',
         'arrival_date' => 'required',
         'total_carton' => 'required'
     ];
+
+    /**
+     * Return the view which contains the vue page for product
+     * @return \Illuminate\Http\Response
+     */
+    public function page()
+    {
+        return view('inbound.page');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -26,7 +34,7 @@ class InboundController extends Controller
     {
         if(request()->wantsJson())
         {
-            return Controller::VueTableListResult(inbound::where('status', 'true'));
+            return Controller::VueTableListResult(inbound::select("*"));
         }
         $inbounds = inbound::where('status', 'true')->get();
         $products = product::where('user_id', auth()->user()->id)->where('status', 'true')->get();
@@ -56,22 +64,25 @@ class InboundController extends Controller
 
         $auth = auth()->user();
         $now = Carbon::today();
-        $compare = Carbon::parse($request->date);
+        $compare = Carbon::parse($request->arrival_date);
         $user_lots = lot::where('volume','>', 0)->where('user_id', $auth->id)->get();
         $product_collections = collect();
         $collection_index = 0;
         $product_total_volume = 0;
-        $products['1'] = ['1']; // $products[product_id] = [quantity]
-        $products['2'] = ['20']; // $products[product_id] = [quantity]
+        $products = [];
+        // $products['1'] = ['1']; // $products[product_id] = [quantity]
+        // $products['2'] = ['20']; // $products[product_id] = [quantity]
         // $products['3'] = ['2'];
+        $rproducts = json_decode(request()->products);
 
-        foreach($products as $key => $product){
-            $product_volume_from_db = product::where('id', $key)->first();
-            $product_total_volume = $product_total_volume + ($product_volume_from_db->volume * $product[0]); 
-            array_push($products[$key], $product_volume_from_db->volume * $product[0]);
-            array_push($products[$key], $product_volume_from_db->volume);
+        foreach($rproducts as $product){
+            $product_volume_from_db = product::where('id', $product->id)->first();
+            $product_total_volume = $product_total_volume + ($product_volume_from_db->volume * $product->quantity);
+            $products[$product->id] = [];
+            array_push($products[$product->id], $product->quantity);
+            array_push($products[$product->id], $product_volume_from_db->volume * $product->quantity);
+            array_push($products[$product->id], $product_volume_from_db->volume);
         }
-
         
         /*  NOTE: 
         products[0] = requiredQuantity
@@ -82,17 +93,17 @@ class InboundController extends Controller
             if($compare->diffInDays($now) > Settings::get('days_before_order') ){
                 $inbound = new inbound;
                 $inbound->user_id = $auth->id;
-                $inbound->product = $request->product;
-                $inbound->quantity = $request->quantity;
-                $inbound->arrival_date = $request->date;
-                $inbound->total_carton = $request->carton;
+                $inbound->product = 1;
+                $inbound->quantity = 1;
+                $inbound->arrival_date = $request->arrival_date;
+                $inbound->total_carton = $request->total_carton;
                 $inbound->status = "true";
                 $inbound->save();
                 foreach($products as $key => $product){
                     $inbound->products()->attach($key, ['quantity' => $product[0]]);
                 }
                 foreach($user_lots as $lot){   // 1, 2
-                    echo "<br>: " . $lot->id;
+                    // echo "<br>: " . $lot->id;
                     foreach($products as $key => $product){ //1, 2
                         if($lot->left_volume > $product[1] && $product[1] > 0 && $product[0] > 0 && $lot->left_volume > 0){
                             echo "<br> all in";
@@ -118,9 +129,18 @@ class InboundController extends Controller
                     }
                 }
             } else {
+                if(request()->wantsJson()) {
+                    return response(['message' => "Inbound must be created before ".Settings::get('days_before_order')." days."], 422);
+                }
+
                 return redirect()->back()->withErrors("Inbound must be created before ".Settings::get('days_before_order')." days.");
             }
+
+            return ['message' => "Inbound order created"];
         } else {
+            if(request()->wantsJson()) {
+                return response(['message' => "You have exceeded your lot limit"], 422);
+            }
             return redirect()->back()->withErrors("You have exceeded your lot limit.");
         }
     }
