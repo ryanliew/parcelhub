@@ -79,6 +79,16 @@ Route::group(['prefix' => 'inbound'], function() {
 	Route::post('update', 'InboundController@update');
 });
 
+Route::group(['prefix' => 'admin'], function() {
+	Route::group(['prefix' => 'inbound'], function() {
+		Route::get('index', 'Admin\InboundController@index');
+		Route::post('update', 'Admin\InboundController@update');
+	});
+	Route::group(['prefix' => 'outbound'], function() {
+		Route::post('update', 'Admin\OutboundController@update');
+	});
+});
+
 Route::group(['middleware' => ['auth', 'role:admin']], function () {
     Route::group(['prefix' => 'setting'], function() {
         Route::get('index', 'SettingsController@index')->name('setting.index');
