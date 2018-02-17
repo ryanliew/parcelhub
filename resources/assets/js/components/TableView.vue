@@ -116,19 +116,7 @@
 			},
 
 			inboundStatusLabel(value) {
-				let color = 'is-success';
-				let text = 'completed';
-				switch(value) {
-					case 'true':
-						color = 'is-info';
-						text = 'Processing';
-						break;
-					case 'false':
-						color = 'is-danger';
-						text = 'Error processing';
-						break;
-				}
-				return '<span class="tag '+ color +'">'+ text +'</span>';
+				return value | formatStatus;
 			},
 
 			image(value) {

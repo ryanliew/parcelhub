@@ -34,7 +34,7 @@ class ProductController extends Controller
     {
         if(request()->wantsJson())
         {
-            return Controller::VueTableListResult(Product::select("*"));
+            return Controller::VueTableListResult(Product::with("inbounds")->with("outbounds"));
         }
 
         $products = product::where('status', 'true')->get();

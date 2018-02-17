@@ -7,7 +7,12 @@
 
 require('./bootstrap');
 
+
+
+
 window.Vue = require('vue');
+
+require('./filters');
 
 window.events = new Vue();
 
@@ -47,6 +52,8 @@ Vue.component('couriers-page', require('./pages/Couriers.vue'));
 Vue.component('products-page', require('./pages/Products.vue'));
 Vue.component('inbounds-page', require('./pages/Inbounds.vue'));
 
+// Single instance view components
+Vue.component('product', require('./objects/Product.vue'));
 
 window.flash = function(message, level = 'success'){
  	window.events.$emit('flash', {message, level});

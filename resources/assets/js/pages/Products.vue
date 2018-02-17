@@ -1,31 +1,36 @@
 <template>
 	<div>
-		<div class="card">
-			<div class="card-header">
-				<div class="card-header-title level">
-					<div class="level-left">
-						<div class="level-item">
-							Products
+		<transition name="slide-fade" mode="out-in">
+			<div class="card" v-if="!isViewing">
+				<div class="card-header">
+					<div class="card-header-title level">
+						<div class="level-left">
+							<div class="level-item">
+								Products
+							</div>
 						</div>
-					</div>
-					<div class="level-right">
-						<div class="level-item">
-							<button class="button is-primary" @click="modalOpen()">
-								<i class="fa fa-plus-circle"></i>
-								<span class="pl-5">Create new product</span>
-							</button>
+						<div class="level-right">
+							<div class="level-item">
+								<button class="button is-primary" @click="modalOpen()">
+									<i class="fa fa-plus-circle"></i>
+									<span class="pl-5">Create new product</span>
+								</button>
+							</div>
 						</div>
 					</div>
 				</div>
+				<div class="card-content">
+					<table-view ref="products" 
+								:fields="fields" 
+								url="/internal/products"
+								:searchables="searchables">	
+					</table-view>
+				</div>
 			</div>
-			<div class="card-content">
-				<table-view ref="products" 
-							:fields="fields" 
-							url="/internal/products"
-							:searchables="searchables">	
-				</table-view>
-			</div>
-		</div>
+			<product :product="selectedProduct" v-if="isViewing"
+					@back="back">
+			</product>
+		</transition>
 
 		<modal :active="dialogActive" @close="dialogActive = false">
 			<template slot="header">{{ dialogTitle }}</template>
@@ -115,11 +120,12 @@
 
 <script>
 	import TableView from '../components/TableView.vue';
+	import Product from '../objects/Product.vue';
 
 	export default {
 		props: [''],
 
-		components: { TableView },
+		components: { TableView, Product },
 
 		data() {
 			return {
@@ -132,6 +138,7 @@
 				],
 				searchables: "name,sku",
 				selectedProduct: '',
+				isViewing: false,
 				dialogActive: false,
 				override: false,
 				productImage: {name: 'No file selected'},
@@ -149,6 +156,7 @@
 
 		mounted() {
 			this.$events.on('edit', data => this.edit(data));
+			this.$events.on('view', data => this.view(data));
 		},
 
 		methods: {
@@ -181,6 +189,16 @@
 				this.productImage = {name: data.picture, src: data.picture};
 				
 				this.dialogActive = true;
+			},
+
+			view(data) {
+				this.selectedProduct = data;
+				this.isViewing = true;
+			},
+
+			back() {
+				this.selectedProduct = '';
+				this.isViewing = false;
 			},
 
 			changeProductImage(e) {

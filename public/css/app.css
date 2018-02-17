@@ -12242,6 +12242,13 @@ th {
   text-transform: capitalize;
 }
 
+.product-display .background {
+  background-position: center;
+  background-size: cover;
+  height: 100%;
+  display: block;
+}
+
 .fade-enter-active,
 .fade-leave-active {
   -webkit-transition: opacity .5s;
@@ -12250,6 +12257,19 @@ th {
 
 .fade-enter,
 .fade-leave-to {
+  opacity: 0;
+}
+
+.slide-fade-enter-active,
+.slide-fade-leave-active {
+  -webkit-transition: all .3s ease;
+  transition: all .3s ease;
+}
+
+.slide-fade-enter,
+.slide-fade-leave-to {
+  -webkit-transform: translateX(30px);
+          transform: translateX(30px);
   opacity: 0;
 }
 
