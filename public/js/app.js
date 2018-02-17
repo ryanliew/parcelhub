@@ -57713,6 +57713,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -57792,36 +57801,51 @@ var render = function() {
             ])
           ]),
           _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "column" },
-            [
-              _c("text-input", {
-                attrs: {
-                  defaultValue: _vm.product.sku,
-                  label: "SKU",
-                  editable: false
-                }
-              }),
+          _c("div", { staticClass: "column" }, [
+            _c("div", { staticClass: "columns" }, [
+              _c(
+                "div",
+                { staticClass: "column" },
+                [
+                  _c("text-input", {
+                    attrs: {
+                      defaultValue: _vm.product.sku,
+                      label: "SKU",
+                      editable: false
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c("text-input", {
+                    attrs: {
+                      defaultValue: _vm.product.name,
+                      label: "Name",
+                      editable: false
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c("text-input", {
+                    attrs: {
+                      defaultValue: _vm.product.volume,
+                      label: "Volume(cm³)",
+                      editable: false
+                    }
+                  })
+                ],
+                1
+              ),
               _vm._v(" "),
-              _c("text-input", {
-                attrs: {
-                  defaultValue: _vm.product.name,
-                  label: "Name",
-                  editable: false
-                }
-              }),
-              _vm._v(" "),
-              _c("text-input", {
-                attrs: {
-                  defaultValue: _vm.product.volume,
-                  label: "Volume(cm³)",
-                  editable: false
-                }
-              })
-            ],
-            1
-          )
+              _c("div", { staticClass: "column has-text-centered" }, [
+                _c("p", { staticClass: "heading" }, [
+                  _vm._v("Stocks available")
+                ]),
+                _vm._v(" "),
+                _c("p", {
+                  staticClass: "title",
+                  domProps: { textContent: _vm._s(_vm.product.total || 0) }
+                })
+              ])
+            ])
+          ])
         ])
       ])
     ]),
@@ -57924,7 +57948,7 @@ var staticRenderFns = [
       _c("div", { staticClass: "card-header-title level" }, [
         _c("div", { staticClass: "level-left" }, [
           _c("div", { staticClass: "level-item" }, [
-            _vm._v("\n\t\t\t\t\t\t\t\tInbound history\n\t\t\t\t\t\t\t")
+            _vm._v("\n\t\t\t\t\t\t\t\tRecent inbound history\n\t\t\t\t\t\t\t")
           ])
         ])
       ])
@@ -57952,7 +57976,7 @@ var staticRenderFns = [
       _c("div", { staticClass: "card-header-title level" }, [
         _c("div", { staticClass: "level-left" }, [
           _c("div", { staticClass: "level-item" }, [
-            _vm._v("\n\t\t\t\t\t\t\t\tOutbound history\n\t\t\t\t\t\t\t")
+            _vm._v("\n\t\t\t\t\t\t\t\tRecent outbound history\n\t\t\t\t\t\t\t")
           ])
         ])
       ])

@@ -26,18 +26,27 @@
 						</figure>
 					</div>
 					<div class="column">
-						<text-input :defaultValue="product.sku"
-									label="SKU"
-									:editable="false">	
-						</text-input>
-						<text-input :defaultValue="product.name"
-									label="Name"
-									:editable="false">
-						</text-input>
-						<text-input :defaultValue="product.volume"
-									label="Volume(cm³)"
-									:editable="false">
-						</text-input>
+						<div class="columns">
+							<div class="column">
+								<text-input :defaultValue="product.sku"
+											label="SKU"
+											:editable="false">	
+								</text-input>
+								<text-input :defaultValue="product.name"
+											label="Name"
+											:editable="false">
+								</text-input>
+								<text-input :defaultValue="product.volume"
+											label="Volume(cm³)"
+											:editable="false">
+								</text-input>
+							</div>
+							<div class="column has-text-centered">
+								<p class="heading">Stocks available</p>
+								<p class="title" v-text="product.total || 0"></p>
+							</div>
+						</div>
+					
 					</div>
 				</div>
 			</div>
@@ -49,7 +58,7 @@
 						<div class="card-header-title level">
 							<div class="level-left">
 								<div class="level-item">
-									Inbound history
+									Recent inbound history
 								</div>
 							</div>
 						</div>
@@ -80,7 +89,7 @@
 						<div class="card-header-title level">
 							<div class="level-left">
 								<div class="level-item">
-									Outbound history
+									Recent outbound history
 								</div>
 							</div>
 						</div>
