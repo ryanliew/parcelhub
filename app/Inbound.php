@@ -40,4 +40,20 @@ class Inbound extends Model
     public function products(){
     	return $this->belongsToMany('App\Product')->withPivot('quantity')->withTimestamps();
     }
+
+    public function scopeAwaiting_arrival($query){
+    	return $query->where('process_status', 'awaiting_arrival');
+    }
+
+    public function scopeProcessing($query){
+    	return $query->where('process_status', 'processing');
+    }
+
+    public function scopeCompleted($query){
+    	return $query->where('process_status', 'completed');
+    }
+
+    public function scopeCanceled($query){
+    	return $query->where('process_status', 'canceled');
+    }
 }

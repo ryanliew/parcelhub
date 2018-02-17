@@ -71,4 +71,16 @@ class Product extends Model
     {
         return asset('images/' . $value);
     }
+
+    public function getTotalAttribute(){
+        $totalInbound = 0;
+        $totalOutbound = 0;
+        foreach($this->inbounds as $product_inbound){
+            $totalInbound = $totalInbound + $product_inbound->pivot->quantity;
+        }
+        foreach($this->outbounds as $product_outbound){
+            $totalOutbound = $totalOutbound + $product_outbound->pivot->quantity;
+        }
+        return $totalInbound-$totalOutbound;
+    }
 }

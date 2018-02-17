@@ -66,13 +66,9 @@ class InboundController extends Controller
         $now = Carbon::today();
         $compare = Carbon::parse($request->arrival_date);
         $user_lots = lot::where('volume','>', 0)->where('user_id', $auth->id)->get();
-        $product_collections = collect();
         $collection_index = 0;
         $product_total_volume = 0;
         $products = [];
-        // $products['1'] = ['1']; // $products[product_id] = [quantity]
-        // $products['2'] = ['20']; // $products[product_id] = [quantity]
-        // $products['3'] = ['2'];
         $rproducts = json_decode(request()->products);
 
         foreach($rproducts as $product){
@@ -93,8 +89,6 @@ class InboundController extends Controller
             if($compare->diffInDays($now) > Settings::get('days_before_order') ){
                 $inbound = new inbound;
                 $inbound->user_id = $auth->id;
-                $inbound->product = 1;
-                $inbound->quantity = 1;
                 $inbound->arrival_date = $request->arrival_date;
                 $inbound->total_carton = $request->total_carton;
                 $inbound->status = "true";
@@ -102,11 +96,9 @@ class InboundController extends Controller
                 foreach($products as $key => $product){
                     $inbound->products()->attach($key, ['quantity' => $product[0]]);
                 }
-                foreach($user_lots as $lot){   // 1, 2
-                    // echo "<br>: " . $lot->id;
-                    foreach($products as $key => $product){ //1, 2
-                        if($lot->left_volume > $product[1] && $product[1] > 0 && $product[0] > 0 && $lot->left_volume > 0){
-                            echo "<br> all in";
+                foreach($user_lots as $lot){ 
+                    foreach($products as $key => $product){
+                        if($lot->left_volume > $product[1] && $product[1] > 0 && $product[0] > 0 && $lot->left_volume > 0){                            
                             $lot->products()->attach($key, ['quantity' => $product[0]]);
                             $lot->left_volume = $lot->left_volume - $product[1];
                             $lot->save();
@@ -114,10 +106,8 @@ class InboundController extends Controller
                             $products[$key][1] = 0;
                         } else {
                             if($product[1] > 0 && $product[0] > 0){
-                                $potentialQuantity = round($lot->left_volume / $product[1] * $product[0], 0, PHP_ROUND_HALF_DOWN);
-                                echo "<br> potentialQuantity: " . $potentialQuantity;
-                                if($potentialQuantity > 0){
-                                    echo "<br> here:";
+                                $potentialQuantity = round($lot->left_volume / $product[1] * $product[0], 0, PHP_ROUND_HALF_DOWN);                                
+                                if($potentialQuantity > 0){                                    
                                     $lot->products()->attach($key, ['quantity' => $potentialQuantity]);
                                     $lot->left_volume = $lot->left_volume - ($potentialQuantity * $product[2]);
                                     $lot->save();
@@ -154,9 +144,6 @@ class InboundController extends Controller
     public function show($id)
     {
         $inbound = inbound::where('id', $id)->first();
-        // $arrivalDate = $inbound->arrival_date->format('Y.m.d');
-
-        // dd($arrivalDate);
         
         return view('inbound.show')->with('inbound', $inbound);
     }
