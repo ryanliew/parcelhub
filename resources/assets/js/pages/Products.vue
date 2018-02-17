@@ -23,11 +23,11 @@
 					<table-view ref="products" 
 								:fields="fields" 
 								url="/internal/products"
-								:searchables="searchables">	
+								:searchables="searchables">
 					</table-view>
 				</div>
 			</div>
-			<product :product="selectedProduct" v-if="isViewing"
+			<product :product="selectedProduct" v-else
 					@back="back">
 			</product>
 		</transition>
@@ -100,8 +100,24 @@
 			          	</div>
 			        </div>
 			    </div>
+				<p class="heading">Product attributes</p>		
+				<div class="is-pulled-left">
+			    	<checkbox-input v-model="form.is_dangerous" :defaultChecked="form.is_dangerous"
+			    					label="Dangerous"
+			    					name="is_dangerous"
+			    					:editable="true">
+			    	</checkbox-input>
+			    </div>
+			    <div class="is-pulled-left pl-5">
+			    	<checkbox-input v-model="form.is_fragile" :defaultChecked="form.is_fragile"
+			    					label="Fragile"
+			    					name="is_fragile"
+			    					:editable="true">
+			    	</checkbox-input>
+			    </div>
+			    <div class="is-clearfix"></div>
 				
-			    <div class="field">
+			    <div class="field mt-10">
 			    	<image-input v-model="productImage" :defaultImage="productImage"
 			    				@loaded="changeProductImage"
 			    				label="product image"
@@ -134,6 +150,8 @@
 					{name: 'sku', sortField: 'sku', title: 'SKU'},
 					{name: 'name', sortField: 'name'},
 					{name: 'volume', title: 'Volume(cm³)'},
+					{name: 'is_dangerous', title: 'Dangerous', sortField: 'is_dangerous', callback: 'dangerousTag'},
+					{name: 'is_fragile', title: 'Fragile', sortField: 'is_fragile', callback: 'fragileTag'},
 					{name: '__component:products-actions', title: 'Actions'}	
 				],
 				searchables: "name,sku",
@@ -149,7 +167,9 @@
 					width: '',
 					length: '',
 					sku: '',
-					picture: ''
+					picture: '',
+					is_dangerous: '',
+					is_fragile: '',
 				}),
 			};
 		},
@@ -185,6 +205,8 @@
 				this.form.height = data.height;
 				this.form.width = data.width;
 				this.form.length = data.length;
+				this.form.is_dangerous = data.is_dangerous;
+				this.form.is_fragile = data.is_fragile;
 
 				this.productImage = {name: data.picture, src: data.picture};
 				

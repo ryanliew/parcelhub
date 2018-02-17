@@ -2,7 +2,7 @@
 	<div>
 		<div class="field">
 		    <p class="control">
-		        <div class="b-checkbox is-primary mt-30">
+		        <div class="b-checkbox is-primary">
 		            <input :id="name" 
 		            		class="styled" 
 		            		type="checkbox" 

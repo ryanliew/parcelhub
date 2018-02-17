@@ -14,7 +14,7 @@ class DeleteDangerousToOutboundsTable extends Migration
     public function up()
     {
         Schema::table('outbounds', function (Blueprint $table) {
-            $table->dropColumn('dangerous')->change();
+            $table->dropColumn('dangerous');
         });
     }
 
@@ -26,7 +26,7 @@ class DeleteDangerousToOutboundsTable extends Migration
     public function down()
     {
         Schema::table('outbounds', function (Blueprint $table) {
-            $table->string('dangerous')->change();
+            $table->string('dangerous');
         });
     }
 }

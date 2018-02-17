@@ -14,7 +14,13 @@
     
     <!-- Stylesheet -->
     <link rel="stylesheet" href="{{ asset('css/app.css?v=1.0') }}">
-
+    
+    <srcipt>
+        window.App = {!! json_encode([
+                'signedIn' => Auth::check()
+            ]) !!};
+    </srcipt>
+    
     <script defer src="https://use.fontawesome.com/releases/v5.0.0/js/all.js"></script>
 
 </head>

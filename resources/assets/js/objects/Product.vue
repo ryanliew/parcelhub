@@ -27,7 +27,7 @@
 					</div>
 					<div class="column">
 						<div class="columns">
-							<div class="column">
+							<div class="column is-one-third">
 								<text-input :defaultValue="product.sku"
 											label="SKU"
 											:editable="false">	
@@ -40,10 +40,21 @@
 											label="Volume(cm³)"
 											:editable="false">
 								</text-input>
+								<p class="heading">
+									Attributes
+								</p>
+								<span class="tag is-danger" v-if="product.is_dangerous">Dangerous</span>
+								<span class="tag is-warning" v-if="product.is_fragile">Fragile</span>
 							</div>
-							<div class="column has-text-centered">
+							<div class="column is-one-third has-text-centered">
 								<p class="heading">Stocks available</p>
-								<p class="title" v-text="product.total || 0"></p>
+								<p class="title" v-text="product.total"></p>
+								<p class="heading">Height</p>
+								<p class="title" v-text="product.height"></p>
+								<p class="heading">Width</p>
+								<p class="title" v-text="product.width"></p>
+								<p class="heading">Length</p>
+								<p class="title" v-text="product.length"></p>
 							</div>
 						</div>
 					
@@ -51,7 +62,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="columns is-gapless">
+		<div class="columns mt-15">
 			<div class="column">
 				<div class="card">
 					<div class="card-header">
@@ -74,9 +85,9 @@
 							</thead>
 							<tbody>
 								<tr v-for="inbound in sortedInbound">
-									<td v-text="inbound.arrival_date"></td>
+									<td>{{ inbound.arrival_date | date }}</td>
 									<td v-text="inbound.pivot.quantity"></td>
-									<td v-html="$options.filters.formatInboundStatus(inbound.status)"></td>
+									<td v-html="$options.filters.formatInboundStatus(inbound.process_status)"></td>
 								</tr>
 							</tbody>
 						</table>
@@ -107,7 +118,7 @@
 								<tr v-for="outbound in sortedOutbound">
 									<td v-text="outbound.date"></td>
 									<td v-text="outbound.pivot.quantity"></td>
-									<td v-text="$options.filters.formatOutboundStatus(outbound.status)"></td>
+									<td v-text="$options.filters.formatOutboundStatus(inbound.process_status)"></td>
 								</tr>
 							</tbody>
 						</table>

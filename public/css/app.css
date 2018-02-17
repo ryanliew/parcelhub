@@ -12161,6 +12161,14 @@ label.panel-block:hover {
   padding: 3rem 1.5rem 6rem;
 }
 
+.b-checkbox label::before {
+  top: 3px;
+}
+
+.b-checkbox label::after {
+  top: 5px;
+}
+
 .nav-container {
   width: 100%;
   border-bottom: 1px solid #ccc;
@@ -12213,6 +12221,18 @@ th {
 
 .is-danger {
   color: #ff3860;
+}
+
+.is-warning {
+  color: #ffdd57;
+}
+
+.is-info {
+  color: #3273dc;
+}
+
+.is-success {
+  color: #23d160;
 }
 
 .button.is-facebook {

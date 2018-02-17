@@ -14,8 +14,8 @@ class AddIsFragileAndIsDangerousToProductsTable extends Migration
     public function up()
     {
         Schema::table('products', function (Blueprint $table) {
-            $table->string('is_dangerous')->default('false');
-            $table->string('is_fragile')->default('false');
+            $table->boolean('is_dangerous')->default(false);
+            $table->boolean('is_fragile')->default(false);
         });
     }
 

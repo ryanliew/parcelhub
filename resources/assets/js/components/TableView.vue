@@ -116,12 +116,24 @@
 			},
 
 			inboundStatusLabel(value) {
-				return value | formatStatus;
+				return this.$options.filters.formatInboundStatus(value);
 			},
 
 			image(value) {
 				return '<figure class="image is-48x48"><img src="'+ value +'"></figure>';
-			}	
+			},
+
+			dangerousTag(value) {
+				return value === 1 ? '<span class="tag is-danger">Dangerous</span>' : '';
+			},
+
+			fragileTag(value){
+				return value === 1 ? '<span class="tag is-warning">Fragile</span>' : '';
+			},
+
+			date(value){
+				return this.$options.filters.date(value);
+			}
 
 
 		}	

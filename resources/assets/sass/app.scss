@@ -19,6 +19,14 @@
 // Css for checkboxes
 @import '~cool-checkboxes-for-bulma.io/dist/css/bulma-radio-checkbox.min.css';
 
+.b-checkbox label::before {
+  top: 3px;
+}
+
+.b-checkbox label::after {
+    top: 5px;
+}
+
 .nav-container {
 	width: 100%;
 	border-bottom: 1px solid #ccc;
@@ -66,8 +74,21 @@
 .pl-5 {
 	padding-left: 5px;
 }
+
 .is-danger {
 	color: #ff3860;
+}
+
+.is-warning {
+  color: #ffdd57;
+}
+
+.is-info {
+  color: #3273dc;
+}
+
+.is-success {
+  color: #23d160;
 }
 
 .button.is-facebook {

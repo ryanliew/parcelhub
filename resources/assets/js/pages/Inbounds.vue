@@ -1,31 +1,39 @@
 <template>
 	<div>
-		<div class="card">
-			<div class="card-header">
-				<div class="card-header-title level">
-					<div class="level-left">
-						<div class="level-item">
-							Inbound orders
+		<transition name="slide-fade" mode="out-in">
+			<div class="card" v-if="!isViewing">
+				<div class="card-header">
+					<div class="card-header-title level">
+						<div class="level-left">
+							<div class="level-item">
+								Inbound orders
+							</div>
 						</div>
-					</div>
-					<div class="level-right">
-						<div class="level-item">
-							<button class="button is-primary" @click="modalOpen()">
-								<i class="fa fa-plus-circle"></i>
-								<span class="pl-5">Create new inbound order</span>
-							</button>
+						<div class="level-right">
+							<div class="level-item">
+								<button class="button is-primary" @click="modalOpen()">
+									<i class="fa fa-plus-circle"></i>
+									<span class="pl-5">Create new inbound order</span>
+								</button>
+							</div>
 						</div>
 					</div>
 				</div>
+				<div class="card-content">
+					<table-view ref="inbounds" 
+								:fields="fields" 
+								url="/internal/inbound/user"
+								:searchables="searchables">	
+					</table-view>
+				</div>
 			</div>
-			<div class="card-content">
-				<table-view ref="inbounds" 
-							:fields="fields" 
-							url="/internal/inbound/user">	
-				</table-view>
-			</div>
-		</div>
-
+			
+			<inbound :inbound="selectedInbound" 
+					@back="back()" 
+					@canceled="cancelInbound"
+					v-else>
+			</inbound>
+		</transition>
 		<modal :active="dialogActive" @close="dialogActive = false">
 			<template slot="header">{{ dialogTitle }}</template>
 
@@ -106,20 +114,23 @@
 
 <script>
 	import TableView from '../components/TableView.vue';
+	import Inbound from '../objects/Inbound.vue';
 
 	export default {
 		props: [''],
 
-		components: { TableView },
+		components: { TableView, Inbound },
 
 		data() {
 			return {
 				fields: [
 					{name: 'id', title: '#'},
-					{name: 'arrival_date', sortField: 'date'},
-					{name: 'total_carton', sortField: 'carton'},
-					{name: 'status', callback: 'inboundStatusLabel'}
+					{name: 'arrival_date', sortField: 'date', title: 'Arrival date', callback: 'date'},
+					{name: 'total_carton', sortField: 'carton', title: 'Total carton'},
+					{name: 'process_status', callback: 'inboundStatusLabel', title: 'Status', sortField: 'process_status'},
+					{name: '__component:inbounds-actions', title: 'Actions'}	
 				],
+				searchables: "process_status",
 				selectedInbound: '',
 				dialogActive: false,
 				override: false,
@@ -131,14 +142,15 @@
 				isDeleting: false,
 				selectedProducts: [],
 				productsOptions: [],
-				step: 1
+				step: 1,
+				isViewing: false
 
 			};
 		},
 
 		mounted() {
 			this.getProducts();
-			this.$events.on('edit', data => this.edit(data));
+			this.$events.on('view', data => this.view(data));
 		},
 
 		methods: {
@@ -164,6 +176,20 @@
 			onSuccess() {
 				this.dialogActive = false;
 				this.$refs.inbounds.refreshTable();
+			},
+
+			view(data) {
+				this.selectedInbound = data;
+				this.isViewing = true;
+			},
+
+			back() {
+				this.isViewing = false;
+				this.selectedInbound = '';
+			},
+
+			cancelInbound() {
+				this.selectedInbound.process_status = "canceled";
 			},
 
 			modalOpen() {
