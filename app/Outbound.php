@@ -51,4 +51,20 @@ class Outbound extends Model
     public function courier(){
     	return $this->hasOne('App\courier');
     }
+
+    public function scopeProcessing($query){
+        return $query->where('process_status', 'processing');
+    }
+
+    public function scopeDelivering($query){
+        return $query->where('process_status', 'delivering');
+    }
+
+    public function scopeCompleted($query){
+        return $query->where('process_status', 'completed');
+    }
+
+    public function scopeCanceled($query){
+        return $query->where('process_status', 'canceled');
+    }
 }

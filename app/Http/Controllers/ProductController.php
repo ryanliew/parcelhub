@@ -68,7 +68,9 @@ class ProductController extends Controller
         $product->height = $request->height;
         $product->length = $request->length;
         $product->width = $request->width;
-        $product->sku = $request->sku;  
+        $product->sku = $request->sku;
+        $product->is_fragile = $request->is_fragile;
+        $product->is_dangerous = $request->is_dangerous;  
         $product->user_id = $auth_id;      
         $product->status = 'true';
         $product->save();
@@ -128,6 +130,8 @@ class ProductController extends Controller
         $product->height = $request->height;
         $product->length = $request->length;
         $product->width = $request->width;
+        $product->is_fragile = $request->is_fragile;
+        $product->is_dangerous = $request->is_dangerous;  
         $product->sku = $request->sku;
         if(Input::hasFile('picture')){
             $file = Input::file('picture');
