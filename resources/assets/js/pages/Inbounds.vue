@@ -41,7 +41,7 @@
 			<form @submit.prevent="onSubmit" 
 					@keydown="form.errors.clear($event.target.name)" 
 					@input="form.errors.clear($event.target.name)">
-				<div v-if="step == 1">
+				<div v-show="step == 1">
 		         	<div class="field">
 		          		<text-input v-model="form.arrival_date" :defaultValue="form.arrival_date" 
 									label="Arrival date" 

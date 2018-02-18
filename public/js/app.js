@@ -59228,95 +59228,106 @@ var render = function() {
               }
             },
             [
-              _vm.step == 1
-                ? _c("div", [
-                    _c(
-                      "div",
-                      { staticClass: "field" },
-                      [
-                        _c("text-input", {
-                          attrs: {
-                            defaultValue: _vm.form.arrival_date,
-                            label: "Arrival date",
-                            required: true,
-                            name: "arrival_date",
-                            type: "date",
-                            editable: true,
-                            error: _vm.form.errors.get("arrival_date"),
-                            focus: true
+              _c(
+                "div",
+                {
+                  directives: [
+                    {
+                      name: "show",
+                      rawName: "v-show",
+                      value: _vm.step == 1,
+                      expression: "step == 1"
+                    }
+                  ]
+                },
+                [
+                  _c(
+                    "div",
+                    { staticClass: "field" },
+                    [
+                      _c("text-input", {
+                        attrs: {
+                          defaultValue: _vm.form.arrival_date,
+                          label: "Arrival date",
+                          required: true,
+                          name: "arrival_date",
+                          type: "date",
+                          editable: true,
+                          error: _vm.form.errors.get("arrival_date"),
+                          focus: true
+                        },
+                        model: {
+                          value: _vm.form.arrival_date,
+                          callback: function($$v) {
+                            _vm.$set(_vm.form, "arrival_date", $$v)
                           },
-                          model: {
-                            value: _vm.form.arrival_date,
-                            callback: function($$v) {
-                              _vm.$set(_vm.form, "arrival_date", $$v)
-                            },
-                            expression: "form.arrival_date"
+                          expression: "form.arrival_date"
+                        }
+                      })
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: "field" },
+                    [
+                      _c("text-input", {
+                        attrs: {
+                          defaultValue: _vm.form.total_carton,
+                          label: "Total carton",
+                          required: true,
+                          name: "total_carton",
+                          type: "text",
+                          editable: true,
+                          error: _vm.form.errors.get("total_carton")
+                        },
+                        model: {
+                          value: _vm.form.total_carton,
+                          callback: function($$v) {
+                            _vm.$set(_vm.form, "total_carton", $$v)
+                          },
+                          expression: "form.total_carton"
+                        }
+                      })
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: "field mt-30" },
+                    [
+                      _c("products-selector-input", {
+                        attrs: {
+                          defaultData: _vm.selectedProducts,
+                          label: "Products",
+                          name: "products",
+                          required: true,
+                          potentialData: _vm.productsOptions,
+                          editable: true,
+                          placeholder: "Select products",
+                          multiple: true,
+                          error: _vm.form.errors.get("products")
+                        },
+                        on: {
+                          input: function($event) {
+                            _vm.productsUpdate($event)
                           }
-                        })
-                      ],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "div",
-                      { staticClass: "field" },
-                      [
-                        _c("text-input", {
-                          attrs: {
-                            defaultValue: _vm.form.total_carton,
-                            label: "Total carton",
-                            required: true,
-                            name: "total_carton",
-                            type: "text",
-                            editable: true,
-                            error: _vm.form.errors.get("total_carton")
+                        },
+                        model: {
+                          value: _vm.selectedProducts,
+                          callback: function($$v) {
+                            _vm.selectedProducts = $$v
                           },
-                          model: {
-                            value: _vm.form.total_carton,
-                            callback: function($$v) {
-                              _vm.$set(_vm.form, "total_carton", $$v)
-                            },
-                            expression: "form.total_carton"
-                          }
-                        })
-                      ],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "div",
-                      { staticClass: "field mt-30" },
-                      [
-                        _c("products-selector-input", {
-                          attrs: {
-                            defaultData: _vm.selectedProducts,
-                            label: "Products",
-                            name: "products",
-                            required: true,
-                            potentialData: _vm.productsOptions,
-                            editable: true,
-                            placeholder: "Select products",
-                            multiple: true,
-                            error: _vm.form.errors.get("products")
-                          },
-                          on: {
-                            input: function($event) {
-                              _vm.productsUpdate($event)
-                            }
-                          },
-                          model: {
-                            value: _vm.selectedProducts,
-                            callback: function($$v) {
-                              _vm.selectedProducts = $$v
-                            },
-                            expression: "selectedProducts"
-                          }
-                        })
-                      ],
-                      1
-                    )
-                  ])
-                : _vm._e(),
+                          expression: "selectedProducts"
+                        }
+                      })
+                    ],
+                    1
+                  )
+                ]
+              ),
               _vm._v(" "),
               _vm.step == 2
                 ? _c("div", [
