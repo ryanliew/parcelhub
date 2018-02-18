@@ -22,7 +22,8 @@
 				<table-view ref="lots" 
 							:fields="fields" 
 							url="/internal/lots"
-							:searchables="searchables">	
+							:searchables="searchables"
+							:detail="detailRow">	
 				</table-view>
 			</div>
 		</div>
@@ -104,11 +105,13 @@
 				lots: '',
 				fields: [
 					{name: 'name', sortField: 'name'},
+					{name: 'left_volume', sortField: 'left_volume', title: 'Volume left (cm³)'},
 					{name: 'category_name', sortField: 'category_name', title: 'Category'},
 					{name: 'volume', sortField: 'Volume', title: 'Volume (cm³)'},
 					{name: 'user_name', sortField: 'user_name', title: 'Customer'},
 					{name: '__component:lots-actions', title: 'Actions'}	
 				],
+				detailRow: 'LotDetailRow',
 				searchables: "users.name,lots.name,categories.name,lots.volume",
 				selectedLot: '',
 				selectedCategory: '',

@@ -9,6 +9,8 @@ class InboundProduct extends Model
 	protected $guarded = [];
 
 	protected $table = 'inbound_product';
+
+    protected $appends = ["lots_name"];
 	
     public function lots(){
     	return $this->belongsToMany('App\Lot');
@@ -22,5 +24,10 @@ class InboundProduct extends Model
     	return $this->belongsTo('App\Product');
     }
 
+    // Accessor
+    public function getLotsNameAttribute()
+    {
+        return $this->lots->pluck('name')->implode(', ');
+    }
 }
 

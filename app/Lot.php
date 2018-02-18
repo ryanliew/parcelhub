@@ -45,7 +45,8 @@ class Lot extends Model
     }
 
     public function products(){
-    	return $this->belongsToMany('App\Product')->withPivot('quantity');
+    	return $this->belongsToMany('App\Product')
+                ->withPivot('quantity');
     }
 
     public function category(){

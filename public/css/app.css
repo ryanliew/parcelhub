@@ -12193,6 +12193,12 @@ th {
   max-height: 300px;
 }
 
+.row-detail {
+  padding: 0 10px;
+  border-left: 1px solid #eee;
+  border-right: 1px solid #eee;
+}
+
 /* Custom helper classes */
 
 .mt-5 {

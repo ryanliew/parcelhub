@@ -8,10 +8,12 @@
 	    		:multi-sort="true"
 	    		:css="css"
 	    		:append-params="params"
+	    		:detail-row-component="detail"
 	    		pagination-path=""
 	    		@vuetable:pagination-data="onPaginationData"
 	    		@vuetable:loaded="onLoaded"
-	    		@vuetable-refresh="refreshTable">	
+	    		@vuetable-refresh="refreshTable"
+	    		@vuetable:cell-clicked="onCellClicked">	
 	    </vuetable>
 	    <div class="level">
 	    	<div class="level-left">
@@ -37,7 +39,7 @@
 	import Loader from './Loader';
 
 	export default {
-		props: ['user', 'fields', 'url', 'searchables'],
+		props: ['user', 'fields', 'url', 'searchables', 'detail'],
 
 		components: { Vuetable, VuetablePagination, VuetablePaginationInfo, VuetableFilterBar, Loader },
 
@@ -91,6 +93,12 @@
 
 			onLoaded() {
 				this.loading = false;
+			},
+
+			onCellClicked(data, field, event) {
+				if(this.detail == 'LotDetailRow'
+					|| this.detail == 'ProductDetailRow')
+					this.$refs.vuetable.toggleDetailRow(data.id);
 			},
 
 			date(value) {

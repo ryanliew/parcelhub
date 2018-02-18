@@ -36,6 +36,10 @@ Vue.component('selector-input', require('./components/SelectorInput.vue'));
 Vue.component('image-input', require('./components/ImageInput.vue'));
 Vue.component('products-selector-input', require('./components/ProductsSelectorInput.vue'));
 
+// Detail row components
+Vue.component('LotDetailRow', require('./details/LotDetailRow.vue'));
+Vue.component('ProductDetailRow', require('./details/ProductDetailRow.vue'));
+
 // Actions components
 Vue.component('CategoriesActions', require('./actions/CategoriesActions.vue'));
 Vue.component('LotsActions', require('./actions/LotsActions.vue'));

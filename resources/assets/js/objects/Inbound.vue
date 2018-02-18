@@ -73,10 +73,11 @@
 									<th>Name</th>
 									<th>Quantity</th>
 									<th>Attributes</th>
+									<th>Lots</th>
 								</tr>
 							</thead>
 							<tbody>
-								<tr v-for="product in inbound.products">
+								<tr v-for="(product, index) in inbound.products">
 									<td><figure class="image is-48x48"><img :src="product.picture"></figure></td>
 									<td v-text="product.name"></td>
 									<td v-text="product.pivot.quantity"></td>
@@ -86,6 +87,7 @@
 											<span class="tag is-warning" v-if="product.is_fragile">Fragile</span>
 										</div>
 									</td>
+									<td v-text="inbound.products_with_lots[index].lots_name"></td>
 								</tr>
 							</tbody>
 						</table>
