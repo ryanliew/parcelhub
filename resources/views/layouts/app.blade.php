@@ -49,8 +49,8 @@
 
     </footer>
     @endif
-    <script src="{{ asset('js/form.js?v=1.0.1') }}"></script>
-    <script src="{{ asset('js/app.js?v=1.0') }}"></script>
+    <script src="{{ asset('js/form.js?v=1.0.2') }}"></script>
+    <script src="{{ asset('js/app.js?v=1.5') }}"></script>
 
     @yield('js')
 

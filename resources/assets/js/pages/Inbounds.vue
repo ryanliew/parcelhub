@@ -174,7 +174,7 @@
 				this.step = 1;
 			},
 
-			onSuccess() {
+			onSuccess(data) {
 				this.dialogActive = false;
 				this.$refs.inbounds.refreshTable();
 			},
