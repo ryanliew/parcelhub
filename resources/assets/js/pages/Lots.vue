@@ -46,7 +46,7 @@
 					</text-input>
 	          	</div>
 
-	          	<div class="field">
+	          	<div class="field mt-30">
 	          		<selector-input v-model="selectedCategory" :defaultData="selectedCategory" 
 									label="Category" 
 									:required="true"

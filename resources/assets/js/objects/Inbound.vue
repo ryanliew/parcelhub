@@ -104,15 +104,10 @@
 						</div>
 					</div>
 					<div class="card-content">
-						<div class="has-text-centered">
-							<p class="title" :class="statusClass">
-								{{ inbound.process_status | unslug | capitalize }}
-							</p>
-							<button v-if="inbound.process_status == 'awaiting_arrival'" @click="confirmation = true" class="button is-danger">Cancel order</button>
-						</div>
 						<form @submit.prevent="onSubmit" 
 							@keydown="form.errors.clear($event.target.name)" 
-							@input="form.errors.clear($event.target.name)">
+							@input="form.errors.clear($event.target.name)"
+							v-if="canManage">
 							
 							<div class="field">
 								<selector-input v-model="selectedStatus" :defaultData="selectedStatus"
@@ -131,6 +126,13 @@
 							</div>
 							<div class="is-clearfix"></div>
           				</form>
+						<div class="has-text-centered" v-else>
+							<p class="title" :class="statusClass">
+								{{ inbound.process_status | unslug | capitalize }}
+							</p>
+							<button v-if="inbound.process_status == 'awaiting_arrival'" @click="confirmation = true" class="button is-danger">Cancel order</button>
+						</div>
+
 					</div>
 				</div>
 			</div>
@@ -150,7 +152,7 @@
 
 <script>
 	export default {
-		props: ['inbound'],
+		props: ['inbound', 'canManage'],
 		data() {
 			return {
 				form: new Form({

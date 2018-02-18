@@ -69,7 +69,7 @@
 			},
 
 			inputClass(){
-				if(this.value && this.value !== '' || this.type == 'date') {
+				if(this.value !== '' || this.type == 'date') {
 					return 'input--filled';
 				}
 

@@ -28,7 +28,8 @@
 				</div>
 			</div>
 			
-			<inbound :inbound="selectedInbound" 
+			<inbound :inbound="selectedInbound"
+					:canManage="can_manage" 
 					@back="back()" 
 					@canceled="cancelInbound"
 					v-else>
@@ -62,7 +63,7 @@
 									:error="form.errors.get('total_carton')">
 						</text-input>
 					</div>
-					<div class="field">
+					<div class="field mt-30">
 						<products-selector-input v-model="selectedProducts" :defaultData="selectedProducts" 
 												label="Products"
 												name="products" 
@@ -117,7 +118,7 @@
 	import Inbound from '../objects/Inbound.vue';
 
 	export default {
-		props: [''],
+		props: ['can_manage'],
 
 		components: { TableView, Inbound },
 
@@ -206,6 +207,8 @@
 					return obj;
 				});
 
+				this.form.errors.clear('products');
+				
 				Vue.nextTick().then( () => this.selectedProducts = data);
 							
 			}
