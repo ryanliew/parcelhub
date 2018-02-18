@@ -85,7 +85,7 @@ class InboundController extends Controller
         // Check for total left over volume
         if($product_total_volume > $user_lots->sum('left_volume')){
             if(request()->wantsJson()) {
-                return response(json_encode(array('products' => ['You have exceeded your lot limit'])), 422);
+                return response(json_encode(array('products' => ['You have exceeded your lot limit'])), 422) ;
             }
             return redirect()->back()->withErrors("You have exceeded your lot limit.");
         }
