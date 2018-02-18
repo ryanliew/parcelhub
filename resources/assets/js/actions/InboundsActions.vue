@@ -8,12 +8,6 @@
                     </span>
                     <span>View</span>
                 </button>
-                <button class="button is-warning" @click="itemAction('edit', rowData, rowIndex)">
-                    <span class="icon">
-                        <i class="fa fa-edit"></i>
-                    </span>
-                    <span>Edit</span>
-                </button>
             </div>
         </div>
     </div>

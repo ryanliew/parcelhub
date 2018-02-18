@@ -89,7 +89,6 @@
 		},
 
 		mounted() {
-			this.fetchCategories();
 			this.$events.on('edit', data => this.edit(data));
 		},
 

@@ -34,7 +34,7 @@ class ProductController extends Controller
     {
         if(request()->wantsJson())
         {
-            return Controller::VueTableListResult(Product::select("*"));
+            return Controller::VueTableListResult(Product::with("inbounds")->with("outbounds"));
         }
 
         $products = product::where('status', 'true')->get();
@@ -69,8 +69,8 @@ class ProductController extends Controller
         $product->length = $request->length;
         $product->width = $request->width;
         $product->sku = $request->sku;
-        $product->is_fragile = $request->is_fragile;
-        $product->is_dangerous = $request->is_dangerous;  
+        $product->is_fragile = $request->is_fragile ? 1 : 0;
+        $product->is_dangerous = $request->is_dangerous ? 1 : 0;  
         $product->user_id = $auth_id;      
         $product->status = 'true';
         $product->save();
@@ -130,8 +130,8 @@ class ProductController extends Controller
         $product->height = $request->height;
         $product->length = $request->length;
         $product->width = $request->width;
-        $product->is_fragile = $request->is_fragile;
-        $product->is_dangerous = $request->is_dangerous;  
+        $product->is_fragile = $request->is_fragile ? 1 : 0;
+        $product->is_dangerous = $request->is_dangerous ? 1 : 0;  
         $product->sku = $request->sku;
         if(Input::hasFile('picture')){
             $file = Input::file('picture');

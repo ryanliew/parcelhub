@@ -38,7 +38,7 @@
                             </text-input>
                         </div>
                                 
-                        <div class="field">
+                        <div class="field mt-30">
                             <checkbox-input
                                 label="Keep me logged in"
                                 name="remember"
