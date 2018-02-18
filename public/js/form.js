@@ -53,6 +53,7 @@ class Errors {
      * @param {string|null} field
      */
     clear(field) {
+        console.log("Clearing: ", field);
         if (field) {
             delete this.errors[field];
 
