@@ -35,8 +35,10 @@ class LotController extends Controller
             if(request()->wantsJson() )
             {
                 return Controller::VueTableListResult(
-                    Lot::select('lots.id as id', 
+                    Lot::with(['products'])
+                        ->select('lots.id as id', 
                                 'lots.name as name', 
+                                'lots.left_volume as left_volume',
                                 'categories.name as category_name', 
                                 'categories.id as category_id',
                                 'categories.volume as category_volume',

@@ -23,7 +23,8 @@
 					<table-view ref="products" 
 								:fields="fields" 
 								url="/internal/products"
-								:searchables="searchables">
+								:searchables="searchables"
+								:detail="detailRow">
 					</table-view>
 				</div>
 			</div>
@@ -154,6 +155,7 @@
 					{name: 'is_fragile', title: 'Fragile', sortField: 'is_fragile', callback: 'fragileTag'},
 					{name: '__component:products-actions', title: 'Actions'}	
 				],
+				detailRow: 'ProductDetailRow',
 				searchables: "name,sku",
 				selectedProduct: '',
 				isViewing: false,

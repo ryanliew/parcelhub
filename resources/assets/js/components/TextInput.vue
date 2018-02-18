@@ -100,6 +100,7 @@
 	width: 100%;
 	vertical-align: top;
 	font-size: 1em;
+	min-width: 80px;
 }
 
 .input__field, .input__disabled {
