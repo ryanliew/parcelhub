@@ -58411,7 +58411,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			selectedProducts: [],
 			productsOptions: [],
 			step: 1,
-			isViewing: false
+			isViewing: false,
+			errorForProducts: ''
 
 		};
 	},
@@ -58447,6 +58448,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		},
 		onError: function onError(error) {
 			this.step = 1;
+			this.errorForProducts = this.form.errors.get('products');
 		},
 		onSuccess: function onSuccess(data) {
 			this.selectedProducts = [];
@@ -58471,8 +58473,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			this.dialogActive = true;
 		},
 		productsUpdate: function productsUpdate(data) {
-			var _this4 = this;
-
 			this.form.products = data.map(function (product) {
 				var obj = {};
 				obj["id"] = product.id;
@@ -58482,9 +58482,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 			this.form.errors.clear('products');
 
-			Vue.nextTick().then(function () {
-				return _this4.selectedProducts = data;
-			});
+			this.selectedProducts = data;
+
+			this.errorForProducts = '';
 		}
 	},
 
@@ -59308,7 +59308,7 @@ var render = function() {
                           editable: true,
                           placeholder: "Select products",
                           multiple: true,
-                          error: _vm.form.errors.get("products")
+                          error: _vm.errorForProducts
                         },
                         on: {
                           input: function($event) {

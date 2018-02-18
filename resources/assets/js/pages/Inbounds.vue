@@ -73,7 +73,7 @@
 												:editable="true"
 												placeholder="Select products"
 												:multiple="true"
-												:error="form.errors.get('products')">
+												:error="errorForProducts">
 						</products-selector-input>
 		          	</div>
 		        </div>
@@ -144,7 +144,8 @@
 				selectedProducts: [],
 				productsOptions: [],
 				step: 1,
-				isViewing: false
+				isViewing: false,
+				errorForProducts: ''
 
 			};
 		},
@@ -172,6 +173,7 @@
 
 			onError(error) {
 				this.step = 1;
+				this.errorForProducts = this.form.errors.get('products');
 			},
 
 			onSuccess(data) {
@@ -211,7 +213,9 @@
 
 				this.form.errors.clear('products');
 				
-				Vue.nextTick().then( () => this.selectedProducts = data);
+				this.selectedProducts = data;
+
+				this.errorForProducts = '';
 							
 			}
 		},
