@@ -58449,6 +58449,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			this.step = 1;
 		},
 		onSuccess: function onSuccess(data) {
+			this.selectedProducts = [];
 			this.dialogActive = false;
 			this.$refs.inbounds.refreshTable();
 		},
@@ -59338,24 +59339,22 @@ var render = function() {
                                 _c("text-input", {
                                   attrs: {
                                     defaultValue:
-                                      _vm.form.products[index].quantity || 0,
+                                      _vm.form.products[index].quantity,
                                     label: "Quantity for " + product.name,
                                     required: true,
                                     type: "text",
                                     editable: true
                                   },
                                   model: {
-                                    value:
-                                      _vm.form.products[index].quantity || 0,
+                                    value: _vm.form.products[index].quantity,
                                     callback: function($$v) {
                                       _vm.$set(
                                         _vm.form.products[index],
-                                        "quantity || 0",
+                                        "quantity",
                                         $$v
                                       )
                                     },
-                                    expression:
-                                      "form.products[index].quantity || 0"
+                                    expression: "form.products[index].quantity"
                                   }
                                 })
                               ],
