@@ -107,11 +107,11 @@
             </div>
             <div>
               <label>Arrival Date: </label>
-              <input type="date" id="date" name="date" />
+              <input type="date" id="date" name="arrival_date" />
             </div>
             <div>
               <label>Total Carton: </label>
-              <input type="number" id="carton" name="carton" />
+              <input type="number" id="carton" name="total_carton" />
             </div>
             <div class="modal-footer">
             @if(count($products) > 0)

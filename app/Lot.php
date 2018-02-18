@@ -34,6 +34,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Lot whereExpiredAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Lot whereLeftVolume($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Lot whereRentalDuration($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Payment[] $payments
  */
 class Lot extends Model
 {

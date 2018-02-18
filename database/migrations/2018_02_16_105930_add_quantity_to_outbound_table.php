@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddLotsExpiredAt extends Migration
+class AddQuantityToOutboundTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,8 @@ class AddLotsExpiredAt extends Migration
      */
     public function up()
     {
-        Schema::table('lots', function (Blueprint $table) {
-            $table->timestamp('expired_at')->nullable();
-            $table->integer('rental_duration')->nullable();
+        Schema::table('outbounds', function (Blueprint $table) {
+            $table->integer('quantity')->default(0);
         });
     }
 
@@ -26,9 +25,8 @@ class AddLotsExpiredAt extends Migration
      */
     public function down()
     {
-        Schema::table('lots', function (Blueprint $table) {
-            $table->dropColumn('expired_at');
-            $table->dropColumn('rental_duration');
+        Schema::table('outbounds', function (Blueprint $table) {
+            $table->dropColumn('quantity');
         });
     }
 }

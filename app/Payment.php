@@ -24,6 +24,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $lot_id
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Lot[] $lot
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Payment whereLotId($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Lot[] $lots
  */
 class Payment extends Model
 {

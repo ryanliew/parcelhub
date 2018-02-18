@@ -31,9 +31,7 @@ class PaymentController extends Controller
                 ->where('status', '=', 'false')
                 ->get();
 
-            $rental_duration = (int)Settings::where('key', '=', 'rental_duration')->value('value');
-
-            return view("payment.user")->with(compact('lots', 'rental_duration'));
+            return view("payment.user")->with('lots', $lots);
 
         }
     }
@@ -50,11 +48,9 @@ class PaymentController extends Controller
 
     public function purchase(Request $request) {
 
-        $rental_duration = (int)Settings::where('key', '=', 'rental_duration')->value('value');
-
         $this->validate($request, [
             'lots_purchase' => 'required',
-            'lots_purchase.*.rental_duration' => 'required|numeric|min:'.$rental_duration,
+            'lots_purchase.*.rental_duration' => 'required|numeric|min:' . Settings::rentalDuration(),
             'payment_slip' => 'required|image',
         ]);
 
@@ -145,12 +141,10 @@ class PaymentController extends Controller
             $lotIds = $payment->lots()->pluck('lot_id')->toArray();
 
             foreach($lotIds as $_key => $_value) {
+
                 $lot = Lot::find($_value);
+                $lot->update(['status' => 'true', 'expired_at' => Carbon::now()->addDays($lot->rental_duration)]);
 
-                $carbon = new Carbon();
-                $carbon->addDays($lot->rental_duration);
-
-                $lot->update(['status' => 'true', 'expired_at' => $carbon->toDateTimeString()]);
             }
         }
 

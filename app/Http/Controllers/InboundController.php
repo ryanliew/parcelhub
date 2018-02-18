@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Settings;
+use App\Settings;
 use App\Lot;
 use App\Inbound;
 use App\Product;
@@ -29,7 +29,7 @@ class InboundController extends Controller
             return Controller::VueTableListResult(inbound::where('status', 'true'));
         }
         $inbounds = inbound::where('status', 'true')->get();
-        $products = product::where('user_id', auth()->user()->id)->where('status', 'true')->get();
+        $products = product::where('user_id', auth()->id())->where('status', 'true')->get();
 
         return view('inbound.index')->with('inbounds', $inbounds)->with('products', $products);
     }
@@ -56,7 +56,7 @@ class InboundController extends Controller
 
         $auth = auth()->user();
         $now = Carbon::today();
-        $compare = Carbon::parse($request->date);
+        $compare = Carbon::parse($request->arrival_date);
         $user_lots = lot::where('volume','>', 0)->where('user_id', $auth->id)->get();
         $product_collections = collect();
         $collection_index = 0;
@@ -71,7 +71,6 @@ class InboundController extends Controller
             array_push($products[$key], $product_volume_from_db->volume * $product[0]);
             array_push($products[$key], $product_volume_from_db->volume);
         }
-
         
         /*  NOTE: 
         products[0] = requiredQuantity
@@ -79,13 +78,13 @@ class InboundController extends Controller
         products[2] = eachVolume */
 
         if($product_total_volume <= $user_lots->sum('left_volume')){
-            if($compare->diffInDays($now) > Settings::get('days_before_order') ){
+            if($compare->diffInDays($now) > Settings::daysBeforeOrder()){
                 $inbound = new inbound;
                 $inbound->user_id = $auth->id;
                 $inbound->product = $request->product;
                 $inbound->quantity = $request->quantity;
-                $inbound->arrival_date = $request->date;
-                $inbound->total_carton = $request->carton;
+                $inbound->arrival_date = $request->arrival_date;
+                $inbound->total_carton = $request->total_carton;
                 $inbound->status = "true";
                 $inbound->save();
                 foreach($products as $key => $product){
@@ -118,7 +117,7 @@ class InboundController extends Controller
                     }
                 }
             } else {
-                return redirect()->back()->withErrors("Inbound must be created before ".Settings::get('days_before_order')." days.");
+                return redirect()->back()->withErrors("Inbound must be created before ".Settings::daysBeforeOrder()." days.");
             }
         } else {
             return redirect()->back()->withErrors("You have exceeded your lot limit.");

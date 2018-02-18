@@ -35,20 +35,22 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Outbound whereUserId($value)
  * @mixin \Eloquent
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Product[] $products
+ * @property int $quantity
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Outbound whereQuantity($value)
  */
 class Outbound extends Model
 {
-	protected $guarded = [];
+	protected $guarded = ['products', 'dangerous', 'insurance', 'amount_insured', 'status'];
 	
     public function user(){
     	return $this->belongsTo('App\User');
     }
 
-    public function products(){
+    public function products() {
     	return $this->belongsToMany('App\Product');
     }
 
-    public function courier(){
+    public function courier() {
     	return $this->hasOne('App\courier');
     }
 }
