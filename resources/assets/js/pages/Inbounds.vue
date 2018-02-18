@@ -195,6 +195,7 @@
 
 			modalOpen() {
 				this.form.reset();
+				this.step = 1;
 				this.selectedProducts = [];
 				this.dialogActive = true;
 			},

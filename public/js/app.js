@@ -58459,6 +58459,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		},
 		modalOpen: function modalOpen() {
 			this.form.reset();
+			this.step = 1;
 			this.selectedProducts = [];
 			this.dialogActive = true;
 		},
