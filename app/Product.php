@@ -46,12 +46,17 @@ class Product extends Model
     protected $appends = ['volume']	;
     
     public function lots(){
-    	return $this->belongsToMany('App\Lot');
+    	return $this->belongsToMany('App\Lot')
+            ->withPivot('quantity');
     }
 
     public function inbounds(){
     	return $this->belongsToMany('App\Inbound')
         ->withPivot('quantity');
+    }
+
+    public function inbounds_with_lots(){
+        return $this->hasMany('App\InboundProduct');
     }
 
     public function outbounds(){
