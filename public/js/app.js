@@ -54348,7 +54348,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-	props: ['potentialData', 'label', 'defaultData', 'error', 'name', 'placeholder', 'required', 'multiple'],
+	props: ['potentialData', 'label', 'defaultData', 'error', 'name', 'placeholder', 'required', 'multiple', 'unclearable'],
 
 	components: { vSelect: __WEBPACK_IMPORTED_MODULE_0_vue_select___default.a },
 
@@ -54360,6 +54360,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 	methods: {
 		updateValue: function updateValue(value) {
 			this.$emit('input', value);
+		}
+	},
+
+	computed: {
+		canClearCss: function canClearCss() {
+			return this.unclearable ? "unclearable" : "";
 		}
 	}
 
@@ -54384,7 +54390,7 @@ var render = function() {
     _vm._v(" "),
     _c(
       "div",
-      { staticClass: "control" },
+      { staticClass: "control", class: _vm.canClearCss },
       [
         _c("v-select", {
           attrs: {
@@ -58655,6 +58661,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	props: ['inbound', 'canManage'],
@@ -58944,6 +58951,7 @@ var render = function() {
                               potentialData: _vm.processStatusOptions,
                               editable: true,
                               placeholder: "Select a status",
+                              unclearable: true,
                               error: _vm.form.errors.get("process_status")
                             },
                             on: {
@@ -59330,22 +59338,24 @@ var render = function() {
                                 _c("text-input", {
                                   attrs: {
                                     defaultValue:
-                                      _vm.form.products[index].quantity,
+                                      _vm.form.products[index].quantity || 0,
                                     label: "Quantity for " + product.name,
                                     required: true,
                                     type: "text",
                                     editable: true
                                   },
                                   model: {
-                                    value: _vm.form.products[index].quantity,
+                                    value:
+                                      _vm.form.products[index].quantity || 0,
                                     callback: function($$v) {
                                       _vm.$set(
                                         _vm.form.products[index],
-                                        "quantity",
+                                        "quantity || 0",
                                         $$v
                                       )
                                     },
-                                    expression: "form.products[index].quantity"
+                                    expression:
+                                      "form.products[index].quantity || 0"
                                   }
                                 })
                               ],

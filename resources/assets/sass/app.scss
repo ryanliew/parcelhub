@@ -55,6 +55,9 @@
   border-right: 1px solid #eee;
 }
 
+.unclearable .v-select .dropdown-toggle .clear {
+  display: none;
+}
 /* Custom helper classes */
 
 .mt-5 {
