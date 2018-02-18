@@ -120,6 +120,7 @@
 													@input="statusUpdate($event)"
 													:editable="true"
 													placeholder="Select a status"
+													:unclearable="true"
 													:error="form.errors.get('process_status')">
 								</selector-input>
 							</div>

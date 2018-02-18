@@ -4,7 +4,7 @@
 			<span v-text="label"></span>
 			<span v-if="required" class="is-danger">*</span>
 		</label>
-		<div class="control">
+		<div class="control" :class="canClearCss">
 			<v-select :multiple="multiple" :options="potentialData" :value="this.defaultData" @input="updateValue" name="name" :placeholder="placeholder" :closeOnSelect="!multiple || true">
 			</v-select>
 		</div>
@@ -15,7 +15,7 @@
 <script>
 	import vSelect from 'vue-select';
 	export default {
-		props: ['potentialData', 'label', 'defaultData', 'error', 'name', 'placeholder', 'required', 'multiple'],
+		props: ['potentialData', 'label', 'defaultData', 'error', 'name', 'placeholder', 'required', 'multiple', 'unclearable'],
 
 		components: { vSelect },
 
@@ -28,6 +28,12 @@
 		methods: {
 			updateValue(value) {
 				this.$emit('input', value);
+			}
+		},	
+
+		computed: {
+			canClearCss() {
+				return this.unclearable ? "unclearable" : "";
 			}
 		}
 

@@ -87,7 +87,7 @@
 			          		</figure>
 			          		<div class="media-content">
 			          			<div class="content">
-				          			<text-input v-model="form.products[index].quantity" :defaultValue="form.products[index].quantity"
+				          			<text-input v-model="form.products[index].quantity || 0" :defaultValue="form.products[index].quantity || 0"
 				          						:label="'Quantity for ' + product.name"
 				          						:required="true"
 				          						type="text"
@@ -195,6 +195,7 @@
 
 			modalOpen() {
 				this.form.reset();
+				this.step = 1;
 				this.selectedProducts = [];
 				this.dialogActive = true;
 			},
