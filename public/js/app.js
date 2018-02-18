@@ -58442,7 +58442,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		onError: function onError(error) {
 			this.step = 1;
 		},
-		onSuccess: function onSuccess() {
+		onSuccess: function onSuccess(data) {
 			this.dialogActive = false;
 			this.$refs.inbounds.refreshTable();
 		},
