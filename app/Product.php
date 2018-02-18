@@ -69,7 +69,6 @@ class Product extends Model
     // Custom accessor
     public function getVolumeAttribute(){
         return $this->height * $this->width * $this->length;
-
     }
 
     public function getPictureAttribute($value)

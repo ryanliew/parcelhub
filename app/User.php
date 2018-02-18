@@ -32,6 +32,7 @@ use Zizaco\Entrust\Traits\EntrustUserTrait;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User withRole($role)
  * @mixin \Eloquent
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Product[] $products
+ * @property-read mixed $total_lot_left_volume
  */
 class User extends Authenticatable
 {
@@ -76,5 +77,9 @@ class User extends Authenticatable
 
     public function products(){
         return $this->hasMany('App\Product');
+    }
+
+    public function getTotalLotLeftVolumeAttribute() {
+        return $this->lots->sum('left_volume');
     }
 }

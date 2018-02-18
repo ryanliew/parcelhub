@@ -96,9 +96,12 @@ Route::group(['middleware' => ['auth', 'role:admin']], function () {
     });
 });
 
-Route::group(['middleware' => 'auth'], function () {
+Route::group(['prefix' => 'outbound'], function() {
+    Route::get('index', 'OutboundController@index')->name('outbound.index');
+    Route::post('store', 'OutboundController@store')->name('outbound.store');
+});
 
-    Route::get('json/categories', 'CategoryController@categories')->name('json.categories');
+Route::group(['middleware' => 'auth'], function () {
 
     Route::group(['prefix' => 'lot'], function() {
         Route::get('index', 'LotController@index');

@@ -39,7 +39,8 @@ class PaymentTest extends TestCase
             ['bankPaymentSlip' => UploadedFile::fake()->image('bank-transfer-slip.jpg')],
             [],
             [],
-            ['HTTP_REFERER' => 'payment/index']);
+            ['HTTP_REFERER' => 'payment/index']
+        );
 
         $this->assertTrue($response->isRedirect());
         $response->assertRedirect('payment/index');
