@@ -7,7 +7,8 @@
 					:type="type || 'text'" 
 					:value="value" 
 					@input="updateValue($event.target.value)"
-					v-if="editable"/>
+					v-if="editable"
+					ref="input" />
 			<span class="input__field input__field--hoshi"
 					v-html="value"
 					v-else>	
@@ -28,7 +29,7 @@
 <script>
 	import moment from 'moment';
 	export default {
-		props: ['defaultValue', 'label', 'required', 'error', 'name', 'type', 'editable'],
+		props: ['defaultValue', 'label', 'required', 'error', 'name', 'type', 'editable', 'focus'],
 		data() {
 			return {
 				finalValue: ''
@@ -37,6 +38,13 @@
 
 		created() {
 			this.finalValue = this.defaultValue;
+		},
+
+		mounted() {
+			if(this.focus)
+			{
+				this.$refs.input.focus();
+			}
 		},
 
 		methods: {
@@ -61,7 +69,7 @@
 			},
 
 			inputClass(){
-				if(this.value || this.type == 'date') {
+				if(this.value !== '' || this.type == 'date') {
 					return 'input--filled';
 				}
 

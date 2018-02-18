@@ -24,6 +24,7 @@ Route::get('couriers', 'CourierController@page')->name('couriers');
 Route::get('lots/categories', 'CategoryController@page')->name('lots.categories');
 Route::get('lots', 'LotController@page')->name('lots');
 Route::get('products', 'ProductController@page')->name('products');
+Route::get('inbounds', 'InboundController@page')->name('inbounds');
 
 /* Route for Socialite authentication */
 Route::group(['prefix' => 'auth', 'as' => 'auth.social.'], function() {
@@ -60,6 +61,7 @@ Route::group(['prefix' => 'internal'], function() {
 	Route::get('lots', 'LotController@index');
 	Route::get('couriers', 'CourierController@index');
 	Route::get('products', 'ProductController@index');
+	Route::get('inbound/user', 'InboundController@index');
 });
 
 Route::group(['prefix' => 'courier'], function() {
@@ -75,6 +77,16 @@ Route::group(['prefix' => 'inbound'], function() {
 	Route::get('delete/{id}', 'InboundController@destroy');
 	Route::post('store', 'InboundController@store');
 	Route::post('update', 'InboundController@update');
+});
+
+Route::group(['prefix' => 'admin'], function() {
+	Route::group(['prefix' => 'inbound'], function() {
+		Route::get('index', 'Admin\InboundController@index');
+		Route::post('update', 'Admin\InboundController@update');
+	});
+	Route::group(['prefix' => 'outbound'], function() {
+		Route::post('update', 'Admin\OutboundController@update');
+	});
 });
 
 Route::group(['middleware' => ['auth', 'role:admin']], function () {

@@ -42,17 +42,19 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
 	protected $guarded = [];
-	
+    
+    protected $appends = ['volume', 'total'];
+    
     public function lots(){
-    	return $this->belongsToMany('App\Lot');
+    	return $this->belongsToMany('App\Lot')->withPivot('quantity');
     }
 
     public function inbounds(){
-    	return $this->belongsToMany('App\Inbound');
+    	return $this->belongsToMany('App\Inbound')->withPivot('quantity');
     }
 
     public function outbounds(){
-    	return $this->belongsToMany('App\Outbound');
+    	return $this->belongsToMany('App\Outbound')->withPivot('quantity');
     }
 
     public function user(){
@@ -67,5 +69,17 @@ class Product extends Model
     public function getPictureAttribute($value)
     {
         return asset('images/' . $value);
+    }
+
+    public function getTotalAttribute(){
+        $totalInbound = 0;
+        $totalOutbound = 0;
+        foreach($this->inbounds as $product_inbound){
+            $totalInbound = $totalInbound + $product_inbound->pivot->quantity;
+        }
+        foreach($this->outbounds as $product_outbound){
+            $totalOutbound = $totalOutbound + $product_outbound->pivot->quantity;
+        }
+        return $totalInbound-$totalOutbound;
     }
 }

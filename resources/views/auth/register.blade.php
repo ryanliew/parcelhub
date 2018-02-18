@@ -21,6 +21,7 @@
                                 error="{{ $errors->first('name') }}"
                                 defaultValue="{{ old('name') }}"
                                 editable="true"
+                                :focus="true"
                                 >
                             </text-input>
                         </div>

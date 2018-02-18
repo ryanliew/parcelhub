@@ -20,6 +20,7 @@
                                 name="email"
                                 editable="true"
                                 error="{{ $errors->first('email') }}"
+                                :focus="true"
                                 >
                             </text-input>
                         </div>
@@ -32,11 +33,12 @@
                                 type="password"
                                 editable="true"
                                 error="{{ $errors->first('password') }}"
+                                :focus=false
                                 >
                             </text-input>
                         </div>
                                 
-                        <div class="field">
+                        <div class="field mt-30">
                             <checkbox-input
                                 label="Keep me logged in"
                                 name="remember"

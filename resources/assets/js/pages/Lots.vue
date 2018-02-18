@@ -41,11 +41,12 @@
 								name="name"
 								type="text"
 								:editable="true"
-								:error="form.errors.get('name')">
+								:error="form.errors.get('name')"
+								:focus="true">
 					</text-input>
 	          	</div>
 
-	          	<div class="field">
+	          	<div class="field mt-30">
 	          		<selector-input v-model="selectedCategory" :defaultData="selectedCategory" 
 									label="Category" 
 									:required="true"
@@ -147,12 +148,17 @@
 
 			submit() {
 				this.form.post(this.action)
-					.then(this.onSuccess());
+					.then(data => this.onSuccess())
+					.catch(error => this.onFail(error));
 			},
 
 			onSuccess() {
 				this.dialogActive = false;
 				this.$refs.lots.refreshTable();
+			},
+
+			onFail(error) {
+
 			},
 
 			edit(data) {

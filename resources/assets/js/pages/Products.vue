@@ -1,31 +1,36 @@
 <template>
 	<div>
-		<div class="card">
-			<div class="card-header">
-				<div class="card-header-title level">
-					<div class="level-left">
-						<div class="level-item">
-							Products
+		<transition name="slide-fade" mode="out-in">
+			<div class="card" v-if="!isViewing">
+				<div class="card-header">
+					<div class="card-header-title level">
+						<div class="level-left">
+							<div class="level-item">
+								Products
+							</div>
 						</div>
-					</div>
-					<div class="level-right">
-						<div class="level-item">
-							<button class="button is-primary" @click="modalOpen()">
-								<i class="fa fa-plus-circle"></i>
-								<span class="pl-5">Create new product</span>
-							</button>
+						<div class="level-right">
+							<div class="level-item">
+								<button class="button is-primary" @click="modalOpen()">
+									<i class="fa fa-plus-circle"></i>
+									<span class="pl-5">Create new product</span>
+								</button>
+							</div>
 						</div>
 					</div>
 				</div>
+				<div class="card-content">
+					<table-view ref="products" 
+								:fields="fields" 
+								url="/internal/products"
+								:searchables="searchables">
+					</table-view>
+				</div>
 			</div>
-			<div class="card-content">
-				<table-view ref="products" 
-							:fields="fields" 
-							url="/internal/products"
-							:searchables="searchables">	
-				</table-view>
-			</div>
-		</div>
+			<product :product="selectedProduct" v-else
+					@back="back">
+			</product>
+		</transition>
 
 		<modal :active="dialogActive" @close="dialogActive = false">
 			<template slot="header">{{ dialogTitle }}</template>
@@ -41,7 +46,8 @@
 								name="sku"
 								type="text"
 								:editable="true"
-								:error="form.errors.get('sku')">
+								:error="form.errors.get('sku')"
+								:focus="true">
 					</text-input>
 	          	</div>
 
@@ -60,7 +66,7 @@
 	          		<div class="column">
 			          	<div class="field">
 			          		<text-input v-model="form.height" :defaultValue="form.height" 
-										label="Height" 
+										label="Height (cm)" 
 										:required="true"
 										name="height"
 										type="text"
@@ -72,7 +78,7 @@
 			        <div class="column">
 			          	<div class="field">
 			          		<text-input v-model="form.width" :defaultValue="form.width" 
-										label="Width" 
+										label="Width (cm)" 
 										:required="true"
 										name="width"
 										type="text"
@@ -84,7 +90,7 @@
 			        <div class="column">
 			          	<div class="field">
 			          		<text-input v-model="form.length" :defaultValue="form.length" 
-										label="length" 
+										label="Length (cm)" 
 										:required="true"
 										name="length"
 										type="text"
@@ -94,8 +100,24 @@
 			          	</div>
 			        </div>
 			    </div>
+				<p class="heading">Product attributes</p>		
+				<div class="is-pulled-left">
+			    	<checkbox-input v-model="form.is_dangerous" :defaultChecked="form.is_dangerous"
+			    					label="Dangerous"
+			    					name="is_dangerous"
+			    					:editable="true">
+			    	</checkbox-input>
+			    </div>
+			    <div class="is-pulled-left pl-5">
+			    	<checkbox-input v-model="form.is_fragile" :defaultChecked="form.is_fragile"
+			    					label="Fragile"
+			    					name="is_fragile"
+			    					:editable="true">
+			    	</checkbox-input>
+			    </div>
+			    <div class="is-clearfix"></div>
 				
-			    <div class="field">
+			    <div class="field mt-10">
 			    	<image-input v-model="productImage" :defaultImage="productImage"
 			    				@loaded="changeProductImage"
 			    				label="product image"
@@ -114,24 +136,27 @@
 
 <script>
 	import TableView from '../components/TableView.vue';
+	import Product from '../objects/Product.vue';
 
 	export default {
 		props: [''],
 
-		components: { TableView },
+		components: { TableView, Product },
 
 		data() {
 			return {
 				fields: [
-					{name: 'sku', sortField: 'sku'},
+					{name: 'picture', callback: 'image', title: 'Image'},
+					{name: 'sku', sortField: 'sku', title: 'SKU'},
 					{name: 'name', sortField: 'name'},
-					{name: 'height', sortField: 'height'},
-					{name: 'width', sortField: 'width'},
-					{name: 'length', sortField: 'length'},
+					{name: 'volume', title: 'Volume(cm³)'},
+					{name: 'is_dangerous', title: 'Dangerous', sortField: 'is_dangerous', callback: 'dangerousTag'},
+					{name: 'is_fragile', title: 'Fragile', sortField: 'is_fragile', callback: 'fragileTag'},
 					{name: '__component:products-actions', title: 'Actions'}	
 				],
 				searchables: "name,sku",
 				selectedProduct: '',
+				isViewing: false,
 				dialogActive: false,
 				override: false,
 				productImage: {name: 'No file selected'},
@@ -142,13 +167,16 @@
 					width: '',
 					length: '',
 					sku: '',
-					picture: ''
+					picture: '',
+					is_dangerous: '',
+					is_fragile: '',
 				}),
 			};
 		},
 
 		mounted() {
 			this.$events.on('edit', data => this.edit(data));
+			this.$events.on('view', data => this.view(data));
 		},
 
 		methods: {
@@ -156,12 +184,17 @@
 
 			submit() {
 				this.form.post(this.action)
-					.then(this.onSuccess());
+					.then(data => this.onSuccess())
+					.catch(error => this.onFail(error));
 			},
 
 			onSuccess() {
 				this.dialogActive = false;
 				this.$refs.products.refreshTable();
+			},
+
+			onFail(error) {
+
 			},
 
 			edit(data) {
@@ -172,10 +205,22 @@
 				this.form.height = data.height;
 				this.form.width = data.width;
 				this.form.length = data.length;
+				this.form.is_dangerous = data.is_dangerous;
+				this.form.is_fragile = data.is_fragile;
 
 				this.productImage = {name: data.picture, src: data.picture};
 				
 				this.dialogActive = true;
+			},
+
+			view(data) {
+				this.selectedProduct = data;
+				this.isViewing = true;
+			},
+
+			back() {
+				this.selectedProduct = '';
+				this.isViewing = false;
 			},
 
 			changeProductImage(e) {

@@ -18,6 +18,12 @@
         <label>SKU</label>
       </th>
       <th>
+        <label>Fragile</label>
+      </th>
+      <th>
+        <label>Dangerous</label>
+      </th>
+      <th>
         <label>Photo</label>
       </th>
       <th>
@@ -37,8 +43,10 @@
         <td>{{$product->name}}</td>
         <td>{{($product->height)*($product->width)*($product->length)}}</td>
         <td>{{$product->sku}}</td>
+        <td>{{$product->is_fragile}}</td>
+        <td>{{$product->is_dangerous}}</td>
         @if(count($product->picture) > 0)
-          <td id="{{$product->picture}}"><img src="/images/{{$product->picture}}" height="200"></td>
+          <td id="{{$product->picture}}"><img src="{{$product->picture}}" height="200"></td>
         @else
           <td>No image is uploaded for this product.</td>
         @endif
@@ -89,6 +97,20 @@
               <input type="text" id="sku" name="sku" placeholder="e.g SKU001" />
             </div>
             <div>
+              <label>Fragile: </label>
+              <select id="fragile" name="is_fragile">
+                <option value="false">No</option>
+                <option value="true">Yes</option>
+              </select>
+            </div>
+            <div>
+              <label>Dangerous: </label>
+              <select id="dangerous" name="is_dangerous">
+                <option value="false">No</option>
+                <option value="true">Yes</option>
+              </select>
+            </div>
+            <div>
               <label>Current Picture: </label>
               <div><img src="" height="200" id="showPicture"></div>
               <input type="file" name="picture" id="picture">
@@ -135,6 +157,20 @@
             <div>
               <label>SKU: </label>
               <input type="text" name="sku" placeholder="e.g SKU001" />
+            </div>
+            <div>
+              <label>Fragile: </label>
+              <select id="fragile" name="is_fragile">
+                <option value="false">No</option>
+                <option value="true">Yes</option>
+              </select>
+            </div>
+            <div>
+              <label>Dangerous: </label>
+              <select id="dangerous" name="is_dangerous">
+                <option value="false">No</option>
+                <option value="true">Yes</option>
+              </select>
             </div>
             <div>
               <label>Picture: </label>

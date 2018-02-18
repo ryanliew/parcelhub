@@ -12,11 +12,19 @@ use Illuminate\Http\Request;
 class InboundController extends Controller
 {
     protected $rules = [
-        'product' => 'required',
-        'quantity' => 'required',
         'arrival_date' => 'required',
         'total_carton' => 'required'
     ];
+
+    /**
+     * Return the view which contains the vue page for product
+     * @return \Illuminate\Http\Response
+     */
+    public function page()
+    {
+        return view('inbound.page');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -26,7 +34,7 @@ class InboundController extends Controller
     {
         if(request()->wantsJson())
         {
-            return Controller::VueTableListResult(inbound::where('status', 'true'));
+            return Controller::VueTableListResult(inbound::with('products'));
         }
         $inbounds = inbound::where('status', 'true')->get();
         $products = product::where('user_id', auth()->id())->where('status', 'true')->get();
@@ -136,7 +144,7 @@ class InboundController extends Controller
         // $arrivalDate = $inbound->arrival_date->format('Y.m.d');
 
         // dd($arrivalDate);
-        
+
         return view('inbound.show')->with('inbound', $inbound);
     }
 
