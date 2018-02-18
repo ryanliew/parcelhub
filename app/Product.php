@@ -43,7 +43,7 @@ class Product extends Model
 {
 	protected $guarded = [];
     
-    protected $appends = ['volume']	;
+    protected $appends = ['volume', 'total'];
     
     public function lots(){
     	return $this->belongsToMany('App\Lot')
@@ -51,8 +51,7 @@ class Product extends Model
     }
 
     public function inbounds(){
-    	return $this->belongsToMany('App\Inbound')
-        ->withPivot('quantity');
+    	return $this->belongsToMany('App\Inbound')->withPivot('quantity');
     }
 
     public function inbounds_with_lots(){
@@ -60,8 +59,7 @@ class Product extends Model
     }
 
     public function outbounds(){
-    	return $this->belongsToMany('App\Outbound')
-        ->withPivot('quantity');
+    	return $this->belongsToMany('App\Outbound')->withPivot('quantity');
     }
 
     public function user(){

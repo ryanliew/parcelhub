@@ -9,6 +9,8 @@ require('./bootstrap');
 
 window.Vue = require('vue');
 
+require('./filters');
+
 window.events = new Vue();
 
 import VueNoty from 'vuejs-noty';
@@ -37,8 +39,9 @@ Vue.component('products-selector-input', require('./components/ProductsSelectorI
 // Actions components
 Vue.component('CategoriesActions', require('./actions/CategoriesActions.vue'));
 Vue.component('LotsActions', require('./actions/LotsActions.vue'));
-Vue.component('CouriersActions', require('./actions/CouriersActions.vue'))
-Vue.component('ProductsActions', require('./actions/ProductsActions.vue'))
+Vue.component('CouriersActions', require('./actions/CouriersActions.vue'));
+Vue.component('ProductsActions', require('./actions/ProductsActions.vue'));
+Vue.component('InboundsActions', require('./actions/InboundsActions.vue'));
 
 // Pages components
 Vue.component('categories-page', require('./pages/Categories.vue'));
@@ -47,6 +50,9 @@ Vue.component('couriers-page', require('./pages/Couriers.vue'));
 Vue.component('products-page', require('./pages/Products.vue'));
 Vue.component('inbounds-page', require('./pages/Inbounds.vue'));
 
+// Single instance view components
+Vue.component('product', require('./objects/Product.vue'));
+Vue.component('inbound', require('./objects/Inbound.vue'));
 
 window.flash = function(message, level = 'success'){
  	window.events.$emit('flash', {message, level});

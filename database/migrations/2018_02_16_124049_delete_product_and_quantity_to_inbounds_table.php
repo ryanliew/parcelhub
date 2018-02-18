@@ -14,8 +14,8 @@ class DeleteProductAndQuantityToInboundsTable extends Migration
     public function up()
     {
         Schema::table('inbounds', function (Blueprint $table) {
-            $table->dropColumn('product')->change();
-            $table->dropColumn('quantity')->change();
+            $table->dropColumn('product');
+            $table->dropColumn('quantity');
         });
     }
 
@@ -27,8 +27,8 @@ class DeleteProductAndQuantityToInboundsTable extends Migration
     public function down()
     {
         Schema::table('inbounds', function (Blueprint $table) {
-            $table->integer('product')->change();
-            $table->integer('quantity')->change();
+            $table->integer('product');
+            $table->integer('quantity');
         });
     }
 }
