@@ -58652,6 +58652,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	props: ['inbound', 'canManage'],
@@ -58855,7 +58857,7 @@ var render = function() {
                   _vm._v(" "),
                   _c(
                     "tbody",
-                    _vm._l(_vm.inbound.products, function(product) {
+                    _vm._l(_vm.inbound.products, function(product, index) {
                       return _c("tr", [
                         _c("td", [
                           _c("figure", { staticClass: "image is-48x48" }, [
@@ -58887,7 +58889,15 @@ var render = function() {
                                 ])
                               : _vm._e()
                           ])
-                        ])
+                        ]),
+                        _vm._v(" "),
+                        _c("td", {
+                          domProps: {
+                            textContent: _vm._s(
+                              _vm.inbound.products_with_lots[index].lots_name
+                            )
+                          }
+                        })
                       ])
                     })
                   )
@@ -59049,7 +59059,9 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("Quantity")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Attributes")])
+        _c("th", [_vm._v("Attributes")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Lots")])
       ])
     ])
   },
