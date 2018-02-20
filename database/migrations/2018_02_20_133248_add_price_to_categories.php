@@ -14,7 +14,7 @@ class AddPriceToCategories extends Migration
     public function up()
     {
         Schema::table('categories', function (Blueprint $table) {
-            $table->float('price');
+            $table->float('price')->nullable();
         });
     }
 

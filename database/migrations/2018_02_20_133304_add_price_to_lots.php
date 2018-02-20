@@ -14,7 +14,7 @@ class AddPriceToLots extends Migration
     public function up()
     {
         Schema::table('lots', function (Blueprint $table) {
-            $table->float('price');
+            $table->float('price')->nullable();
         });
     }
 
