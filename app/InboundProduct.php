@@ -4,6 +4,25 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * App\InboundProduct
+ *
+ * @property int $inbound_id
+ * @property int $product_id
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
+ * @property int $quantity
+ * @property-read mixed $lots_name
+ * @property-read \App\Inbound $inbound
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Lot[] $lots
+ * @property-read \App\Product $product
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\InboundProduct whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\InboundProduct whereInboundId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\InboundProduct whereProductId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\InboundProduct whereQuantity($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\InboundProduct whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
 class InboundProduct extends Model
 {
 	protected $guarded = [];

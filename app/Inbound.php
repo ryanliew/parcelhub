@@ -28,6 +28,13 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Inbound whereUserId($value)
  * @mixin \Eloquent
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Product[] $products
+ * @property string $process_status
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\InboundProduct[] $products_with_lots
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Inbound awaitingArrival()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Inbound canceled()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Inbound completed()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Inbound processing()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Inbound whereProcessStatus($value)
  */
 class Inbound extends Model
 {

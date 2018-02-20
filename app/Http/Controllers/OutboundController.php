@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Courier;
+use App\Lot;
 use App\Outbound;
 use App\Product;
 use App\User;
@@ -20,9 +21,10 @@ class OutboundController extends Controller
         if(\Entrust::hasRole('admin')) {
 
             return view('outbound.admin');
+
         } else {
 
-            $products = Product::where('user_id', auth()->id())->get();
+            $products = Product::with('lots')->where('user_id', auth()->id())->get();
 
             $couriers = Courier::all();
 
@@ -52,101 +54,100 @@ class OutboundController extends Controller
             'recipient_name' => 'required',
             'recipient_address' => 'required',
             'courier_id' => 'required',
+            'insurance' => 'required',
+            'amount_insured' => 'sometimes|required',
             'products' => 'required',
             'products.*.id' => 'required',
-            'products.*.quantity' => 'required',
-            'products.*.dangerous' => 'required',
-            'products.*.insurance' => 'required',
-            'products.*.amount_insured' => 'sometimes|required',
-            'products.*' => 'lot_space',
+            'products.*.quantity' => 'required|min:1',
         ]);
 
         $inputs = $request->all();
-
         $outboundProducts = $inputs['products'];
 
+        $user = \Auth::user();
         $outbound = new Outbound();
-        $outbound->fill($inputs);
 
-        // Auto assign all the product into user available lot
-        // how many product can enter into lot is calculate based on
-        // the total lot left volume and total volume of the products
-        foreach ($outboundProducts as $key => $value) {
+        try {
+            $outbound->fill($inputs);
 
-            $product = Product::find($outboundProducts[$key]['id']);
-
-            $user = User::with(['lots'])->find(auth()->id());
-
-            $lots = $user->lots()->where('left_volume', '>', 0)->get();
-
-            foreach ($lots as $lot) {
-
-                if($outboundProducts[$key]['quantity'] == 0) {
-                    break;
-                }
-
-                echo "Lot : $lot->id, have : $lot->left_volume space left\n";
-
-                $totalProductVolume = $product->volume * $outboundProducts[$key]['quantity'];
-
-                if($lot->left_volume >= $totalProductVolume) {
-
-                    $lot->products()->attach($product->id, ['quantity' => $outboundProducts[$key]['quantity']]);
-
-                    echo "Lot : $lot->id, stored : Product $product->id x ". $outboundProducts[$key]['quantity'] . "\n";
-
-                    $lot->update(['left_volume' => $lot->left_volume - $totalProductVolume]);
-
-                    // If current lot space able to store all the products
-                    // then the current product quantity should set to 0
-                    // prevent it looking for next available lot
-                    $outboundProducts[$key]['quantity'] = 0;
-                }
-
-                // Breakdown large amount of product's quantity to suitable value
-                // for the current lot left volume
-                else {
-
-                    $numberOfQuantityAbleToFitIn = intdiv($lot->left_volume, $product->volume);
-
-                    echo "Lot : $lot->id : can store $numberOfQuantityAbleToFitIn products\n";
-
-                    $lot->products()->attach($product->id, ['quantity' => $numberOfQuantityAbleToFitIn]);
-
-                    echo "Lot : $lot->id, stored : Product $product->id x $numberOfQuantityAbleToFitIn quantity\n";
-
-                    // Deduct lot's volume based on total number of product * quantity have been stored
-                    $lotSpace = intval($lot->left_volume) - ($product->volume * $numberOfQuantityAbleToFitIn);
-
-                    $lot->update(['left_volume' => $lotSpace]);
-
-                    // Update remaining product's quantity it will be store to next lot with available space
-                    $outboundProducts[$key]['quantity'] = $outboundProducts[$key]['quantity'] - $numberOfQuantityAbleToFitIn;
-                }
-
-            }
-
-        }
-
-        foreach($inputs['products'] as $product) {
-            $outbound->user_id = $user->id;
-            $outbound->product = $product['id'];
-            $outbound->dangerous = $product['dangerous'] === 'yes' ? true : false;
-
-            if($product['insurance'] === 'yes') {
+            if($inputs['insurance'] === 'yes') {
                 $outbound->insurance = true;
-                $outbound->amount_insured = $product['amount_insured'];
+                $outbound->amount_insured = $inputs['amount_insured'];
             } else {
                 $outbound->insurance = false;
                 $outbound->amount_insured = 0;
             }
 
+            $outbound->user_id = $user->id;
             $outbound->status = 'true';
             $outbound->save();
-            $outbound->products()->attach($product['id'], ['quantity' => $product['quantity']]);
+        } catch (\Exception $e) {
+            echo $e;
+            abort(404);
         }
 
-        return redirect()->back();
+        foreach ($outboundProducts as $outboundProduct) {
+
+            try {
+                $product = $user->products()
+                    ->where('id', $outboundProduct['id'])
+                    ->firstOrFail();
+
+                // Quantity used to mark down how many number of product
+                // going to retrieve from user's lots
+                $quantity = $outboundProduct['quantity'];
+
+                if($quantity > $product->total_quantity) {
+                    return redirect()->back()->withErrors("You don't have sufficient products in your LOT");
+                }
+
+                foreach ($product->lots as $lot) {
+
+                    // Check if the lot have enough products supply to the outbound request
+                    if($lot->pivot->quantity >= $quantity) {
+
+                        $volumeAfterDeductProduct = $lot->left_volume + ($product->volume * $quantity);
+
+                        $lot->update(['left_volume' => $volumeAfterDeductProduct]);
+
+                        // Update remaining product left in the lot
+                        $numOfProductLeft = $lot->pivot->quantity - $quantity;
+
+                        // Lot with 0 quantity will be detach else update the remaining available quantity
+                        if($numOfProductLeft === 0) {
+
+                            $product->lots()->detach($lot->id);
+
+                        } else {
+
+                            $product->lots()->updateExistingPivot($lot->id, ['quantity' => $numOfProductLeft]);;
+                        }
+
+                        $outbound->products()->attach($product->id, ['quantity' => $quantity, 'lot_id' => $lot->id]);
+
+                        break;
+
+                    } else {
+
+                        $volumeAfterDeductProduct = $lot->left_volume + ($product->volume * $lot->pivot->quantity);
+
+                        $lot->update(['left_volume' => $volumeAfterDeductProduct]);
+
+                        $product->lots()->detach($lot->id);
+
+                        $outbound->products()->attach($product->id, ['quantity' => $lot->pivot->quantity, 'lot_id' => $lot->id]);
+
+                        // Update how many quantity left require to acquire from the other lot
+                        $quantity -= $lot->pivot->quantity;
+                    }
+                }
+            } catch (\Exception $e) {
+                echo $e;
+                abort(404);
+            }
+        }
+
+        return redirect()->back()->withSuccess('Successfully create outbound order');
     }
 
     /**

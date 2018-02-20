@@ -26,6 +26,7 @@
         <td>{{$category->id}}</td>
         <td>{{$category->name}}</td>
         <td>{{$category->volume}}</td>
+        <td>{{$category->price}}</td>
         <td><button type="button" class="openEditModal btn btn-info btn-lg" data-toggle="modal" data-target="#categoryEdit">Edit</button></td>
         <td><a href="delete/{{$category->id}}" /><button type="button" class="btn btn-info btn-lg">Delete</button></td>
       <tr>
@@ -55,6 +56,10 @@
             <div>
               <label>Volume(cm3): </label>
               <input type="number" id="volume" name="volume" />
+            </div>
+            <div>
+              <label>Price: </label>
+              <input type="number" id="price" name="price" />
             </div>
             <input type="hidden" id="id" name="id" />
             <div class="modal-footer">
@@ -87,6 +92,10 @@
           		<label>Volume(cm3): </label>
           		<input type="number" name="volume" />
           	</div>
+            <div>
+              <label>Price: </label>
+              <input type="number" name="price" />
+            </div>
           	<div class="modal-footer">
           		<input type="submit" value="Submit">
           	</div>
@@ -107,6 +116,7 @@ $(document).on("click", ".openEditModal", function () {
     $("#id").val($columns[0].innerHTML);
     $("#name").val($columns[1].innerHTML);
     $("#volume").val($columns[2].innerHTML);
+    $("#price").val($columns[3].innerHTML);
 });
 </script>
 

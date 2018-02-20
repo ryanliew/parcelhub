@@ -21,7 +21,7 @@ class CreateOutboundsTable extends Migration
             $table->string('recipient_name');
             $table->string('recipient_address');
             $table->boolean('insurance');
-            $table->float('amount_insured');
+            $table->float('amount_insured')->default(0);
             $table->boolean('dangerous');
             $table->string('status');
             $table->timestamps();

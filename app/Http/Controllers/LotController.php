@@ -12,7 +12,8 @@ class LotController extends Controller
 {
     protected $rules = [
         'name' => 'required',
-        'volume' => 'required'
+        'volume' => 'required',
+        'price' => 'required',
     ];
 
     /**
@@ -82,8 +83,9 @@ class LotController extends Controller
         $lot->volume = $request->volume;
         $lot->left_volume = $request->volume;
         $lot->category_id = $request->category;
+        $lot->price = $request->price;
         $lot->status = "false";
-        $lot->rental_duration = (int)Settings::where('key', '=', 'rental_duration')->value('value');
+        $lot->rental_duration = Settings::rentalDuration();
         $lot->save();
 
         if(request()->wantsJson())
@@ -132,6 +134,7 @@ class LotController extends Controller
         $lot->category_id = $request->category;
         $lot->volume = $request->volume;
         $lot->left_volume = $request->volume;
+        $lot->price = $request->price;
         $lot->save();
 
         if(request()->wantsJson())

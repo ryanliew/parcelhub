@@ -37,53 +37,33 @@
                       </div>
 
                       <div>
-                          <label>Product: </label>
-                          <select name="product[]">
-                              @forelse($products as $product)
+                          @forelse($products as $product)
+                              <label>Product: </label>
+                              <select name="products[{{ $product->id }}][id]">
                                   <option value="{{$product->id}}">{{$product->name}}</option>
-                              @empty
+                              </select>
+                              <div style="display: inline-block">
+                                  <label>Quantity: </label>
+                                  <input type="number" name="products[{{ $product->id }}][quantity]" value="{{ $product->total_quantity }}"/>
+                              </div>
+                          @empty
+                              <select name="products[][id]">
                                   <option disabled>No category is found. Please click "Create Product" to create new product.</option>
-                              @endforelse
-                          </select>
-                          <div style="display: inline-block">
-                              <label>Quantity: </label>
-                              <input type="number" name="quantity" />
-                          </div>
-                      </div>
-                      <div>
-                          <label>Product: </label>
-                          <select name="product[]">
-                              @forelse($products as $product)
-                                  <option value="{{$product->id}}">{{$product->name}}</option>
-                              @empty
-                                  <option disabled>No category is found. Please click "Create Product" to create new product.</option>
-                              @endforelse
-                          </select>
-                          <div style="display: inline-block">
-                              <label>Quantity: </label>
-                              <input type="number" name="quantity" />
-                          </div>
+                              </select>
+                              <div style="display: inline-block">
+                                  <label>Quantity: </label>
+                                  <input type="number" name="products[][quantity]" />
+                              </div>
+                          @endforelse
                       </div>
 
                       <div>
                           <label>Courier: </label>
-                          <select name="courier">
+                          <select name="courier_id">
                               @foreach($couriers as $courier)
                                   <option value="{{ $courier->id }}"> {{ $courier->name }} </option>
                               @endforeach
                           </select>
-                      </div>
-
-                      <div>
-                          <label>Dangerous: </label>
-                          <label>
-                              Yes
-                              <input type="radio" name="dangerous" value="yes">
-                          </label>
-                          <label>
-                              No
-                              <input type="radio" name="dangerous" value="no">
-                          </label>
                       </div>
 
                       <div>
@@ -99,19 +79,9 @@
                           <div id="amountOfInsurance" style="display: none">
                               <label>
                                   Amount of Insurance:
-                                  <input type="number" name="amount_insured">
+                                  <input type="number" name="amount_insured" value="0">
                               </label>
                           </div>
-                      </div>
-
-                      <div>
-                          <label>Arrival Date: </label>
-                          <input type="date" name="arrival_date" />
-                      </div>
-
-                      <div>
-                          <label>Total Carton: </label>
-                          <input type="number" id="carton" name="total_carton" />
                       </div>
                   </div>
 
@@ -129,75 +99,22 @@
       </div>
   </div>
 
-  {{--<div class="modal fade" id="inboundEdit" role="dialog">--}}
-    {{--<div class="modal-dialog">--}}
-    {{----}}
-      {{--<div class="modal-content">--}}
-        {{--<div class="modal-header">--}}
-          {{--<button type="button" class="close" data-dismiss="modal">&times;</button>--}}
-          {{--<h4 class="modal-title">Inbound Edit</h4>--}}
-        {{--</div>--}}
-        {{--<div class="modal-body">--}}
-          {{--<form action="update" method="post">--}}
-            {{--<input type="hidden" name="_token" value="{{csrf_token()}}"/>--}}
-            {{--<div>--}}
-              {{--<label>Product: </label>--}}
-                {{--<select id="product" name="product">--}}
-                  {{--@forelse($products as $product)--}}
-                      {{--<option value="{{$product->id}}">{{$product->name}}</option>--}}
-                  {{--@empty--}}
-                    {{--<option disabled>No category is found. Please click "Create Product" to create new product.</option>--}}
-                  {{--@endforelse--}}
-                {{--</select>--}}
-              {{--</div>--}}
-            {{--<div>--}}
-              {{--<label>Quantity: </label>--}}
-              {{--<input type="number" id="quantity" name="quantity" />--}}
-            {{--</div>--}}
-            {{--<div>--}}
-              {{--<label>Arrival Date: </label>--}}
-              {{--<input type="number" id="date" name="date" />--}}
-            {{--</div>--}}
-            {{--<div>--}}
-              {{--<label>Total Carton: </label>--}}
-              {{--<input type="number" id="carton" name="carton" />--}}
-            {{--</div>--}}
-            {{--<input type="hidden" id="id" name="id" />--}}
-            {{--<div class="modal-footer">--}}
-              {{--<input type="submit" value="Submit">--}}
-            {{--</div>--}}
-          {{--</form>--}}
-        {{--</div>--}}
-      {{--</div> --}}
-    {{--</div>--}}
-  {{--</div>--}}
-{{--<!-- MODAL EDIT END -->--}}
-
 <script>
     $(document).ready(function () {
         var amountOfInsurance = $('#amountOfInsurance');
 
-        $('#insuranceYes').click(function () {
+        $("#insuranceYes").on('click', function () {
            if($(this).is(":checked")) {
                amountOfInsurance.show();
            }
         });
 
-        $('#insuranceNo').click(function () {
+        $("#insuranceNo").on('click', function () {
             if($(this).is(":checked")) {
                 amountOfInsurance.hide();
             }
         });
     });
-
-    {{--var $row = $(this).closest('tr');--}}
-    {{--var $columns = $row.find('td');--}}
-
-    {{--$columns.addClass('row-highlight');--}}
-    {{--$("#id").val($columns[0].innerHTML);--}}
-    {{--$("#name").val($columns[1].innerHTML);--}}
-    {{--$("#volume").val($columns[2].innerHTML);--}}
-{{--});--}}
 </script>
 
 @endsection

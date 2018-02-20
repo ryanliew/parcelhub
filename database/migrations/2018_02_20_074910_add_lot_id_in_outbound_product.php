@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddIdToInboundProductTable extends Migration
+class AddLotIdInOutboundProduct extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddIdToInboundProductTable extends Migration
      */
     public function up()
     {
-        Schema::table('inbound_product', function (Blueprint $table) {
-             $table->increments('id');
+        Schema::table('outbound_product', function (Blueprint $table) {
+            $table->integer('lot_id')->nullable();
         });
     }
 
@@ -25,8 +25,8 @@ class AddIdToInboundProductTable extends Migration
      */
     public function down()
     {
-        Schema::table('inbound_product', function (Blueprint $table) {
-            $table->dropColumn('id');
+        Schema::table('outbound_product', function (Blueprint $table) {
+            $table->dropColumn('lot_id');
         });
     }
 }

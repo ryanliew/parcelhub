@@ -12,6 +12,7 @@
             <th><label>Name</label></th>
             <th><label>Category</label></th>
             <th><label>Volume</label></th>
+            <th><label>Price</label></th>
             <th><label>Edit</label></th>
             <th><label>Delete</label></th>
         </tr>
@@ -21,6 +22,7 @@
                 <td>{{$lot->name}}</td>
                 <td id="{{$lot->category_id}}">{{$lot->category->name}}</td>
                 <td>{{$lot->volume}}</td>
+                <td>{{$lot->category->price}}</td>
             <!-- <td><button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#lotModification-{{$lot->id}}">Edit</button></td> -->
                 <td><button type="button" class="openEditModal btn btn-info btn-lg" data-toggle="modal" data-target="#lotModification">Edit</button></td>
                 <td><a href="delete/{{$lot->id}}" /><button type="button" class="btn btn-info btn-lg">Delete</button></td>
@@ -50,17 +52,19 @@
                         </div>
                         <div>
                             <label>Category: </label>
-                            <select id="category" name="category">
-                                @forelse($categories as $category)
-                                    <option id="{{$category->volume}}" value="{{$category->id}}" >{{$category->name}}</option>
-                                @empty
-                                    <option disabled>No category is found. Please click "Create Category" to create new category.</option>
-                                @endforelse
-                            </select>
-                        </div>
-                        <div>
-                            <label>Volume(cm3): </label>
-                            <input type="number" id="volume" name="volume"/>
+                            @foreach($categories as $category)
+                                <select name="category">
+                                    <option id="{{$category->volume}}" value="{{$category->id}}">{{$category->name}}</option>
+                                </select>
+                                <div>
+                                    <label>Price: </label>
+                                    <input type="number" name="price" value="{{$category->price}}"/>
+                                </div>
+                                <div>
+                                    <label>Volume(cm3): </label>
+                                    <input type="number" name="volume" value="{{$category->volume}}" />
+                                </div>
+                            @endforeach
                         </div>
                         <input type="hidden" id="id" name="id" />
                         <div class="modal-footer">
@@ -90,17 +94,20 @@
                         </div>
                         <div>
                             <label>Category: </label>
-                            <select id="category" name="category">
-                                @forelse($categories as $category)
+                            @foreach($categories as $category)
+                                <select name="category">
                                     <option id="{{$category->volume}}" value="{{$category->id}}">{{$category->name}}</option>
-                                @empty
-                                    <option disabled>No category is found. Please click "Create Category" to create new category.</option>
-                                @endforelse
-                            </select>
-                        </div>
-                        <div>
-                            <label>Volume(cm3): </label>
-                            <input type="number" id="volume-creation" name="volume" />
+                                </select>
+                                <div>
+                                    <label>Price: </label>
+                                    <input type="number" name="price" value="{{$category->price}}"/>
+                                </div>
+                                <div>
+                                    <label>Volume(cm3): </label>
+                                    <input type="number" id="volume-creation" name="volume" />
+                                </div>
+                            @endforeach
+
                         </div>
                         <div class="modal-footer">
                             @if(count($categories) > 0)

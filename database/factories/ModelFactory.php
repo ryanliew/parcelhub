@@ -72,7 +72,7 @@ $factory->define(App\Lot::class, function (Faker\Generator $faker) {
 $factory->define(App\Product::class, function (Faker\Generator $faker) {
 
     return [
-        'user_id' => $faker->unique()->randomDigitNotNull,
+        'user_id' => $faker->randomDigitNotNull,
         'name' => $faker->name,
         'height' => $faker->numberBetween($min = 1, $max = 50),
         'length' => $faker->numberBetween($min = 1, $max = 50),
