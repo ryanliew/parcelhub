@@ -58,7 +58,6 @@ class PaymentController extends Controller
             'payment_slip' => 'required|image',
         ]);
 
-        dd(Input::file('cat.jpg'));
         $lots = $request->input('lots_purchase');
 
         $payment = new Payment();

@@ -13,6 +13,7 @@
                 <th>Name</th>
                 <th>Category</th>
                 <th>Volume</th>
+                <th>Price</th>
                 <th>Rental Duration (Min 90 days)</th>
             </tr>
             <tr>
@@ -29,17 +30,22 @@
                     </td>
                     <td>
                         <label>
-                            <input type="text" id="name_{{ $index }}" name="name" value="{{ $lot->name }}" disabled>
+                            <input type="text" value="{{ $lot->name }}" disabled>
                         </label>
                     </td>
                     <td>
                         <label>
-                            <input type="text" id="category_{{ $index }}" name="category" value="{{ $lot->category->name }}" disabled>
+                            <input type="text" value="{{ $lot->category->name }}" disabled>
                         </label>
                     </td>
                     <td>
                         <label>
-                            <input type="text" id="volume_{{ $index }}" name="volume" value="{{ $lot->volume }}" disabled>
+                            <input type="text" value="{{ $lot->volume }}" disabled>
+                        </label>
+                    </td>
+                    <td>
+                        <label>
+                            <input type="text" value="{{ $lot->price }}" disabled>
                         </label>
                     </td>
                     <td>

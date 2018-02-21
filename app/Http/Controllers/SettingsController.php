@@ -69,11 +69,13 @@ class SettingsController extends Controller
      * @param  \App\Settings  $settings
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(Request $request, $id)
     {
-        Settings::where('key', '=', $request->key)->update(['value' => $request->setting]);
+        $settings = Settings::find($id);
+        $settings->value = $request->get('setting_value');
+        $settings->save();
 
-        return redirect()->back()->withSuccess($request->key . " edited successfully.");
+        return redirect()->back()->withSuccess("Edit successfully.");
     }
 
     /**

@@ -38,6 +38,15 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Inbound[] $inbounds
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Lot[] $lots
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Outbound[] $outbounds
+ * @property int $is_dangerous
+ * @property int $is_fragile
+ * @property-read mixed $total
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\InboundProduct[] $inbounds_with_lots
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Product whereIsDangerous($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Product whereIsFragile($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\OutboundProduct[] $outbounds_products_lots
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\OutboundProduct[] $outbounds_with_lots
+ * @property-read mixed $total_quantity
  */
 class Product extends Model
 {
@@ -58,11 +67,11 @@ class Product extends Model
         return $this->hasMany('App\InboundProduct');
     }
 
-    public function outbounds(){
-    	return $this->belongsToMany('App\Outbound')->withPivot('quantity');
+    public function outbounds() {
+        return $this->belongsToMany('App\Outbound')->withPivot('quantity');
     }
 
-    public function user(){
+    public function user() {
     	return $this->belongsTo('App\User');
     }
 
@@ -86,5 +95,13 @@ class Product extends Model
             $totalOutbound = $totalOutbound + $product_outbound->pivot->quantity;
         }
         return $totalInbound-$totalOutbound;
+    }
+
+    public function getTotalQuantityAttribute() {
+        $total = 0;
+        foreach ($this->lots as $lot) {
+            $total += $lot->pivot->quantity;
+        }
+        return $total;
     }
 }

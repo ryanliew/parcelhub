@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateOutboundProductTable extends Migration
+class AddLotIdInOutboundProduct extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,8 @@ class CreateOutboundProductTable extends Migration
      */
     public function up()
     {
-        Schema::create('outbound_product', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('outbound_id');
-            $table->integer('product_id');
-            $table->timestamps();
+        Schema::table('outbound_product', function (Blueprint $table) {
+            $table->integer('lot_id')->nullable();
         });
     }
 
@@ -28,6 +25,8 @@ class CreateOutboundProductTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('outbound_product');
+        Schema::table('outbound_product', function (Blueprint $table) {
+            $table->dropColumn('lot_id');
+        });
     }
 }

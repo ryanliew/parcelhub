@@ -37,17 +37,24 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Product[] $products
  * @property int $quantity
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Outbound whereQuantity($value)
+ * @property string $process_status
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Outbound canceled()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Outbound completed()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Outbound delivering()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Outbound processing()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Outbound whereProcessStatus($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\OutboundProduct[] $outbounds_products_lots
  */
 class Outbound extends Model
 {
-	protected $guarded = ['products', 'dangerous', 'insurance', 'amount_insured', 'status'];
+	protected $guarded = ['products', 'insurance', 'amount_insured', 'user_id', 'status'];
 	
     public function user(){
     	return $this->belongsTo('App\User');
     }
 
     public function products() {
-    	return $this->belongsToMany('App\Product');
+        return $this->belongsToMany('App\Product')->withPivot('quantity', 'lot_id');
     }
 
     public function courier() {

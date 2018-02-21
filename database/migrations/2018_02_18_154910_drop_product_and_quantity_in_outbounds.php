@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class DeleteProductAndQuantityToInboundsTable extends Migration
+class DropProductAndQuantityInOutbounds extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class DeleteProductAndQuantityToInboundsTable extends Migration
      */
     public function up()
     {
-        Schema::table('inbounds', function (Blueprint $table) {
+        Schema::table('outbounds', function (Blueprint $table) {
             $table->dropColumn('product');
         });
-        Schema::table('inbounds', function (Blueprint $table) {
+        Schema::table('outbounds', function (Blueprint $table) {
             $table->dropColumn('quantity');
         });
     }
@@ -28,9 +28,9 @@ class DeleteProductAndQuantityToInboundsTable extends Migration
      */
     public function down()
     {
-        Schema::table('inbounds', function (Blueprint $table) {
+        Schema::table('outbounds', function (Blueprint $table) {
             $table->integer('product');
-            $table->integer('quantity');
+            $table->integer('quantity')->default(0);
         });
     }
 }

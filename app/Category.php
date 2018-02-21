@@ -21,6 +21,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Category whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Category whereVolume($value)
  * @mixin \Eloquent
+ * @property float $price
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Category wherePrice($value)
  */
 class Category extends Model
 {

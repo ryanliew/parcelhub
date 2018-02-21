@@ -5,6 +5,7 @@ namespace Tests\Unit;
 use App\Courier;
 use App\Lot;
 use App\Outbound;
+use App\OutboundProduct;
 use App\Product;
 use App\User;
 use Faker\Factory as Faker;
@@ -25,6 +26,15 @@ class OutboundTest extends TestCase
         //Mock authenticated user
         $this->user = factory(User::class)->create(['name' => 'test_user']);
 
+        factory(Courier::class)->create();
+
+        factory(Product::class, 10)->create([
+            'user_id' => $this->user->id,
+            'height' => 10,
+            'width' => 10,
+            'length' => 10
+        ]);
+
         $this->actingAs($this->user);
     }
 
@@ -33,29 +43,23 @@ class OutboundTest extends TestCase
      *
      * @return void
      */
-    public function testOutbound_withOneSingleEmptyLot_and_OneProduct()
+    public function testOutbound_getOneProductFromSingleLot()
     {
         $faker = Faker::create();
 
-        $courier = factory(Courier::class)->create();
+        $lot = factory(Lot::class)->create(['user_id' => $this->user->id, 'left_volume' => 0]);
 
-        factory(Lot::class)->create(['user_id' => $this->user->id]);
-
-        $product = factory(Product::class)->create(['user_id' => $this->user->id]);
-
-        $sumOfLotSpaceLeft = $this->user->total_lot_left_volume - $product->volume;
+        $lot->products()->attach(1, ['quantity' => 1]);
 
         $response = $this->call('POST', 'outbound/store',
             [
-                'courier_id' => $courier->id,
+                'courier_id' => 1,
                 'recipient_name' => $faker->name,
                 'recipient_address' => $faker->address,
+                'insurance' => false,
                 'products' => [
                     [
-                        'id' => $product->id,
-                        'quantity' => '1',
-                        'insurance' => 'no',
-                        'dangerous' => 'no',
+                        'id' => 1, 'quantity' => '1',
                     ]
                 ],
             ],
@@ -66,48 +70,44 @@ class OutboundTest extends TestCase
 
         $this->assertTrue($response->isRedirect());
 
-        $outbound = Outbound::all();
+        $this->assertEquals(1000, Lot::find(1)->left_volume);
 
-        $this->assertEquals(1, $outbound->count());
+        $this->assertEquals(0, Lot::find(1)->products->count());
 
-        $this->assertEquals($sumOfLotSpaceLeft, User::find($this->user->id)->total_lot_left_volume);
+        $this->assertEquals(1, Outbound::all()->count());
 
-        $lot1 = Lot::find(1);
-        $lot1TotalQuantity = $lot1->products()->where('product_id', $product->id)->value('quantity');
-        $this->assertEquals(1, $lot1TotalQuantity);
+        $outbound = Outbound::firstOrFail();
+
+        $this->assertEquals(1, $outbound->products->count());
+
+        $outbound_product = $outbound->products->get(0);
+
+        $this->assertEquals(1, $outbound_product->pivot->quantity);
+
+        $this->assertEquals(1, $outbound_product->pivot->lot_id);
     }
 
-    public function testOutbound_withTwoEmptyLot_and_SingleProductWithMultipleQuantity()
+    public function testOutbound_getPartialProductFromMultipleLot()
     {
         $faker = Faker::create();
-
-        $courier = factory(Courier::class)->create();
 
         factory(Lot::class, 2)->create([
             'user_id' => $this->user->id,
-            'left_volume' => '10000'
+            'left_volume' => 0,
         ]);
 
-        $product = factory(Product::class)->create([
-            'user_id' => $this->user->id,
-            'height' => 10,
-            'length' => 10,
-            'width' => 10,
-        ]);
-
-        $sumOfLotSpaceLeft = $this->user->total_lot_left_volume - ($product->volume * 15);
+        Lot::find(1)->products()->attach(1, ['quantity' => 5]);
+        Lot::find(2)->products()->attach(1, ['quantity' => 10]);
 
         $response = $this->call('POST', 'outbound/store',
             [
-                'courier_id' => $courier->id,
+                'courier_id' => 1,
                 'recipient_name' => $faker->name,
                 'recipient_address' => $faker->address,
+                'insurance' => false,
                 'products' => [
                     [
-                        'id' => $product->id,
-                        'quantity' => '15',
-                        'insurance' => 'no',
-                        'dangerous' => 'no',
+                        'id' => 1, 'quantity' => '10',
                     ]
                 ],
             ],
@@ -118,65 +118,132 @@ class OutboundTest extends TestCase
 
         $this->assertTrue($response->isRedirect());
 
-        $outbound = Outbound::all();
+        $this->assertEquals(5000, Lot::find(1)->left_volume);
 
-        $this->assertEquals(1, $outbound->count());
+        $this->assertEquals(0, Lot::find(1)->products->count());
 
-        $this->assertEquals($sumOfLotSpaceLeft, User::find($this->user->id)->total_lot_left_volume);
+        $this->assertEquals(5000, Lot::find(2)->left_volume);
 
-        $lot1 = Lot::find(1);
-        $lot1TotalQuantity = $lot1->products()->where('product_id', $product->id)->value('quantity');
-        $this->assertEquals(10, $lot1TotalQuantity);
+        $this->assertEquals(1, Lot::find(2)->products->count());
 
-        $lot2 = Lot::find(2);
-        $lot2TotalQuantity = $lot2->products()->where('product_id', $product->id)->value('quantity');
-        $this->assertEquals(5, $lot2TotalQuantity);
+        $lot_product = Lot::find(2)->products->get(0);
+
+        $this->assertEquals(5, $lot_product->pivot->quantity);
+
+        $this->assertEquals(1, Outbound::all()->count());
+
+        $outbound = Outbound::firstOrFail();
+
+        $this->assertEquals(2, $outbound->products->count());
+
+        $outbound_product0 = $outbound->products->get(0);
+
+        $this->assertEquals(5, $outbound_product0->pivot->quantity);
+
+        $this->assertEquals(1, $outbound_product0->pivot->lot_id);
+
+        $outbound_product1 = $outbound->products->get(1);
+
+        $this->assertEquals(5, $outbound_product1->pivot->quantity);
+
+        $this->assertEquals(2, $outbound_product1->pivot->lot_id);
     }
 
-    public function testOutbound_withMultipleEmptyLot_and_MultipleProductsWithQuantity()
+    public function testOutbound_getDifferentPartialProductFromSameLot()
     {
         $faker = Faker::create();
 
-        $courier = factory(Courier::class)->create();
-
-        factory(Lot::class, 4)->create([
+        factory(Lot::class, 2)->create([
             'user_id' => $this->user->id,
-            'left_volume' => '10000'
+            'left_volume' => 0,
         ]);
 
-        $products = factory(Product::class, 3)->create([
-            'user_id' => $this->user->id,
-            'height' => 10,
-            'length' => 10,
-            'width' => 10,
-        ]);
-
-        $sumOfLotSpaceLeft = $this->user->total_lot_left_volume - ($products->get(0)->volume * 37);
+        Lot::find(1)->products()->attach(1, ['quantity' => 20]);
+        Lot::find(1)->products()->attach(2, ['quantity' => 10]);
+        Lot::find(2)->products()->attach(1, ['quantity' => 10]);
+        Lot::find(2)->products()->attach(2, ['quantity' => 10]);
 
         $response = $this->call('POST', 'outbound/store',
             [
-                'courier_id' => $courier->id,
+                'courier_id' => 1,
                 'recipient_name' => $faker->name,
                 'recipient_address' => $faker->address,
+                'insurance' => false,
                 'products' => [
-                    [
-                        'id' => 1,
-                        'quantity' => '15',
-                        'insurance' => 'no',
-                        'dangerous' => 'no',
-                    ],
-                    [
-                        'id' => 2,
-                        'quantity' => '10',
-                        'insurance' => 'no',
-                        'dangerous' => 'no',
-                    ],
-                    [
-                        'id' => 3,
-                        'quantity' => '12',
-                        'insurance' => 'no',
-                        'dangerous' => 'no',
-                    ]
+                    ['id' => 1, 'quantity' => '18'],
+                    ['id' => 2, 'quantity' => '15']
+                ],
+            ],
+            [],
+            [],
+            ['HTTP_REFERER' => 'outbound/index']
+        );
+
+        $this->assertTrue($response->isRedirect());
+        $this->assertEquals(28000, Lot::find(1)->left_volume);
+        $this->assertEquals(5000, Lot::find(2)->left_volume);
+
+        $product1 = Product::with('lots')
+            ->where('id', 1)
+            ->where('user_id', $this->user->id)
+            ->first();
+
+        $this->assertEquals(12, $product1->total_quantity);
+
+        $product2 = Product::with('lots')
+            ->where('id', 2)
+            ->where('user_id', $this->user->id)
+            ->first();
+
+        $this->assertEquals(5, $product2->total_quantity);
+
+        $this->assertEquals(1, Outbound::all()->count());
+
+        $outbound = Outbound::firstOrFail();
+
+        $this->assertEquals(3, $outbound->products->count());
+
+        $outbound_product_0 = $outbound->products->get(0);
+
+        $this->assertEquals(18, $outbound_product_0->pivot->quantity);
+        $this->assertEquals(1, $outbound_product_0->pivot->lot_id);
+
+        $outbound_product_1 = $outbound->products->get(1);
+
+        $this->assertEquals(10, $outbound_product_1->pivot->quantity);
+        $this->assertEquals(1, $outbound_product_1->pivot->lot_id);
+
+        $outbound_product_2 = $outbound->products->get(2);
+
+        $this->assertEquals(5, $outbound_product_2->pivot->quantity);
+        $this->assertEquals(2, $outbound_product_2->pivot->lot_id);
+    }
+
+    public function testOutbound_getMultiplePartialProductFromMultipleLot()
+    {
+        $faker = Faker::create();
+
+        factory(Lot::class, 5)->create([
+            'user_id' => $this->user->id,
+            'left_volume' => 0,
+        ]);
+
+        Lot::find(1)->products()->attach(1, ['quantity' => 5]);
+        Lot::find(2)->products()->attach(1, ['quantity' => 5]);
+        Lot::find(3)->products()->attach(2, ['quantity' => 5]);
+        Lot::find(4)->products()->attach(3, ['quantity' => 5]);
+        Lot::find(5)->products()->attach(2, ['quantity' => 5]);
+
+        $response = $this->call('POST', 'outbound/store',
+            [
+                'courier_id' => 1,
+                'recipient_name' => $faker->name,
+                'recipient_address' => $faker->address,
+                'insurance' => false,
+                'products' => [
+                    ['id' => 1, 'quantity' => '8'],
+                    ['id' => 2, 'quantity' => '6'],
+                    ['id' => 3, 'quantity' => '1'],
                 ],
             ],
             [],
@@ -186,32 +253,56 @@ class OutboundTest extends TestCase
 
         $this->assertTrue($response->isRedirect());
 
-        $outbound = Outbound::all();
+        $this->assertEquals(5000, Lot::find(1)->left_volume);
+        $this->assertEquals(0, Lot::find(1)->products->count());
 
-        $this->assertEquals(1, $outbound->count());
+        $this->assertEquals(3000, Lot::find(2)->left_volume);
+        $this->assertEquals(1, Lot::find(2)->products->count());
+        $lot2_product = Lot::find(2)->products->get(0);
+        $this->assertEquals(2, $lot2_product->pivot->quantity);
 
-        $this->assertEquals($sumOfLotSpaceLeft, User::find($this->user->id)->total_lot_left_volume);
+        $this->assertEquals(5000, Lot::find(3)->left_volume);
+        $this->assertEquals(0, Lot::find(3)->products->count());
 
-        $lot1 = Lot::find(1);
-        $lot1TotalQuantity = $lot1->products()->where('product_id', 1)->value('quantity');
-        $this->assertEquals(10, $lot1TotalQuantity);
+        $this->assertEquals(1000, Lot::find(4)->left_volume);
+        $this->assertEquals(1, Lot::find(4)->products->count());
+        $lot4_product = Lot::find(4)->products->get(0);
+        $this->assertEquals(4, $lot4_product->pivot->quantity);
 
-        $lot2 = Lot::find(2);
-        $lot2TotalQuantity = $lot2->products()->where('product_id', 1)->value('quantity');
-        $this->assertEquals(5, $lot2TotalQuantity);
+        $this->assertEquals(1000, Lot::find(5)->left_volume);
+        $this->assertEquals(1, Lot::find(5)->products->count());
+        $lot5_product = Lot::find(5)->products->get(0);
+        $this->assertEquals(4, $lot5_product->pivot->quantity);
 
-        $lot2TotalQuantity = $lot2->products()->where('product_id', 2)->value('quantity');
-        $this->assertEquals(5, $lot2TotalQuantity);
+        $this->assertEquals(1, Outbound::all()->count());
 
-        $lot3 = Lot::find(3);
-        $lot3TotalQuantity = $lot3->products()->where('product_id', 2)->value('quantity');
-        $this->assertEquals(5, $lot3TotalQuantity);
+        $outbound = Outbound::firstOrFail();
 
-        $lot3TotalQuantity = $lot3->products()->where('product_id', 3)->value('quantity');
-        $this->assertEquals(5, $lot3TotalQuantity);
+        $this->assertEquals(5, $outbound->products->count());
 
-        $lot4 = Lot::find(4);
-        $lot4TotalQuantity = $lot4->products()->where('product_id', 3)->value('quantity');
-        $this->assertEquals(7, $lot4TotalQuantity);
+        $outbound_product0 = $outbound->products->get(0);
+        $this->assertEquals(5, $outbound_product0->pivot->quantity);
+        $this->assertEquals(1, $outbound_product0->pivot->product_id);
+        $this->assertEquals(1, $outbound_product0->pivot->lot_id);
+
+        $outbound_product1 = $outbound->products->get(1);
+        $this->assertEquals(3, $outbound_product1->pivot->quantity);
+        $this->assertEquals(1, $outbound_product1->pivot->product_id);
+        $this->assertEquals(2, $outbound_product1->pivot->lot_id);
+
+        $outbound_product2 = $outbound->products->get(2);
+        $this->assertEquals(5, $outbound_product2->pivot->quantity);
+        $this->assertEquals(2, $outbound_product2->pivot->product_id);
+        $this->assertEquals(3, $outbound_product2->pivot->lot_id);
+
+        $outbound_product3 = $outbound->products->get(3);
+        $this->assertEquals(1, $outbound_product3->pivot->quantity);
+        $this->assertEquals(2, $outbound_product3->pivot->product_id);
+        $this->assertEquals(5, $outbound_product3->pivot->lot_id);
+
+        $outbound_product4 = $outbound->products->get(4);
+        $this->assertEquals(1, $outbound_product4->pivot->quantity);
+        $this->assertEquals(3, $outbound_product4->pivot->product_id);
+        $this->assertEquals(4, $outbound_product4->pivot->lot_id);
     }
 }

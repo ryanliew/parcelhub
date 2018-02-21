@@ -35,6 +35,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Lot whereLeftVolume($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Lot whereRentalDuration($value)
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Payment[] $payments
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\OutboundProduct[] $outbounds_products_lots
+ * @property float $price
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Lot wherePrice($value)
  */
 class Lot extends Model
 {

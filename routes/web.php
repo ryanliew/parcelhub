@@ -93,7 +93,7 @@ Route::group(['prefix' => 'admin'], function() {
 Route::group(['middleware' => ['auth', 'role:admin']], function () {
     Route::group(['prefix' => 'setting'], function() {
         Route::get('index', 'SettingsController@index')->name('setting.index');
-        Route::post('update', 'SettingsController@update')->name('setting.update');
+        Route::post('update/{id}', 'SettingsController@update')->name('setting.update');
     });
 });
 

@@ -10,6 +10,7 @@ class CategoryController extends Controller
     protected $rules = [
         'name' => 'required',
         'volume' => 'required',
+        'price' => 'required',
     ];
 
     /**
@@ -62,6 +63,7 @@ class CategoryController extends Controller
         $category = new category;
         $category->name = $request->name;
         $category->volume = $request->volume;
+        $category->price = $request->price;
         $category->status = 'true';
         $category->save();
 
@@ -108,6 +110,7 @@ class CategoryController extends Controller
         $category = category::find($request->id);
         $category->name = $request->name;
         $category->volume = $request->volume;
+        $category->price = $request->price;
         $category->save();
 
         if(request()->wantsJson())
