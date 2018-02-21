@@ -1,13 +1,15 @@
 <aside class="menu">
-    <p class="menu-label">
-        User
-    </p>
     <ul class="menu-list">
         <li>
             <a @if( url()->current() == route('products') ) class="is-active" @endif href="{{ route('products') }}">
                 Products
             </a>
         </li>
+    </ul>
+    <p class="menu-label">
+        Orders
+    </p>
+    <ul class="menu-list">
         <li>
             <a @if( url()->current() == route('inbounds') ) class="is-active" @endif href="{{ route('inbounds') }}">
                 Inbounds
@@ -18,9 +20,6 @@
                 Outbounds
             </a>
         </li>
-    </ul>
-    <ul class="menu-list">
-        
     </ul>
     <p class="menu-label">
     	Admin
