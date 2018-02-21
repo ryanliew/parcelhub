@@ -77,7 +77,7 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr v-for="(product, index) in outbound.products">
+								<tr v-for="(product, index) in products">
 									<td><figure class="image is-48x48"><img :src="product.picture"></figure></td>
 									<td v-text="product.name"></td>
 									<td v-text="product.pivot.quantity"></td>
@@ -195,7 +195,7 @@
 
 		methods: {
 			getOutbound() {
-				axios.get('/internal/outbound/' + this.outboundId)
+				axios.get('/internal/outbound/' + this.outbound.id)
 					.then(response => this.setOutbound(response));
 			},
 

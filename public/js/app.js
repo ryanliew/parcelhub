@@ -59760,8 +59760,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 	data: function data() {
 		return {
-			fields: [{ name: 'id', title: '#' }, { name: 'created_at', sortField: 'created_at', title: 'Order date', callback: 'date' }, { name: 'courier', sortField: 'courier', title: 'Courier' }, { name: 'amount_insured', sortField: 'amount_insured', title: 'Insurance' }, { name: 'process_status', callback: 'outboundStatusLabel', title: 'Status', sortField: 'process_status' }, { name: '__component:outbounds-actions', title: 'Actions' }],
-			searchables: "process_status, courier",
+			userField: [{ name: 'id', title: '#' }, { name: 'created_at', sortField: 'created_at', title: 'Order date', callback: 'date' }, { name: 'courier', sortField: 'couriers.name', title: 'Courier' }, { name: 'amount_insured', sortField: 'amount_insured', title: 'Insurance' }, { name: 'process_status', callback: 'outboundStatusLabel', title: 'Status', sortField: 'process_status' }, { name: '__component:outbounds-actions', title: 'Actions' }],
+			userSearchables: "process_status",
 			selectedoutbound: '',
 			dialogActive: false,
 			form: new Form({
@@ -59884,6 +59884,23 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		},
 		buttonClass: function buttonClass() {
 			return this.form.submitting ? 'is-loading' : '';
+		},
+		fields: function fields() {
+			var field = this.userField;
+			if (this.can_manage) {
+				field.splice(1, 0, { name: 'customer', sortField: 'users.name', title: 'Customer' });
+			}
+
+			return field;
+		},
+		searchables: function searchables() {
+			var searchables = this.userSearchables;
+
+			if (this.can_manage) {
+				searchables = searchables + ",users.name";
+			}
+
+			return searchables;
 		}
 	}
 });
@@ -60135,7 +60152,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		getOutbound: function getOutbound() {
 			var _this = this;
 
-			axios.get('/internal/outbound/' + this.outboundId).then(function (response) {
+			axios.get('/internal/outbound/' + this.outbound.id).then(function (response) {
 				return _this.setOutbound(response);
 			});
 		},
@@ -60317,7 +60334,7 @@ var render = function() {
                   _vm._v(" "),
                   _c(
                     "tbody",
-                    _vm._l(_vm.outbound.products, function(product, index) {
+                    _vm._l(_vm.products, function(product, index) {
                       return _c("tr", [
                         _c("td", [
                           _c("figure", { staticClass: "image is-48x48" }, [
@@ -60573,28 +60590,30 @@ var render = function() {
                       ])
                     ]),
                     _vm._v(" "),
-                    _c("div", { staticClass: "level-right" }, [
-                      _c("div", { staticClass: "level-item" }, [
-                        _c(
-                          "button",
-                          {
-                            staticClass: "button is-primary",
-                            on: {
-                              click: function($event) {
-                                _vm.modalOpen()
-                              }
-                            }
-                          },
-                          [
-                            _c("i", { staticClass: "fa fa-plus-circle" }),
-                            _vm._v(" "),
-                            _c("span", { staticClass: "pl-5" }, [
-                              _vm._v("Create new outbound order")
-                            ])
-                          ]
-                        )
-                      ])
-                    ])
+                    !_vm.can_manage
+                      ? _c("div", { staticClass: "level-right" }, [
+                          _c("div", { staticClass: "level-item" }, [
+                            _c(
+                              "button",
+                              {
+                                staticClass: "button is-primary",
+                                on: {
+                                  click: function($event) {
+                                    _vm.modalOpen()
+                                  }
+                                }
+                              },
+                              [
+                                _c("i", { staticClass: "fa fa-plus-circle" }),
+                                _vm._v(" "),
+                                _c("span", { staticClass: "pl-5" }, [
+                                  _vm._v("Create new outbound order")
+                                ])
+                              ]
+                            )
+                          ])
+                        ])
+                      : _vm._e()
                   ])
                 ]),
                 _vm._v(" "),

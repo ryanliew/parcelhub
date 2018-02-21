@@ -29,14 +29,26 @@ class OutboundController extends Controller
     {
         if(request()->wantsJson()) {
             $user = auth()->user();
-            return Controller::VueTableListResult( $user->outbounds()
-                                                        ->select('outbounds.id as id',
-                                                                'amount_insured',
-                                                                'process_status',
-                                                                'couriers.name as courier',
-                                                                'outbounds.created_at'
-                                                                )
-                                                        ->leftJoin('couriers', 'courier_id', '=', 'couriers.id') );
+            if(\Entrust::hasRole('admin'))
+                return Controller::VueTableListResult( Outbound::select('outbounds.id as id',
+                                                                    'amount_insured',
+                                                                    'process_status',
+                                                                    'couriers.name as courier',
+                                                                    'outbounds.created_at',
+                                                                    'users.name as customer'
+                                                                    )
+                                                                ->leftJoin('couriers', 'courier_id', '=', 'couriers.id')
+                                                                ->leftJoin('users', 'user_id', '=', 'users.id') );
+            else
+                return Controller::VueTableListResult( $user->outbounds()
+                                                            ->select('outbounds.id as id',
+                                                                    'amount_insured',
+                                                                    'process_status',
+                                                                    'couriers.name as courier',
+                                                                    'outbounds.created_at'
+                                                                    )
+                                                            ->leftJoin('couriers', 'courier_id', '=', 'couriers.id') );
+
         }
 
         if(\Entrust::hasRole('admin')) {
@@ -192,7 +204,7 @@ class OutboundController extends Controller
                             ->orderBy('lot_id')
                             ->get();
 
-        return ['outbound' => $outbound, 'products' => $products];
+        return $products;
     }
 
     /**

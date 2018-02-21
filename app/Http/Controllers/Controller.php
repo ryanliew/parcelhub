@@ -36,12 +36,15 @@ class Controller extends BaseController
             // handle searching
             $searchables = explode(",", request()->searchables);
 
-            foreach($searchables as $searchable)
-            {
-                $result = $query->orWhere($searchable, 'LIKE', '%' . request()->filter . '%');
-            }
+            $result = $result->where(function($query) use ($searchables){
+                foreach($searchables as $searchable)
+                {
+                    $query = $query->orWhere($searchable, 'LIKE', '%' . request()->filter . '%');
+                }
+            });
+            
         }
-        
+
     	return $result->paginate(10);
     }
 }

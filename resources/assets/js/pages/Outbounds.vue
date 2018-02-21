@@ -10,7 +10,7 @@
 								Outbound orders
 							</div>
 						</div>
-						<div class="level-right">
+						<div class="level-right" v-if="!can_manage">
 							<div class="level-item">
 								<button class="button is-primary" @click="modalOpen()">
 									<i class="fa fa-plus-circle"></i>
@@ -162,15 +162,15 @@
 
 		data() {
 			return {
-				fields: [
+				userField: [
 					{name: 'id', title: '#'},
 					{name: 'created_at', sortField: 'created_at', title: 'Order date', callback: 'date'},
-					{name: 'courier', sortField: 'courier', title: 'Courier'},
+					{name: 'courier', sortField: 'couriers.name', title: 'Courier'},
 					{name: 'amount_insured', sortField: 'amount_insured', title: 'Insurance'},
 					{name: 'process_status', callback: 'outboundStatusLabel', title: 'Status', sortField: 'process_status'},
 					{name: '__component:outbounds-actions', title: 'Actions'}	
 				],
-				searchables: "process_status, courier",
+				userSearchables: "process_status",
 				selectedoutbound: '',
 				dialogActive: false,
 				form: new Form({
@@ -296,6 +296,27 @@
 
 			buttonClass() {
 				return this.form.submitting ? 'is-loading' : '';
+			},
+
+			fields() {
+				let field = this.userField;
+				if(this.can_manage)
+				{
+					field.splice(1, 0, {name: 'customer', sortField: 'users.name', title: 'Customer'});
+				}
+
+				return field;
+			},
+
+			searchables() {
+				let searchables = this.userSearchables;
+
+				if(this.can_manage)
+				{
+					searchables = searchables + ",users.name";
+				}
+
+				return searchables;
 			}
 		}
 	}

@@ -49,8 +49,6 @@ class Outbound extends Model
 {
 	protected $guarded = ['id', 'user_id', 'status', 'products'];
 
-    protected $with = ['products'];
-
     public function user(){
     	return $this->belongsTo('App\User');
     }
