@@ -94,7 +94,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="column">
+			<div class="column is-one-third">
 				<div class="card">
 					<div class="card-header">
 						<div class="card-header-title level">

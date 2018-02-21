@@ -12181,7 +12181,8 @@ th {
 }
 
 .modal-card-body {
-  overflow: visible;
+  overflow-y: scroll;
+  max-height: 450px;
 }
 
 .modal-card {
@@ -12201,6 +12202,10 @@ th {
 
 .unclearable .v-select .dropdown-toggle .clear {
   display: none;
+}
+
+.v-select input[type="search"] {
+  width: 150px !important;
 }
 
 /* Custom helper classes */

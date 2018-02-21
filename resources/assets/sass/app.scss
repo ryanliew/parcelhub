@@ -37,7 +37,8 @@
 }
 
 .modal-card-body {
-  overflow: visible;
+  overflow-y: scroll;
+  max-height: 450px;
 }
 
 .modal-card {
@@ -58,6 +59,11 @@
 .unclearable .v-select .dropdown-toggle .clear {
   display: none;
 }
+
+.v-select input[type="search"] {
+  width: 150px !important;
+}
+
 /* Custom helper classes */
 
 .mt-5 {

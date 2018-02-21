@@ -46,6 +46,7 @@ Vue.component('LotsActions', require('./actions/LotsActions.vue'));
 Vue.component('CouriersActions', require('./actions/CouriersActions.vue'));
 Vue.component('ProductsActions', require('./actions/ProductsActions.vue'));
 Vue.component('InboundsActions', require('./actions/InboundsActions.vue'));
+Vue.component('OutboundsActions', require('./actions/OutboundsActions.vue'));
 
 // Pages components
 Vue.component('categories-page', require('./pages/Categories.vue'));
@@ -53,6 +54,8 @@ Vue.component('lots-page', require('./pages/Lots.vue'));
 Vue.component('couriers-page', require('./pages/Couriers.vue'));
 Vue.component('products-page', require('./pages/Products.vue'));
 Vue.component('inbounds-page', require('./pages/Inbounds.vue'));
+Vue.component('outbounds-page', require('./pages/Outbounds.vue'));
+Vue.component('payments-page', require('./pages/Payments.vue'));
 
 // Single instance view components
 Vue.component('product', require('./objects/Product.vue'));

@@ -15,7 +15,7 @@ class InboundController extends Controller
      */
     public function index()
     {
-        
+        return Controller::VueTableListResult(inbound::with('products', 'products_with_lots.lots'));
     }
 
     /**

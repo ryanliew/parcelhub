@@ -13,6 +13,11 @@
                 Inbounds
             </a>
         </li>
+        <li>
+            <a @if( url()->current() == route('outbounds') ) class="is-active" @endif href="{{ route('outbounds') }}">
+                Outbounds
+            </a>
+        </li>
     </ul>
     <ul class="menu-list">
         

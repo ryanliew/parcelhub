@@ -25,6 +25,7 @@ Route::get('lots/categories', 'CategoryController@page')->name('lots.categories'
 Route::get('lots', 'LotController@page')->name('lots');
 Route::get('products', 'ProductController@page')->name('products');
 Route::get('inbounds', 'InboundController@page')->name('inbounds');
+Route::get('outbounds', 'OutboundController@page')->name('outbounds');
 
 /* Route for Socialite authentication */
 Route::group(['prefix' => 'auth', 'as' => 'auth.social.'], function() {
@@ -62,6 +63,11 @@ Route::group(['prefix' => 'internal'], function() {
 	Route::get('couriers', 'CourierController@index');
 	Route::get('products', 'ProductController@index');
 	Route::get('inbound/user', 'InboundController@index');
+	Route::get('outbound/user', 'OutboundController@index');
+	Route::get('inbound/admin', 'Admin\InboundController@index');
+	Route::get('outbound/admin', 'Admin\OutboundController@index');
+	Route::get('outbound/{outbound}', 'OutboundController@show');
+	Route::get('payments', 'PaymentController@index');
 });
 
 Route::group(['prefix' => 'courier'], function() {

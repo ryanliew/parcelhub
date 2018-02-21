@@ -44,6 +44,7 @@ class LotController extends Controller
                                 'categories.id as category_id',
                                 'categories.volume as category_volume',
                                 'lots.volume as volume', 
+                                'lots.price as price',
                                 'users.name as user_name')
                         ->join('categories', 'categories.id', '=', 'category_id')
                         ->leftJoin('users', 'users.id', '=', 'user_id')
