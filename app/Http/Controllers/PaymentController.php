@@ -19,6 +19,10 @@ class PaymentController extends Controller
      */
     public function index()
     {
+        if(request()->wantsJson())
+            return Controller::VueTableListResult(Payment::select("*"));
+
+        return view('payment.page');
         if(\Entrust::hasRole('admin')) {
 
             $payments = Payment::whereStatus('false')->get();

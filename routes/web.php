@@ -62,6 +62,7 @@ Route::group(['prefix' => 'internal'], function() {
 	Route::get('couriers', 'CourierController@index');
 	Route::get('products', 'ProductController@index');
 	Route::get('inbound/user', 'InboundController@index');
+	Route::get('payments', 'PaymentController@index');
 });
 
 Route::group(['prefix' => 'courier'], function() {

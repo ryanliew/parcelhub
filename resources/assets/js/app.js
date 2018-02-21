@@ -53,6 +53,7 @@ Vue.component('lots-page', require('./pages/Lots.vue'));
 Vue.component('couriers-page', require('./pages/Couriers.vue'));
 Vue.component('products-page', require('./pages/Products.vue'));
 Vue.component('inbounds-page', require('./pages/Inbounds.vue'));
+Vue.component('payments-page', require('./pages/Payments.vue'));
 
 // Single instance view components
 Vue.component('product', require('./objects/Product.vue'));

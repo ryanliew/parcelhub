@@ -5344,16 +5344,6 @@ if (typeof __g == 'number') __g = global; // eslint-disable-line no-undef
 
 /***/ }),
 /* 5 */
-/***/ (function(module, exports) {
-
-var hasOwnProperty = {}.hasOwnProperty;
-module.exports = function (it, key) {
-  return hasOwnProperty.call(it, key);
-};
-
-
-/***/ }),
-/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
@@ -5397,6 +5387,16 @@ if (false) {(function () {
 })()}
 
 module.exports = Component.exports
+
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports) {
+
+var hasOwnProperty = {}.hasOwnProperty;
+module.exports = function (it, key) {
+  return hasOwnProperty.call(it, key);
+};
 
 
 /***/ }),
@@ -6273,7 +6273,7 @@ module.exports = (
 /***/ (function(module, exports, __webpack_require__) {
 
 var def = __webpack_require__(8).f;
-var has = __webpack_require__(5);
+var has = __webpack_require__(6);
 var TAG = __webpack_require__(11)('toStringTag');
 
 module.exports = function (it, tag, stat) {
@@ -18429,7 +18429,7 @@ var LIBRARY = __webpack_require__(24);
 var $export = __webpack_require__(164);
 var redefine = __webpack_require__(167);
 var hide = __webpack_require__(7);
-var has = __webpack_require__(5);
+var has = __webpack_require__(6);
 var Iterators = __webpack_require__(27);
 var $iterCreate = __webpack_require__(237);
 var setToStringTag = __webpack_require__(32);
@@ -18643,7 +18643,7 @@ module.exports = Object.create || function create(O, Properties) {
 /* 169 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var has = __webpack_require__(5);
+var has = __webpack_require__(6);
 var toIObject = __webpack_require__(10);
 var arrayIndexOf = __webpack_require__(240)(false);
 var IE_PROTO = __webpack_require__(29)('IE_PROTO');
@@ -19064,7 +19064,7 @@ module.exports = Component.exports
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(182);
-module.exports = __webpack_require__(351);
+module.exports = __webpack_require__(354);
 
 
 /***/ }),
@@ -19108,7 +19108,7 @@ Vue.component('flash', __webpack_require__(211));
 Vue.component('loader', __webpack_require__(162));
 Vue.component('navigation', __webpack_require__(219));
 Vue.component('modal', __webpack_require__(222));
-Vue.component('table-view', __webpack_require__(6));
+Vue.component('table-view', __webpack_require__(5));
 Vue.component('text-input', __webpack_require__(294));
 Vue.component('checkbox-input', __webpack_require__(299));
 Vue.component('selector-input', __webpack_require__(302));
@@ -19132,6 +19132,7 @@ Vue.component('lots-page', __webpack_require__(335));
 Vue.component('couriers-page', __webpack_require__(338));
 Vue.component('products-page', __webpack_require__(341));
 Vue.component('inbounds-page', __webpack_require__(346));
+Vue.component('payments-page', __webpack_require__(351));
 
 // Single instance view components
 Vue.component('product', __webpack_require__(179));
@@ -50784,7 +50785,7 @@ module.exports = document && document.documentElement;
 /***/ (function(module, exports, __webpack_require__) {
 
 // 19.1.2.9 / 15.2.3.2 Object.getPrototypeOf(O)
-var has = __webpack_require__(5);
+var has = __webpack_require__(6);
 var toObject = __webpack_require__(245);
 var IE_PROTO = __webpack_require__(29)('IE_PROTO');
 var ObjectProto = Object.prototype;
@@ -50916,7 +50917,7 @@ module.exports = __webpack_require__(25).Symbol;
 
 // ECMAScript 6 symbols shim
 var global = __webpack_require__(4);
-var has = __webpack_require__(5);
+var has = __webpack_require__(6);
 var DESCRIPTORS = __webpack_require__(9);
 var $export = __webpack_require__(164);
 var redefine = __webpack_require__(167);
@@ -51155,7 +51156,7 @@ setToStringTag(global.JSON, 'JSON', true);
 
 var META = __webpack_require__(17)('meta');
 var isObject = __webpack_require__(12);
-var has = __webpack_require__(5);
+var has = __webpack_require__(6);
 var setDesc = __webpack_require__(8).f;
 var id = 0;
 var isExtensible = Object.isExtensible || function () {
@@ -51273,7 +51274,7 @@ var pIE = __webpack_require__(35);
 var createDesc = __webpack_require__(16);
 var toIObject = __webpack_require__(10);
 var toPrimitive = __webpack_require__(26);
-var has = __webpack_require__(5);
+var has = __webpack_require__(6);
 var IE8_DOM_DEFINE = __webpack_require__(165);
 var gOPD = Object.getOwnPropertyDescriptor;
 
@@ -55909,7 +55910,7 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_TableView_vue__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_TableView_vue__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_TableView_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__components_TableView_vue__);
 //
 //
@@ -56272,7 +56273,7 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_TableView_vue__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_TableView_vue__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_TableView_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__components_TableView_vue__);
 //
 //
@@ -56769,7 +56770,7 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_TableView_vue__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_TableView_vue__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_TableView_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__components_TableView_vue__);
 //
 //
@@ -57157,7 +57158,7 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_TableView_vue__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_TableView_vue__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_TableView_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__components_TableView_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__objects_Product_vue__ = __webpack_require__(179);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__objects_Product_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__objects_Product_vue__);
@@ -58267,7 +58268,7 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_TableView_vue__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_TableView_vue__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_TableView_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__components_TableView_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__objects_Inbound_vue__ = __webpack_require__(180);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__objects_Inbound_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__objects_Inbound_vue__);
@@ -58916,7 +58917,7 @@ var render = function() {
           ])
         ]),
         _vm._v(" "),
-        _c("div", { staticClass: "column" }, [
+        _c("div", { staticClass: "column is-one-third" }, [
           _c("div", { staticClass: "card" }, [
             _vm._m(2),
             _vm._v(" "),
@@ -59455,6 +59456,409 @@ if (false) {
 
 /***/ }),
 /* 351 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(352)
+/* template */
+var __vue_template__ = __webpack_require__(353)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources\\assets\\js\\pages\\Payments.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-54ff7424", Component.options)
+  } else {
+    hotAPI.reload("data-v-54ff7424", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 352 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_TableView_vue__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_TableView_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__components_TableView_vue__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+	props: [''],
+
+	components: { TableView: __WEBPACK_IMPORTED_MODULE_0__components_TableView_vue___default.a },
+
+	data: function data() {
+		return {
+			fields: [{ name: 'name', sortField: 'name' }],
+			selectedPayment: '',
+			dialogActive: false,
+			override: false,
+			lots: '',
+			form: new Form({
+				id: '',
+				name: ''
+			}),
+			isDeleting: false
+		};
+	},
+	mounted: function mounted() {
+		var _this = this;
+
+		this.$events.on('view', function (data) {
+			return _this.view(data);
+		});
+		this.$events.on('delete', function (data) {
+			return _this.delete(data);
+		});
+		this.getLots();
+	},
+
+
+	methods: {
+		getLots: function getLots() {
+			var _this2 = this;
+
+			axios.get('/internal/lots').then(function (response) {
+				return _this2.setLots(response.data);
+			});
+		},
+		setLots: function setLots(data) {
+			console.log(data.data);
+			this.lots = _.filter(data.data, function (lot) {
+				return !lot.user_name;
+			});
+		},
+		submit: function submit() {
+			var _this3 = this;
+
+			this.form.post(this.action).then(function (data) {
+				return _this3.onSuccess();
+			}).catch(function (error) {
+				return _this3.onFail(error);
+			});
+		},
+		onSuccess: function onSuccess() {
+			this.dialogActive = false;
+			this.$refs.couriers.refreshTable();
+		},
+		onFail: function onFail() {},
+		edit: function edit(data) {
+			this.selectedPayment = data;
+			this.form.id = data.id;
+			this.form.name = data.name;
+
+			this.dialogActive = true;
+		},
+		delete: function _delete(data) {
+			this.selectedPayment = data;
+			this.isDeleting = true;
+		},
+		confirmDeletion: function confirmDeletion() {
+			var _this4 = this;
+
+			axios.get('/courier/delete/' + this.selectedPayment.id).then(function (response) {
+				return _this4.deleteSuccess(response);
+			});
+		},
+		deleteSuccess: function deleteSuccess(response) {
+			this.isDeleting = false;
+			flash(response.message);
+			this.$refs.couriers.refreshTable();
+		},
+		modalOpen: function modalOpen() {
+			this.form.reset();
+			this.selectedPayment = '';
+			this.dialogActive = true;
+		}
+	},
+
+	computed: {
+		dialogTitle: function dialogTitle() {
+			return this.selectedPayment ? "Edit " + this.selectedPayment.name : "Create new courier";
+		},
+		action: function action() {
+			var action = this.selectedPayment ? "update" : "store";
+			return "/courier/" + action;
+		}
+	}
+});
+
+/***/ }),
+/* 353 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    [
+      _c("div", { staticClass: "card" }, [
+        _c("div", { staticClass: "card-header" }, [
+          _c("div", { staticClass: "card-header-title level" }, [
+            _vm._m(0),
+            _vm._v(" "),
+            _c("div", { staticClass: "level-right" }, [
+              _c("div", { staticClass: "level-item" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "button is-primary",
+                    on: {
+                      click: function($event) {
+                        _vm.modalOpen()
+                      }
+                    }
+                  },
+                  [
+                    _c("i", { staticClass: "fa fa-plus-circle" }),
+                    _vm._v(" "),
+                    _c("span", { staticClass: "pl-5" }, [
+                      _vm._v("Purchase lots")
+                    ])
+                  ]
+                )
+              ])
+            ])
+          ])
+        ]),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "card-content" },
+          [
+            _c("table-view", {
+              ref: "couriers",
+              attrs: { fields: _vm.fields, url: "/internal/payments" }
+            })
+          ],
+          1
+        )
+      ]),
+      _vm._v(" "),
+      _c(
+        "modal",
+        {
+          attrs: { active: _vm.dialogActive },
+          on: {
+            close: function($event) {
+              _vm.dialogActive = false
+            }
+          }
+        },
+        [
+          _c("template", { slot: "header" }, [_vm._v(_vm._s(_vm.dialogTitle))]),
+          _vm._v(" "),
+          _c(
+            "form",
+            {
+              on: {
+                submit: function($event) {
+                  $event.preventDefault()
+                  _vm.onSubmit($event)
+                },
+                keydown: function($event) {
+                  _vm.form.errors.clear($event.target.name)
+                },
+                input: function($event) {
+                  _vm.form.errors.clear($event.target.name)
+                }
+              }
+            },
+            [
+              _c(
+                "div",
+                { staticClass: "field" },
+                [
+                  _c("text-input", {
+                    attrs: {
+                      defaultValue: _vm.form.name,
+                      label: "Name",
+                      required: true,
+                      name: "name",
+                      type: "text",
+                      editable: true,
+                      error: _vm.form.errors.get("name"),
+                      focus: true
+                    },
+                    model: {
+                      value: _vm.form.name,
+                      callback: function($$v) {
+                        _vm.$set(_vm.form, "name", $$v)
+                      },
+                      expression: "form.name"
+                    }
+                  })
+                ],
+                1
+              )
+            ]
+          ),
+          _vm._v(" "),
+          _c("template", { slot: "footer" }, [
+            _c(
+              "button",
+              { staticClass: "button is-primary", on: { click: _vm.submit } },
+              [_vm._v("Submit")]
+            )
+          ])
+        ],
+        2
+      ),
+      _vm._v(" "),
+      _c(
+        "modal",
+        {
+          attrs: { active: _vm.isDeleting },
+          on: {
+            close: function($event) {
+              _vm.isDeleting = false
+            }
+          }
+        },
+        [
+          _c("template", { slot: "header" }, [_vm._v("Delete payment")]),
+          _vm._v("\n\t\t\t\n\t\t\tAre you sure you want to delete "),
+          _c("span", {
+            domProps: { textContent: _vm._s(_vm.selectedPayment.name) }
+          }),
+          _vm._v("?\n\n\t\t\t"),
+          _c("template", { slot: "footer" }, [
+            _c(
+              "button",
+              {
+                staticClass: "button is-primary",
+                on: { click: _vm.confirmDeletion }
+              },
+              [_vm._v("Confirm")]
+            )
+          ])
+        ],
+        2
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "level-left" }, [
+      _c("div", { staticClass: "level-item" }, [
+        _vm._v("\n\t\t\t\t\t\t\tPurchase history\n\t\t\t\t\t\t")
+      ])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-54ff7424", module.exports)
+  }
+}
+
+/***/ }),
+/* 354 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
