@@ -54,6 +54,16 @@
 								:error="form.errors.get('volume')">
 					</text-input>
 	          	</div>
+	          	<div class="field">
+	          		<text-input v-model="form.price" :defaultValue="form.price" 
+								label="Price(RM)" 
+								:required="true"
+								name="price"
+								type="text"
+								:editable="true"
+								:error="form.errors.get('price')">
+					</text-input>
+	          	</div>
           	</form>
 
           	<template slot="footer">
@@ -76,6 +86,7 @@
 				fields: [
 					{name: 'name', sortField: 'name'},
 					{name: 'volume', sortFiled: 'volume', title: 'Volume (cm³)'},
+					{name: 'price', sortFiled: 'price', title: 'Price (RM)'},
 					{name: '__component:categories-actions', title: 'Actions'}	
 				],
 				selectedCategory: '',
@@ -83,6 +94,7 @@
 				form: new Form({
 					id: '',
 					name: '',
+					price: '',
 					volume: ''
 				}),
 			};

@@ -18,7 +18,6 @@ class Controller extends BaseController
     public static function VueTableListResult($query)
     {
         $result = $query;
-
     	if(!empty(request()->sort))
     	{
             // handle sorting
@@ -42,7 +41,7 @@ class Controller extends BaseController
                 $result = $query->orWhere($searchable, 'LIKE', '%' . request()->filter . '%');
             }
         }
-
+        
     	return $result->paginate(10);
     }
 }

@@ -127,6 +127,10 @@
 				return this.$options.filters.formatInboundStatus(value);
 			},
 
+			outboundStatusLabel(value) {
+				return this.$options.filters.formatOutboundStatus(value);
+			},
+
 			image(value) {
 				return '<figure class="image is-48x48"><img src="'+ value +'"></figure>';
 			},
