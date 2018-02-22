@@ -24,7 +24,7 @@ class Courier extends Model
 {
 	protected $guarded = [];
 	
-    public function outbound(){
-    	return $this->belongsTo('App\Outbound');
+    public function outbound() {
+        return $this->hasOne('App\Outbound');
     }
 }

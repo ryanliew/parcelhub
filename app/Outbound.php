@@ -49,7 +49,7 @@ class Outbound extends Model
 {
 	protected $guarded = ['products', 'insurance', 'amount_insured', 'user_id', 'status'];
 	
-    public function user(){
+    public function user() {
     	return $this->belongsTo('App\User');
     }
 
@@ -58,7 +58,7 @@ class Outbound extends Model
     }
 
     public function courier() {
-    	return $this->hasOne('App\courier');
+        return $this->belongsTo('App\Courier');
     }
 
     public function scopeProcessing($query){

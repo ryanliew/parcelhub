@@ -3,11 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Courier;
-use App\Lot;
 use App\Outbound;
 use App\Product;
-use App\User;
 use Illuminate\Http\Request;
+use PDF;
 
 class OutboundController extends Controller
 {
@@ -20,7 +19,8 @@ class OutboundController extends Controller
     {
         if(\Entrust::hasRole('admin')) {
 
-            return view('outbound.admin');
+            $outbounds = Outbound::processing()->get();
+            return view('outbound.admin')->with('outbounds', $outbounds);
 
         } else {
 
@@ -40,6 +40,15 @@ class OutboundController extends Controller
     public function create()
     {
         //
+    }
+
+    public function report($id)
+    {
+        $outbound = Outbound::find($id);
+
+        $pdf = PDF::loadView('outbound.report', compact('outbound'));
+
+        return $pdf->setPaper('A4')->download('outbound-report.pdf');
     }
 
     /**

@@ -101,6 +101,10 @@ Route::group(['prefix' => 'outbound'], function() {
     Route::post('store', 'OutboundController@store')->name('outbound.store');
 });
 
+Route::group(['prefix' => 'download'], function () {
+    Route::get('outbound/report/{id}', 'OutboundController@report')->name('download.outbound.report');
+});
+
 Route::group(['middleware' => 'auth'], function () {
 
     Route::group(['prefix' => 'lot'], function() {

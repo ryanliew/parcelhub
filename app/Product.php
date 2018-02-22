@@ -54,9 +54,8 @@ class Product extends Model
     
     protected $appends = ['volume', 'total'];
     
-    public function lots(){
-    	return $this->belongsToMany('App\Lot')
-            ->withPivot('quantity');
+    public function lots() {
+    	return $this->belongsToMany('App\Lot')->withPivot('quantity');
     }
 
     public function inbounds(){
@@ -103,5 +102,9 @@ class Product extends Model
             $total += $lot->pivot->quantity;
         }
         return $total;
+    }
+
+    public function getOutboundProductLotAttribute() {
+        return Lot::find($this->pivot->lot_id);
     }
 }
