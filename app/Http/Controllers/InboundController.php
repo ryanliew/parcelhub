@@ -30,7 +30,7 @@ class InboundController extends Controller
     {
         if(request()->wantsJson())
         {
-            return Controller::VueTableListResult(inbound::with('products', 'products_with_lots.lots'));
+            return Controller::VueTableListResult(auth()->user()->inbounds()->with('products', 'products_with_lots.lots'));
         }
         $inbounds = inbound::where('status', 'true')->get();
         $products = product::where('user_id', auth()->user()->id)->where('status', 'true')->get();

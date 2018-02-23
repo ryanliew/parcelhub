@@ -15,7 +15,7 @@ class UpdatePaymentUserIdToForeignKey extends Migration
     {
         Schema::table('payments', function (Blueprint $table) {
             $table->integer('user_id')->unsigned()->change();
-            $table->foreign('user_id')->references('id')->on('users');
+            //$table->foreign('user_id')->references('id')->on('users');
 
             $table->foreign('user_id')
                 ->references('id')->on('users')

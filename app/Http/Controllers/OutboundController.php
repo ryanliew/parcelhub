@@ -6,10 +6,20 @@ use App\Courier;
 use App\Outbound;
 use App\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use PDF;
 
 class OutboundController extends Controller
 {
+    /**
+     * Return the page view for outbounds
+     * @return \Illuminate\Http\Response
+     */
+    public function page()
+    {
+        return view('outbound.page');
+    }
+    
     /**
      * Display a listing of the resource.
      *
@@ -17,6 +27,30 @@ class OutboundController extends Controller
      */
     public function index()
     {
+        if(request()->wantsJson()) {
+            $user = auth()->user();
+            if(\Entrust::hasRole('admin'))
+                return Controller::VueTableListResult( Outbound::select('outbounds.id as id',
+                                                                    'amount_insured',
+                                                                    'process_status',
+                                                                    'couriers.name as courier',
+                                                                    'outbounds.created_at',
+                                                                    'users.name as customer'
+                                                                    )
+                                                                ->leftJoin('couriers', 'courier_id', '=', 'couriers.id')
+                                                                ->leftJoin('users', 'user_id', '=', 'users.id') );
+            else
+                return Controller::VueTableListResult( $user->outbounds()
+                                                            ->select('outbounds.id as id',
+                                                                    'amount_insured',
+                                                                    'process_status',
+                                                                    'couriers.name as courier',
+                                                                    'outbounds.created_at'
+                                                                    )
+                                                            ->leftJoin('couriers', 'courier_id', '=', 'couriers.id') );
+
+        }
+
         if(\Entrust::hasRole('admin')) {
 
             $outbounds = Outbound::processing()->get();
@@ -63,41 +97,34 @@ class OutboundController extends Controller
             'recipient_name' => 'required',
             'recipient_address' => 'required',
             'courier_id' => 'required',
-            'insurance' => 'required',
-            'amount_insured' => 'sometimes|required',
-            'products' => 'required',
-            'products.*.id' => 'required',
-            'products.*.quantity' => 'required|min:1',
+            'insurance' => 'required|boolean',
+            'amount_insured' => 'required_if:insurance,==,1|numeric|min:0',
+            'outbound_products' => 'required',
         ]);
 
-        $inputs = $request->all();
-        $outboundProducts = $inputs['products'];
-
-        $user = \Auth::user();
-        $outbound = new Outbound();
-
         try {
-            $outbound->fill($inputs);
+            $outboundProducts = json_decode($request['outbound_products'], true);
 
-            if($inputs['insurance'] === 'yes') {
-                $outbound->insurance = true;
-                $outbound->amount_insured = $inputs['amount_insured'];
-            } else {
-                $outbound->insurance = false;
-                $outbound->amount_insured = 0;
+            $validator = Validator::make(['outbound_products' => $outboundProducts], [
+                'outbound_products.*' => 'bail|product_exist|product_stock',
+            ]);
+
+            if ($validator->fails()) {
+                return redirect()->back()
+                    ->withErrors($validator)
+                    ->withInput();
             }
 
+            $user = \Auth::user();
+
+            $outbound = new Outbound();
+            $outbound->fill($request->all());
+            $outbound->amount_insured = $outbound->insurance ? request()->amount_insured : 0;
             $outbound->user_id = $user->id;
             $outbound->status = 'true';
             $outbound->save();
-        } catch (\Exception $e) {
-            echo $e;
-            abort(404);
-        }
 
-        foreach ($outboundProducts as $outboundProduct) {
-
-            try {
+            foreach ($outboundProducts as $outboundProduct) {
                 $product = $user->products()
                     ->where('id', $outboundProduct['id'])
                     ->firstOrFail();
@@ -105,10 +132,6 @@ class OutboundController extends Controller
                 // Quantity used to mark down how many number of product
                 // going to retrieve from user's lots
                 $quantity = $outboundProduct['quantity'];
-
-                if($quantity > $product->total_quantity) {
-                    return redirect()->back()->withErrors("You don't have sufficient products in your LOT");
-                }
 
                 foreach ($product->lots as $lot) {
 
@@ -150,10 +173,12 @@ class OutboundController extends Controller
                         $quantity -= $lot->pivot->quantity;
                     }
                 }
-            } catch (\Exception $e) {
-                echo $e;
-                abort(404);
             }
+
+        } catch (\Exception $exception) {
+
+            return redirect()->back()->withErrors($exception->getMessage());
+
         }
 
         return redirect()->back()->withSuccess('Successfully create outbound order');
@@ -165,9 +190,20 @@ class OutboundController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Outbound $outbound)
     {
-        //
+        $products = $outbound->products()
+                            ->select('products.name as name',
+                                  'products.picture as picture',
+                                  'outbound_product.quantity as quantity',
+                                  'products.is_fragile as is_fragile',
+                                  'products.is_dangerous as is_dangerous',
+                                  'lots.name as lot_name')
+                            ->join('lots', 'lots.id', '=', 'lot_id')
+                            ->orderBy('lot_id')
+                            ->get();
+
+        return $products;
     }
 
     /**

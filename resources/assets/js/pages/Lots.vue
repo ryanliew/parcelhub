@@ -70,16 +70,28 @@
 				</div>
 
 				<transition name="fade">
-		          	<div class="field" v-if="override || this.form.volume">
-		          		<text-input v-model="form.volume" :defaultValue="form.volume" 
-									label="Volume(cm³)" 
-									:required="true"
-									name="volume"
-									type="text"
-									:editable="override"
-									:error="form.errors.get('volume')">
-						</text-input>
-		          	</div>
+					<div v-if="override || this.form.volume || this.form.price">
+			          	<div class="field">
+			          		<text-input v-model="form.volume" :defaultValue="form.volume" 
+										label="Volume (cm³)" 
+										:required="true"
+										name="volume"
+										type="text"
+										:editable="override"
+										:error="form.errors.get('volume')">
+							</text-input>
+			          	</div>
+			          	<div class="field">
+			          		<text-input v-model="form.price" :defaultValue="form.price" 
+										label="Price (RM)" 
+										:required="true"
+										name="price"
+										type="text"
+										:editable="override"
+										:error="form.errors.get('price')">
+							</text-input>
+			          	</div>
+			         </div>
 	          	</transition>
           	</form>
 
@@ -107,7 +119,8 @@
 					{name: 'name', sortField: 'name'},
 					{name: 'left_volume', sortField: 'left_volume', title: 'Volume left (cm³)'},
 					{name: 'category_name', sortField: 'category_name', title: 'Category'},
-					{name: 'volume', sortField: 'Volume', title: 'Volume (cm³)'},
+					{name: 'volume', sortField: 'volume', title: 'Volume (cm³)'},
+					{name: 'price', sortField: 'price', title: 'Price (RM)'},
 					{name: 'user_name', sortField: 'user_name', title: 'Customer'},
 					{name: '__component:lots-actions', title: 'Actions'}	
 				],
@@ -121,7 +134,8 @@
 					id: '',
 					name: '',
 					volume: '',
-					category: ''
+					category: '',
+					price: ''
 				}),
 			};
 		},
@@ -144,7 +158,7 @@
 					obj['label'] = category.name;
 					obj['value'] = category.id;
 					obj['volume'] = category.volume;
-
+					obj['price'] = category.price;
 					return obj;
 				});
 			},
@@ -173,16 +187,18 @@
 				this.selectedCategory = {
 					label: data.category_name,
 					value: data.category_id,
-					volume: data.category_volume
+					volume: data.category_volume,
+					price: data.category_price
 				};
 				this.dialogActive = true;
-				this.override = data.category_volume !== data.volume;
+				this.override = data.category_volume !== data.volume || data.category_price !== data.price;
 			},
 
 			categoryUpdate(data) {
 				this.selectedCategory = data;
 				this.form.category = data.value;
 				this.form.volume = data.volume; 
+				this.form.price = data.price; 
 			},
 
 			modalOpen() {

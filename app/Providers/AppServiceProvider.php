@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Validation\LotValidator;
+use App\Validation\ProductValidator;
 use Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
@@ -19,9 +19,9 @@ class AppServiceProvider extends ServiceProvider
     {
         Schema::defaultStringLength(191);
 
-        Validator::resolver(function($translator, $data, $rules, $messages)
+        Validator::resolver(function($translator, $data, $rules, $messages, $attribute)
         {
-            return new LotValidator($translator, $data, $rules, $messages);
+            return new ProductValidator($translator, $data, $rules, $messages, $attribute);
         });
     }
 
