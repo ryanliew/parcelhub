@@ -108,6 +108,7 @@ Route::group(['prefix' => 'outbound'], function() {
 });
 
 Route::group(['prefix' => 'download'], function () {
+    Route::get('inbound/report/{id}', 'InboundController@report')->name('download.inbound.report');
     Route::get('outbound/report/{id}', 'OutboundController@report')->name('download.outbound.report');
 });
 
