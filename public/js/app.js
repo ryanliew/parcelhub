@@ -56213,6 +56213,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			this.form.id = data.id;
 			this.form.name = data.name;
 			this.form.volume = data.volume;
+			this.form.price = data.price;
 			this.dialogActive = true;
 		},
 		modalOpen: function modalOpen() {
