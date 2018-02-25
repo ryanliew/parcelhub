@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Courier;
-use App\Lot;
 use App\Outbound;
 use App\Product;
-use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use PDF;
 
 class OutboundController extends Controller
 {
@@ -53,7 +53,8 @@ class OutboundController extends Controller
 
         if(\Entrust::hasRole('admin')) {
 
-            return view('outbound.admin');
+            $outbounds = Outbound::processing()->get();
+            return view('outbound.admin')->with('outbounds', $outbounds);
 
         } else {
 
@@ -75,6 +76,15 @@ class OutboundController extends Controller
         //
     }
 
+    public function report($id)
+    {
+        $outbound = Outbound::find($id);
+
+        $pdf = PDF::loadView('outbound.report', compact('outbound'));
+
+        return $pdf->setPaper('A4')->download('outbound-report.pdf');
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -87,54 +97,41 @@ class OutboundController extends Controller
             'recipient_name' => 'required',
             'recipient_address' => 'required',
             'courier_id' => 'required',
-            'insurance' => 'required',
-            'amount_insured' => 'sometimes|required',
-            'products' => 'required',
-            'products.*.id' => 'required',
-            'products.*.quantity' => 'required|min:1',
+            'insurance' => 'required|boolean',
+            'amount_insured' => 'required_if:insurance,==,1|numeric|min:0',
+            'outbound_products' => 'required',
         ]);
 
-        $inputs = $request->all();
-        $outboundProducts = json_decode(request()->products);
-
-
-
-        $user = \Auth::user();  
-        $outbound = new Outbound();
-
         try {
-            $outbound->fill($inputs);
+            $outboundProducts = json_decode($request['outbound_products'], true);
 
-            if($inputs['insurance'] === 'true') {
-                $outbound->insurance = true;
-                $outbound->amount_insured = $inputs['amount_insured'];
-            } else {
-                $outbound->insurance = false;
-                $outbound->amount_insured = 0;
+            $validator = Validator::make(['outbound_products' => $outboundProducts], [
+                'outbound_products.*' => 'bail|product_exist|product_stock',
+            ]);
+
+            if ($validator->fails()) {
+                return redirect()->back()
+                    ->withErrors($validator)
+                    ->withInput();
             }
 
+            $user = \Auth::user();
+
+            $outbound = new Outbound();
+            $outbound->fill($request->all());
+            $outbound->amount_insured = $outbound->insurance ? request()->amount_insured : 0;
             $outbound->user_id = $user->id;
             $outbound->status = 'true';
             $outbound->save();
-        } catch (\Exception $e) {
-            
-            echo $e;
-            return response(422);
-        }
 
-        foreach ($outboundProducts as $outboundProduct) {
-            try {
+            foreach ($outboundProducts as $outboundProduct) {
                 $product = $user->products()
-                    ->where('id', $outboundProduct->id)
+                    ->where('id', $outboundProduct['id'])
                     ->firstOrFail();
 
                 // Quantity used to mark down how many number of product
                 // going to retrieve from user's lots
-                $quantity = $outboundProduct->quantity;
-
-                if($quantity > $product->total_quantity) {
-                    return redirect()->back()->withErrors("You don't have sufficient products in your LOT");
-                }
+                $quantity = $outboundProduct['quantity'];
 
                 foreach ($product->lots as $lot) {
 
@@ -176,10 +173,12 @@ class OutboundController extends Controller
                         $quantity -= $lot->pivot->quantity;
                     }
                 }
-            } catch (\Exception $e) {
-                echo $e;
-                abort(404);
             }
+
+        } catch (\Exception $exception) {
+
+            return redirect()->back()->withErrors($exception->getMessage());
+
         }
 
         return redirect()->back()->withSuccess('Successfully create outbound order');

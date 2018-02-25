@@ -38,11 +38,52 @@ class OutboundTest extends TestCase
         $this->actingAs($this->user);
     }
 
-    /**
-     * A basic test example.
-     *
-     * @return void
-     */
+    public function testOutbound_amountInsuredNotPresentWhenInsuranceIsTrue_shouldFail()
+    {
+        $faker = Faker::create();
+
+        $json = [
+            'courier_id' => 1,
+            'recipient_name' => $faker->name,
+            'recipient_address' => $faker->address,
+            'insurance' => true,
+            'outbound_products' => json_encode(['id' => 1, 'quantity' => 8]),
+        ];
+
+        $response = $this->post('outbound/store', $json, ['HTTP_REFERER' => 'outbound/index']);
+
+        $this->assertTrue($response->isRedirect());
+
+        $response->assertSessionHasErrors();
+    }
+
+    public function testOutbound_negativeAmountInsured_shouldFail()
+    {
+        $faker = Faker::create();
+
+        $outbound_products = [
+            ['id' => 1, 'quantity' => 8],
+        ];
+
+        $response = $this->call('POST', 'outbound/store',
+            [
+                'courier_id' => 1,
+                'recipient_name' => $faker->name,
+                'recipient_address' => $faker->address,
+                'insurance' => true,
+                'amount_insured' => -123456.35,
+                'outbound_products' => json_encode($outbound_products),
+            ],
+            [],
+            [],
+            ['HTTP_REFERER' => 'outbound/index']
+        );
+
+        $this->assertTrue($response->isRedirect());
+
+        $response->assertSessionHasErrors();
+    }
+
     public function testOutbound_getOneProductFromSingleLot()
     {
         $faker = Faker::create();
@@ -51,17 +92,18 @@ class OutboundTest extends TestCase
 
         $lot->products()->attach(1, ['quantity' => 1]);
 
+        $outbound_products = [
+            ['id' => 1, 'quantity' => 1]
+        ];
+
         $response = $this->call('POST', 'outbound/store',
             [
                 'courier_id' => 1,
                 'recipient_name' => $faker->name,
                 'recipient_address' => $faker->address,
-                'insurance' => false,
-                'products' => [
-                    [
-                        'id' => 1, 'quantity' => '1',
-                    ]
-                ],
+                'insurance' => true,
+                'amount_insured' => 1999.50,
+                'outbound_products' => json_encode($outbound_products),
             ],
             [],
             [],
@@ -79,6 +121,10 @@ class OutboundTest extends TestCase
         $outbound = Outbound::firstOrFail();
 
         $this->assertEquals(1, $outbound->products->count());
+
+        $this->assertEquals(1, $outbound->insurance);
+
+        $this->assertEquals(1999.50, $outbound->amount_insured);
 
         $outbound_product = $outbound->products->get(0);
 
@@ -99,17 +145,17 @@ class OutboundTest extends TestCase
         Lot::find(1)->products()->attach(1, ['quantity' => 5]);
         Lot::find(2)->products()->attach(1, ['quantity' => 10]);
 
+        $outbound_products = [
+            ['id' => 1, 'quantity' => 10]
+        ];
+
         $response = $this->call('POST', 'outbound/store',
             [
                 'courier_id' => 1,
                 'recipient_name' => $faker->name,
                 'recipient_address' => $faker->address,
                 'insurance' => false,
-                'products' => [
-                    [
-                        'id' => 1, 'quantity' => '10',
-                    ]
-                ],
+                'outbound_products' => json_encode($outbound_products),
             ],
             [],
             [],
@@ -163,16 +209,18 @@ class OutboundTest extends TestCase
         Lot::find(2)->products()->attach(1, ['quantity' => 10]);
         Lot::find(2)->products()->attach(2, ['quantity' => 10]);
 
+        $outbound_products = [
+            ['id' => 1, 'quantity' => 18],
+            ['id' => 2, 'quantity' => 15],
+        ];
+
         $response = $this->call('POST', 'outbound/store',
             [
                 'courier_id' => 1,
                 'recipient_name' => $faker->name,
                 'recipient_address' => $faker->address,
                 'insurance' => false,
-                'products' => [
-                    ['id' => 1, 'quantity' => '18'],
-                    ['id' => 2, 'quantity' => '15']
-                ],
+                'outbound_products' => json_encode($outbound_products),
             ],
             [],
             [],
@@ -234,17 +282,19 @@ class OutboundTest extends TestCase
         Lot::find(4)->products()->attach(3, ['quantity' => 5]);
         Lot::find(5)->products()->attach(2, ['quantity' => 5]);
 
+        $outbound_products = [
+            ['id' => 1, 'quantity' => 8],
+            ['id' => 2, 'quantity' => 6],
+            ['id' => 3, 'quantity' => 1],
+        ];
+
         $response = $this->call('POST', 'outbound/store',
             [
                 'courier_id' => 1,
                 'recipient_name' => $faker->name,
                 'recipient_address' => $faker->address,
                 'insurance' => false,
-                'products' => [
-                    ['id' => 1, 'quantity' => '8'],
-                    ['id' => 2, 'quantity' => '6'],
-                    ['id' => 3, 'quantity' => '1'],
-                ],
+                'outbound_products' => json_encode($outbound_products),
             ],
             [],
             [],

@@ -107,6 +107,10 @@ Route::group(['prefix' => 'outbound'], function() {
     Route::post('store', 'OutboundController@store')->name('outbound.store');
 });
 
+Route::group(['prefix' => 'download'], function () {
+    Route::get('outbound/report/{id}', 'OutboundController@report')->name('download.outbound.report');
+});
+
 Route::group(['middleware' => 'auth'], function () {
 
     Route::group(['prefix' => 'lot'], function() {
@@ -115,12 +119,11 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('store', 'LotController@store');
         Route::post('update', 'LotController@update');
     });
+});
 
-    Route::group(['prefix' => 'payment', 'as' => 'payment.'], function() {
-        Route::get('index', ['as' => 'index', 'uses' => 'PaymentController@index']);
-        Route::post('store', ['as' => 'store', 'uses' => 'PaymentController@store']);
-        Route::post('approve', ['as' => 'approve', 'uses' => 'PaymentController@approve']);
-        Route::post('purchase', ['as' => 'purchase', 'uses' => 'PaymentController@purchase']);
-    });
-
+Route::group(['prefix' => 'payment'], function() {
+    Route::get('index', 'PaymentController@index')->name('payment.index');
+    Route::post('store', 'PaymentController@store')->name('payment.store');
+    Route::post('approve', 'PaymentController@approve')->name('payment.approve');
+    Route::post('purchase', 'PaymentController@purchase')->name('payment.purchase');
 });

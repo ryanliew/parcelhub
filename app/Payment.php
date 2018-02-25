@@ -28,7 +28,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Payment extends Model
 {
-	protected $guarded = ['user_id'];
+	protected $guarded = ['id', 'user_id'];
 
     public function user() {
     	return $this->belongsTo('App\User');

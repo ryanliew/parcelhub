@@ -14,6 +14,7 @@ class CreateInboundProductTable extends Migration
     public function up()
     {
         Schema::create('inbound_product', function (Blueprint $table) {
+            $table->increments('id');
             $table->integer('inbound_id');
             $table->integer('product_id');
             $table->timestamps();

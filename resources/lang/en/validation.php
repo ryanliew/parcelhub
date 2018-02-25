@@ -106,13 +106,19 @@ return [
         'payments' => [
             'required' => 'Please select at least one of the payment to approve',
         ],
-        'lots_purchase' => [
+        'lot_purchases' => [
             'required' => 'Please select at least one lot to purchase',
         ],
-        'lots_purchase.*.rental_duration' => [
+        'lot_purchases.*.rental_duration' => [
             'min' => 'Minimum rental duration must not least than :min days',
         ],
-
+        'outbound_products' => [
+            'required' => 'Create outbound order require at least one product',
+        ],
+        'outbound_products.*' => [
+            'product_exist' => 'One of the selected outbound product doesn\'t exist in your lot',
+            'product_stock' => 'The quantity of :product you requested for outbound has exceeded in your lot',
+        ],
     ],
 
     /*

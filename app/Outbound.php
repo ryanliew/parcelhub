@@ -47,9 +47,9 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Outbound extends Model
 {
-	protected $guarded = ['id', 'user_id', 'status', 'products'];
-
-    public function user(){
+	protected $guarded = ['id', 'user_id', 'amount_insured', 'outbound_products', 'status'];
+	
+    public function user() {
     	return $this->belongsTo('App\User');
     }
 
@@ -58,22 +58,22 @@ class Outbound extends Model
     }
 
     public function courier() {
-    	return $this->belongsTo('App\courier');
+    	return $this->hasOne('App\courier');
     }
 
-    public function scopeProcessing($query){
+    public function scopeProcessing($query) {
         return $query->where('process_status', 'processing');
     }
 
-    public function scopeDelivering($query){
+    public function scopeDelivering($query) {
         return $query->where('process_status', 'delivering');
     }
 
-    public function scopeCompleted($query){
+    public function scopeCompleted($query) {
         return $query->where('process_status', 'completed');
     }
 
-    public function scopeCanceled($query){
+    public function scopeCanceled($query) {
         return $query->where('process_status', 'canceled');
     }
 }

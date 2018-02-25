@@ -19,10 +19,10 @@ class PaymentController extends Controller
      */
     public function index()
     {
-        if(request()->wantsJson())
+        if(request()->wantsJson()) {
             return Controller::VueTableListResult(Payment::select("*"));
+        }
 
-        return view('payment.page');
         if(\Entrust::hasRole('admin')) {
 
             $payments = Payment::whereStatus('false')->get();
@@ -53,25 +53,45 @@ class PaymentController extends Controller
     public function purchase(Request $request) {
 
         $this->validate($request, [
-            'lots_purchase' => 'required',
-            'lots_purchase.*.rental_duration' => 'required|numeric|min:' . Settings::rentalDuration(),
             'payment_slip' => 'required|image',
         ]);
 
-        $lots = $request->input('lots_purchase');
+        try {
+            $lot_purchases = json_decode($request['lot_purchases'], true);
 
-        $payment = new Payment();
-        $payment->user_id = auth()->user()->id;
-        $payment->picture = $request->file('payment_slip')->store('public');
-        $payment->save();
+            $validator = \Validator::make(['lot_purchases' => $lot_purchases], [
+                'lot_purchases.*.rental_duration' => 'required|integer|min:90',
+            ]);
 
-        foreach($lots as $lot) {
-            if(isset($lot['id'])) {
-                $purchasedLot = Lot::find($lot['id']);
-                $purchasedLot->update(['user_id' => auth()->id(), 'rental_duration' => $lot['rental_duration']]);
-                $purchasedLot->payments()->attach([$payment->id]);
+            if ($validator->fails()) {
+                return redirect()->back()
+                    ->withErrors($validator)
+                    ->withInput();
             }
-         }
+
+            $user = \Auth::user();
+
+            $payment = new Payment();
+            $payment->picture = $request->file('payment_slip')->store('public');
+            $payment->user()->associate($user);
+            $payment->save();
+
+            foreach($lot_purchases as $lot_purchase) {
+
+                $lot = Lot::find($lot_purchase['id']);
+
+                $lot->rental_duration = $lot_purchase['rental_duration'];
+                $lot->user()->associate($user);
+                $lot->save();
+
+                $lot->payments()->save($payment);
+            }
+
+        } catch (\Exception $exception) {
+
+            return redirect()->back()->withErrors($exception->getMessage());
+
+        }
 
          return redirect()->back()->withSuccess('Successfully purchase');
      }
