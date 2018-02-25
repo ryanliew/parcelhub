@@ -31,7 +31,7 @@
 		<modal :active="dialogActive" @close="dialogActive = false">
 			<template slot="header">{{ dialogTitle }}</template>
 
-			<form @submit.prevent="onSubmit" 
+			<form @submit.prevent="submit" 
 					@keydown="form.errors.clear($event.target.name)" 
 					@input="form.errors.clear($event.target.name)"
 					@keyup.enter="submit">
@@ -100,6 +100,33 @@
 				<button class="button is-primary" @click="submit">Submit</button>
           	</template>
 		</modal>
+
+		<modal :active="dialogUserActive" @close="dialogUserActive = false">
+			<template slot="header">Assign lot</template>
+
+			<form @submit.prevent="submitOwner" 
+				@keydown="ownerForm.errors.clear($event.target.name)" 
+				@input="ownerForm.errors.clear($event.target.name)"
+				@keyup.enter="submitOwner">
+
+	          	<div class="field">
+					<selector-input v-model="selectedUser" :defaultData="selectedUser" 
+									label="Owner" 
+									:required="true"
+									name="user_id"
+									:potentialData="userOptions"
+									@input="userUpdate($event)"
+									:editable="true"
+									placeholder="Select an owner"
+									:error="ownerForm.errors.get('user_id')">
+					</selector-input>
+	          	</div>
+          	</form>
+
+          	<template slot="footer">
+				<button class="button is-primary" @click="submitOwner">Submit</button>
+          	</template>
+		</modal>
 	</div>
 </template>
 
@@ -130,6 +157,7 @@
 				selectedLot: '',
 				selectedCategory: '',
 				dialogActive: false,
+				dialogUserActive: false,
 				override: false,
 				form: new Form({
 					id: '',
@@ -138,12 +166,20 @@
 					category: '',
 					price: ''
 				}),
+				ownerForm: new Form({
+					user_id: '',
+					id: ''
+				}),
+				userOptions: [],
+				selectedUser: ''
 			};
 		},
 
 		mounted() {
 			this.fetchCategories();
+
 			this.$events.on('edit', data => this.edit(data));
+			this.$events.on('assign', data => this.editOwner(data));
 		},
 
 		methods: {
@@ -162,6 +198,22 @@
 					obj['price'] = category.price;
 					return obj;
 				});
+
+				this.fetchUsers();
+			},
+
+			fetchUsers() {
+				axios.get('/internal/users')
+					.then(response => this.setUsers(response));
+			},
+
+			setUsers(response) {
+				this.userOptions = response.data.map(user => {
+					let obj = {};
+					obj['label'] = user.name;
+					obj['value'] = user.id;
+					return obj;
+				});
 			},
 
 			submit() {
@@ -170,8 +222,15 @@
 					.catch(error => this.onFail(error));
 			},
 
+			submitOwner() {
+				this.ownerForm.post('/lot/assign/' + this.selectedLot.id)
+					.then(data => this.onSuccess())
+					.catch(error => this.onFail(error));
+			},
+
 			onSuccess() {
 				this.dialogActive = false;
+				this.dialogUserActive = false;
 				this.$refs.lots.refreshTable();
 			},
 
@@ -196,6 +255,18 @@
 				this.override = data.category_volume !== data.volume || data.category_price !== data.price;
 			},
 
+			editOwner(data) {
+				this.selectedLot = data;
+				if(data.user_name)
+					this.selectedUser = {
+						label: data.user_name,
+						value: data.user_id
+					};
+				else
+					this.selectedUser = '';
+				this.dialogUserActive = true;
+			},
+
 			categoryUpdate(data) {
 				this.selectedCategory = data;
 				this.form.category = data.value;
@@ -203,6 +274,11 @@
 					this.form.volume = data.volume; 
 					this.form.price = data.price; 
 				}
+			},
+
+			userUpdate(data) {
+				this.selectedUser = data;
+				this.ownerForm.user_id = data.value;
 			},
 
 			modalOpen() {

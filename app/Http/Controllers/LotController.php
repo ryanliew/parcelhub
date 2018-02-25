@@ -45,7 +45,8 @@ class LotController extends Controller
                                 'categories.volume as category_volume',
                                 'lots.volume as volume', 
                                 'lots.price as price',
-                                'users.name as user_name')
+                                'users.name as user_name',
+                                'users.id as user_id')
                         ->join('categories', 'categories.id', '=', 'category_id')
                         ->leftJoin('users', 'users.id', '=', 'user_id')
                     );
@@ -168,5 +169,26 @@ class LotController extends Controller
             // assigned then here
             return redirect()->back()->withErrors($lot->name . ' cannot be deleted because this lot is assigned to product.');
         }
+    }
+
+    /**
+     * Reassign specified lot to another user
+     * @param  Lot    $lot 
+     * @return \Illuminate\Http\Response
+     */
+    public function assign(Request $request, Lot $lot)
+    {
+        $this->validate($request, ['user_id' => 'required']);
+
+        if( $lot->user_id !== $request->user_id
+            && $lot->products()->count() > 0 )
+        {
+            return response(json_encode(array('user_id' => ['There are still products of the previous user, reassignment is not allowed.'])), 422);
+        }
+
+        $lot->user_id = $request->user_id;
+        $lot->save();
+
+        return ['message' => 'Lot reassigned successfully.'];
     }
 }
