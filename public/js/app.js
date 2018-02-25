@@ -55355,6 +55355,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: {
@@ -55368,7 +55376,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     methods: {
         itemAction: function itemAction(action, data, index) {
-            this.$events.fire('edit', data);
+            this.$events.fire(action, data);
         }
     }
 });
@@ -55396,6 +55404,21 @@ var render = function() {
           },
           [_vm._m(0), _vm._v(" "), _c("span", [_vm._v("Edit")])]
         )
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "column" }, [
+        _c(
+          "button",
+          {
+            staticClass: "button is-info",
+            on: {
+              click: function($event) {
+                _vm.itemAction("assign", _vm.rowData, _vm.rowIndex)
+              }
+            }
+          },
+          [_vm._m(1), _vm._v(" "), _c("span", [_vm._v("Assign")])]
+        )
       ])
     ])
   ])
@@ -55407,6 +55430,14 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("span", { staticClass: "icon" }, [
       _c("i", { staticClass: "fa fa-edit" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "icon" }, [
+      _c("i", { staticClass: "fa fa-user" })
     ])
   }
 ]
@@ -56571,6 +56602,33 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -56590,6 +56648,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			selectedLot: '',
 			selectedCategory: '',
 			dialogActive: false,
+			dialogUserActive: false,
 			override: false,
 			form: new Form({
 				id: '',
@@ -56597,15 +56656,25 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 				volume: '',
 				category: '',
 				price: ''
-			})
+			}),
+			ownerForm: new Form({
+				user_id: '',
+				id: ''
+			}),
+			userOptions: [],
+			selectedUser: ''
 		};
 	},
 	mounted: function mounted() {
 		var _this = this;
 
 		this.fetchCategories();
+
 		this.$events.on('edit', function (data) {
 			return _this.edit(data);
+		});
+		this.$events.on('assign', function (data) {
+			return _this.editOwner(data);
 		});
 	},
 
@@ -56628,18 +56697,45 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 				obj['price'] = category.price;
 				return obj;
 			});
+
+			this.fetchUsers();
 		},
-		submit: function submit() {
+		fetchUsers: function fetchUsers() {
 			var _this3 = this;
 
+			axios.get('/internal/users').then(function (response) {
+				return _this3.setUsers(response);
+			});
+		},
+		setUsers: function setUsers(response) {
+			this.userOptions = response.data.map(function (user) {
+				var obj = {};
+				obj['label'] = user.name;
+				obj['value'] = user.id;
+				return obj;
+			});
+		},
+		submit: function submit() {
+			var _this4 = this;
+
 			this.form.post(this.action).then(function (data) {
-				return _this3.onSuccess();
+				return _this4.onSuccess();
 			}).catch(function (error) {
-				return _this3.onFail(error);
+				return _this4.onFail(error);
+			});
+		},
+		submitOwner: function submitOwner() {
+			var _this5 = this;
+
+			this.ownerForm.post('/lot/assign/' + this.selectedLot.id).then(function (data) {
+				return _this5.onSuccess();
+			}).catch(function (error) {
+				return _this5.onFail(error);
 			});
 		},
 		onSuccess: function onSuccess() {
 			this.dialogActive = false;
+			this.dialogUserActive = false;
 			this.$refs.lots.refreshTable();
 		},
 		onFail: function onFail(error) {},
@@ -56659,6 +56755,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			this.dialogActive = true;
 			this.override = data.category_volume !== data.volume || data.category_price !== data.price;
 		},
+		editOwner: function editOwner(data) {
+			this.selectedLot = data;
+			if (data.user_name) this.selectedUser = {
+				label: data.user_name,
+				value: data.user_id
+			};else this.selectedUser = '';
+			this.dialogUserActive = true;
+		},
 		categoryUpdate: function categoryUpdate(data) {
 			this.selectedCategory = data;
 			this.form.category = data.value;
@@ -56666,6 +56770,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 				this.form.volume = data.volume;
 				this.form.price = data.price;
 			}
+		},
+		userUpdate: function userUpdate(data) {
+			this.selectedUser = data;
+			this.ownerForm.user_id = data.value;
 		},
 		modalOpen: function modalOpen() {
 			this.form.reset();
@@ -56765,7 +56873,7 @@ var render = function() {
               on: {
                 submit: function($event) {
                   $event.preventDefault()
-                  _vm.onSubmit($event)
+                  _vm.submit($event)
                 },
                 keydown: function($event) {
                   _vm.form.errors.clear($event.target.name)
@@ -56933,6 +57041,93 @@ var render = function() {
             _c(
               "button",
               { staticClass: "button is-primary", on: { click: _vm.submit } },
+              [_vm._v("Submit")]
+            )
+          ])
+        ],
+        2
+      ),
+      _vm._v(" "),
+      _c(
+        "modal",
+        {
+          attrs: { active: _vm.dialogUserActive },
+          on: {
+            close: function($event) {
+              _vm.dialogUserActive = false
+            }
+          }
+        },
+        [
+          _c("template", { slot: "header" }, [_vm._v("Assign lot")]),
+          _vm._v(" "),
+          _c(
+            "form",
+            {
+              on: {
+                submit: function($event) {
+                  $event.preventDefault()
+                  _vm.submitOwner($event)
+                },
+                keydown: function($event) {
+                  _vm.ownerForm.errors.clear($event.target.name)
+                },
+                input: function($event) {
+                  _vm.ownerForm.errors.clear($event.target.name)
+                },
+                keyup: function($event) {
+                  if (
+                    !("button" in $event) &&
+                    _vm._k($event.keyCode, "enter", 13, $event.key)
+                  ) {
+                    return null
+                  }
+                  _vm.submitOwner($event)
+                }
+              }
+            },
+            [
+              _c(
+                "div",
+                { staticClass: "field" },
+                [
+                  _c("selector-input", {
+                    attrs: {
+                      defaultData: _vm.selectedUser,
+                      label: "Owner",
+                      required: true,
+                      name: "user_id",
+                      potentialData: _vm.userOptions,
+                      editable: true,
+                      placeholder: "Select an owner",
+                      error: _vm.ownerForm.errors.get("user_id")
+                    },
+                    on: {
+                      input: function($event) {
+                        _vm.userUpdate($event)
+                      }
+                    },
+                    model: {
+                      value: _vm.selectedUser,
+                      callback: function($$v) {
+                        _vm.selectedUser = $$v
+                      },
+                      expression: "selectedUser"
+                    }
+                  })
+                ],
+                1
+              )
+            ]
+          ),
+          _vm._v(" "),
+          _c("template", { slot: "footer" }, [
+            _c(
+              "button",
+              {
+                staticClass: "button is-primary",
+                on: { click: _vm.submitOwner }
+              },
               [_vm._v("Submit")]
             )
           ])
@@ -58974,6 +59169,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	props: ['inbound', 'canManage'],
@@ -59059,6 +59258,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			}
 
 			return color;
+		},
+		download: function download() {
+			return "/download/inbound/report/" + this.inbound.id;
 		}
 	}
 });
@@ -59100,6 +59302,21 @@ var render = function() {
                     _vm._v(" "),
                     _c("span", { staticClass: "pl-5" }, [
                       _vm._v("Back to list")
+                    ])
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "a",
+                  {
+                    staticClass: "button is-primary ml-5",
+                    attrs: { href: _vm.download, target: "_blank" }
+                  },
+                  [
+                    _c("i", { staticClass: "fa fa-download" }),
+                    _vm._v(" "),
+                    _c("span", { staticClass: "pl-5" }, [
+                      _vm._v("Download PDF")
                     ])
                   ]
                 )

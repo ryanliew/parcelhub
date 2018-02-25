@@ -39,6 +39,7 @@ Route::group(['prefix' => 'lot'], function() {
 	Route::get('delete/{id}', 'LotController@destroy');
 	Route::post('store', 'LotController@store');
 	Route::post('update', 'LotController@update');
+	Route::post('assign/{lot}', 'LotController@assign');
 });
 
 Route::get('categories', 'CategoryController@page')->name('lots.categories');
@@ -68,6 +69,7 @@ Route::group(['prefix' => 'internal'], function() {
 	Route::get('outbound/admin', 'Admin\OutboundController@index');
 	Route::get('outbound/{outbound}', 'OutboundController@show');
 	Route::get('payments', 'PaymentController@index');
+	Route::get('users', 'UserController@index');
 });
 
 Route::group(['prefix' => 'courier'], function() {
