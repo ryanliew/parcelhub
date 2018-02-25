@@ -92,10 +92,12 @@ class Form {
         for (let property in this.originalData) {
 
             let value = this[property];
+
             if(Array.isArray(this[property]))
                 value = JSON.stringify(this[property]);
 
-            data.append(property, value);
+            if(this[property])
+                data.append(property, value);
         }
 
         return data;

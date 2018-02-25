@@ -9,6 +9,14 @@
                     <span>Edit</span>
                 </button>
             </div>
+            <div class="column">
+                <button class="button is-info" @click="itemAction('assign', rowData, rowIndex)">
+                    <span class="icon">
+                        <i class="fa fa-user"></i>
+                    </span>
+                    <span>Assign</span>
+                </button>
+            </div>
         </div>
     </div>
 </template>
@@ -26,7 +34,7 @@ export default {
     },
     methods: {
         itemAction(action, data, index){
-            this.$events.fire('edit', data);            
+            this.$events.fire(action, data);            
         }
     }
   }

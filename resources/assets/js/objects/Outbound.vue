@@ -14,6 +14,10 @@
 								<i class="fa fa-arrow-alt-circle-left"></i>
 								<span class="pl-5">Back to list</span>
 							</button>
+							<a class="button is-info ml-5" :href="download" target="_blank">
+								<i class="fa fa-download"></i>
+								<span class="pl-5">Download PDF</span>
+							</a>
 						</div>
 					</div>
 				</div>
@@ -109,6 +113,7 @@
 						<form @submit.prevent="onSubmit" 
 							@keydown="form.errors.clear($event.target.name)" 
 							@input="form.errors.clear($event.target.name)"
+							@keyup.enter="submit"
 							v-if="canManage">
 							
 							<div class="field">
@@ -124,6 +129,7 @@
 													:error="form.errors.get('process_status')">
 								</selector-input>
 							</div>
+
 							<div class="field">
 								<button type="submit" class="button is-success is-pulled-right">Change status</button>
 							</div>
@@ -240,7 +246,7 @@
 
 		computed: {
 			totalProducts() {
-				return this.outbound.products.length;
+				return this.products ? this.products.length : 0;
 			},
 
 			action() {
@@ -267,7 +273,11 @@
 				}
 
 				return color;
-			}
+			},
+
+			download() {
+				return "/download/outbound/report/" + this.outbound.id;
+			},
 		}
 	}
 </script>

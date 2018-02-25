@@ -97,7 +97,6 @@ class OutboundController extends Controller
             'recipient_name' => 'required',
             'recipient_address' => 'required',
             'courier_id' => 'required',
-            'insurance' => 'required|boolean',
             'amount_insured' => 'required_if:insurance,==,1|numeric|min:0',
             'outbound_products' => 'required',
         ]);
@@ -129,6 +128,7 @@ class OutboundController extends Controller
 
             $outbound = new Outbound();
             $outbound->fill($request->all());
+            $outbound->insurance = request()->has('insurance');
             $outbound->amount_insured = $outbound->insurance ? request()->amount_insured : 0;
             $outbound->user_id = $user->id;
             $outbound->status = 'true';
@@ -189,6 +189,11 @@ class OutboundController extends Controller
 
             return response(json_encode(['errors' => $exception->getMessage()]), 422);
 
+        }
+
+        if(request()->wantsJson())
+        {
+            return ['message' => 'Outbound order created successfully'];
         }
 
         return redirect()->back()->withSuccess('Successfully create outbound order');

@@ -31,7 +31,8 @@
 
 			<form @submit.prevent="onSubmit" 
 					@keydown="form.errors.clear($event.target.name)" 
-					@input="form.errors.clear($event.target.name)">
+					@input="form.errors.clear($event.target.name)"
+					@keyup.enter="submit">
 
 	          	<div class="field">
 	          		<text-input v-model="form.name" :defaultValue="form.name" 
@@ -125,6 +126,7 @@
 				this.form.id = data.id;
 				this.form.name = data.name;
 				this.form.volume = data.volume;
+				this.form.price = data.price;
 				this.dialogActive = true;
 			},
 
