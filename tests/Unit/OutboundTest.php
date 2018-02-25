@@ -52,9 +52,13 @@ class OutboundTest extends TestCase
 
         $response = $this->post('outbound/store', $json, ['HTTP_REFERER' => 'outbound/index']);
 
-        $this->assertTrue($response->isRedirect());
-
-        $response->assertSessionHasErrors();
+        $response
+            ->assertStatus(422)
+            ->assertJsonFragment([
+                'errors' => [
+                    'amount_insured' => ['The amount insured field is required when insurance is 1.']
+                ]
+            ]);
     }
 
     public function testOutbound_negativeAmountInsured_shouldFail()
@@ -79,9 +83,48 @@ class OutboundTest extends TestCase
             ['HTTP_REFERER' => 'outbound/index']
         );
 
-        $this->assertTrue($response->isRedirect());
+        $response
+            ->assertStatus(422)
+            ->assertJsonFragment([
+                'errors' => [
+                    'amount_insured' => ['The amount insured must be at least 0.']
+                ]
+            ]);
+    }
 
-        $response->assertSessionHasErrors();
+    public function testOutbound_whenRequestProductExceedStockLimit_shouldFail()
+    {
+        $faker = Faker::create();
+
+        $lot = factory(Lot::class)->create(['user_id' => $this->user->id, 'left_volume' => 0]);
+
+        $lot->products()->attach(1, ['quantity' => 10]);
+
+        $outbound_products = [
+            ['id' => 1, 'quantity' => 20],
+        ];
+
+        $response = $this->call('POST', 'outbound/store',
+            [
+                'courier_id' => 1,
+                'recipient_name' => $faker->name,
+                'recipient_address' => $faker->address,
+                'insurance' => true,
+                'amount_insured' => 1234,
+                'outbound_products' => json_encode($outbound_products),
+            ],
+            [],
+            [],
+            ['HTTP_REFERER' => 'outbound/index']
+        );
+
+        $response
+            ->assertStatus(422)
+            ->assertJsonFragment([
+                'errors' => [
+                    'outbound_products.0' => ['The quantity of '. Product::find(1)->name .' you requested for outbound has exceeded in your lot']
+                ]
+            ]);
     }
 
     public function testOutbound_getOneProductFromSingleLot()
