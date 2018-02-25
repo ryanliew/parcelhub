@@ -81,6 +81,7 @@ class Product extends Model
 
     public function getPictureAttribute($value)
     {
+        $value = $value === null ? 'default.jpg' : $value;
         return asset('images/' . $value);
     }
 
