@@ -1,5 +1,6 @@
 <?php
 namespace App\Http\Controllers;
+use PDF;
 use Settings;
 use App\Lot;
 use App\Inbound;
@@ -46,6 +47,16 @@ class InboundController extends Controller
     {
         //
     }
+
+    public function report($id)
+    {
+        $inbound = Inbound::find($id);
+
+        $pdf = PDF::loadView('inbound.report', compact('inbound'));
+
+        return $pdf->setPaper('A4')->stream('inbound-report.pdf');
+    }
+
     /**
      * Store a newly created resource in storage.
      *

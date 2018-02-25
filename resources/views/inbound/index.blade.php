@@ -23,6 +23,8 @@
         <!-- <td><button type="button" class="openEditModal btn btn-info btn-lg" data-toggle="modal" data-target="#inboundEdit">Edit</button></td>
         <td><a href="delete/{{$inbound->id}}" /><button type="button" class="btn btn-info btn-lg">Delete</button></td> -->
         <td><a href="show/{{$inbound->id}}" /><button type="button" class="btn btn-info btn-lg">View</button></td>
+        <td><a href="{{ route('download.inbound.report', ['id' => $inbound->id]) }}" target="_blank"
+               class="btn btn-info btn-lg" role="button">Download</a></td>
       <tr>
     @empty
       <tr>
