@@ -183,6 +183,11 @@ class OutboundController extends Controller
 
         }
 
+        if(request()->wantsJson())
+        {
+            return ['message' => 'Outbound order created successfully'];
+        }
+
         return redirect()->back()->withSuccess('Successfully create outbound order');
     }
 
