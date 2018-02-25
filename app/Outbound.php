@@ -58,7 +58,7 @@ class Outbound extends Model
     }
 
     public function courier() {
-    	return $this->hasOne('App\courier');
+    	return $this->belongsTo('App\courier');
     }
 
     public function scopeProcessing($query) {

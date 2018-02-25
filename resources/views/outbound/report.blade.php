@@ -79,14 +79,15 @@
     <div class="clear-both"></div>
 
     <div class="pull-left width-half">
-        <p>Sender : {{ $outbound->user->name }}</p>
+        <p>Sender</p>
         <div class="md-text-box">
             {{ $outbound->user->name }}
         </div>
     </div>
     <div class="pull-right width-half">
-        <p>Receiver : {{ $outbound->recipient_name }}</p>
+        <p>Receiver</p>
         <div class="md-text-box">
+            {{ $outbound->recipient_name }} <br>
             {{ $outbound->recipient_address }}
         </div>
     </div>
@@ -95,7 +96,7 @@
 
     <div class="pt-2 pull-left width-half">
         <div class="s-text-box">
-            <span>Courier Service : {{ $outbound->courier->name }}</span>
+            <p>Courier Service : <br>{{ $outbound->courier->name }}</p>
         </div>
     </div>
     <div class="pt-2 pull-right width-half">

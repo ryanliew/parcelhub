@@ -12208,6 +12208,14 @@ th {
   width: 150px !important;
 }
 
+.products-list .columns {
+  border-bottom: 1px solid #ddd;
+}
+
+.products-list .columns:last-child {
+  border-bottom: 0px solid transparent;
+}
+
 /* Custom helper classes */
 
 .mt-5 {
@@ -12228,6 +12236,10 @@ th {
 
 .mt-30 {
   margin-top: 30px;
+}
+
+.ml-5 {
+  margin-left: 5px;
 }
 
 .pl-5 {

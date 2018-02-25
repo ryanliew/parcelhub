@@ -118,7 +118,7 @@
 								<tr v-for="outbound in sortedOutbound">
 									<td v-text="outbound.date"></td>
 									<td v-text="outbound.pivot.quantity"></td>
-									<td v-text="$options.filters.formatOutboundStatus(inbound.process_status)"></td>
+									<td v-html="$options.filters.formatOutboundStatus(outbound.process_status)"></td>
 								</tr>
 							</tbody>
 						</table>

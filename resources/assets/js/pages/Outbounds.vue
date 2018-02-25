@@ -2,7 +2,7 @@
 <template>
 	<div>
 		<transition name="slide-fade" mode="out-in">
-			<div class="card" v-if="!isViewing">
+			<div class="card" v-if="!isViewing && !isCreating">
 				<div class="card-header">
 					<div class="card-header-title level">
 						<div class="level-left">
@@ -10,7 +10,7 @@
 								Outbound orders
 							</div>
 						</div>
-						<div class="level-right" v-if="!can_manage">
+						<div class="level-right">
 							<div class="level-item">
 								<button class="button is-primary" @click="modalOpen()">
 									<i class="fa fa-plus-circle"></i>
@@ -33,121 +33,157 @@
 					:canManage="can_manage" 
 					@back="back()" 
 					@canceled="canceloutbound"
-					v-else>
+					v-if="isViewing">
 			</outbound>
 		</transition>
-		<modal :active="dialogActive" @close="dialogActive = false">
-			<template slot="header">{{ dialogTitle }}</template>
-
-			<form @submit.prevent="onSubmit" 
-					@keydown="form.errors.clear($event.target.name)" 
-					@input="form.errors.clear($event.target.name)">
-				<div v-show="step == 1">
-		         	<div class="field">
-		          		<text-input v-model="form.recipient_name" :defaultValue="form.recipient_name" 
-									label="Recipient name" 
-									:required="true"
-									name="recipient_name"
-									type="text"
-									:editable="true"
-									:error="form.errors.get('recipient_name')"
-									:focus="true">
-						</text-input>
-					</div>
-					<div class="field">
-						<text-input v-model="form.recipient_address" :defaultValue="form.recipient_address" 
-									label="Recipient address" 
-									:required="true"
-									name="recipient_address"
-									type="text"
-									:editable="true"
-									:error="form.errors.get('recipient_address')">
-						</text-input>
-					</div>
-					<div class="field mt-30">
-						<selector-input v-model="selectedCourier" :defaultData="selectedCourier" 
-												label="Couriers"
-												name="couriers" 
-												:required="true"
-												:potentialData="couriersOptions"
-												@input="couriersUpdate($event)"
-												:editable="true"
-												placeholder="Select preferred courier"
-												:error="form.errors.get('courier_id')">
-						</selector-input>
-		          	</div>
-
-		          	<div class="field">
-						<checkbox-input v-model="form.insurance" :defaultChecked="form.insurance"
-									label="Delivery insurance?" 
-									:required="false"
-									name="insurance"
-									:editable="true">
-						</checkbox-input>
-					</div>
-					
-					<transition name="fade">
-						<div class="field" v-if="form.insurance">
-							<text-input v-model="form.amount_insured" :defaultValue="form.amount_insured" 
-										label="Insured amount" 
-										:required="true"
-										name="amount_insured"
-										type="text"
-										:editable="true"
-										:error="form.errors.get('amount_insured')">
-							</text-input>
+		<transition name="slide-fade">
+			<div v-if="isCreating" class="card" :active="dialogActive" @close="dialogActive = false">
+				<div class="card-header">
+					<div class="card-header-title level">
+						<div class="level-left">
+							<div class="level-item">
+								{{ dialogTitle }}
+							</div>
 						</div>
-					</transition>
+						<div class="level-right" v-if="!can_manage">
+							<div class="level-item">
+								<button class="button is-warning" @click="back()">
+									<i class="fa fa-arrow-alt-circle-left"></i>
+									<span class="pl-5">Cancel</span>
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="card-content">
+					<form @submit.prevent="submit" 
+						@keydown="form.errors.clear($event.target.name)" 
+						@input="form.errors.clear($event.target.name)"
+						@keyup.enter="submit">
+						<div class="columns">
+				         	<div class="column">
+				          		<text-input v-model="form.recipient_name" :defaultValue="form.recipient_name" 
+											label="Recipient name" 
+											:required="true"
+											name="recipient_name"
+											type="text"
+											:editable="true"
+											:error="form.errors.get('recipient_name')"
+											:focus="true">
+								</text-input>
+							</div>
+							<div class="column">
+								<text-input v-model="form.recipient_address" :defaultValue="form.recipient_address" 
+											label="Recipient address" 
+											:required="true"
+											name="recipient_address"
+											type="text"
+											:editable="true"
+											:error="form.errors.get('recipient_address')">
+								</text-input>
+							</div>
+						</div>
+						<div class="field">
+							<selector-input v-model="selectedCourier" :defaultData="selectedCourier" 
+													label="Couriers"
+													name="couriers" 
+													:required="true"
+													:potentialData="couriersOptions"
+													@input="couriersUpdate($event)"
+													:editable="true"
+													placeholder="Select courier"
+													:error="form.errors.get('courier_id')">
+							</selector-input>
+			          	</div>
+						
+						<div class="columns">
+				          	<div class="column is-narrow">
+								<checkbox-input v-model="form.insurance" :defaultChecked="form.insurance"
+											label="Delivery insurance?" 
+											:required="false"
+											name="insurance"
+											:editable="true"
+											class="mt-10">
+								</checkbox-input>
+							</div>
+							
+							<transition name="fade">
+								<div class="column" v-if="form.insurance">
+									<text-input v-model="form.amount_insured" :defaultValue="form.amount_insured" 
+												label="Insured amount" 
+												:required="true"
+												name="amount_insured"
+												type="text"
+												:editable="true"
+												:error="form.errors.get('amount_insured')">
+									</text-input>
+								</div>
+							</transition>
+						</div>
+						
 
-
-
-					<div class="field mt-30">
-						<products-selector-input v-model="selectedProducts" :defaultData="selectedProducts" 
+			          	<div class="products-list">
+			          		<p class="is-danger header" v-text="errorForProducts"></p>
+				          	<div class="columns">
+				          		<div class="column is-narrow">
+				          			#
+				          		</div>
+								<div class="column">
+									<b>Product</b>
+								</div>
+								<div class="column">
+									<b>Quantity</b>
+								</div>
+								<div class="column is-2">
+									<div class="button is-primary is-small" @click="addRow">
+										<i class="fa fa-plus"></i>
+										<span class="pl-5">Add product</span>
+									</div>
+								</div>
+				          	</div>
+			          		<div v-for="(row, index) in productRows" class="columns">
+			          			<div class="column is-narrow">
+									{{ index + 1 }}
+			          			</div>
+								<div class="column">
+									<products-selector-input v-model="productRows[index].product" :defaultData="productRows[index].product" 
 												label="Products"
 												name="products" 
 												:required="true"
 												:potentialData="productsOptions"
-												@input="productsUpdate($event)"
 												:editable="true"
-												placeholder="Select products"
-												:multiple="true"
-												:error="errorForProducts">
-						</products-selector-input>
-		          	</div>
-		        </div>
-		        <div v-if="step == 2">
-		          	<div class="field product-list">
-		          		<div class="media" v-for="(product, index) in selectedProducts">
-	          				<figure class="media-left">
-			          			<p class="image is-64x64">
-			          				<img :src="product.picture">
-			          			</p>
-			          		</figure>
-			          		<div class="media-content">
-			          			<div class="content">
-				          			<text-input v-model="form.products[index].quantity" :defaultValue="form.products[index].quantity"
-				          						:label="'Quantity for ' + product.name"
+												placeholder="Select product"
+												:hideLabel="true"
+												@input="clearProductErrors">
+									</products-selector-input>
+								</div>
+								<div class="column">
+									<text-input v-if="productRows[index]" v-model="productRows[index].quantity" :defaultValue="productRows[index].quantity"
+				          						:label="'Quantity'"
 				          						:required="true"
-				          						type="text"
-				          						:editable="true">
+				          						type="number"
+				          						:editable="true"
+				          						:hideLabel="true"
+				          						@input="clearProductErrors"
+				          						name="quantity">
 				          			</text-input>
-				          		</div>
-			          		</div>
-		          		</div>
-		          	</div>
-		        </div>
-          	</form>
-			
-			<progress class="progress is-primary mt-30" :value="step" max="2"></progress>
+								</div>
+								<div class="column is-2">
+									<div class="button is-danger is-small" @click="removeRow(index)">
+										<i class="fa fa-minus"></i>
+										<span class="pl-5">Remove product</span>
+									</div>
+								</div>
+				          	</div>
+				        </div>	
 
-          	<template slot="footer">
-          		<button class="button is-primary" :class="buttonClass" @click="step++" v-if="step == 1" :disabled=" selectedProducts.length == 0 || form.errors.any()">Next step</button>
-          		<div v-if="step == 2">
-	          		<button class="button is-info" :class="buttonClass" @click="step--">Back</button>
-					<button class="button is-primary" :class="buttonClass" @click="submit">Submit</button>
+
+				        <button class="button is-primary mt-15" :disabled="this.form.errors.any()" :class="buttonClass">Submit</button>
+		          	</form>
 				</div>
-          	</template>
-		</modal>
+			</div>
+		</transition>
 	</div>
 </template>
 
@@ -179,15 +215,16 @@
 					insurance: '',
 					amount_insured: 0,
 					courier_id: '',
-					products: [{id: 0, quantity:0}],
+					outbound_products: [],
 				}),
 				isDeleting: false,
-				selectedProducts: [],
+				errorForProducts: '',
+				productRows: [],
 				selectedCourier: false,
 				couriersOptions: [],
 				productsOptions: [],
-				step: 1,
 				isViewing: false,
+				isCreating: false,
 				errorForProducts: ''
 
 			};
@@ -223,20 +260,62 @@
 				});
 			},
 
+			addRow() {
+				this.productRows.push({ product: null, quantity: 0});
+				this.clearProductErrors();
+			},
+
+			removeRow(index) {
+				this.productRows.splice(index, 1);
+				this.clearProductErrors();
+			},
+
+			clearProductErrors() {
+				this.form.errors.clear("outbound_products");
+				this.errorForProducts = '';
+			},
+
+			processProduct() {
+				if(this.productRows.length > 0)
+					this.form.outbound_products = [];
+				else if(this.form.outbound_products)
+					delete this.form.outbound_products;
+
+				this.productRows.forEach(function(element) {
+					if(element.product && element.quantity > 0) {
+						
+						let product = _.findIndex(this.form.outbound_products, function(p){ return p.id == element.product.id}.bind(element));
+
+						if(product > -1)
+							this.form.outbound_products[product].quantity = parseInt(this.form.outbound_products[product].quantity) + parseInt(element.quantity);
+						else
+							this.form.outbound_products.push({id: element.product.id, quantity: element.quantity});
+					}
+				}.bind(this));							
+			},
+
 			submit() {
+				this.processProduct();
+
 				this.form.post(this.action)
 					.then(data => this.onSuccess())
 					.catch(error => this.onError(error));
 			},
 
+			modalOpen() {
+				this.form.reset();
+				this.isCreating = true;
+			},
+
 			onError(error) {
 				this.step = 1;
-				this.errorForProducts = this.form.errors.get('products');
+				this.errorForProducts = this.form.errors.get('outbound_products');
 			},
 
 			onSuccess(data) {
-				this.selectedProducts = [];
+				this.productRows = [];
 				this.dialogActive = false;
+				this.back();
 				this.$refs.outbounds.refreshTable();
 			},
 
@@ -247,18 +326,12 @@
 
 			back() {
 				this.isViewing = false;
+				this.isCreating = false;
 				this.selectedoutbound = '';
 			},
 
 			canceloutbound() {
 				this.selectedoutbound.process_status = "canceled";
-			},
-
-			modalOpen() {
-				this.form.reset();
-				this.step = 1;
-				this.selectedProducts = [];
-				this.dialogActive = true;
 			},
 
 			couriersUpdate(data) {
@@ -273,7 +346,7 @@
 					return obj;
 				});
 
-				this.form.errors.clear('products');
+				this.form.errors.clear('outbound_products');
 				
 				this.selectedProducts = data;
 

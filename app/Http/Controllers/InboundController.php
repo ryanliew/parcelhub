@@ -12,7 +12,8 @@ class InboundController extends Controller
 {
     protected $rules = [
         'arrival_date' => 'required',
-        'total_carton' => 'required'
+        'total_carton' => 'required',
+        'products'  => 'required'
     ];
     /**
      * Return the view which contains the vue page for product
@@ -64,7 +65,7 @@ class InboundController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, $this->rules);
+        $this->validate($request, $this->rules, ['products.required' => "You need to select at least 1 product."]);
         $auth = auth()->user();
         $now = Carbon::today();
         $compare = Carbon::parse($request->arrival_date);
@@ -81,6 +82,14 @@ class InboundController extends Controller
             $products[$product->id]["volume"] = $product_volume_from_db->volume * $product->quantity;
             $products[$product->id]["singleVolume"] = $product_volume_from_db->volume;
         }
+        // Check for quantity
+        if($product_total_volume == 0){
+            if(request()->wantsJson()) {
+                return response(json_encode(array('products' => ['You need to have at least 1 product'])), 422);
+            }
+            return redirect()->back()->withErrors("You need to have at least 1 product");
+        }
+
         // Check for total left over volume
         if($product_total_volume > $user_lots->sum('left_volume')){
             if(request()->wantsJson()) {

@@ -69,8 +69,8 @@ class ProductController extends Controller
         $product->length = $request->length;
         $product->width = $request->width;
         $product->sku = $request->sku;
-        $product->is_fragile = $request->is_fragile ? 1 : 0;
-        $product->is_dangerous = $request->is_dangerous ? 1 : 0;  
+        $product->is_fragile = $request->has('is_fragile');
+        $product->is_dangerous = $request->has('is_dangerous');  
         $product->user_id = $auth_id;      
         $product->status = 'true';
         $product->save();
@@ -123,15 +123,15 @@ class ProductController extends Controller
     public function update(Request $request)
     {
         $this->validate($request, $this->rules);
-        
+
         $auth_id = auth()->user()->id;
         $product = product::find($request->id);
         $product->name = $request->name;
         $product->height = $request->height;
         $product->length = $request->length;
         $product->width = $request->width;
-        $product->is_fragile = $request->is_fragile ? 1 : 0;
-        $product->is_dangerous = $request->is_dangerous ? 1 : 0;  
+        $product->is_fragile = $request->has('is_fragile');
+        $product->is_dangerous = $request->has('is_dangerous');  
         $product->sku = $request->sku;
         if(Input::hasFile('picture')){
             $file = Input::file('picture');
