@@ -93,7 +93,7 @@ class OutboundController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        $this->validate($request, [
             'recipient_name' => 'required',
             'recipient_address' => 'required',
             'courier_id' => 'required',
@@ -101,10 +101,18 @@ class OutboundController extends Controller
             'amount_insured' => 'required_if:insurance,==,1|numeric|min:0',
             'outbound_products' => 'required',
         ]);
+//        $validator = Validator::make($request->all(), [
+//            'recipient_name' => 'required',
+//            'recipient_address' => 'required',
+//            'courier_id' => 'required',
+//            'insurance' => 'required|boolean',
+//            'amount_insured' => 'required_if:insurance,==,1|numeric|min:0',
+//            'outbound_products' => 'required',
+//        ]);
 
-        if ($validator->fails()) {
-            return response(json_encode(['errors' => $validator->messages()->toArray()]), 422);
-        }
+//        if ($validator->fails()) {
+//            return response(json_encode(['errors' => $validator->messages()->toArray()]), 422);
+//        }
 
         try {
             $outboundProducts = json_decode($request['outbound_products'], true);

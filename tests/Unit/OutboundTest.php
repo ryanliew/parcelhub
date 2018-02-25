@@ -50,15 +50,14 @@ class OutboundTest extends TestCase
             'outbound_products' => json_encode(['id' => 1, 'quantity' => 8]),
         ];
 
-        $response = $this->post('outbound/store', $json, ['HTTP_REFERER' => 'outbound/index']);
+        $response = $this->post('outbound/store', $json, ['HTTP_X-Requested-With' => 'XMLHttpRequest']);
 
-        $response
-            ->assertStatus(422)
-            ->assertJsonFragment([
-                'errors' => [
-                    'amount_insured' => ['The amount insured field is required when insurance is 1.']
-                ]
-            ]);
+        $response->assertStatus(422);
+        $response->assertJson([
+            'amount_insured' => [
+                'The amount insured field is required when insurance is 1.'
+            ]
+        ]);
     }
 
     public function testOutbound_negativeAmountInsured_shouldFail()
