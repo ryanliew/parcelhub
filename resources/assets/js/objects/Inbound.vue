@@ -109,6 +109,7 @@
 						<form @submit.prevent="onSubmit" 
 							@keydown="form.errors.clear($event.target.name)" 
 							@input="form.errors.clear($event.target.name)"
+							@keyup.enter="submit"
 							v-if="canManage">
 							
 							<div class="field">
@@ -222,7 +223,7 @@
 
 		computed: {
 			totalProducts() {
-				return this.inbound.products.length;
+				return this.inbound.products ? this.inbound.products.length : 0;
 			},
 
 			action() {

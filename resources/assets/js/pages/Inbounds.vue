@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<transition name="slide-fade" mode="out-in">
-			<div class="card" v-if="!isViewing">
+			<div class="card" v-if="!isViewing && !isCreating">
 				<div class="card-header">
 					<div class="card-header-title level">
 						<div class="level-left">
@@ -32,84 +32,116 @@
 					:canManage="can_manage" 
 					@back="back()" 
 					@canceled="cancelInbound"
-					v-else>
+					v-if="isViewing">
 			</inbound>
 		</transition>
-		<modal :active="dialogActive" @close="dialogActive = false">
-			<template slot="header">{{ dialogTitle }}</template>
-
-			<form @submit.prevent="onSubmit" 
-					@keydown="form.errors.clear($event.target.name)" 
-					@input="form.errors.clear($event.target.name)">
-				<div v-show="step == 1">
-		         	<div class="field">
-		          		<text-input v-model="form.arrival_date" :defaultValue="form.arrival_date" 
-									label="Arrival date" 
-									:required="true"
-									name="arrival_date"
-									type="date"
-									:editable="true"
-									:error="form.errors.get('arrival_date')"
-									:focus="true">
-						</text-input>
+		<transition name="slide-fade">
+			<div class="card" v-if="isCreating" @back="isCreating = false">
+				<div class="card-header">
+					<div class="card-header-title level">
+						<div class="level-left">
+							<div class="level-item">
+								New inbound order
+							</div>
+						</div>
+						<div class="level-right">
+							<div class="level-item">
+								<button class="button is-warning" @click="back()">
+									<i class="fa fa-arrow-alt-circle-left"></i>
+									<span class="pl-5">Cancel</span>
+								</button>
+							</div>
+						</div>
 					</div>
-					<div class="field">
-						<text-input v-model="form.total_carton" :defaultValue="form.total_carton" 
-									label="Total carton" 
-									:required="true"
-									name="total_carton"
-									type="text"
-									:editable="true"
-									:error="form.errors.get('total_carton')">
-						</text-input>
-					</div>
-					<div class="field mt-30">
-						<products-selector-input v-model="selectedProducts" :defaultData="selectedProducts" 
+				</div>
+				<div class="card-content">
+					<form @submit.prevent="onSubmit" 
+							@keydown="form.errors.clear($event.target.name)" 
+							@input="form.errors.clear($event.target.name)"
+							@keyup.enter="onSubmit">
+						<div class="columns">
+				         	<div class="column">
+				          		<text-input v-model="form.arrival_date" :defaultValue="form.arrival_date" 
+											label="Arrival date" 
+											:required="true"
+											name="arrival_date"
+											type="date"
+											:editable="true"
+											:error="form.errors.get('arrival_date')"
+											:focus="true">
+								</text-input>
+							</div>
+							<div class="column">
+								<text-input v-model="form.total_carton" :defaultValue="form.total_carton" 
+											label="Total carton" 
+											:required="true"
+											name="total_carton"
+											type="text"
+											:editable="true"
+											:error="form.errors.get('total_carton')">
+								</text-input>
+							</div>
+				        </div>
+			          	<div class="products-list">
+			          		<p class="is-danger header" v-text="errorForProducts"></p>
+				          	<div class="columns">
+				          		<div class="column is-narrow">
+				          			#
+				          		</div>
+								<div class="column">
+									<b>Product</b>
+								</div>
+								<div class="column">
+									<b>Quantity</b>
+								</div>
+								<div class="column is-2">
+									<div class="button is-primary is-small" @click="addRow">
+										<i class="fa fa-plus"></i>
+										<span class="pl-5">Add product</span>
+									</div>
+								</div>
+				          	</div>
+			          		<div v-for="(row, index) in productRows" class="columns">
+			          			<div class="column is-narrow">
+									{{ index + 1 }}
+			          			</div>
+								<div class="column">
+									<products-selector-input v-model="productRows[index].product" :defaultData="productRows[index].product" 
 												label="Products"
 												name="products" 
 												:required="true"
 												:potentialData="productsOptions"
-												@input="productsUpdate($event)"
 												:editable="true"
-												placeholder="Select products"
-												:multiple="true"
-												:error="errorForProducts">
-						</products-selector-input>
-		          	</div>
-		        </div>
-		        <div v-if="step == 2">
-		          	<div class="field product-list">
-		          		<div class="media" v-for="(product, index) in selectedProducts">
-	          				<figure class="media-left">
-			          			<p class="image is-64x64">
-			          				<img :src="product.picture">
-			          			</p>
-			          		</figure>
-			          		<div class="media-content">
-			          			<div class="content">
-				          			<text-input v-model="form.products[index].quantity" :defaultValue="form.products[index].quantity"
-				          						:label="'Quantity for ' + product.name"
+												placeholder="Select product"
+												:hideLabel="true"
+												@input="clearProductErrors">
+									</products-selector-input>
+								</div>
+								<div class="column">
+									<text-input v-if="productRows[index]" v-model="productRows[index].quantity" :defaultValue="productRows[index].quantity"
+				          						:label="'Quantity'"
 				          						:required="true"
-				          						type="text"
-				          						:editable="true">
+				          						type="number"
+				          						:editable="true"
+				          						:hideLabel="true"
+				          						@input="clearProductErrors"
+				          						name="quantity">
 				          			</text-input>
-				          		</div>
-			          		</div>
-		          		</div>
-		          	</div>
+								</div>
+								<div class="column is-2">
+									<div class="button is-danger is-small" @click="removeRow(index)">
+										<i class="fa fa-minus"></i>
+										<span class="pl-5">Remove product</span>
+									</div>
+								</div>
+				          	</div>
+				        </div>
+			    
+				        <button class="button is-primary mt-15" :disabled="this.form.errors.any()" :class="buttonClass" type="submit">Submit</button>
+		          	</form>
 		        </div>
-          	</form>
-			
-			<progress class="progress is-primary mt-30" :value="step" max="2"></progress>
-
-          	<template slot="footer">
-          		<button class="button is-primary" :class="buttonClass" @click="step++" v-if="step == 1" :disabled=" selectedProducts.length == 0 || form.errors.any()">Next step</button>
-          		<div v-if="step == 2">
-	          		<button class="button is-info" :class="buttonClass" @click="step--">Back</button>
-					<button class="button is-primary" :class="buttonClass" @click="submit">Submit</button>
-				</div>
-          	</template>
-		</modal>
+			</div>
+		</transition>
 	</div>
 </template>
 
@@ -133,19 +165,18 @@
 				],
 				searchables: "process_status",
 				selectedInbound: '',
-				dialogActive: false,
+				isCreating: false,
 				override: false,
 				form: new Form({
 					arrival_date: '',
 					total_carton: '',
-					products: [{id: 0, quantity:0}],
+					products: []
 				}),
 				isDeleting: false,
-				selectedProducts: [],
 				productsOptions: [],
-				step: 1,
 				isViewing: false,
-				errorForProducts: ''
+				errorForProducts: '',
+				productRows: []
 
 			};
 		},
@@ -165,7 +196,20 @@
 				this.productsOptions = response.data.data;
 			},
 
-			submit() {
+			addRow() {
+				this.productRows.push({ product: null, quantity: 0});
+				this.clearProductErrors();
+			},
+
+			removeRow(index) {
+				this.productRows.splice(index, 1);
+				this.clearProductErrors();
+			},
+
+			onSubmit() {
+				
+				this.processProduct();
+
 				this.form.post(this.action)
 					.then(data => this.onSuccess())
 					.catch(error => this.onError(error));
@@ -177,8 +221,9 @@
 			},
 
 			onSuccess(data) {
-				this.selectedProducts = [];
+				this.productRows = [];
 				this.dialogActive = false;
+				this.back();
 				this.$refs.inbounds.refreshTable();
 			},
 
@@ -188,6 +233,7 @@
 			},
 
 			back() {
+				this.isCreating = false;
 				this.isViewing = false;
 				this.selectedInbound = '';
 			},
@@ -198,35 +244,35 @@
 
 			modalOpen() {
 				this.form.reset();
-				this.step = 1;
-				this.selectedProducts = [];
-				this.dialogActive = true;
+				this.isCreating = true;
 			},
 
-			productsUpdate(data) {
-				this.form.products = data.map(product =>{
-					let obj = {};
-					obj["id"] = product.id;
-					obj["quantity"] = 0;
-					return obj;
-				});
-
-				this.form.errors.clear('products');
-				
-				this.selectedProducts = data;
-
+			clearProductErrors() {
+				this.form.errors.clear("products");
 				this.errorForProducts = '';
-							
+			},
+
+			processProduct() {
+				if(this.productRows.length > 0)
+					this.form.products = [];
+				else if(this.form.products)
+					delete this.form.products;
+
+				this.productRows.forEach(function(element) {
+					if(element.product && element.quantity > 0) {
+						
+						let product = _.findIndex(this.form.products, function(p){ return p.id == element.product.id}.bind(element));
+
+						if(product > -1)
+							this.form.products[product].quantity = parseInt(this.form.products[product].quantity) + parseInt(element.quantity);
+						else
+							this.form.products.push({id: element.product.id, quantity: element.quantity});
+					}
+				}.bind(this));							
 			}
 		},
 
 		computed: {
-			dialogTitle() {
-				return this.selectedInbound
-						? "Edit order #" + this.selectedInbound.id
-						: "Create new inbound order";
-			},
-
 			action() {
 				let action = this.selectedInbound ? "update" : "store";
 				return "/inbound/" + action;

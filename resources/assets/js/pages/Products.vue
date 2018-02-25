@@ -38,7 +38,8 @@
 
 			<form @submit.prevent="onSubmit" 
 					@keydown="form.errors.clear($event.target.name)" 
-					@input="form.errors.clear($event.target.name)">
+					@input="form.errors.clear($event.target.name)"
+					@keyup.enter="submit">
 				
 				<div class="field">
 	          		<text-input v-model="form.sku" :defaultValue="form.sku" 

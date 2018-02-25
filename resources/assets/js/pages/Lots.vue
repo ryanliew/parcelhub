@@ -33,7 +33,8 @@
 
 			<form @submit.prevent="onSubmit" 
 					@keydown="form.errors.clear($event.target.name)" 
-					@input="form.errors.clear($event.target.name)">
+					@input="form.errors.clear($event.target.name)"
+					@keyup.enter="submit">
 
 	          	<div class="field">
 	          		<text-input v-model="form.name" :defaultValue="form.name" 
@@ -184,6 +185,7 @@
 				this.form.name = data.name;
 				this.form.volume = data.volume;
 				this.form.category = data.category_id;
+				this.form.price = data.price;
 				this.selectedCategory = {
 					label: data.category_name,
 					value: data.category_id,
@@ -197,8 +199,10 @@
 			categoryUpdate(data) {
 				this.selectedCategory = data;
 				this.form.category = data.value;
-				this.form.volume = data.volume; 
-				this.form.price = data.price; 
+				if(!this.override) {
+					this.form.volume = data.volume; 
+					this.form.price = data.price; 
+				}
 			},
 
 			modalOpen() {

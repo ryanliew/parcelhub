@@ -13,10 +13,11 @@
 					v-html="value"
 					v-else>	
 			</span>
-			<label class="input__label input__label--hoshi" 
+			<label class="input__label input__label--hoshi"
 					:class="className"  
-					:for="name">
-				<span class="input__label-content input__label-content--hoshi">
+					:for="name"
+					>
+				<span class="input__label-content input__label-content--hoshi" v-if="!hideLabel">
 					<span v-text="label"></span>
 					<span v-if="required && editable" class="is-danger">*</span>
 				</span>
@@ -29,15 +30,11 @@
 <script>
 	import moment from 'moment';
 	export default {
-		props: ['defaultValue', 'label', 'required', 'error', 'name', 'type', 'editable', 'focus'],
+		props: ['defaultValue', 'label', 'required', 'error', 'name', 'type', 'editable', 'focus', 'hideLabel'],
 		data() {
 			return {
-				finalValue: ''
+				
 			};
-		},
-
-		created() {
-			this.finalValue = this.defaultValue;
 		},
 
 		mounted() {
@@ -69,16 +66,20 @@
 			},
 
 			inputClass(){
+				let theClass = [];
 				if(this.value !== '' || this.type == 'date') {
-					return 'input--filled';
+					theClass.push('input--filled');
 				}
 
-				return '';
+				if(this.hideLabel) {
+					theClass.push('input--nolabel');
+				}
+
+				return theClass;
 			},
 
 			value() {
-				return this.finalValue == '' ? 
-						!this.editable && this.type == 'date' ? moment(this.defaultValue).fromNow() : this.defaultValue : this.finalValue;
+				return !this.editable && this.type == 'date' ? moment(this.defaultValue).fromNow() : this.defaultValue;
 			}
 		},
 
@@ -140,7 +141,7 @@
 .input__label-content {
 	position: relative;
 	display: block;
-	padding: 1.6em 0;
+	padding: 0.4em 0;
 	width: 100%;
 }
 
@@ -149,10 +150,13 @@
 }
 
 .input__field--hoshi, .input__disabled {
-	margin-top: 1em;
 	padding: 1em 0.15em;
 	width: 100%;
 	background: transparent;
+}
+
+.input--nolabel .input__field--hoshi {
+	padding: 0 1em 1em 0.15em;
 }
 
 .input__label--hoshi {
@@ -239,8 +243,8 @@ span.input__label--hoshi::after {
 	}
 	100% {
 		opacity: 1;
-		-webkit-transform: translate3d(0, -40%, 0);
-		transform: translate3d(0, -40%, 0);
+		-webkit-transform: translate3d(0, -70%, 0);
+		transform: translate3d(0, -70%, 0);
 		font-size: 85%;
 	}
 }
@@ -260,8 +264,8 @@ span.input__label--hoshi::after {
 	}
 	100% {
 		opacity: 1;
-		-webkit-transform: translate3d(0, -40%, 0);
-		transform: translate3d(0, -40%, 0);
+		-webkit-transform: translate3d(0, -70%, 0);
+		transform: translate3d(0, -70%, 0);
 		font-size: 85%;
 	}
 }

@@ -1,11 +1,11 @@
 <template>
 	<div>
-		<label class="select-label">
+		<label class="select-label" v-if="!hideLabel">
 			<span v-text="label"></span>
 			<span v-if="required" class="is-danger">*</span>
 		</label>
 		<div class="control">
-			<v-select :multiple="multiple" :options="potentialData" :value="this.defaultData" @input="updateValue" name="name" :placeholder="placeholder" label="name" :closeOnSelect="false">
+			<v-select :multiple="multiple" :options="potentialData" :value="this.defaultData" @input="updateValue" name="name" :placeholder="placeholder" label="name">
 				<template slot="option" slot-scope="option">
 					<div class="level">
 						<figure class="image is-48x48">
@@ -23,7 +23,7 @@
 <script>
 	import vSelect from 'vue-select';
 	export default {
-		props: ['potentialData', 'label', 'defaultData', 'error', 'name', 'placeholder', 'required', 'multiple'],
+		props: ['potentialData', 'label', 'defaultData', 'error', 'name', 'placeholder', 'required', 'multiple', 'hideLabel'],
 
 		components: { vSelect },
 
