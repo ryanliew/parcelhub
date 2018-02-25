@@ -59,14 +59,12 @@ class PaymentController extends Controller
         try {
             $lot_purchases = json_decode($request['lot_purchases'], true);
 
-            $validator = \Validator::make(['lot_purchases' => $lot_purchases], [
+            $json_validator = \Validator::make(['lot_purchases' => $lot_purchases], [
                 'lot_purchases.*.rental_duration' => 'required|integer|min:90',
             ]);
 
-            if ($validator->fails()) {
-                return redirect()->back()
-                    ->withErrors($validator)
-                    ->withInput();
+            if ($json_validator->fails()) {
+                return response()->json($json_validator->messages(), 422);
             }
 
             $user = \Auth::user();
@@ -88,12 +86,10 @@ class PaymentController extends Controller
             }
 
         } catch (\Exception $exception) {
-
-            return redirect()->back()->withErrors($exception->getMessage());
-
+            return response()->json($exception->getMessage(), 422);
         }
 
-         return redirect()->back()->withSuccess('Successfully purchase');
+        return response()->json(['message' => 'Successfully purchase']);
      }
 
     /**

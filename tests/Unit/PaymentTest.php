@@ -4,6 +4,7 @@ namespace Tests\Unit;
 
 use App\Lot;
 use App\Payment;
+use App\Settings;
 use App\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -40,12 +41,18 @@ class PaymentTest extends TestCase
             ['id' => $lot->id, 'rental_duration' => $lot->rental_duration]
         ];
 
-        $response = $this->post('payment/purchase', [
-            'lot_purchases' => json_encode($lot_purchases),
-            'payment_slip' => UploadedFile::fake()->image('bank-transfer-slip.jpg')
-        ]);
+        $response = $this->ajaxPost('payment/purchase',
+            [
+                'lot_purchases' => json_encode($lot_purchases),
+                'payment_slip' => UploadedFile::fake()->image('bank-transfer-slip.jpg')
+            ]
+        );
 
-        $this->assertTrue($response->isRedirect());
+        $response
+            ->assertStatus(200)
+            ->assertJson([
+                'message' => 'Successfully purchase'
+            ]);
 
         $this->assertNotNull($payment = Payment::get()->first());
 
@@ -70,15 +77,20 @@ class PaymentTest extends TestCase
             ['id' => $lot->id, 'rental_duration' => 10]
         ];
 
-        $response = $this->post('payment/purchase', [
+        $response = $this->ajaxPost('payment/purchase',
+            [
                 'lot_purchases' => json_encode($lot_purchases),
                 'payment_slip' => UploadedFile::fake()->image('bank-transfer-slip.jpg'),
-            ], ['HTTP_REFERER' => 'payment/index']
+            ]
         );
 
-        $this->assertTrue($response->isRedirect());
-
-        $response->assertSessionHasErrors();
+        $response
+            ->assertStatus(422)
+            ->assertJson([
+                "lot_purchases.0.rental_duration" => [
+                    "Minimum rental duration must not least than ". Settings::rentalDuration() ." days"
+                ]
+            ]);
     }
 
     public function test_purchase_userOverrideDefaultRentalDuration_shouldPass()
@@ -91,18 +103,19 @@ class PaymentTest extends TestCase
             ['id' => $lot->id, 'rental_duration' => 90]
         ];
 
-        $response = $this->call('POST', 'payment/purchase',
+        $response = $this->ajaxPost('payment/purchase',
             [
                 'lot_purchases' => json_encode($lot_purchases),
 
                 'payment_slip' => UploadedFile::fake()->image('bank-transfer-slip.jpg'),
-            ],
-            [],
-            [],
-            ['HTTP_REFERER' => 'payment/index']
+            ]
         );
 
-        $this->assertTrue($response->isRedirect());
+        $response
+            ->assertStatus(200)
+            ->assertJson([
+                'message' => 'Successfully purchase'
+            ]);
 
         $user_lot = $this->user->lots->first();
 
@@ -121,18 +134,19 @@ class PaymentTest extends TestCase
 
         Storage::fake('testing');
 
-        $response = $this->call('POST', 'payment/purchase',
+        $response = $this->ajaxPost('payment/purchase',
             [
                 'lot_purchases' => json_encode($lot_purchases),
 
                 'payment_slip' => UploadedFile::fake()->image('bank-transfer-slip.jpg'),
-            ],
-            [],
-            [],
-            ['HTTP_REFERER' => 'payment/index']
+            ]
         );
 
-        $this->assertTrue($response->isRedirect());
+        $response
+            ->assertStatus(200)
+            ->assertJson([
+                'message' => 'Successfully purchase'
+            ]);
 
         $this->assertEquals(1, $this->user->payments->count());
 

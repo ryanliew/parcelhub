@@ -100,18 +100,6 @@ class OutboundController extends Controller
             'amount_insured' => 'required_if:insurance,==,1|numeric|min:0',
             'outbound_products' => 'required',
         ]);
-//        $validator = Validator::make($request->all(), [
-//            'recipient_name' => 'required',
-//            'recipient_address' => 'required',
-//            'courier_id' => 'required',
-//            'insurance' => 'required|boolean',
-//            'amount_insured' => 'required_if:insurance,==,1|numeric|min:0',
-//            'outbound_products' => 'required',
-//        ]);
-
-//        if ($validator->fails()) {
-//            return response(json_encode(['errors' => $validator->messages()->toArray()]), 422);
-//        }
 
         try {
             $outboundProducts = json_decode($request['outbound_products'], true);
@@ -120,14 +108,13 @@ class OutboundController extends Controller
                 'outbound_products.*' => 'bail|product_exist|product_stock',
             ]);
 
-            if ($json_validator->fails()) {
-                return response(json_encode(['errors' => $json_validator->messages()->toArray()]), 422);
+            if($json_validator->fails()) {
+                return response()->json($json_validator->messages(), 422);
             }
 
             $user = \Auth::user();
 
-            $outbound = new Outbound();
-            $outbound->fill($request->all());
+            $outbound = new Outbound($request->all());
             $outbound->insurance = request()->has('insurance');
             $outbound->amount_insured = $outbound->insurance ? request()->amount_insured : 0;
             $outbound->user_id = $user->id;
@@ -187,16 +174,11 @@ class OutboundController extends Controller
 
         } catch (\Exception $exception) {
 
-            return response(json_encode(['errors' => $exception->getMessage()]), 422);
+            return response()->json($exception->getMessage(), 422);
 
         }
 
-        if(request()->wantsJson())
-        {
-            return ['message' => 'Outbound order created successfully'];
-        }
-
-        return redirect()->back()->withSuccess('Successfully create outbound order');
+        return response()->json(['message' => 'Outbound order created successfully']);
     }
 
     /**

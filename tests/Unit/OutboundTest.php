@@ -42,22 +42,21 @@ class OutboundTest extends TestCase
     {
         $faker = Faker::create();
 
-        $json = [
-            'courier_id' => 1,
-            'recipient_name' => $faker->name,
-            'recipient_address' => $faker->address,
-            'insurance' => true,
-            'outbound_products' => json_encode(['id' => 1, 'quantity' => 8]),
-        ];
-
-        $response = $this->post('outbound/store', $json, ['HTTP_X-Requested-With' => 'XMLHttpRequest']);
-
-        $response->assertStatus(422);
-        $response->assertJson([
-            'amount_insured' => [
-                'The amount insured field is required when insurance is 1.'
+        $response = $this->ajaxPost('outbound/store',
+            [
+                'courier_id' => 1,
+                'recipient_name' => $faker->name,
+                'recipient_address' => $faker->address,
+                'insurance' => true,
+                'outbound_products' => json_encode(['id' => 1, 'quantity' => 8]),
             ]
-        ]);
+        );
+
+        $response
+            ->assertStatus(422)
+            ->assertJson([
+                'amount_insured' => ['The amount insured field is required when insurance is 1.']
+            ]);
     }
 
     public function testOutbound_negativeAmountInsured_shouldFail()
@@ -68,7 +67,7 @@ class OutboundTest extends TestCase
             ['id' => 1, 'quantity' => 8],
         ];
 
-        $response = $this->call('POST', 'outbound/store',
+        $response = $this->ajaxPost('outbound/store',
             [
                 'courier_id' => 1,
                 'recipient_name' => $faker->name,
@@ -76,17 +75,42 @@ class OutboundTest extends TestCase
                 'insurance' => true,
                 'amount_insured' => -123456.35,
                 'outbound_products' => json_encode($outbound_products),
-            ],
-            [],
-            [],
-            ['HTTP_REFERER' => 'outbound/index']
+            ]
         );
 
         $response
             ->assertStatus(422)
-            ->assertJsonFragment([
-                'errors' => [
-                    'amount_insured' => ['The amount insured must be at least 0.']
+            ->assertJson([
+                'amount_insured' => ['The amount insured must be at least 0.']
+            ]);
+    }
+
+    public function testOutbound_whenRequestProductDoesntExistInLot_shouldFail()
+    {
+        $faker = Faker::create();
+
+        $lot = factory(Lot::class)->create(['user_id' => $this->user->id, 'left_volume' => 0]);
+
+        $lot->products()->attach(1, ['quantity' => 10]);
+
+        $outbound_products = [['id' => 20, 'quantity' => 20]];
+
+        $response = $this->ajaxPost('outbound/store',
+            [
+                'courier_id' => 1,
+                'recipient_name' => $faker->name,
+                'recipient_address' => $faker->address,
+                'insurance' => true,
+                'amount_insured' => 1234,
+                'outbound_products' => json_encode($outbound_products),
+            ]
+        );
+
+        $response
+            ->assertStatus(422)
+            ->assertJson([
+                'outbound_products.0' => [
+                    "One of the selected outbound product doesn't exist in your lot"
                 ]
             ]);
     }
@@ -103,7 +127,7 @@ class OutboundTest extends TestCase
             ['id' => 1, 'quantity' => 20],
         ];
 
-        $response = $this->call('POST', 'outbound/store',
+        $response = $this->ajaxPost('outbound/store',
             [
                 'courier_id' => 1,
                 'recipient_name' => $faker->name,
@@ -111,17 +135,14 @@ class OutboundTest extends TestCase
                 'insurance' => true,
                 'amount_insured' => 1234,
                 'outbound_products' => json_encode($outbound_products),
-            ],
-            [],
-            [],
-            ['HTTP_REFERER' => 'outbound/index']
+            ]
         );
 
         $response
             ->assertStatus(422)
-            ->assertJsonFragment([
-                'errors' => [
-                    'outbound_products.0' => ['The quantity of '. Product::find(1)->name .' you requested for outbound has exceeded in your lot']
+            ->assertJson([
+                'outbound_products.0' => [
+                    'The quantity of '. Product::find(1)->name .' you requested for outbound has exceeded in your lot'
                 ]
             ]);
     }
@@ -138,7 +159,7 @@ class OutboundTest extends TestCase
             ['id' => 1, 'quantity' => 1]
         ];
 
-        $response = $this->call('POST', 'outbound/store',
+        $response = $this->ajaxPost('outbound/store',
             [
                 'courier_id' => 1,
                 'recipient_name' => $faker->name,
@@ -146,13 +167,14 @@ class OutboundTest extends TestCase
                 'insurance' => true,
                 'amount_insured' => 1999.50,
                 'outbound_products' => json_encode($outbound_products),
-            ],
-            [],
-            [],
-            ['HTTP_REFERER' => 'outbound/index']
+            ]
         );
 
-        $this->assertTrue($response->isRedirect());
+        $response
+            ->assertStatus(200)
+            ->assertJson([
+               'message' => 'Outbound order created successfully'
+            ]);
 
         $this->assertEquals(1000, Lot::find(1)->left_volume);
 
@@ -191,20 +213,22 @@ class OutboundTest extends TestCase
             ['id' => 1, 'quantity' => 10]
         ];
 
-        $response = $this->call('POST', 'outbound/store',
+        $response = $this->ajaxPost('outbound/store',
             [
                 'courier_id' => 1,
                 'recipient_name' => $faker->name,
                 'recipient_address' => $faker->address,
                 'insurance' => false,
+                'amount_insured' => 0,
                 'outbound_products' => json_encode($outbound_products),
-            ],
-            [],
-            [],
-            ['HTTP_REFERER' => 'outbound/index']
+            ]
         );
 
-        $this->assertTrue($response->isRedirect());
+        $response
+            ->assertStatus(200)
+            ->assertJson([
+                'message' => 'Outbound order created successfully'
+            ]);
 
         $this->assertEquals(5000, Lot::find(1)->left_volume);
 
@@ -256,20 +280,23 @@ class OutboundTest extends TestCase
             ['id' => 2, 'quantity' => 15],
         ];
 
-        $response = $this->call('POST', 'outbound/store',
+        $response = $this->ajaxPost('outbound/store',
             [
                 'courier_id' => 1,
                 'recipient_name' => $faker->name,
                 'recipient_address' => $faker->address,
                 'insurance' => false,
+                'amount_insured' => 0,
                 'outbound_products' => json_encode($outbound_products),
-            ],
-            [],
-            [],
-            ['HTTP_REFERER' => 'outbound/index']
+            ]
         );
 
-        $this->assertTrue($response->isRedirect());
+        $response
+            ->assertStatus(200)
+            ->assertJson([
+                'message' => 'Outbound order created successfully'
+            ]);
+
         $this->assertEquals(28000, Lot::find(1)->left_volume);
         $this->assertEquals(5000, Lot::find(2)->left_volume);
 
@@ -330,20 +357,22 @@ class OutboundTest extends TestCase
             ['id' => 3, 'quantity' => 1],
         ];
 
-        $response = $this->call('POST', 'outbound/store',
+        $response = $this->ajaxPost('outbound/store',
             [
                 'courier_id' => 1,
                 'recipient_name' => $faker->name,
                 'recipient_address' => $faker->address,
                 'insurance' => false,
+                'amount_insured' => 0,
                 'outbound_products' => json_encode($outbound_products),
-            ],
-            [],
-            [],
-            ['HTTP_REFERER' => 'outbound/index']
+            ]
         );
 
-        $this->assertTrue($response->isRedirect());
+        $response
+            ->assertStatus(200)
+            ->assertJson([
+                'message' => 'Outbound order created successfully'
+            ]);
 
         $this->assertEquals(5000, Lot::find(1)->left_volume);
         $this->assertEquals(0, Lot::find(1)->products->count());
