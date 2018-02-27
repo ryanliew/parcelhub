@@ -167,6 +167,6 @@ class PaymentController extends Controller
             }
         }
 
-        return redirect()->back()->withSuccess('Payment approved');
+        return response()->json(['message' => 'Payment approved']);
     }
 }

@@ -54,7 +54,7 @@ class InboundController extends Controller
 
         $pdf = PDF::loadView('inbound.report', compact('inbound'));
 
-        return $pdf->setPaper('A4')->stream('inbound-report.pdf');
+        return $pdf->setPaper('A4')->download('inbound-report.pdf');
     }
 
     /**
