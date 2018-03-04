@@ -73,7 +73,7 @@
     </div>
     <div class="pull-right width-half">
         <p>Ref No : ___________________</p>
-        <p>Date : <u>{{ $outbound->created_at }}</u></p>
+        <p>Date : <u>{{ $outbound->created_at->toDateString() }}</u></p>
     </div>
 
     <div class="clear-both"></div>
@@ -136,8 +136,8 @@
                     <td>{{ $key + 1 }}</td>
                     <td>{{ $product->sku }}</td>
                     <td class="text-center">{{ $product->pivot->quantity }}</td>
-                    <td class="text-center">0</td>
-                    <td>0</td>
+                    <td></td>
+                    <td></td>
                 </tr>
             @endforeach
         </tbody>

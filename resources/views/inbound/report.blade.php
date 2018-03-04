@@ -42,6 +42,15 @@
         .pt-2 {
             padding-top: 2em;
         }
+        .pt-3 {
+            padding-top: 3em;
+        }
+        .pt-4 {
+            padding-top: 4em;
+        }
+        .pt-5 {
+            padding-top: 5em;
+        }
         .d-inline-block {
             display: inline-block;
         }
@@ -73,7 +82,7 @@
     </div>
     <div class="pull-right width-half">
         <p>Ref No : ___________________</p>
-        <p>Date : <u>{{ $inbound->created_at }}</u></p>
+        <p>Date : <u>{{ $inbound->created_at->toDateString() }}</u></p>
     </div>
 
     <div class="clear-both"></div>
@@ -84,41 +93,10 @@
             {{ $inbound->user->name }}
         </div>
     </div>
-    <div class="pull-right width-half">
-        <p>Receiver : </p>
-        <div class="md-text-box">
-        </div>
-    </div>
 
     <div class="clear-both"></div>
 
-    <div class="pt-2 pull-left width-half">
-        <div class="s-text-box">
-            <span>Courier Service : </span>
-        </div>
-    </div>
-    <div class="pt-2 pull-right width-half">
-        <div class="s-text-box">
-            <span>Tracking Number : </span>
-        </div>
-        <div class="d-inline-block width-half pt-1">Actual Weight :</div>
-        <div class="d-inline-block width-half pt-1">Chargeable Weight :</div>
-    </div>
-
-    <div class="clear-both"></div>
-
-    <div class="pull-left" style="padding-left: 20%">
-        <p>Insurances</p>
-    </div>
-    <div class="pull-right width-half">
-        <p>
-            <strong>MYR</strong> :
-        </p>
-    </div>
-
-    <div class="clear-both"></div>
-
-    <table class="item-table">
+    <table class="pt-5 item-table">
         <thead>
             <tr>
                 <th>No</th>
@@ -134,8 +112,8 @@
                     <td>{{ $key + 1 }}</td>
                     <td>{{ $product->sku }}</td>
                     <td class="text-center">{{ $product->pivot->quantity }}</td>
-                    <td class="text-center">0</td>
-                    <td>0</td>
+                    <td></td>
+                    <td></td>
                 </tr>
             @endforeach
         </tbody>

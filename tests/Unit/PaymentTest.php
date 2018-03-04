@@ -4,6 +4,7 @@ namespace Tests\Unit;
 
 use App\Lot;
 use App\Payment;
+use App\Settings;
 use App\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -40,12 +41,18 @@ class PaymentTest extends TestCase
             ['id' => $lot->id, 'rental_duration' => $lot->rental_duration]
         ];
 
-        $response = $this->post('payment/purchase', [
-            'lot_purchases' => json_encode($lot_purchases),
-            'payment_slip' => UploadedFile::fake()->image('bank-transfer-slip.jpg')
-        ]);
+        $response = $this->ajaxPost('payment/purchase',
+            [
+                'lot_purchases' => json_encode($lot_purchases),
+                'payment_slip' => UploadedFile::fake()->image('bank-transfer-slip.jpg')
+            ]
+        );
 
-        $this->assertTrue($response->isRedirect());
+        $response
+            ->assertStatus(200)
+            ->assertJson([
+                'message' => 'Successfully purchase'
+            ]);
 
         $this->assertNotNull($payment = Payment::get()->first());
 
@@ -70,15 +77,20 @@ class PaymentTest extends TestCase
             ['id' => $lot->id, 'rental_duration' => 10]
         ];
 
-        $response = $this->post('payment/purchase', [
+        $response = $this->ajaxPost('payment/purchase',
+            [
                 'lot_purchases' => json_encode($lot_purchases),
                 'payment_slip' => UploadedFile::fake()->image('bank-transfer-slip.jpg'),
-            ], ['HTTP_REFERER' => 'payment/index']
+            ]
         );
 
-        $this->assertTrue($response->isRedirect());
-
-        $response->assertSessionHasErrors();
+        $response
+            ->assertStatus(422)
+            ->assertJson([
+                "lot_purchases.0.rental_duration" => [
+                    "Minimum rental duration must not least than ". Settings::rentalDuration() ." days"
+                ]
+            ]);
     }
 
     public function test_purchase_userOverrideDefaultRentalDuration_shouldPass()
@@ -91,18 +103,19 @@ class PaymentTest extends TestCase
             ['id' => $lot->id, 'rental_duration' => 90]
         ];
 
-        $response = $this->call('POST', 'payment/purchase',
+        $response = $this->ajaxPost('payment/purchase',
             [
                 'lot_purchases' => json_encode($lot_purchases),
 
                 'payment_slip' => UploadedFile::fake()->image('bank-transfer-slip.jpg'),
-            ],
-            [],
-            [],
-            ['HTTP_REFERER' => 'payment/index']
+            ]
         );
 
-        $this->assertTrue($response->isRedirect());
+        $response
+            ->assertStatus(200)
+            ->assertJson([
+                'message' => 'Successfully purchase'
+            ]);
 
         $user_lot = $this->user->lots->first();
 
@@ -121,18 +134,19 @@ class PaymentTest extends TestCase
 
         Storage::fake('testing');
 
-        $response = $this->call('POST', 'payment/purchase',
+        $response = $this->ajaxPost('payment/purchase',
             [
                 'lot_purchases' => json_encode($lot_purchases),
 
                 'payment_slip' => UploadedFile::fake()->image('bank-transfer-slip.jpg'),
-            ],
-            [],
-            [],
-            ['HTTP_REFERER' => 'payment/index']
+            ]
         );
 
-        $this->assertTrue($response->isRedirect());
+        $response
+            ->assertStatus(200)
+            ->assertJson([
+                'message' => 'Successfully purchase'
+            ]);
 
         $this->assertEquals(1, $this->user->payments->count());
 
@@ -143,25 +157,107 @@ class PaymentTest extends TestCase
             $this->assertEquals(90, $lot->rental_duration);
         }
     }
-//
-//    public function testApprovePayments()
-//    {
-//        $payments = factory(\App\Payment::class, 2)->create();
-//
-//        $response = $this->call('POST', 'payment/approve', [
-//                'payments' => ['1', '2']
-//            ],
-//            [],
-//            [],
-//            ['HTTP_REFERER' => 'payment/index']);
-//
-//        $this->assertTrue($response->isRedirect());
-//        $response->assertRedirect('payment/index');
-//
-//        $expect = Payment::all()->filter(function($p) {
-//            return $p->status === 'true';
-//        });
-//
-//        $this->assertEquals(2, $expect->count());
-//    }
+
+    public function testApproveWhenPaymentNotExistInRequest()
+    {
+        $response = $this->ajaxPost('payment/approve',
+            [
+                'payments_not_exist' => [ 1 ]
+            ]);
+
+        $response
+            ->assertStatus(422)
+            ->assertJson([
+                'payments' => [ 'Please select at least one of the payment to approve' ]
+            ]);
+    }
+
+    public function testApproveSinglePayment()
+    {
+        $payment = factory(Payment::class)->create([
+            'user_id' => $this->user->id,
+            'status' => 'false'
+        ]);
+
+        $lot = factory(Lot::class)->create([
+            'user_id' => $this->user->id,
+            'status' => 'false'
+        ]);
+
+        $lot->payments()->attach($payment->id);
+
+        $response = $this->ajaxPost('payment/approve',
+            [
+                'payments' => [ 1 ]
+            ]);
+
+        $response
+            ->assertStatus(200)
+            ->assertJson([
+                'message' => 'Payment approved'
+            ]);
+
+        $expectedPayment = Payment::find($payment->id);
+        $expectedLot = Lot::find($lot->id);
+
+        $this->assertEquals('true', $expectedPayment->status);
+        $this->assertEquals('true', $expectedLot->status);
+        $this->assertNotNull($expectedLot->expired_at);
+    }
+
+    public function testApproveMultiplePayments()
+    {
+        $user_1 = factory(User::class)->create();
+        $payment_1 = factory(Payment::class)->create([
+            'user_id' => $user_1->id,
+            'status' => 'false'
+        ]);
+        $lot_1 = factory(Lot::class, 2)->create([
+            'user_id' => $user_1->id,
+            'status' => 'false'
+        ]);
+        foreach ($lot_1 as $lot) {
+            $lot->payments()->attach($payment_1->id);
+        }
+
+        $user_2 = factory(User::class)->create();
+        $payment_2 = factory(Payment::class)->create([
+            'user_id' => $user_2->id,
+            'status' => 'false'
+        ]);
+        $lot_2 = factory(Lot::class, 3)->create([
+            'user_id' => $payment_2->id,
+            'status' => 'false'
+        ]);
+        foreach ($lot_2 as $lot) {
+            $lot->payments()->attach($payment_2->id);
+        }
+
+        $response = $this->ajaxPost('payment/approve',
+            [
+                'payments' => [ $payment_1->id, $payment_2->id ]
+            ]);
+
+        $response
+            ->assertStatus(200)
+            ->assertJson([
+                'message' => 'Payment approved'
+            ]);
+
+        $this->assertEquals('true', Payment::find($payment_1->id)->status);
+        $this->assertEquals('true', Payment::find($payment_2->id)->status);
+
+        foreach ($lot_1->pluck('id') as $id) {
+            $lot = Lot::find($id);
+            $this->assertEquals('true', $lot->status);
+            $this->assertNotNull($lot->expired_at);
+        }
+
+        foreach ($lot_2->pluck('id') as $id) {
+            $lot = Lot::find($id);
+            $this->assertEquals('true', $lot->status);
+            $this->assertNotNull($lot->expired_at);
+        }
+
+    }
 }
