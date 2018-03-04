@@ -32,7 +32,7 @@ class CategoryController extends Controller
         if(request()->wantsJson())
         {
             // Ryan 09022018 If this is an internal API request
-            return Controller::VueTableListResult(Category::where('status', 'true'));
+            return Controller::VueTableListResult(Category::with('lots')->where('status', 'true'));
         }
 
         $categories = category::where('status', 'true')->get();

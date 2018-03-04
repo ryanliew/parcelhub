@@ -12,6 +12,15 @@ use Illuminate\Support\Facades\Input;
 
 class PaymentController extends Controller
 {
+    public function page()
+    {
+        if(request()->wantsJson()) {
+            return Controller::VueTableListResult(Payment::select("*"));
+        }
+
+        return view("payment.page");
+
+    }
     /**
      * Display a listing of the resource.
      *

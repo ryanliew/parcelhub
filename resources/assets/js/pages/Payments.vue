@@ -1,66 +1,64 @@
 <template>
 	<div>
-		<div class="card">
-			<div class="card-header">
-				<div class="card-header-title level">
-					<div class="level-left">
-						<div class="level-item">
-							Purchase history
+		<transition name="slide-fade">
+			<div class="card" v-if="!isPurchasing">
+				<div class="card-header">
+					<div class="card-header-title level">
+						<div class="level-left">
+							<div class="level-item">
+								Purchase history
+							</div>
 						</div>
-					</div>
-					<div class="level-right">
-						<div class="level-item">
-							<button class="button is-primary" @click="modalOpen()">
-								<i class="fa fa-plus-circle"></i>
-								<span class="pl-5">Purchase lots</span>
-							</button>
+						<div class="level-right">
+							<div class="level-item">
+								<button class="button is-primary" @click="isPurchasing = true">
+									<i class="fa fa-plus-circle"></i>
+									<span class="pl-5">Purchase lots</span>
+								</button>
+							</div>
 						</div>
 					</div>
 				</div>
+				<div class="card-content">
+					<table-view ref="couriers" 
+								:fields="fields" 
+								url="/internal/payments">	
+					</table-view>
+				</div>
 			</div>
-			<div class="card-content">
-				<table-view ref="couriers" 
-							:fields="fields" 
-							url="/internal/payments">	
-				</table-view>
+			<div class="card" v-if="isPurchasing">
+				<div class="card-header">
+					<div class="card-header-title level">
+						<div class="level-left">
+							<div class="level-item">
+								{{ dialogTitle }}
+							</div>
+						</div>
+						<div class="level-right">
+							<div class="level-item">
+								<button class="button is-warning" @click="back()">
+									<i class="fa fa-arrow-alt-circle-left"></i>
+									<span class="pl-5">Cancel</span>
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="card-content">
+					<form @submit.prevent="submit" 
+						@keydown="form.errors.clear($event.target.name)" 
+						@input="form.errors.clear($event.target.name)"
+						@keyup.enter="submit">
+						
+					</form>
+				</div>
+
 			</div>
-		</div>
 
-		<modal :active="dialogActive" @close="dialogActive = false">
-			<template slot="header">{{ dialogTitle }}</template>
+		</transition>
+		
 
-			<form @submit.prevent="onSubmit" 
-					@keydown="form.errors.clear($event.target.name)" 
-					@input="form.errors.clear($event.target.name)"
-					@keyup.enter="submit">
-
-	          	<div class="field">
-	          		<text-input v-model="form.name" :defaultValue="form.name" 
-								label="Name" 
-								:required="true"
-								name="name"
-								type="text"
-								:editable="true"
-								:error="form.errors.get('name')"
-								:focus="true">
-					</text-input>
-	          	</div>
-          	</form>
-
-          	<template slot="footer">
-				<button class="button is-primary" @click="submit">Submit</button>
-          	</template>
-		</modal>
-
-		<modal :active="isDeleting" @close="isDeleting = false">
-			<template slot="header">Delete payment</template>
-			
-			Are you sure you want to delete <span v-text="selectedPayment.name"></span>?
-
-			<template slot="footer">
-				<button class="button is-primary" @click="confirmDeletion">Confirm</button>
-          	</template>
-        </modal>
 	</div>
 </template>
 
@@ -75,36 +73,40 @@
 		data() {
 			return {
 				fields: [
-					{name: 'name', sortField: 'name'},	
+					{name: 'created_at', sortField: 'created_at'},
+					{name: 'price', sortField: 'price'}	
 				],
 				selectedPayment: '',
+				isPurchasing: false,
 				dialogActive: false,
 				override: false,
-				lots: '',
+				selectedLots: '',
 				form: new Form({
 					id: '',
 					name: '',
 				}),
-				isDeleting: false
+				categories: ''
 			};
 		},
 
 		mounted() {
 			this.$events.on('view', data => this.view(data));
 			this.$events.on('delete', data => this.delete(data));
-			this.getLots();
+			this.getLotCategories();
 		},
 
 		methods: {
-			getLots() {
-				axios.get('/internal/lots')
-					.then(response => this.setLots(response.data));
+			getLotCategories() {
+				axios.get('/internal/categories')
+					.then(response => this.setLotCategories(response.data));
 			},
 
-			setLots(data) {
-				console.log(data.data);
-				this.lots = _.filter(data.data, function(lot){ return !lot.user_name });
+			setLotCategories(data) {
+				console.log(data);
+				this.categories = data.data;
 			},
+
+
 
 			submit() {
 				this.form.post(this.action)

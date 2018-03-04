@@ -61795,8 +61795,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
 
 
 
@@ -61807,16 +61805,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 	data: function data() {
 		return {
-			fields: [{ name: 'name', sortField: 'name' }],
+			fields: [{ name: 'created_at', sortField: 'created_at' }, { name: 'price', sortField: 'price' }],
 			selectedPayment: '',
+			isPurchasing: false,
 			dialogActive: false,
 			override: false,
-			lots: '',
+			selectedLots: '',
 			form: new Form({
 				id: '',
 				name: ''
 			}),
-			isDeleting: false
+			categories: ''
 		};
 	},
 	mounted: function mounted() {
@@ -61828,23 +61827,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		this.$events.on('delete', function (data) {
 			return _this.delete(data);
 		});
-		this.getLots();
+		this.getLotCategories();
 	},
 
 
 	methods: {
-		getLots: function getLots() {
+		getLotCategories: function getLotCategories() {
 			var _this2 = this;
 
-			axios.get('/internal/lots').then(function (response) {
-				return _this2.setLots(response.data);
+			axios.get('/internal/categories').then(function (response) {
+				return _this2.setLotCategories(response.data);
 			});
 		},
-		setLots: function setLots(data) {
-			console.log(data.data);
-			this.lots = _.filter(data.data, function (lot) {
-				return !lot.user_name;
-			});
+		setLotCategories: function setLotCategories(data) {
+			console.log(data);
+			this.categories = data.data;
 		},
 		submit: function submit() {
 			var _this3 = this;
@@ -61912,174 +61909,130 @@ var render = function() {
   return _c(
     "div",
     [
-      _c("div", { staticClass: "card" }, [
-        _c("div", { staticClass: "card-header" }, [
-          _c("div", { staticClass: "card-header-title level" }, [
-            _vm._m(0),
-            _vm._v(" "),
-            _c("div", { staticClass: "level-right" }, [
-              _c("div", { staticClass: "level-item" }, [
-                _c(
-                  "button",
-                  {
-                    staticClass: "button is-primary",
-                    on: {
-                      click: function($event) {
-                        _vm.modalOpen()
-                      }
-                    }
-                  },
-                  [
-                    _c("i", { staticClass: "fa fa-plus-circle" }),
-                    _vm._v(" "),
-                    _c("span", { staticClass: "pl-5" }, [
-                      _vm._v("Purchase lots")
+      _c("transition", { attrs: { name: "slide-fade" } }, [
+        !_vm.isPurchasing
+          ? _c("div", { staticClass: "card" }, [
+              _c("div", { staticClass: "card-header" }, [
+                _c("div", { staticClass: "card-header-title level" }, [
+                  _c("div", { staticClass: "level-left" }, [
+                    _c("div", { staticClass: "level-item" }, [
+                      _vm._v("\n\t\t\t\t\t\t\tPurchase history\n\t\t\t\t\t\t")
                     ])
-                  ]
-                )
-              ])
-            ])
-          ])
-        ]),
-        _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "card-content" },
-          [
-            _c("table-view", {
-              ref: "couriers",
-              attrs: { fields: _vm.fields, url: "/internal/payments" }
-            })
-          ],
-          1
-        )
-      ]),
-      _vm._v(" "),
-      _c(
-        "modal",
-        {
-          attrs: { active: _vm.dialogActive },
-          on: {
-            close: function($event) {
-              _vm.dialogActive = false
-            }
-          }
-        },
-        [
-          _c("template", { slot: "header" }, [_vm._v(_vm._s(_vm.dialogTitle))]),
-          _vm._v(" "),
-          _c(
-            "form",
-            {
-              on: {
-                submit: function($event) {
-                  $event.preventDefault()
-                  _vm.onSubmit($event)
-                },
-                keydown: function($event) {
-                  _vm.form.errors.clear($event.target.name)
-                },
-                input: function($event) {
-                  _vm.form.errors.clear($event.target.name)
-                },
-                keyup: function($event) {
-                  if (
-                    !("button" in $event) &&
-                    _vm._k($event.keyCode, "enter", 13, $event.key)
-                  ) {
-                    return null
-                  }
-                  _vm.submit($event)
-                }
-              }
-            },
-            [
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "level-right" }, [
+                    _c("div", { staticClass: "level-item" }, [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "button is-primary",
+                          on: {
+                            click: function($event) {
+                              _vm.isPurchasing = true
+                            }
+                          }
+                        },
+                        [
+                          _c("i", { staticClass: "fa fa-plus-circle" }),
+                          _vm._v(" "),
+                          _c("span", { staticClass: "pl-5" }, [
+                            _vm._v("Purchase lots")
+                          ])
+                        ]
+                      )
+                    ])
+                  ])
+                ])
+              ]),
+              _vm._v(" "),
               _c(
                 "div",
-                { staticClass: "field" },
+                { staticClass: "card-content" },
                 [
-                  _c("text-input", {
-                    attrs: {
-                      defaultValue: _vm.form.name,
-                      label: "Name",
-                      required: true,
-                      name: "name",
-                      type: "text",
-                      editable: true,
-                      error: _vm.form.errors.get("name"),
-                      focus: true
-                    },
-                    model: {
-                      value: _vm.form.name,
-                      callback: function($$v) {
-                        _vm.$set(_vm.form, "name", $$v)
-                      },
-                      expression: "form.name"
-                    }
+                  _c("table-view", {
+                    ref: "couriers",
+                    attrs: { fields: _vm.fields, url: "/internal/payments" }
                   })
                 ],
                 1
               )
-            ]
-          ),
-          _vm._v(" "),
-          _c("template", { slot: "footer" }, [
-            _c(
-              "button",
-              { staticClass: "button is-primary", on: { click: _vm.submit } },
-              [_vm._v("Submit")]
-            )
-          ])
-        ],
-        2
-      ),
-      _vm._v(" "),
-      _c(
-        "modal",
-        {
-          attrs: { active: _vm.isDeleting },
-          on: {
-            close: function($event) {
-              _vm.isDeleting = false
-            }
-          }
-        },
-        [
-          _c("template", { slot: "header" }, [_vm._v("Delete payment")]),
-          _vm._v("\n\t\t\t\n\t\t\tAre you sure you want to delete "),
-          _c("span", {
-            domProps: { textContent: _vm._s(_vm.selectedPayment.name) }
-          }),
-          _vm._v("?\n\n\t\t\t"),
-          _c("template", { slot: "footer" }, [
-            _c(
-              "button",
-              {
-                staticClass: "button is-primary",
-                on: { click: _vm.confirmDeletion }
-              },
-              [_vm._v("Confirm")]
-            )
-          ])
-        ],
-        2
-      )
+            ])
+          : _vm._e(),
+        _vm._v(" "),
+        _vm.isPurchasing
+          ? _c("div", { staticClass: "card" }, [
+              _c("div", { staticClass: "card-header" }, [
+                _c("div", { staticClass: "card-header-title level" }, [
+                  _c("div", { staticClass: "level-left" }, [
+                    _c("div", { staticClass: "level-item" }, [
+                      _vm._v(
+                        "\n\t\t\t\t\t\t\t" +
+                          _vm._s(_vm.dialogTitle) +
+                          "\n\t\t\t\t\t\t"
+                      )
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "level-right" }, [
+                    _c("div", { staticClass: "level-item" }, [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "button is-warning",
+                          on: {
+                            click: function($event) {
+                              _vm.back()
+                            }
+                          }
+                        },
+                        [
+                          _c("i", {
+                            staticClass: "fa fa-arrow-alt-circle-left"
+                          }),
+                          _vm._v(" "),
+                          _c("span", { staticClass: "pl-5" }, [
+                            _vm._v("Cancel")
+                          ])
+                        ]
+                      )
+                    ])
+                  ])
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "card-content" }, [
+                _c("form", {
+                  on: {
+                    submit: function($event) {
+                      $event.preventDefault()
+                      _vm.submit($event)
+                    },
+                    keydown: function($event) {
+                      _vm.form.errors.clear($event.target.name)
+                    },
+                    input: function($event) {
+                      _vm.form.errors.clear($event.target.name)
+                    },
+                    keyup: function($event) {
+                      if (
+                        !("button" in $event) &&
+                        _vm._k($event.keyCode, "enter", 13, $event.key)
+                      ) {
+                        return null
+                      }
+                      _vm.submit($event)
+                    }
+                  }
+                })
+              ])
+            ])
+          : _vm._e()
+      ])
     ],
     1
   )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "level-left" }, [
-      _c("div", { staticClass: "level-item" }, [
-        _vm._v("\n\t\t\t\t\t\t\tPurchase history\n\t\t\t\t\t\t")
-      ])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
