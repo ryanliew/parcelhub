@@ -1,110 +1,201 @@
 <template>
 	<div>
-		<div class="card">
-			<div class="card-header">
-				<div class="card-header-title level">
-					<div class="level-left">
-						<div class="level-item">
-							Purchase history
+		<transition name="slide-fade">
+			<div class="card" v-if="!isPurchasing">
+				<div class="card-header">
+					<div class="card-header-title level">
+						<div class="level-left">
+							<div class="level-item">
+								Purchase history
+							</div>
 						</div>
-					</div>
-					<div class="level-right">
-						<div class="level-item">
-							<button class="button is-primary" @click="modalOpen()">
-								<i class="fa fa-plus-circle"></i>
-								<span class="pl-5">Purchase lots</span>
-							</button>
+						<div class="level-right">
+							<div class="level-item">
+								<button class="button is-primary" @click="isPurchasing = true">
+									<i class="fa fa-plus-circle"></i>
+									<span class="pl-5">Purchase lots</span>
+								</button>
+							</div>
 						</div>
 					</div>
 				</div>
+				<div class="card-content">
+					<table-view ref="couriers" 
+								:fields="fields" 
+								url="/internal/payments">	
+					</table-view>
+				</div>
 			</div>
-			<div class="card-content">
-				<table-view ref="couriers" 
-							:fields="fields" 
-							url="/internal/payments">	
-				</table-view>
+			<div class="card" v-if="isPurchasing">
+				<div class="card-header">
+					<div class="card-header-title level">
+						<div class="level-left">
+							<div class="level-item">
+								{{ dialogTitle }}
+							</div>
+						</div>
+						<div class="level-right">
+							<div class="level-item">
+								<button class="button is-warning" @click="back()">
+									<i class="fa fa-arrow-circle-left"></i>
+									<span class="pl-5">Cancel</span>
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="card-content">
+					<form @submit.prevent="submit" 
+						@keydown="form.errors.clear($event.target.name)" 
+						@input="form.errors.clear($event.target.name)"
+						@keyup.enter="submit">
+	
+						<div class="accordions">
+							<Accordion 
+								v-for="category in categories" 
+								:key="category.id"
+								v-if="availableLots(category).length > 0">
+								<template slot="title">
+									{{ category.name }}
+								</template>
+								<table class="table is-hoverable is-fullwidth">
+									<thead>
+										<tr>
+											<th>Name</th>
+											<th>Volume(cm³)</th>
+											<th>Price(RM)</th>
+											<th>Purchase</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr v-for="(lot, index) in availableLots(category)" v-if="lot.user_id == null">
+											<td>
+												{{ lot.name }}
+											</td>
+											<td>
+												{{ lot.volume }}
+											</td>
+											<td>
+												{{ lot.price }}
+											</td>
+											<td>
+												<checkbox-input
+													v-model="selectableLots[index].selected"
+													:defaultChecked="selectableLots[index].selected"
+													:required="false"
+													:name="'lot-' + lot.id"
+													:editable="true"
+													@input="toggleCheck(lot)">
+												</checkbox-input>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</Accordion>
+						</div>
+						
+						<hr>
+
+						<div class="level">
+							<div class="level-item has-text-centered">
+								<div>
+									<p class="heading">
+										Lots purchased
+									</p>
+									<p class="title">
+										{{ totalLots }}
+									</p>
+								</div>
+							</div>
+							<div class="level-item has-text-centered">
+								<div>
+									<p class="heading">
+										Total price (RM)
+									</p>
+									<p class="title">
+										{{ totalPrice }}
+									</p>
+								</div>
+							</div>
+							<div class="level-item has-text-centered">
+								<div>
+									<p class="heading">
+										Total volume (cm³)
+									</p>
+									<p class="title">
+										{{ totalVolume }}
+									</p>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+
 			</div>
-		</div>
 
-		<modal :active="dialogActive" @close="dialogActive = false">
-			<template slot="header">{{ dialogTitle }}</template>
+		</transition>
+		
 
-			<form @submit.prevent="onSubmit" 
-					@keydown="form.errors.clear($event.target.name)" 
-					@input="form.errors.clear($event.target.name)"
-					@keyup.enter="submit">
-
-	          	<div class="field">
-	          		<text-input v-model="form.name" :defaultValue="form.name" 
-								label="Name" 
-								:required="true"
-								name="name"
-								type="text"
-								:editable="true"
-								:error="form.errors.get('name')"
-								:focus="true">
-					</text-input>
-	          	</div>
-          	</form>
-
-          	<template slot="footer">
-				<button class="button is-primary" @click="submit">Submit</button>
-          	</template>
-		</modal>
-
-		<modal :active="isDeleting" @close="isDeleting = false">
-			<template slot="header">Delete payment</template>
-			
-			Are you sure you want to delete <span v-text="selectedPayment.name"></span>?
-
-			<template slot="footer">
-				<button class="button is-primary" @click="confirmDeletion">Confirm</button>
-          	</template>
-        </modal>
 	</div>
 </template>
 
 <script>
 	import TableView from '../components/TableView.vue';
-
+	import Accordion from '../components/Accordion.vue';
 	export default {
 		props: [''],
 
-		components: { TableView },
+		components: { TableView, Accordion },
 
 		data() {
 			return {
 				fields: [
-					{name: 'name', sortField: 'name'},	
+					{name: 'created_at', sortField: 'created_at'},
+					{name: 'price', sortField: 'price'}	
 				],
 				selectedPayment: '',
+				isPurchasing: false,
 				dialogActive: false,
 				override: false,
-				lots: '',
 				form: new Form({
 					id: '',
 					name: '',
 				}),
-				isDeleting: false
+				categories: '',
+				selectableLots: [],
+				totalLots: 0,
+				totalVolume: 0,
+				totalPrice: 0,
 			};
 		},
 
 		mounted() {
 			this.$events.on('view', data => this.view(data));
 			this.$events.on('delete', data => this.delete(data));
-			this.getLots();
+			this.getLotCategories();
 		},
 
 		methods: {
-			getLots() {
-				axios.get('/internal/lots')
-					.then(response => this.setLots(response.data));
+			getLotCategories() {
+				axios.get('/internal/categories')
+					.then(response => this.setLotCategories(response.data));
 			},
 
-			setLots(data) {
-				console.log(data.data);
-				this.lots = _.filter(data.data, function(lot){ return !lot.user_name });
+			setLotCategories(data) {
+				this.categories = data.data;
+				this.categories.forEach(function(category){
+					category.lots.forEach(function(lot){
+						if(lot.user_id == null)
+						{
+							lot.selected = false;
+							this.selectableLots.push(lot);
+						}
+					}.bind(this))
+				}.bind(this));
 			},
+
+
 
 			submit() {
 				this.form.post(this.action)
@@ -121,28 +212,22 @@
 
 			},
 
-			edit(data) {
-				this.selectedPayment = data;
-				this.form.id = data.id;
-				this.form.name = data.name;
-				
-				this.dialogActive = true;
+			toggleCheck(lot){
+				if(lot.selected){
+					this.totalVolume = parseInt(this.totalVolume + lot.volume);
+					this.totalPrice += lot.price;
+					this.totalLots++;
+				}
+				else{
+					this.totalVolume = parseInt(this.totalVolume - lot.volume);
+					this.totalPrice -= lot.price;
+					this.totalLots--;
+				}
+
 			},
 
-			delete(data) {
-				this.selectedPayment = data;
-				this.isDeleting = true;
-			},
-
-			confirmDeletion() {
-				axios.get('/courier/delete/' + this.selectedPayment.id)
-					.then(response => this.deleteSuccess(response));
-			},
-
-			deleteSuccess(response) {
-				this.isDeleting = false;
-				flash(response.message);
-				this.$refs.couriers.refreshTable();
+			availableLots(category) {
+				return _.filter(category.lots, {'user_id' : null});
 			},
 
 			modalOpen() {
@@ -154,15 +239,12 @@
 
 		computed: {
 			dialogTitle() {
-				return this.selectedPayment
-						? "Edit " + this.selectedPayment.name
-						: "Create new courier";
+				return "Purchase lot";
 			},
 
 			action() {
-				let action = this.selectedPayment ? "update" : "store";
-				return "/courier/" + action;
-			}
+				return "/payment/store" + action;
+			},
 		}
 	}
 </script>

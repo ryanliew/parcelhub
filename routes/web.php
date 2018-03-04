@@ -26,6 +26,7 @@ Route::get('lots', 'LotController@page')->name('lots');
 Route::get('products', 'ProductController@page')->name('products');
 Route::get('inbounds', 'InboundController@page')->name('inbounds');
 Route::get('outbounds', 'OutboundController@page')->name('outbounds');
+Route::get('purchase', 'PaymentController@page')->name('payment');
 
 /* Route for Socialite authentication */
 Route::group(['prefix' => 'auth', 'as' => 'auth.social.'], function() {

@@ -59774,9 +59774,7 @@ var render = function() {
                             }
                           },
                           [
-                            _c("i", {
-                              staticClass: "fa fa-arrow-alt-circle-left"
-                            }),
+                            _c("i", { staticClass: "fa fa-arrow-circle-left" }),
                             _vm._v(" "),
                             _c("span", { staticClass: "pl-5" }, [
                               _vm._v("Cancel")
@@ -61301,7 +61299,7 @@ var render = function() {
                               },
                               [
                                 _c("i", {
-                                  staticClass: "fa fa-arrow-alt-circle-left"
+                                  staticClass: "fa fa-arrow-circle-left"
                                 }),
                                 _vm._v(" "),
                                 _c("span", { staticClass: "pl-5" }, [
@@ -61731,6 +61729,84 @@ module.exports = Component.exports
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_TableView_vue__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_TableView_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__components_TableView_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_Accordion_vue__ = __webpack_require__(370);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_Accordion_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__components_Accordion_vue__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -61803,20 +61879,24 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony default export */ __webpack_exports__["default"] = ({
 	props: [''],
 
-	components: { TableView: __WEBPACK_IMPORTED_MODULE_0__components_TableView_vue___default.a },
+	components: { TableView: __WEBPACK_IMPORTED_MODULE_0__components_TableView_vue___default.a, Accordion: __WEBPACK_IMPORTED_MODULE_1__components_Accordion_vue___default.a },
 
 	data: function data() {
 		return {
-			fields: [{ name: 'name', sortField: 'name' }],
+			fields: [{ name: 'created_at', sortField: 'created_at' }, { name: 'price', sortField: 'price' }],
 			selectedPayment: '',
+			isPurchasing: false,
 			dialogActive: false,
 			override: false,
-			lots: '',
 			form: new Form({
 				id: '',
 				name: ''
 			}),
-			isDeleting: false
+			categories: '',
+			selectableLots: [],
+			totalLots: 0,
+			totalVolume: 0,
+			totalPrice: 0
 		};
 	},
 	mounted: function mounted() {
@@ -61828,23 +61908,28 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		this.$events.on('delete', function (data) {
 			return _this.delete(data);
 		});
-		this.getLots();
+		this.getLotCategories();
 	},
 
 
 	methods: {
-		getLots: function getLots() {
+		getLotCategories: function getLotCategories() {
 			var _this2 = this;
 
-			axios.get('/internal/lots').then(function (response) {
-				return _this2.setLots(response.data);
+			axios.get('/internal/categories').then(function (response) {
+				return _this2.setLotCategories(response.data);
 			});
 		},
-		setLots: function setLots(data) {
-			console.log(data.data);
-			this.lots = _.filter(data.data, function (lot) {
-				return !lot.user_name;
-			});
+		setLotCategories: function setLotCategories(data) {
+			this.categories = data.data;
+			this.categories.forEach(function (category) {
+				category.lots.forEach(function (lot) {
+					if (lot.user_id == null) {
+						lot.selected = false;
+						this.selectableLots.push(lot);
+					}
+				}.bind(this));
+			}.bind(this));
 		},
 		submit: function submit() {
 			var _this3 = this;
@@ -61860,28 +61945,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			this.$refs.couriers.refreshTable();
 		},
 		onFail: function onFail() {},
-		edit: function edit(data) {
-			this.selectedPayment = data;
-			this.form.id = data.id;
-			this.form.name = data.name;
-
-			this.dialogActive = true;
+		toggleCheck: function toggleCheck(lot) {
+			if (lot.selected) {
+				this.totalVolume = parseInt(this.totalVolume + lot.volume);
+				this.totalPrice += lot.price;
+				this.totalLots++;
+			} else {
+				this.totalVolume = parseInt(this.totalVolume - lot.volume);
+				this.totalPrice -= lot.price;
+				this.totalLots--;
+			}
 		},
-		delete: function _delete(data) {
-			this.selectedPayment = data;
-			this.isDeleting = true;
-		},
-		confirmDeletion: function confirmDeletion() {
-			var _this4 = this;
-
-			axios.get('/courier/delete/' + this.selectedPayment.id).then(function (response) {
-				return _this4.deleteSuccess(response);
-			});
-		},
-		deleteSuccess: function deleteSuccess(response) {
-			this.isDeleting = false;
-			flash(response.message);
-			this.$refs.couriers.refreshTable();
+		availableLots: function availableLots(category) {
+			return _.filter(category.lots, { 'user_id': null });
 		},
 		modalOpen: function modalOpen() {
 			this.form.reset();
@@ -61892,12 +61968,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 	computed: {
 		dialogTitle: function dialogTitle() {
-			return this.selectedPayment ? "Edit " + this.selectedPayment.name : "Create new courier";
+			return "Purchase lot";
 		},
-		action: function action() {
-			var action = this.selectedPayment ? "update" : "store";
-			return "/courier/" + action;
-		}
+		action: function (_action) {
+			function action() {
+				return _action.apply(this, arguments);
+			}
+
+			action.toString = function () {
+				return _action.toString();
+			};
+
+			return action;
+		}(function () {
+			return "/payment/store" + action;
+		})
 	}
 });
 
@@ -61912,174 +61997,326 @@ var render = function() {
   return _c(
     "div",
     [
-      _c("div", { staticClass: "card" }, [
-        _c("div", { staticClass: "card-header" }, [
-          _c("div", { staticClass: "card-header-title level" }, [
-            _vm._m(0),
-            _vm._v(" "),
-            _c("div", { staticClass: "level-right" }, [
-              _c("div", { staticClass: "level-item" }, [
+      _c("transition", { attrs: { name: "slide-fade" } }, [
+        !_vm.isPurchasing
+          ? _c("div", { staticClass: "card" }, [
+              _c("div", { staticClass: "card-header" }, [
+                _c("div", { staticClass: "card-header-title level" }, [
+                  _c("div", { staticClass: "level-left" }, [
+                    _c("div", { staticClass: "level-item" }, [
+                      _vm._v("\n\t\t\t\t\t\t\tPurchase history\n\t\t\t\t\t\t")
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "level-right" }, [
+                    _c("div", { staticClass: "level-item" }, [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "button is-primary",
+                          on: {
+                            click: function($event) {
+                              _vm.isPurchasing = true
+                            }
+                          }
+                        },
+                        [
+                          _c("i", { staticClass: "fa fa-plus-circle" }),
+                          _vm._v(" "),
+                          _c("span", { staticClass: "pl-5" }, [
+                            _vm._v("Purchase lots")
+                          ])
+                        ]
+                      )
+                    ])
+                  ])
+                ])
+              ]),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "card-content" },
+                [
+                  _c("table-view", {
+                    ref: "couriers",
+                    attrs: { fields: _vm.fields, url: "/internal/payments" }
+                  })
+                ],
+                1
+              )
+            ])
+          : _vm._e(),
+        _vm._v(" "),
+        _vm.isPurchasing
+          ? _c("div", { staticClass: "card" }, [
+              _c("div", { staticClass: "card-header" }, [
+                _c("div", { staticClass: "card-header-title level" }, [
+                  _c("div", { staticClass: "level-left" }, [
+                    _c("div", { staticClass: "level-item" }, [
+                      _vm._v(
+                        "\n\t\t\t\t\t\t\t" +
+                          _vm._s(_vm.dialogTitle) +
+                          "\n\t\t\t\t\t\t"
+                      )
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "level-right" }, [
+                    _c("div", { staticClass: "level-item" }, [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "button is-warning",
+                          on: {
+                            click: function($event) {
+                              _vm.back()
+                            }
+                          }
+                        },
+                        [
+                          _c("i", { staticClass: "fa fa-arrow-circle-left" }),
+                          _vm._v(" "),
+                          _c("span", { staticClass: "pl-5" }, [
+                            _vm._v("Cancel")
+                          ])
+                        ]
+                      )
+                    ])
+                  ])
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "card-content" }, [
                 _c(
-                  "button",
+                  "form",
                   {
-                    staticClass: "button is-primary",
                     on: {
-                      click: function($event) {
-                        _vm.modalOpen()
+                      submit: function($event) {
+                        $event.preventDefault()
+                        _vm.submit($event)
+                      },
+                      keydown: function($event) {
+                        _vm.form.errors.clear($event.target.name)
+                      },
+                      input: function($event) {
+                        _vm.form.errors.clear($event.target.name)
+                      },
+                      keyup: function($event) {
+                        if (
+                          !("button" in $event) &&
+                          _vm._k($event.keyCode, "enter", 13, $event.key)
+                        ) {
+                          return null
+                        }
+                        _vm.submit($event)
                       }
                     }
                   },
                   [
-                    _c("i", { staticClass: "fa fa-plus-circle" }),
+                    _c(
+                      "div",
+                      { staticClass: "accordions" },
+                      _vm._l(_vm.categories, function(category) {
+                        return _vm.availableLots(category).length > 0
+                          ? _c(
+                              "Accordion",
+                              { key: category.id },
+                              [
+                                _c("template", { slot: "title" }, [
+                                  _vm._v(
+                                    "\n\t\t\t\t\t\t\t\t" +
+                                      _vm._s(category.name) +
+                                      "\n\t\t\t\t\t\t\t"
+                                  )
+                                ]),
+                                _vm._v(" "),
+                                _c(
+                                  "table",
+                                  {
+                                    staticClass:
+                                      "table is-hoverable is-fullwidth"
+                                  },
+                                  [
+                                    _c("thead", [
+                                      _c("tr", [
+                                        _c("th", [_vm._v("Name")]),
+                                        _vm._v(" "),
+                                        _c("th", [_vm._v("Volume(cm³)")]),
+                                        _vm._v(" "),
+                                        _c("th", [_vm._v("Price(RM)")]),
+                                        _vm._v(" "),
+                                        _c("th", [_vm._v("Purchase")])
+                                      ])
+                                    ]),
+                                    _vm._v(" "),
+                                    _c(
+                                      "tbody",
+                                      _vm._l(
+                                        _vm.availableLots(category),
+                                        function(lot, index) {
+                                          return lot.user_id == null
+                                            ? _c("tr", [
+                                                _c("td", [
+                                                  _vm._v(
+                                                    "\n\t\t\t\t\t\t\t\t\t\t\t" +
+                                                      _vm._s(lot.name) +
+                                                      "\n\t\t\t\t\t\t\t\t\t\t"
+                                                  )
+                                                ]),
+                                                _vm._v(" "),
+                                                _c("td", [
+                                                  _vm._v(
+                                                    "\n\t\t\t\t\t\t\t\t\t\t\t" +
+                                                      _vm._s(lot.volume) +
+                                                      "\n\t\t\t\t\t\t\t\t\t\t"
+                                                  )
+                                                ]),
+                                                _vm._v(" "),
+                                                _c("td", [
+                                                  _vm._v(
+                                                    "\n\t\t\t\t\t\t\t\t\t\t\t" +
+                                                      _vm._s(lot.price) +
+                                                      "\n\t\t\t\t\t\t\t\t\t\t"
+                                                  )
+                                                ]),
+                                                _vm._v(" "),
+                                                _c(
+                                                  "td",
+                                                  [
+                                                    _c("checkbox-input", {
+                                                      attrs: {
+                                                        defaultChecked:
+                                                          _vm.selectableLots[
+                                                            index
+                                                          ].selected,
+                                                        required: false,
+                                                        name: "lot-" + lot.id,
+                                                        editable: true
+                                                      },
+                                                      on: {
+                                                        input: function(
+                                                          $event
+                                                        ) {
+                                                          _vm.toggleCheck(lot)
+                                                        }
+                                                      },
+                                                      model: {
+                                                        value:
+                                                          _vm.selectableLots[
+                                                            index
+                                                          ].selected,
+                                                        callback: function(
+                                                          $$v
+                                                        ) {
+                                                          _vm.$set(
+                                                            _vm.selectableLots[
+                                                              index
+                                                            ],
+                                                            "selected",
+                                                            $$v
+                                                          )
+                                                        },
+                                                        expression:
+                                                          "selectableLots[index].selected"
+                                                      }
+                                                    })
+                                                  ],
+                                                  1
+                                                )
+                                              ])
+                                            : _vm._e()
+                                        }
+                                      )
+                                    )
+                                  ]
+                                )
+                              ],
+                              2
+                            )
+                          : _vm._e()
+                      })
+                    ),
                     _vm._v(" "),
-                    _c("span", { staticClass: "pl-5" }, [
-                      _vm._v("Purchase lots")
+                    _c("hr"),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "level" }, [
+                      _c(
+                        "div",
+                        { staticClass: "level-item has-text-centered" },
+                        [
+                          _c("div", [
+                            _c("p", { staticClass: "heading" }, [
+                              _vm._v(
+                                "\n\t\t\t\t\t\t\t\t\tLots purchased\n\t\t\t\t\t\t\t\t"
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("p", { staticClass: "title" }, [
+                              _vm._v(
+                                "\n\t\t\t\t\t\t\t\t\t" +
+                                  _vm._s(_vm.totalLots) +
+                                  "\n\t\t\t\t\t\t\t\t"
+                              )
+                            ])
+                          ])
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        { staticClass: "level-item has-text-centered" },
+                        [
+                          _c("div", [
+                            _c("p", { staticClass: "heading" }, [
+                              _vm._v(
+                                "\n\t\t\t\t\t\t\t\t\tTotal price (RM)\n\t\t\t\t\t\t\t\t"
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("p", { staticClass: "title" }, [
+                              _vm._v(
+                                "\n\t\t\t\t\t\t\t\t\t" +
+                                  _vm._s(_vm.totalPrice) +
+                                  "\n\t\t\t\t\t\t\t\t"
+                              )
+                            ])
+                          ])
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        { staticClass: "level-item has-text-centered" },
+                        [
+                          _c("div", [
+                            _c("p", { staticClass: "heading" }, [
+                              _vm._v(
+                                "\n\t\t\t\t\t\t\t\t\tTotal volume (cm³)\n\t\t\t\t\t\t\t\t"
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("p", { staticClass: "title" }, [
+                              _vm._v(
+                                "\n\t\t\t\t\t\t\t\t\t" +
+                                  _vm._s(_vm.totalVolume) +
+                                  "\n\t\t\t\t\t\t\t\t"
+                              )
+                            ])
+                          ])
+                        ]
+                      )
                     ])
                   ]
                 )
               ])
             ])
-          ])
-        ]),
-        _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "card-content" },
-          [
-            _c("table-view", {
-              ref: "couriers",
-              attrs: { fields: _vm.fields, url: "/internal/payments" }
-            })
-          ],
-          1
-        )
-      ]),
-      _vm._v(" "),
-      _c(
-        "modal",
-        {
-          attrs: { active: _vm.dialogActive },
-          on: {
-            close: function($event) {
-              _vm.dialogActive = false
-            }
-          }
-        },
-        [
-          _c("template", { slot: "header" }, [_vm._v(_vm._s(_vm.dialogTitle))]),
-          _vm._v(" "),
-          _c(
-            "form",
-            {
-              on: {
-                submit: function($event) {
-                  $event.preventDefault()
-                  _vm.onSubmit($event)
-                },
-                keydown: function($event) {
-                  _vm.form.errors.clear($event.target.name)
-                },
-                input: function($event) {
-                  _vm.form.errors.clear($event.target.name)
-                },
-                keyup: function($event) {
-                  if (
-                    !("button" in $event) &&
-                    _vm._k($event.keyCode, "enter", 13, $event.key)
-                  ) {
-                    return null
-                  }
-                  _vm.submit($event)
-                }
-              }
-            },
-            [
-              _c(
-                "div",
-                { staticClass: "field" },
-                [
-                  _c("text-input", {
-                    attrs: {
-                      defaultValue: _vm.form.name,
-                      label: "Name",
-                      required: true,
-                      name: "name",
-                      type: "text",
-                      editable: true,
-                      error: _vm.form.errors.get("name"),
-                      focus: true
-                    },
-                    model: {
-                      value: _vm.form.name,
-                      callback: function($$v) {
-                        _vm.$set(_vm.form, "name", $$v)
-                      },
-                      expression: "form.name"
-                    }
-                  })
-                ],
-                1
-              )
-            ]
-          ),
-          _vm._v(" "),
-          _c("template", { slot: "footer" }, [
-            _c(
-              "button",
-              { staticClass: "button is-primary", on: { click: _vm.submit } },
-              [_vm._v("Submit")]
-            )
-          ])
-        ],
-        2
-      ),
-      _vm._v(" "),
-      _c(
-        "modal",
-        {
-          attrs: { active: _vm.isDeleting },
-          on: {
-            close: function($event) {
-              _vm.isDeleting = false
-            }
-          }
-        },
-        [
-          _c("template", { slot: "header" }, [_vm._v("Delete payment")]),
-          _vm._v("\n\t\t\t\n\t\t\tAre you sure you want to delete "),
-          _c("span", {
-            domProps: { textContent: _vm._s(_vm.selectedPayment.name) }
-          }),
-          _vm._v("?\n\n\t\t\t"),
-          _c("template", { slot: "footer" }, [
-            _c(
-              "button",
-              {
-                staticClass: "button is-primary",
-                on: { click: _vm.confirmDeletion }
-              },
-              [_vm._v("Confirm")]
-            )
-          ])
-        ],
-        2
-      )
+          : _vm._e()
+      ])
     ],
     1
   )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "level-left" }, [
-      _c("div", { staticClass: "level-item" }, [
-        _vm._v("\n\t\t\t\t\t\t\tPurchase history\n\t\t\t\t\t\t")
-      ])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
@@ -62094,6 +62331,144 @@ if (false) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 364 */,
+/* 365 */,
+/* 366 */,
+/* 367 */,
+/* 368 */,
+/* 369 */,
+/* 370 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(371)
+/* template */
+var __vue_template__ = __webpack_require__(372)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources\\assets\\js\\components\\Accordion.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-e6fac83e", Component.options)
+  } else {
+    hotAPI.reload("data-v-e6fac83e", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 371 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+	props: [],
+	data: function data() {
+		return {
+			isActive: false
+		};
+	},
+
+
+	methods: {
+		toggle: function toggle() {
+			this.isActive = !this.isActive;
+		}
+	},
+
+	computed: {
+		iconClass: function iconClass() {
+			return this.isActive ? "fa-minus " : "fa-plus";
+		}
+	}
+});
+
+/***/ }),
+/* 372 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("article", { staticClass: "message" }, [
+    _c(
+      "div",
+      { staticClass: "message-header" },
+      [
+        _vm._t("title"),
+        _vm._v(" "),
+        _c("button", {
+          staticClass: "button is-small is-dark fa",
+          class: _vm.iconClass,
+          on: { click: _vm.toggle }
+        })
+      ],
+      2
+    ),
+    _vm._v(" "),
+    _vm.isActive
+      ? _c("div", { staticClass: "message-body" }, [
+          _c("div", { staticClass: "message-content" }, [_vm._t("default")], 2)
+        ])
+      : _vm._e()
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-e6fac83e", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);

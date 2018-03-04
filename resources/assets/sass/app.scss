@@ -19,6 +19,9 @@
 // Css for checkboxes
 @import '~cool-checkboxes-for-bulma.io/dist/css/bulma-radio-checkbox.min.css';
 
+// Css for bulma extensions
+@import "~bulma-extensions/dist/bulma-extensions.min.css";
+
 .b-checkbox label::before {
   top: 3px;
 }

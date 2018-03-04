@@ -14,3 +14,7 @@
 		</section>
 	</div>
 @endsection
+
+@section('js')
+	<script type="text/javascript" src="/js/vendors.js"></script>
+@endsection
