@@ -47,7 +47,7 @@
 						<div class="level-right">
 							<div class="level-item">
 								<button class="button is-warning" @click="back()">
-									<i class="fa fa-arrow-alt-circle-left"></i>
+									<i class="fa fa-arrow-circle-left"></i>
 									<span class="pl-5">Cancel</span>
 								</button>
 							</div>
