@@ -101,8 +101,10 @@
 					this.$refs.vuetable.toggleDetailRow(data.id);
 			},
 
-			date(value) {
-				return moment(value).format('DD-MM-YYYY');
+			purchaseStatusLabel(value) {
+				return value == 'true' 
+					? '<span class="tag is-success">Approved</span>'
+					: '<span class="tag is-warning">Processing</span>'
 			},
 
 			incomeLabel(value) {

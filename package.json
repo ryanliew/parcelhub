@@ -25,6 +25,7 @@
     "vuetable-2": "^1.7.2"
   },
   "dependencies": {
-    "bulma-extensions": "^1.0.3"
+    "bulma-extensions": "^1.0.3",
+    "vue-animate-number": "^0.4.2"
   }
 }

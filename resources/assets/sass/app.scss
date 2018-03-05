@@ -97,6 +97,10 @@
   	margin-top: 30px;
 }
 
+.mb-5 {
+  margin-bottom: 5px;
+}
+
 .ml-5 {
   margin-left: 5px;
 }
@@ -121,16 +125,67 @@
   color: #23d160;
 }
 
+.accordions .message {
+  margin-bottom: 0;
+}
+
+.accordions .message .message-header .button {
+  background-color: transparent; 
+}
+
+.accordions .message .message-header {
+  cursor: pointer;
+}
+
+.is-divider[data-content]::after, .is-divider-vertical[data-content]::after {
+    background: #fff;
+    color: #b5b5b5;
+    content: attr(data-content);
+    display: inline-block;
+    font-size: .75rem;
+    padding: .5rem .8rem;
+    -webkit-transform: translateY(-1.1rem);
+    -ms-transform: translateY(-1.1rem);
+    transform: translateY(-1.1rem);
+    text-align: center;
+}
+
+.is-divider {
+    border-top: .1rem solid #dbdbdb;
+    height: .1rem;
+    margin: 2rem 0;
+    text-align: center;
+}
+
 .button.is-facebook {
   background-color: #3b5998;
   border-color: transparent;
   color: #fff;
 }
 
+.tooltip.button[disabled] {
+  opacity: 1;
+}
+
+.button.is-primary[disabled] {
+  background-color: rgba(0, 209, 178, 0.5);
+  opacity: 1;
+}
+
 .button.is-google-plus {
   background-color: #d34836;
   border-color: transparent;
   color: #fff;
+}
+
+.is-divider, .is-divider-vertical {
+    display: block;
+    position: relative;
+}
+
+.image img {
+  height: 100%;
+  width: auto;
 }
 
 .select-label {

@@ -65,5 +65,7 @@ Vue.filter('formatOutboundStatus', function(value) {
 });
 
 Vue.filter('date', function(value){
-	return moment(value).format('L');
+	if(moment(value).isValid())
+		return moment(value).format('L');
+	return 'N/A';
 });

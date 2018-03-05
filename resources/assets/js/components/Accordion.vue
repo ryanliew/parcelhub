@@ -1,9 +1,9 @@
 <template>
 	<article class="message">
-		<div class="message-header">
+		<div class="message-header" @click="toggle">
 			<slot name="title"></slot>
 
-			<button class="button is-small is-dark fa" :class="iconClass" @click="toggle"></button>
+			<a class="button is-small is-dark fa" :class="iconClass"></a>
 		</div>
 		<div class="message-body" v-if="isActive">
 			<div class="message-content">

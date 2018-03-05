@@ -6,7 +6,7 @@
                     <div class="control has-icons-left has-icons-right">
                         <input class="input" type="text" placeholder="Search" v-model="filterText" @keyup.enter="doFilter">
                         <span class="icon is-small is-left">
-                            <i class="fas fa-search"></i>
+                            <i class="fa fa-search"></i>
                         </span>
                     </div>
                     <div class="control">

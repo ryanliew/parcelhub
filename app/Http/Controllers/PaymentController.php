@@ -15,7 +15,7 @@ class PaymentController extends Controller
     public function page()
     {
         if(request()->wantsJson()) {
-            return Controller::VueTableListResult(Payment::select("*"));
+            return Controller::VueTableListResult(Payment::with('user')->with('lots'));
         }
 
         return view("payment.page");
@@ -29,7 +29,7 @@ class PaymentController extends Controller
     public function index()
     {
         if(request()->wantsJson()) {
-            return Controller::VueTableListResult(Payment::select("*"));
+            return Controller::VueTableListResult(Payment::with('user')->with('lots'));
         }
 
         if(\Entrust::hasRole('admin')) {
@@ -69,8 +69,8 @@ class PaymentController extends Controller
             $lot_purchases = json_decode($request['lot_purchases'], true);
 
             $json_validator = \Validator::make(['lot_purchases' => $lot_purchases], [
-                'lot_purchases.*.rental_duration' => 'required|integer|min:90',
-            ]);
+                'lot_purchases.*.rental_duration' => 'required|integer|min:1',
+            ], ['lot_purchases.$key.rental_duration' => 'Rental duration is required']);
 
             if ($json_validator->fails()) {
                 return response()->json($json_validator->messages(), 422);
@@ -80,6 +80,7 @@ class PaymentController extends Controller
 
             $payment = new Payment();
             $payment->picture = $request->file('payment_slip')->store('public');
+            $payment->price = $request->price;
             $payment->user()->associate($user);
             $payment->save();
 
@@ -98,7 +99,7 @@ class PaymentController extends Controller
             return response()->json($exception->getMessage(), 422);
         }
 
-        return response()->json(['message' => 'Successfully purchase']);
+        return response()->json(['message' => 'Purchase order created']);
      }
 
     /**
@@ -157,13 +158,13 @@ class PaymentController extends Controller
 
     public function approve(Request $request)
     {
-        $this->validate($request, [
-            'payments' => 'required'
-        ]);
+        // $this->validate($request, [
+        //     'payments' => 'required'
+        // ]);
 
-        foreach ($request->input('payments') as $key => $value) {
-
-            $payment = Payment::find($value);
+        // foreach ($request->input('payments') as $key => $value) {
+        
+            $payment = Payment::find($request->id);
             $payment->update(['status' => 'true']);
 
             $lotIds = $payment->lots()->pluck('lot_id')->toArray();
@@ -171,10 +172,10 @@ class PaymentController extends Controller
             foreach($lotIds as $_key => $_value) {
 
                 $lot = Lot::find($_value);
-                $lot->update(['status' => 'true', 'expired_at' => Carbon::now()->addDays($lot->rental_duration)]);
+                $lot->update(['status' => 'true', 'expired_at' => Carbon::now()->addMonths($lot->rental_duration)]);
 
             }
-        }
+        //}
 
         return response()->json(['message' => 'Payment approved']);
     }
