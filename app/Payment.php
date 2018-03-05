@@ -37,4 +37,9 @@ class Payment extends Model
     public function lots() {
         return $this->belongsToMany('App\Lot');
     }
+
+    public function getPictureAttribute($value)
+    {
+    	return asset(str_replace('public', 'storage', $value));
+    }
 }

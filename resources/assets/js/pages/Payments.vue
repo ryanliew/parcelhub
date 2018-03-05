@@ -6,12 +6,12 @@
 					<div class="card-header-title level">
 						<div class="level-left">
 							<div class="level-item">
-								Purchase history
+								{{ mainTitle }}
 							</div>
 						</div>
-						<div class="level-right">
+						<div class="level-right" v-if="!can_manage">
 							<div class="level-item">
-								<button class="button is-primary" @click="isPurchasing = true">
+								<button class="button is-primary is-tooltip-danger is-tooltip-left" :class="tooltipClass" :disabled="!canPurchase" @click="modalOpen" data-tooltip="Sold out temporarily">
 									<i class="fa fa-plus-circle"></i>
 									<span class="pl-5">Purchase lots</span>
 								</button>
@@ -26,12 +26,14 @@
 					</table-view>
 				</div>
 			</div>
+		</transition>
+		<transition name="slide-fade">
 			<div class="card" v-if="isPurchasing">
 				<div class="card-header">
 					<div class="card-header-title level">
 						<div class="level-left">
 							<div class="level-item">
-								{{ dialogTitle }}
+								Purchase lots
 							</div>
 						</div>
 						<div class="level-right">
@@ -49,72 +51,17 @@
 					<form @submit.prevent="submit" 
 						@keydown="form.errors.clear($event.target.name)" 
 						@input="form.errors.clear($event.target.name)"
-						@keyup.enter="submit">
-	
-						<div class="accordions">
-							<Accordion 
-								v-for="category in categories" 
-								:key="category.id"
-								v-if="availableLots(category).length > 0">
-								<template slot="title">
-									{{ category.name }}
-								</template>
-								<table class="table is-hoverable is-fullwidth">
-									<thead>
-										<tr>
-											<th>Name</th>
-											<th>Volume(cm³)</th>
-											<th>Price(RM)</th>
-											<th>Purchase</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr v-for="(lot, index) in availableLots(category)" v-if="lot.user_id == null">
-											<td>
-												{{ lot.name }}
-											</td>
-											<td>
-												{{ lot.volume }}
-											</td>
-											<td>
-												{{ lot.price }}
-											</td>
-											<td>
-												<checkbox-input
-													v-model="selectableLots[index].selected"
-													:defaultChecked="selectableLots[index].selected"
-													:required="false"
-													:name="'lot-' + lot.id"
-													:editable="true"
-													@input="toggleCheck(lot)">
-												</checkbox-input>
-											</td>
-										</tr>
-									</tbody>
-								</table>
-							</Accordion>
-						</div>
-						
-						<hr>
+						@keyup.enter="submit"
+						v-if="this.selectableLots.length > 0">
 
 						<div class="level">
 							<div class="level-item has-text-centered">
 								<div>
 									<p class="heading">
-										Lots purchased
+										Lots count
 									</p>
 									<p class="title">
 										{{ totalLots }}
-									</p>
-								</div>
-							</div>
-							<div class="level-item has-text-centered">
-								<div>
-									<p class="heading">
-										Total price (RM)
-									</p>
-									<p class="title">
-										{{ totalPrice }}
 									</p>
 								</div>
 							</div>
@@ -128,15 +75,174 @@
 									</p>
 								</div>
 							</div>
+							<div class="level-item has-text-centered">
+								<div>
+									<p class="heading">
+										Price (RM)
+									</p>
+									<p class="title">
+										{{ subPrice }}
+									</p>
+								</div>
+							</div>
+							<div class="level-item has-text-centered">
+								<div>
+									<p class="heading">
+										Total Price (RM)
+									</p>
+									<p class="title">
+										{{ totalPrice }}
+									</p>
+								</div>
+							</div>
 						</div>
+
+						<div class="is-divider" data-content="SELECT LOTS"></div>
+						
+						<div class="accordions">
+							<Accordion 
+								v-for="category in categories" 
+								:key="category.id"
+								v-if="availableLots(category).length > 0">
+								<template slot="title">
+									{{ category.name }}
+								</template>
+								<table class="table is-hoverable is-fullwidth">
+									<thead>
+										<tr>
+											<th>Name</th>
+											<th>Volume(cm³)</th>
+											<th>Price(RM) / Month</th>
+											<th>Purchase</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr v-for="lot in availableLots(category)" v-if="lot.user_id == null">
+											<td>
+												{{ lot.lot.name }}
+											</td>
+											<td>
+												{{ lot.lot.volume }}
+											</td>
+											<td>
+												{{ lot.lot.price }}
+											</td>
+											<td>
+												<checkbox-input
+													v-model="selectableLots[lot.index].selected"
+													:defaultChecked="selectableLots[lot.index].selected"
+													:required="false"
+													:name="'lot-' + lot.lot.id"
+													:editable="true"
+													:index="index"
+													@input="toggleCheck(lot.lot)">
+												</checkbox-input>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</Accordion>
+						</div>
+						
+						<div class="is-divider" data-content="FILL IN DETAILS"></div>
+						
+						<div class="field">
+							<text-input
+								v-model="rental_duration"
+								:defaultValue="rental_duration"
+								:required="true"
+								label="Rental duration (months)"
+								name="lot_purchases.0.rental_duration"
+								type="number"
+								:editable="true"
+								:error="form.errors.get('lot_purchases.0.rental_duration') ? 'Rental duration is required' : ''">
+							</text-input>
+						</div>
+
+						<div class="field mt-10">
+					    	<image-input v-model="paymentSlip" :defaultImage="paymentSlip"
+					    				@loaded="changePaymentSlipImage"
+					    				label="payment slip"
+					    				name="payment_slip"
+					    				:required="true"
+					    				:error="form.errors.get('payment_slip')">
+					    	</image-input>
+					    </div>	
+						
+						<button type="submit" :disabled="!canSubmit" class="button is-primary is-tooltip-danger is-tooltip-right" :class="submitTooltipClass" :data-tooltip="submitTooltipText" >Submit</button>
 					</form>
+					<article class="message" v-else>
+						<div class="message-body">
+							We are currently fully occupied. Please try again later or contact our support team.
+						</div>
+					</article>
 				</div>
 
 			</div>
 
 		</transition>
 		
+		<modal :active="isViewing" @close="isViewing = false" v-if="selectedPayment">
+			<template slot="header">{{ dialogTitle }}</template>
 
+			<div class="columns">
+				<div class="column">
+					<figure class="image">
+						<img :src="selectedPayment.picture">
+					</figure>
+				</div>
+				<div class="column">
+					<text-input :defaultValue="selectedPayment.user.name"
+							:editable="false"
+							:required="false"
+							label="Paid by"
+							type="text">
+					</text-input>
+					<text-input :defaultValue="'RM' + selectedPayment.price"
+							:editable="false"
+							:required="false"
+							label="Amount payable"
+							type="text">
+					</text-input>
+					<text-input :defaultValue="selectedPayment.lots[0].rental_duration + ' months'"
+							:editable="false"
+							:required="false"
+							label="Rental duration"
+							type="text">
+					</text-input>
+					<div v-if="selectedPayment.lots[0].expired_at">
+						<text-input :defaultValue="selectedPayment.lots[0].expired_at | date"
+							:editable="false"
+							:required="false"
+							label="Expire date"
+							type="text">
+						</text-input>
+					</div>
+					
+					<div class="is-divider" data-content="Lots purchased"></div>
+
+					<table class="table is-hoverable is-fullwidth">
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th>Price</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr v-for="lot in selectedPayment.lots">
+								<td v-text="lot.name"></td>
+								<td v-text="lot.price"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+          	<template slot="footer" v-if="can_manage && !selectedPayment.status == 'true'">
+				<button class="button is-primary" :class="approveLoadingClass" @click="approve">Approve</button>
+          	</template>
+		</modal>
+		
 	</div>
 </template>
 
@@ -144,35 +250,45 @@
 	import TableView from '../components/TableView.vue';
 	import Accordion from '../components/Accordion.vue';
 	export default {
-		props: [''],
+		props: ['can_manage'],
 
 		components: { TableView, Accordion },
 
 		data() {
 			return {
 				fields: [
-					{name: 'created_at', sortField: 'created_at'},
-					{name: 'price', sortField: 'price'}	
+					{name: 'created_at', sortField: 'created_at', title: 'Purchase date', callback: 'date'},
+					{name: 'price', sortField: 'price'},
+					{name: 'status', sortField: 'status', title: 'Status', callback: 'purchaseStatusLabel'},
+					{name: 'expired_at', sortField: 'expired_at', title: 'Expire date', callback: 'date'},
+					{name: '__component:payments-actions', title: 'Actions'}
 				],
 				selectedPayment: '',
 				isPurchasing: false,
 				dialogActive: false,
 				override: false,
 				form: new Form({
-					id: '',
-					name: '',
+					payment_slip: '',
+					lot_purchases: '',
+					price: ''
 				}),
 				categories: '',
 				selectableLots: [],
+				rental_duration: '',
 				totalLots: 0,
 				totalVolume: 0,
-				totalPrice: 0,
+				subPrice: 0,
+				paymentSlip: {name: 'No file selected'},
+				hasSelectedLot: false,
+				selectedPayment: '',
+				isViewing: false,
+				submitting: false,
 			};
 		},
 
 		mounted() {
 			this.$events.on('view', data => this.view(data));
-			this.$events.on('delete', data => this.delete(data));
+
 			this.getLotCategories();
 		},
 
@@ -184,6 +300,7 @@
 
 			setLotCategories(data) {
 				this.categories = data.data;
+				this.selectableLots = [];
 				this.categories.forEach(function(category){
 					category.lots.forEach(function(lot){
 						if(lot.user_id == null)
@@ -193,47 +310,110 @@
 						}
 					}.bind(this))
 				}.bind(this));
+
+				this.isPurchasing = this.getParameterByName('new') == 'true';
 			},
 
+			getParameterByName(name, url) {
+			    if (!url) url = window.location.href;
+			    name = name.replace(/[\[\]]/g, "\\$&");
+			    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+			        results = regex.exec(url);
+			    if (!results) return null;
+			    if (!results[2]) return '';
+			    return decodeURIComponent(results[2].replace(/\+/g, " "));
+			},
 
+			view(data) {
+				this.selectedPayment = data;
+				this.isViewing = true;
+			},
+
+			approve() {
+				this.submitting = true;
+				axios.post('/payment/approve', {id: this.selectedPayment.id})
+					.then(response => this.onSuccess);
+			},
+
+			back(){
+				this.isPurchasing = false;
+			},
+
+			reset() {
+				this.selectableLots.forEach(function(lot){
+					lot.selected = false;
+				});
+				this.totalLots = 0;
+				this.totalVolume = 0;
+				this.subPrice = 0;
+				this.rental_duration = '';
+				this.hasSelectedLot = false;
+			},
 
 			submit() {
+				let selectedLots = _.filter(this.selectableLots, function(lot){ return lot.selected; });
+				this.form.lot_purchases = selectedLots.map(function(lot) {
+					let obj = {};
+					obj['id'] = lot.id;
+					obj['rental_duration'] = this.rental_duration;
+					return obj;
+				}.bind(this));
+
+				this.form.price = this.totalPrice;
+				
 				this.form.post(this.action)
 					.then(data => this.onSuccess())
 					.catch(error => this.onFail(error));
 			},
 
 			onSuccess() {
-				this.dialogActive = false;
-				this.$refs.couriers.refreshTable();
+				this.isPurchasing = false;
+				this.isViewing = false;
+				this.submitting = false;
+				this.$refs.payments.refreshTable();
 			},
 
 			onFail() {
 
 			},
 
+			changePaymentSlipImage(e) {
+				//console.log(e);
+				this.paymentSlip = { src: e.src, file: e.file };
+				this.form.payment_slip = e.file;	
+			},
+
 			toggleCheck(lot){
 				if(lot.selected){
-					this.totalVolume = parseInt(this.totalVolume + lot.volume);
-					this.totalPrice += lot.price;
+					this.totalVolume = this.totalVolume + parseInt(lot.volume);
+					this.subPrice += lot.price;
 					this.totalLots++;
 				}
 				else{
-					this.totalVolume = parseInt(this.totalVolume - lot.volume);
-					this.totalPrice -= lot.price;
+					this.totalVolume = this.totalVolume - parseInt(lot.volume);
+					this.subPrice -= lot.price;
 					this.totalLots--;
 				}
+
+				this.hasSelectedLot = _.filter(this.selectableLots, function(lot){ return lot.selected; }).length > 0;
 
 			},
 
 			availableLots(category) {
-				return _.filter(category.lots, {'user_id' : null});
+				let availableLots = [];
+				this.selectableLots.forEach(function(lot, key){
+					if(lot.category_id == category.id && lot.user_id == null)
+					{
+						availableLots.push({'lot': lot, 'index': key});
+					}
+				}.bind(category));
+				return availableLots;
 			},
 
 			modalOpen() {
 				this.form.reset();
-				this.selectedPayment = '';
-				this.dialogActive = true;
+				this.reset();
+				this.isPurchasing = true;
 			}
 		},
 
@@ -243,8 +423,53 @@
 			},
 
 			action() {
-				return "/payment/store" + action;
+				return "/payment/purchase";
 			},
+
+			totalPrice() {
+				return this.subPrice * this.rental_duration;
+			},
+
+			canSubmit() {
+				return this.hasSelectedLot && !this.form.errors.any();
+			},
+
+			canPurchase() {
+				return !this.selectableLots.length == 0;
+			},
+
+			tooltipClass() {
+				return this.canPurchase ? '' : 'tooltip';
+			},
+
+			submitTooltipClass() {
+				return this.canSubmit ? '' : 'tooltip';
+			},
+
+			submitTooltipText() {
+				let text = '';
+
+				if(!this.hasSelectedLot){
+					text = 'Please select at least one lot';
+				}
+
+				if(this.form.errors.any())
+					text = 'There are errors in the form';
+
+				return text;
+			},
+
+			dialogTitle() {
+				return 'View payment #' + this.selectedPayment.id;
+			},
+
+			approveLoadingClass() {
+				return this.submitting ? 'is-loading' : '';
+			},
+
+			mainTitle() {
+				return this.can_manage ? 'Purchases' : 'Purchase history';
+			}
 		}
 	}
 </script>

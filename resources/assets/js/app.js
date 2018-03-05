@@ -15,9 +15,11 @@ window.events = new Vue();
 
 import VueNoty from 'vuejs-noty';
 import VueEvents from 'vue-events';
+import VueAnimateNumber from 'vue-animate-number';
 
 Vue.use(VueNoty);
 Vue.use(VueEvents);
+Vue.use(VueAnimateNumber);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -47,6 +49,7 @@ Vue.component('CouriersActions', require('./actions/CouriersActions.vue'));
 Vue.component('ProductsActions', require('./actions/ProductsActions.vue'));
 Vue.component('InboundsActions', require('./actions/InboundsActions.vue'));
 Vue.component('OutboundsActions', require('./actions/OutboundsActions.vue'));
+Vue.component('PaymentsActions', require('./actions/PaymentsActions.vue'));
 
 // Pages components
 Vue.component('categories-page', require('./pages/Categories.vue'));

@@ -13,7 +13,7 @@
     @yield('css')
     
     <!-- Stylesheet -->
-    <link rel="stylesheet" href="{{ asset('css/app.css?v=1.0.1') }}">
+    <link rel="stylesheet" href="{{ asset('css/app.css?v=1.0.5') }}">
     
     <script>
         window.App = {!! json_encode([
@@ -48,7 +48,7 @@
     </footer>
     @endif
     <script src="{{ asset('js/form.js?v=1.0.3') }}"></script>
-    <script src="{{ asset('js/app.js?v=1.5.1') }}"></script>
+    <script src="{{ asset('js/app.js?v=1.6.0') }}"></script>
 
     @yield('js')
 

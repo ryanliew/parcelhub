@@ -1,25 +1,28 @@
 <template>
-	<div class="file has-name is-boxed">
-		<figure class="image is-128x128" v-if="defaultImage.src">
-			<img :src="defaultImage.src">
-		</figure>
-	  	<label class="file-label pl-5">
-		    <input class="file-input" type="file" :name="name" @change="onChange">
-		    <span class="file-cta">
-			     <span class="file-icon">
-			        <i class="fas fa-image"></i>
-			     </span>
-			     <span class="file-label" v-text="fileLabel">
-			     </span>
-		    </span>
-		    <span class="file-name" v-text="defaultImage.name || defaultImage.file.name"></span>
-	  	</label>
-	</div>
+	<div>
+		<div class="file has-name is-boxed">
+			<figure class="image is-128x128" v-if="defaultImage.src">
+				<img :src="defaultImage.src">
+			</figure>
+		  	<label class="file-label pl-5">
+			    <input class="file-input" type="file" :name="name" @change="onChange">
+			    <span class="file-cta">
+				     <span class="file-icon">
+				        <i class="fa fa-image"></i>
+				     </span>
+				     <p v-html="fileLabel">
+				     </p>
+			    </span>
+			    <span class="file-name" v-text="defaultImage.name || defaultImage.file.name"></span>
+		  	</label>
+		</div>
+	  	<span class="help is-danger" v-if="error" v-text="error"></span>
+	 </div>
 </template>
 
 <script>
 	export default {
-		props: ['label', 'name', 'required', 'defaultImage'],
+		props: ['label', 'name', 'required', 'defaultImage', 'error'],
 		data() {
 			return {
 				
@@ -49,7 +52,13 @@
 			},
 
 			fileLabel() {
-				return ( this.defaultImage.src ? 'Change ' : 'Upload ' ) + this.label;
+				let text = ( this.defaultImage.src ? 'Change ' : 'Upload ' ) + this.label;
+
+				if(this.required) {
+				    text += '<span class="is-danger">*</span>';
+				}
+
+				return text;
 			}
 		}	
 	}
