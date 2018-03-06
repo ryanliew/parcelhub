@@ -8,7 +8,7 @@
 					@include('components.side-menu')
 				</div>
 				<div class="column">
-					<outbounds-page :can_manage="{{ auth()->user()->hasRole('admin') }}"></outbounds-page>
+					<outbounds-page can_manage="{{ auth()->user()->hasRole('admin') }}"></outbounds-page>
 				</div>	
 			</div>
 		</section>

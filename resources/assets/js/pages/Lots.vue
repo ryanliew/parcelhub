@@ -8,7 +8,7 @@
 							Lots
 						</div>
 					</div>
-					<div class="level-right">
+					<div class="level-right" v-if="can_manage">
 						<div class="level-item">
 							<button class="button is-primary" @click="modalOpen()">
 								<i class="fa fa-plus-circle"></i>
@@ -25,6 +25,7 @@
 							:searchables="searchables"
 							:detail="detailRow">	
 				</table-view>
+				<p class="has-text-grey is-italic">Click on the lot to view products in the lot currently</p>
 			</div>
 		</div>
 
@@ -134,7 +135,7 @@
 	import TableView from '../components/TableView.vue';
 
 	export default {
-		props: [''],
+		props: ['can_manage'],
 
 		components: { TableView },
 
@@ -143,15 +144,6 @@
 				categories: [],
 				categoriesOptions: [],
 				lots: '',
-				fields: [
-					{name: 'name', sortField: 'name'},
-					{name: 'left_volume', sortField: 'left_volume', title: 'Volume left (cm³)'},
-					{name: 'category_name', sortField: 'category_name', title: 'Category'},
-					{name: 'volume', sortField: 'volume', title: 'Volume (cm³)'},
-					{name: 'price', sortField: 'price', title: 'Price (RM)'},
-					{name: 'user_name', sortField: 'user_name', title: 'Customer'},
-					{name: '__component:lots-actions', title: 'Actions'}	
-				],
 				detailRow: 'LotDetailRow',
 				searchables: "users.name,lots.name,categories.name,lots.volume",
 				selectedLot: '',
@@ -300,6 +292,30 @@
 			action() {
 				let action = this.selectedLot ? "update" : "store";
 				return "/lot/" + action;
+			},
+
+			fields() {
+				let displayFields = [
+					{name: 'name', sortField: 'name'},
+					
+					{name: 'category_name', sortField: 'category_name', title: 'Category'},
+					{name: 'volume', sortField: 'volume', title: 'Volume (cm³)'},
+					{name: 'price', sortField: 'price', title: 'Price (RM)'},
+					{name: 'expired_at', sortField: 'expired_at', title: 'Rental expire', callback: 'date'}
+					
+				];
+
+				if(this.can_manage)
+				{
+					displayFields.push({name: 'user_name', sortField: 'user_name', title: 'Customer'});
+					displayFields.push({name: '__component:lots-actions', title: 'Actions'});
+				}
+				else
+				{
+					displayFields.push({name: 'left_volume', sortField: 'left_volume', title: 'Volume left (cm³)'});
+					displayFields.push({name: 'lot_status', sortField: 'lot_status', title: 'Rental status', callback: 'purchaseStatusLabel'});
+				}
+				return displayFields;
 			}
 		}
 	}

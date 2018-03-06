@@ -29,7 +29,7 @@ class OutboundController extends Controller
     {
         if(request()->wantsJson()) {
             $user = auth()->user();
-            if(\Entrust::hasRole('admin'))
+            if($user->hasRole('admin'))
                 return Controller::VueTableListResult( Outbound::select('outbounds.id as id',
                                                                     'amount_insured',
                                                                     'process_status',
