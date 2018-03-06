@@ -11,7 +11,7 @@
 					<div class="level-right">
 						<div class="level-item">
 							<button class="button is-primary" @click="back()">
-								<i class="fa fa-arrow-alt-circle-left"></i>
+								<i class="fa fa-arrow-circle-left"></i>
 								<span class="pl-5">Back to list</span>
 							</button>
 						</div>
@@ -49,11 +49,11 @@
 							<div class="column is-one-third has-text-centered">
 								<p class="heading">Stocks available</p>
 								<p class="title" v-text="product.total"></p>
-								<p class="heading">Height</p>
+								<p class="heading">Height(cm)</p>
 								<p class="title" v-text="product.height"></p>
-								<p class="heading">Width</p>
+								<p class="heading">Width(cm)</p>
 								<p class="title" v-text="product.width"></p>
-								<p class="heading">Length</p>
+								<p class="heading">Length(cm)</p>
 								<p class="title" v-text="product.length"></p>
 							</div>
 						</div>

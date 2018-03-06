@@ -17,6 +17,16 @@ class LotController extends Controller
     ];
 
     /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
+    /**
      * Display the Vue page for lots
      * @return \Illuminate\Http\Response
      */
@@ -32,13 +42,16 @@ class LotController extends Controller
      */
     public function index()
     {
-        if(\Entrust::hasRole('admin')) {
-            if(request()->wantsJson() )
-            {
+        $user = auth()->user();
+        
+        if(request()->wantsJson() )
+        {
+            if($user->hasRole('admin')) {
                 return Controller::VueTableListResult(
                     Lot::with(['products'])
                         ->select('lots.id as id', 
                                 'lots.name as name', 
+                                'lots.status as lot_status',
                                 'lots.left_volume as left_volume',
                                 'categories.name as category_name', 
                                 'categories.id as category_id',
@@ -46,18 +59,38 @@ class LotController extends Controller
                                 'lots.volume as volume', 
                                 'lots.price as price',
                                 'users.name as user_name',
+                                'lots.expired_at as expired_at',
                                 'users.id as user_id')
                         ->join('categories', 'categories.id', '=', 'category_id')
                         ->leftJoin('users', 'users.id', '=', 'user_id')
                     );
             }
-
-            $categories = category::where('status', 'true')->get();
-            
-            $lots = lot::where('status', 'true')->get();
-
-            return view('lot.admin')->with(compact('categories', 'lots'));
+            else {
+                return Controller::VueTableListResult(
+                    $user->lots()->with(['products'])
+                                ->select('lots.id as id', 
+                                        'lots.name as name',
+                                        'lots.status as lot_status',
+                                        'lots.left_volume as left_volume',
+                                        'categories.name as category_name', 
+                                        'categories.id as category_id',
+                                        'categories.volume as category_volume',
+                                        'lots.volume as volume', 
+                                        'lots.price as price',
+                                        'users.name as user_name',
+                                        'lots.expired_at as expired_at',
+                                        'users.id as user_id')
+                                ->join('categories', 'categories.id', '=', 'category_id')
+                                ->leftJoin('users', 'users.id', '=', 'user_id')
+                    );
+            }
         }
+
+        $categories = category::where('status', 'true')->get();
+        
+        $lots = lot::where('status', 'true')->get();
+
+        return view('lot.admin')->with(compact('categories', 'lots'));
     }
 
     /**
@@ -187,6 +220,7 @@ class LotController extends Controller
         }
 
         $lot->user_id = $request->user_id;
+        $lot->status = 'true';
         $lot->save();
 
         return ['message' => 'Lot reassigned successfully.'];

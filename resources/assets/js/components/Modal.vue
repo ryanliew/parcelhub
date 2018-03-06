@@ -2,17 +2,25 @@
 	<transition name="fade">
 		<div class="modal is-active" v-if="active">
 		  	<div class="modal-background" @click="close"></div>
-		  	<div class="modal-card">
-		    	<header class="modal-card-head">
-		      		<p class="modal-card-title"><slot name="header"></slot></p>
-		      		<button class="delete" aria-label="close" @click="close"></button>
-		    	</header>
-		    	<section class="modal-card-body">
+		  	<div class="modal-content">
+		  		<div class="box">
+		  			<div class="level">
+		  				<div class="level-left">
+		  					<p class="modal-card-title"><slot name="header"></slot></p>
+		  				</div>
+		  				<div class="level-right">
+		  					<button class="delete" aria-label="close" @click="close"></button>
+		  				</div>
+		  			</div>
+				
+					<hr>
+
 		    		<slot></slot>
-		    	</section>
-		    	<footer class="modal-card-foot">
+
+		    		<hr>
+
 		      		<slot name="footer"></slot>
-		    	</footer>
+		      	</div>
 		  	</div>
 		</div>
 	</transition>

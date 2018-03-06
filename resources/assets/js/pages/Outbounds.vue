@@ -10,7 +10,7 @@
 								Outbound orders
 							</div>
 						</div>
-						<div class="level-right">
+						<div class="level-right" v-if="!can_manage">
 							<div class="level-item">
 								<button class="button is-primary" @click="modalOpen()">
 									<i class="fa fa-plus-circle"></i>

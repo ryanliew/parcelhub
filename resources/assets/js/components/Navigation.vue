@@ -19,7 +19,8 @@
 			  			<!-- Todo Search component here -->
 			  		</div>
 			  		<div class="navbar-end">
-			  			<a class="navbar-item" href="/lots">Admin panel</a>
+			  			<a class="navbar-item" href="/">Home</a>
+			  			<a class="navbar-item" href="/lots" v-text="panelTitle"></a>
 			  			<a class="navbar-item" @click="logout">Logout</a>
 			  		</div>
 			  	</div>
@@ -30,7 +31,7 @@
 
 <script>
 	export default {
-		props: ['current', 'title'],
+		props: ['current', 'title', 'can_manage'],
 		data() {
 			return {
 
@@ -46,6 +47,16 @@
 			redirect(response){
 				window.location.href = '/login';
 			}
-		}	
+		},
+
+		computed: {
+			panelTitle() {
+				if(this.can_manage)
+				{
+					return 'Admin Panel';
+				}
+				return 'My Account';
+			}
+		}
 	}
 </script>

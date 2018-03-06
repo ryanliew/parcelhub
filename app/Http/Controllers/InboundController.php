@@ -15,6 +15,17 @@ class InboundController extends Controller
         'total_carton' => 'required',
         'products'  => 'required'
     ];
+
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Return the view which contains the vue page for product
      * @return \Illuminate\Http\Response
@@ -32,7 +43,11 @@ class InboundController extends Controller
     {
         if(request()->wantsJson())
         {
-            return Controller::VueTableListResult(auth()->user()->inbounds()->with('products', 'products_with_lots.lots'));
+            $user = auth()->user();
+            if($user->hasRole('admin'))
+                 return Controller::VueTableListResult(Inbound::with('products', 'products_with_lots.lots'));
+            else
+                return Controller::VueTableListResult(auth()->user()->inbounds()->with('products', 'products_with_lots.lots'));
         }
         $inbounds = inbound::where('status', 'true')->get();
         $products = product::where('user_id', auth()->user()->id)->where('status', 'true')->get();

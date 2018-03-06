@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<section class="hero is-primary is-fullheight">
+<section class="hero is-light is-fullheight">
     <div class="hero-body">
         <div class="container">
             <div class="column is-4 is-offset-4">
@@ -65,9 +65,21 @@
                             </text-input>
                         </div>
 
-                         <div class="field">
+                        <div class="field">
                             <div class="has-text-centered">
                                 <button type="submit" class="button is-primary">Register</button>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="has-text-centered">
+                                <a href="{{ route('auth.social.redirect', ['provider' => 'facebook']) }}" class="button is-facebook">
+                                    <i class="fa fa-facebook"></i>
+                                    <span class="pl-5">Facebook Register</span>
+                                </a>
+                                <a href="{{ route('auth.social.redirect', ['provider' => 'google']) }}" class="button is-google-plus">
+                                    <i class="fa fa-google"></i> 
+                                    <span class="pl-5">Google+ Register</span>
+                                </a>
                             </div>
                         </div>
                         <div class="has-text-centered">

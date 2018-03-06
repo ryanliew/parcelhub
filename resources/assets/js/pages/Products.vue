@@ -26,6 +26,7 @@
 								:searchables="searchables"
 								:detail="detailRow">
 					</table-view>
+					<p class="has-text-grey is-italic">Click on the product row to view current placed lots</p>
 				</div>
 			</div>
 			<product :product="selectedProduct" v-else

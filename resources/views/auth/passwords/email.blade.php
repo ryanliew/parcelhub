@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<section class="hero is-primary is-fullheight">
+<section class="hero is-light is-fullheight">
     <div class="hero-body">
         <div class="container">
             <div class="column is-4 is-offset-4">

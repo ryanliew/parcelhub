@@ -8,7 +8,7 @@
 					@include('components.side-menu')
 				</div>
 				<div class="column">
-					<inbounds-page :can_manage="true"></inbounds-page>
+					<inbounds-page can_manage="{{ auth()->user()->hasRole('admin') }}"></inbounds-page>
 				</div>	
 			</div>
 		</section>

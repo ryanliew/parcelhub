@@ -49128,9 +49128,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-	props: ['current', 'title'],
+	props: ['current', 'title', 'can_manage'],
 	data: function data() {
 		return {};
 	},
@@ -49142,6 +49143,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		},
 		redirect: function redirect(response) {
 			window.location.href = '/login';
+		}
+	},
+
+	computed: {
+		panelTitle: function panelTitle() {
+			if (this.can_manage) {
+				return 'Admin Panel';
+			}
+			return 'My Account';
 		}
 	}
 });
@@ -49177,11 +49187,15 @@ var render = function() {
             _c("div", { staticClass: "navbar-start" }),
             _vm._v(" "),
             _c("div", { staticClass: "navbar-end" }, [
-              _c(
-                "a",
-                { staticClass: "navbar-item", attrs: { href: "/lots" } },
-                [_vm._v("Admin panel")]
-              ),
+              _c("a", { staticClass: "navbar-item", attrs: { href: "/" } }, [
+                _vm._v("Home")
+              ]),
+              _vm._v(" "),
+              _c("a", {
+                staticClass: "navbar-item",
+                attrs: { href: "/lots" },
+                domProps: { textContent: _vm._s(_vm.panelTitle) }
+              }),
               _vm._v(" "),
               _c(
                 "a",
@@ -49291,6 +49305,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	props: ['active'],
@@ -49322,33 +49344,38 @@ var render = function() {
             on: { click: _vm.close }
           }),
           _vm._v(" "),
-          _c("div", { staticClass: "modal-card" }, [
-            _c("header", { staticClass: "modal-card-head" }, [
-              _c(
-                "p",
-                { staticClass: "modal-card-title" },
-                [_vm._t("header")],
-                2
-              ),
-              _vm._v(" "),
-              _c("button", {
-                staticClass: "delete",
-                attrs: { "aria-label": "close" },
-                on: { click: _vm.close }
-              })
-            ]),
-            _vm._v(" "),
+          _c("div", { staticClass: "modal-content" }, [
             _c(
-              "section",
-              { staticClass: "modal-card-body" },
-              [_vm._t("default")],
-              2
-            ),
-            _vm._v(" "),
-            _c(
-              "footer",
-              { staticClass: "modal-card-foot" },
-              [_vm._t("footer")],
+              "div",
+              { staticClass: "box" },
+              [
+                _c("div", { staticClass: "level" }, [
+                  _c("div", { staticClass: "level-left" }, [
+                    _c(
+                      "p",
+                      { staticClass: "modal-card-title" },
+                      [_vm._t("header")],
+                      2
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "level-right" }, [
+                    _c("button", {
+                      staticClass: "delete",
+                      attrs: { "aria-label": "close" },
+                      on: { click: _vm.close }
+                    })
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("hr"),
+                _vm._v(" "),
+                _vm._t("default"),
+                _vm._v(" "),
+                _c("hr"),
+                _vm._v(" "),
+                _vm._t("footer")
+              ],
               2
             )
           ])
@@ -56795,11 +56822,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-	props: [''],
+	props: ['can_manage'],
 
 	components: { TableView: __WEBPACK_IMPORTED_MODULE_0__components_TableView_vue___default.a },
 
@@ -56808,7 +56836,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			categories: [],
 			categoriesOptions: [],
 			lots: '',
-			fields: [{ name: 'name', sortField: 'name' }, { name: 'left_volume', sortField: 'left_volume', title: 'Volume left (cm³)' }, { name: 'category_name', sortField: 'category_name', title: 'Category' }, { name: 'volume', sortField: 'volume', title: 'Volume (cm³)' }, { name: 'price', sortField: 'price', title: 'Price (RM)' }, { name: 'user_name', sortField: 'user_name', title: 'Customer' }, { name: '__component:lots-actions', title: 'Actions' }],
 			detailRow: 'LotDetailRow',
 			searchables: "users.name,lots.name,categories.name,lots.volume",
 			selectedLot: '',
@@ -56957,6 +56984,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		action: function action() {
 			var action = this.selectedLot ? "update" : "store";
 			return "/lot/" + action;
+		},
+		fields: function fields() {
+			var displayFields = [{ name: 'name', sortField: 'name' }, { name: 'category_name', sortField: 'category_name', title: 'Category' }, { name: 'volume', sortField: 'volume', title: 'Volume (cm³)' }, { name: 'price', sortField: 'price', title: 'Price (RM)' }, { name: 'expired_at', sortField: 'expired_at', title: 'Rental expire', callback: 'date' }];
+
+			if (this.can_manage) {
+				displayFields.push({ name: 'user_name', sortField: 'user_name', title: 'Customer' });
+				displayFields.push({ name: '__component:lots-actions', title: 'Actions' });
+			} else {
+				displayFields.push({ name: 'left_volume', sortField: 'left_volume', title: 'Volume left (cm³)' });
+				displayFields.push({ name: 'lot_status', sortField: 'lot_status', title: 'Rental status', callback: 'purchaseStatusLabel' });
+			}
+			return displayFields;
 		}
 	}
 });
@@ -56977,28 +57016,30 @@ var render = function() {
           _c("div", { staticClass: "card-header-title level" }, [
             _vm._m(0),
             _vm._v(" "),
-            _c("div", { staticClass: "level-right" }, [
-              _c("div", { staticClass: "level-item" }, [
-                _c(
-                  "button",
-                  {
-                    staticClass: "button is-primary",
-                    on: {
-                      click: function($event) {
-                        _vm.modalOpen()
-                      }
-                    }
-                  },
-                  [
-                    _c("i", { staticClass: "fa fa-plus-circle" }),
-                    _vm._v(" "),
-                    _c("span", { staticClass: "pl-5" }, [
-                      _vm._v("Create new lot")
-                    ])
-                  ]
-                )
-              ])
-            ])
+            _vm.can_manage
+              ? _c("div", { staticClass: "level-right" }, [
+                  _c("div", { staticClass: "level-item" }, [
+                    _c(
+                      "button",
+                      {
+                        staticClass: "button is-primary",
+                        on: {
+                          click: function($event) {
+                            _vm.modalOpen()
+                          }
+                        }
+                      },
+                      [
+                        _c("i", { staticClass: "fa fa-plus-circle" }),
+                        _vm._v(" "),
+                        _c("span", { staticClass: "pl-5" }, [
+                          _vm._v("Create new lot")
+                        ])
+                      ]
+                    )
+                  ])
+                ])
+              : _vm._e()
           ])
         ]),
         _vm._v(" "),
@@ -57014,7 +57055,11 @@ var render = function() {
                 searchables: _vm.searchables,
                 detail: _vm.detailRow
               }
-            })
+            }),
+            _vm._v(" "),
+            _c("p", { staticClass: "has-text-grey is-italic" }, [
+              _vm._v("Click on the lot to view products in the lot currently")
+            ])
           ],
           1
         )
@@ -57918,6 +57963,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 
 
@@ -58224,7 +58270,7 @@ var render = function() {
                   }
                 },
                 [
-                  _c("i", { staticClass: "fa fa-arrow-alt-circle-left" }),
+                  _c("i", { staticClass: "fa fa-arrow-circle-left" }),
                   _vm._v(" "),
                   _c("span", { staticClass: "pl-5" }, [_vm._v("Back to list")])
                 ]
@@ -58304,21 +58350,21 @@ var render = function() {
                     domProps: { textContent: _vm._s(_vm.product.total) }
                   }),
                   _vm._v(" "),
-                  _c("p", { staticClass: "heading" }, [_vm._v("Height")]),
+                  _c("p", { staticClass: "heading" }, [_vm._v("Height(cm)")]),
                   _vm._v(" "),
                   _c("p", {
                     staticClass: "title",
                     domProps: { textContent: _vm._s(_vm.product.height) }
                   }),
                   _vm._v(" "),
-                  _c("p", { staticClass: "heading" }, [_vm._v("Width")]),
+                  _c("p", { staticClass: "heading" }, [_vm._v("Width(cm)")]),
                   _vm._v(" "),
                   _c("p", {
                     staticClass: "title",
                     domProps: { textContent: _vm._s(_vm.product.width) }
                   }),
                   _vm._v(" "),
-                  _c("p", { staticClass: "heading" }, [_vm._v("Length")]),
+                  _c("p", { staticClass: "heading" }, [_vm._v("Length(cm)")]),
                   _vm._v(" "),
                   _c("p", {
                     staticClass: "title",
@@ -58550,7 +58596,13 @@ var render = function() {
                         searchables: _vm.searchables,
                         detail: _vm.detailRow
                       }
-                    })
+                    }),
+                    _vm._v(" "),
+                    _c("p", { staticClass: "has-text-grey is-italic" }, [
+                      _vm._v(
+                        "Click on the product row to view current placed lots"
+                      )
+                    ])
                   ],
                   1
                 )
@@ -59842,28 +59894,30 @@ var render = function() {
                       ])
                     ]),
                     _vm._v(" "),
-                    _c("div", { staticClass: "level-right" }, [
-                      _c("div", { staticClass: "level-item" }, [
-                        _c(
-                          "button",
-                          {
-                            staticClass: "button is-primary",
-                            on: {
-                              click: function($event) {
-                                _vm.modalOpen()
-                              }
-                            }
-                          },
-                          [
-                            _c("i", { staticClass: "fa fa-plus-circle" }),
-                            _vm._v(" "),
-                            _c("span", { staticClass: "pl-5" }, [
-                              _vm._v("Create new inbound order")
-                            ])
-                          ]
-                        )
-                      ])
-                    ])
+                    !_vm.can_manage
+                      ? _c("div", { staticClass: "level-right" }, [
+                          _c("div", { staticClass: "level-item" }, [
+                            _c(
+                              "button",
+                              {
+                                staticClass: "button is-primary",
+                                on: {
+                                  click: function($event) {
+                                    _vm.modalOpen()
+                                  }
+                                }
+                              },
+                              [
+                                _c("i", { staticClass: "fa fa-plus-circle" }),
+                                _vm._v(" "),
+                                _c("span", { staticClass: "pl-5" }, [
+                                  _vm._v("Create new inbound order")
+                                ])
+                              ]
+                            )
+                          ])
+                        ])
+                      : _vm._e()
                   ])
                 ]),
                 _vm._v(" "),
@@ -61362,28 +61416,30 @@ var render = function() {
                       ])
                     ]),
                     _vm._v(" "),
-                    _c("div", { staticClass: "level-right" }, [
-                      _c("div", { staticClass: "level-item" }, [
-                        _c(
-                          "button",
-                          {
-                            staticClass: "button is-primary",
-                            on: {
-                              click: function($event) {
-                                _vm.modalOpen()
-                              }
-                            }
-                          },
-                          [
-                            _c("i", { staticClass: "fa fa-plus-circle" }),
-                            _vm._v(" "),
-                            _c("span", { staticClass: "pl-5" }, [
-                              _vm._v("Create new outbound order")
-                            ])
-                          ]
-                        )
-                      ])
-                    ])
+                    !_vm.can_manage
+                      ? _c("div", { staticClass: "level-right" }, [
+                          _c("div", { staticClass: "level-item" }, [
+                            _c(
+                              "button",
+                              {
+                                staticClass: "button is-primary",
+                                on: {
+                                  click: function($event) {
+                                    _vm.modalOpen()
+                                  }
+                                }
+                              },
+                              [
+                                _c("i", { staticClass: "fa fa-plus-circle" }),
+                                _vm._v(" "),
+                                _c("span", { staticClass: "pl-5" }, [
+                                  _vm._v("Create new outbound order")
+                                ])
+                              ]
+                            )
+                          ])
+                        ])
+                      : _vm._e()
                   ])
                 ]),
                 _vm._v(" "),
