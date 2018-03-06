@@ -47,12 +47,26 @@
                                             <td valign="middle" width="14%" style="font-family: Helvetica, Arial, sans-serif, 'Open Sans'; font-weight: 600;">
                                                 <a href="#pricing" style="text-decoration: none; color: #191919;">PRICING</a>
                                             </td>
-                                            <td valign="middle" width="14%" style="font-family: Helvetica, Arial, sans-serif, 'Open Sans'; font-weight: 600;">
-                                                <a href="{{ url('/register') }}" style="text-decoration: none; color: #191919;">REGISTER</a>
-                                            </td>
-                                            <td valign="middle" width="14%" style="font-family: Helvetica, Arial, sans-serif, 'Open Sans'; font-weight: 600;">
-                                                <a href="{{ url('/login') }}" style="text-decoration: none; color: #191919;">LOGIN</a>
-                                            </td>
+                                            @if(auth()->check())
+                                                <td valign="middle" width="14%" style="font-family: Helvetica, Arial, sans-serif, 'Open Sans'; font-weight: 600;">
+                                                    <a href="{{ url('/lots') }}" style="text-decoration: none; color: #191919;">
+                                                        @role('admin')
+                                                            ADMIN PANEL
+                                                        @endrole
+                                                        @role('user')
+                                                            MY ACCOUNT
+                                                        @endrole
+                                                    </a>
+                                                </td>
+                                            @else
+                                                <td valign="middle" width="14%" style="font-family: Helvetica, Arial, sans-serif, 'Open Sans'; font-weight: 600;">
+                                                    <a href="{{ url('/register') }}" style="text-decoration: none; color: #191919;">REGISTER</a>
+                                                </td>
+                                                <td valign="middle" width="14%" style="font-family: Helvetica, Arial, sans-serif, 'Open Sans'; font-weight: 600;">
+                                                    <a href="{{ url('/login') }}" style="text-decoration: none; color: #191919;">LOGIN</a>
+                                                </td>
+                                            @endif
+                                            
                                         </tr>
                                     </tbody></table>
                                                                     
