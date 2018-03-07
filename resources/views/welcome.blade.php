@@ -10,7 +10,7 @@
 <title>ParcelHub</title>
 </head>
 <body style='margin: 0; padding: 0;'>
-<table width="100%" border="0" cellpadding="0" cellspacing="0" align="center" class="full">
+<table width="100%" border="0" cellpadding="0" cellspacing="0" align="center" class="full header" style="position:fixed; top:0px;">
     <tbody><tr>
         <td width="100%" valign="top" align="center" bgcolor="#ffffff">
         
@@ -30,16 +30,16 @@
                                     <table width="150" border="0" cellpadding="0" cellspacing="0" align="left" class="fullCenter" style="text-align: left;">
                                         <tbody><tr>
                                             <td height="65" valign="middle" width="100%" class="fullCenter">
-                                                <a href="#"><img width="113" src="images/logo.png" alt="" border="0"></a>
+                                                <a href="#home"><img width="113" src="images/logo.png" alt="" border="0"></a>
                                             </td>
                                         </tr>
                                     </tbody></table>
                                     
                                     <!-- Nav --> 
-                                    <table width="800" border="0" cellpadding="0" cellspacing="0" align="right" style="text-align: right; font-size: 13px; letter-spacing: 1px;" class="fullCenter">    
+                                    <table id="menu-list" width="800" border="0" cellpadding="0" cellspacing="0" align="right" style="text-align: right; font-size: 13px; letter-spacing: 1px;" class="fullCenter">    
                                         <tbody><tr>
                                             <td height="65" valign="middle" width="14%" style="font-family: Helvetica, Arial, sans-serif, 'Open Sans'; font-weight: 600;">
-                                                <a href="#" style="text-decoration: none; color: #191919;">HOME</a>
+                                                <a href="#home" class="active" style="text-decoration: none; color: #191919;">HOME</a>
                                             </td>
                                             <td valign="middle" width="14%" style="font-family: Helvetica, Arial, sans-serif, 'Open Sans'; font-weight: 600;">
                                                 <a href="#service" style="text-decoration: none; color: #191919;">SERVICE</a>
@@ -82,7 +82,7 @@
     </tr>
 </table>
 
-<table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0" align="center" class="full">
+<table id="home" width="100%" height="100%" border="0" cellpadding="0" cellspacing="0" align="center" class="full">
     <tbody><tr>
         <td align="center" bgcolor="#303030" style="background-image: url('images/home-1.jpg'); background-position: center center; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-attachment: fixed; background-size: cover; background-size: 100% auto;" id="animation" class="headerBG">
         <!--[if gte mso 9]> <v:rect xmlns:v="urn:schemas-microsoft-com:vml" fill="true" stroke="false" style="mso-width-percent:1000;"><v:fill type="tile" src="images/header_bg2.jpg"/><v:textbox style="mso-fit-shape-to-text:true" inset="0,0,0,0"><![endif]--><div>
@@ -925,4 +925,46 @@ $(document).ready(function(){
     } // End if
   });
 });
+
+$(document).ready(function () {
+    $(document).on("scroll", onScroll);
+    
+    //smoothscroll
+    $('a[href^="#"]').on('click', function (e) {
+        e.preventDefault();
+        $(document).off("scroll");
+        
+        $('a').each(function () {
+            $(this).removeClass('active');
+        })
+        $(this).addClass('active');
+      
+        var target = this.hash,
+            menu = target;
+        $target = $(target);
+        $('html, body').stop().animate({
+            'scrollTop': $target.offset().top+2
+        }, 500, 'swing', function () {
+            window.location.hash = target;
+            $(document).on("scroll", onScroll);
+        });
+    });
+});
+
+function onScroll(event){
+    var scrollPos = $(document).scrollTop();
+    $('#menu-list a[href^="#"').each(function () {
+        var currLink = $(this);
+        var refElement = $(currLink.attr("href"));
+        if (refElement.position().top <= scrollPos && refElement.position().top + refElement.height() > scrollPos) {
+            $('#menu-list tbody tr td a').removeClass("active");
+            currLink.addClass("active");
+        }
+        else{
+            currLink.removeClass("active");
+        }
+    });
+}
+
+
 </script>
