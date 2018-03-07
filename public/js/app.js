@@ -62310,7 +62310,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 		var _ref;
 
 		return _ref = {
-			fields: [{ name: 'created_at', sortField: 'created_at', title: 'Purchase date', callback: 'date' }, { name: 'price', sortField: 'price' }, { name: 'status', sortField: 'status', title: 'Status', callback: 'purchaseStatusLabel' }, { name: 'user_name', sortField: 'user_name', title: 'Made by' }, { name: '__component:payments-actions', title: 'Actions' }],
 			selectedPayment: '',
 			isPurchasing: false,
 			dialogActive: false,
@@ -62528,6 +62527,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 		return this.submitting ? 'is-loading' : '';
 	}), _defineProperty(_computed, 'mainTitle', function mainTitle() {
 		return this.can_manage ? 'Purchases' : 'Purchase history';
+	}), _defineProperty(_computed, 'fields', function fields() {
+		var displayFields = [{ name: 'user.name', title: 'Made by' }, { name: 'created_at', sortField: 'created_at', title: 'Purchase date', callback: 'date' }, { name: 'price', sortField: 'price' }, { name: 'status', sortField: 'status', title: 'Status', callback: 'purchaseStatusLabel' }, { name: '__component:payments-actions', title: 'Actions' }];
+
+		if (!this.can_manage) {
+			displayFields = _.drop(displayFields);
+		}
+
+		return displayFields;
 	}), _computed)
 });
 

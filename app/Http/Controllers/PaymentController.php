@@ -15,24 +15,9 @@ class PaymentController extends Controller
     public function page()
     {
         if(request()->wantsJson()) {
-            if(auth()->user()->hasRole('admin')) {
-                return Controller::VueTableListResult(Payment::with('lots')
-                                                            ->select('payments.created_at as created_at',
-                                                                    'payments.price as price',
-                                                                    'payments.status as status',
-                                                                    'users.name as user_name',
-                                                                    'payments.picture as picture'
-                                                                )
-                                                             ->leftJoin('users', 'user_id', '=', 'users.id'));
-            }
-            return Controller::VueTableListResult(auth()->user()->payments()->with('lots')
-                                                                            ->select('payments.created_at as created_at',
-                                                                                    'payments.price as price',
-                                                                                    'payments.status as status',
-                                                                                    'users.name as user_name',
-                                                                                    'payments.picture as picture'
-                                                                                )
-                                                                             ->leftJoin('users', 'user_id', '=', 'users.id'));
+            if(auth()->user()->hasRole('admin'))
+                return Controller::VueTableListResult(Payment::with('user')->with('lots'));
+            return Controller::VueTableListResult(auth()->user()->payments()->with('user')->with('lots'));
         }
 
         return view("payment.page");
@@ -46,14 +31,7 @@ class PaymentController extends Controller
     public function index()
     {
         if(request()->wantsJson()) {
-            return Controller::VueTableListResult(Payment::with('lots')
-                                                        ->select('payments.created_at as created_at',
-                                                                'payments.price as price',
-                                                                'payments.status as status',
-                                                                'users.name as user_name',
-                                                                'payments.picture as picture'
-                                                            )
-                                                         ->leftJoin('users', 'user_id', '=', 'users.id'));
+            return Controller::VueTableListResult(Payment::with('user')->with('lots'));
         }
 
         if(\Entrust::hasRole('admin')) {
@@ -201,6 +179,6 @@ class PaymentController extends Controller
             }
         //}
 
-        return ['message' => 'Payment approved'];
+        return response()->json(['message' => 'Payment approved']);
     }
 }

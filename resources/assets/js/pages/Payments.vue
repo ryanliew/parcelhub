@@ -285,13 +285,6 @@
 
 		data() {
 			return {
-				fields: [
-					{name: 'created_at', sortField: 'created_at', title: 'Purchase date', callback: 'date'},
-					{name: 'price', sortField: 'price'},
-					{name: 'status', sortField: 'status', title: 'Status', callback: 'purchaseStatusLabel'},
-					{name: 'user_name', sortField: 'user_name', title: 'Made by'},
-					{name: '__component:payments-actions', title: 'Actions'}
-				],
 				selectedPayment: '',
 				isPurchasing: false,
 				dialogActive: false,
@@ -525,6 +518,23 @@
 
 			mainTitle() {
 				return this.can_manage ? 'Purchases' : 'Purchase history';
+			},
+
+			fields() {
+				let displayFields = [
+					{name: 'user.name', title: 'Made by'},
+					{name: 'created_at', sortField: 'created_at', title: 'Purchase date', callback: 'date'},
+					{name: 'price', sortField: 'price'},
+					{name: 'status', sortField: 'status', title: 'Status', callback: 'purchaseStatusLabel'},
+					{name: '__component:payments-actions', title: 'Actions'}
+				];
+
+				if(!this.can_manage)
+				{
+					displayFields = _.drop(displayFields);
+				}
+
+				return displayFields;
 			}
 		}
 	}
