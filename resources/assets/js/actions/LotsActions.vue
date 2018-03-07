@@ -14,7 +14,7 @@
                     <span class="icon">
                         <i class="fa fa-user"></i>
                     </span>
-                    <span>Assign</span>
+                    <span>Manage owner</span>
                 </button>
             </div>
         </div>

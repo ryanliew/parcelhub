@@ -221,8 +221,30 @@ class LotController extends Controller
 
         $lot->user_id = $request->user_id;
         $lot->status = 'true';
+        $lot->expired_at = null;
         $lot->save();
 
         return ['message' => 'Lot reassigned successfully.'];
+    }
+
+    /**
+     * Remove the owner from the specified lot
+     * @param  Lot    $lot 
+     * @return \Illuminate\Http\Response
+     */
+    public function unassign(Request $request, Lot $lot)
+    {
+        if( $lot->user_id !== $request->user_id
+            && $lot->products()->count() > 0 )
+        {
+            return response(json_encode(array('user_id' => ['There are still products of the previous user, unassignment is not allowed.'])), 422);
+        }
+
+        $lot->user()->dissociate();
+        $lot->expired_at = null;
+        $lot->status = 'false';
+        $lot->save();
+
+        return ['message' => 'Lot unassigned successfully.'];
     }
 }

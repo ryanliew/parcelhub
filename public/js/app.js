@@ -55477,7 +55477,7 @@ var render = function() {
               }
             }
           },
-          [_vm._m(1), _vm._v(" "), _c("span", [_vm._v("Assign")])]
+          [_vm._m(1), _vm._v(" "), _c("span", [_vm._v("Manage owner")])]
         )
       ])
     ])
@@ -56823,6 +56823,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 
 
@@ -56924,6 +56925,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 				return _this5.onSuccess();
 			}).catch(function (error) {
 				return _this5.onFail(error);
+			});
+		},
+		unassignOwner: function unassignOwner() {
+			var _this6 = this;
+
+			this.ownerForm.post('/lot/unassign/' + this.selectedLot.id).then(function (data) {
+				return _this6.onSuccess();
+			}).catch(function (error) {
+				return _this6.onFail(error);
 			});
 		},
 		onSuccess: function onSuccess() {
@@ -57163,30 +57173,6 @@ var render = function() {
                 1
               ),
               _vm._v(" "),
-              _c(
-                "div",
-                { staticClass: "field" },
-                [
-                  _c("checkbox-input", {
-                    attrs: {
-                      defaultChecked: _vm.override,
-                      label: "Overwrite volume",
-                      required: false,
-                      name: "override",
-                      editable: true
-                    },
-                    model: {
-                      value: _vm.override,
-                      callback: function($$v) {
-                        _vm.override = $$v
-                      },
-                      expression: "override"
-                    }
-                  })
-                ],
-                1
-              ),
-              _vm._v(" "),
               _c("transition", { attrs: { name: "fade" } }, [
                 _vm.override || this.form.volume || this.form.price
                   ? _c("div", [
@@ -57270,7 +57256,7 @@ var render = function() {
           }
         },
         [
-          _c("template", { slot: "header" }, [_vm._v("Assign lot")]),
+          _c("template", { slot: "header" }, [_vm._v("Manage owner")]),
           _vm._v(" "),
           _c(
             "form",
@@ -57339,8 +57325,19 @@ var render = function() {
                 staticClass: "button is-primary",
                 on: { click: _vm.submitOwner }
               },
-              [_vm._v("Submit")]
-            )
+              [_vm._v("Reassign")]
+            ),
+            _vm._v(" "),
+            _vm.selectedUser
+              ? _c(
+                  "button",
+                  {
+                    staticClass: "button is-danger",
+                    on: { click: _vm.unassignOwner }
+                  },
+                  [_vm._v("Unassign")]
+                )
+              : _vm._e()
           ])
         ],
         2
@@ -60913,6 +60910,31 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	props: ['outbound', 'canManage'],
@@ -61283,6 +61305,35 @@ var render = function() {
                     ])
                   ])
             ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "card" }, [
+            _vm._m(4),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "card-content" },
+              [
+                _c("text-input", {
+                  attrs: {
+                    defaultValue: _vm.outbound.recipient_name,
+                    editable: false,
+                    name: "recipient_name",
+                    label: "Name"
+                  }
+                }),
+                _vm._v(" "),
+                _c("text-input", {
+                  attrs: {
+                    defaultValue: _vm.outbound.recipient_address,
+                    editable: false,
+                    name: "recipient_address",
+                    label: "Name"
+                  }
+                })
+              ],
+              1
+            )
           ])
         ])
       ]),
@@ -61379,6 +61430,20 @@ var staticRenderFns = [
         },
         [_vm._v("Change status")]
       )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "card-header" }, [
+      _c("div", { staticClass: "card-header-title level" }, [
+        _c("div", { staticClass: "level-left" }, [
+          _c("div", { staticClass: "level-item" }, [
+            _vm._v("\n\t\t\t\t\t\t\t\t\tRecipient details\n\t\t\t\t\t\t\t\t")
+          ])
+        ])
+      ])
     ])
   }
 ]
@@ -62204,6 +62269,35 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -62216,7 +62310,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 		var _ref;
 
 		return _ref = {
-			fields: [{ name: 'created_at', sortField: 'created_at', title: 'Purchase date', callback: 'date' }, { name: 'price', sortField: 'price' }, { name: 'status', sortField: 'status', title: 'Status', callback: 'purchaseStatusLabel' }, { name: 'expired_at', sortField: 'expired_at', title: 'Expire date', callback: 'date' }, { name: '__component:payments-actions', title: 'Actions' }],
+			fields: [{ name: 'created_at', sortField: 'created_at', title: 'Purchase date', callback: 'date' }, { name: 'price', sortField: 'price' }, { name: 'status', sortField: 'status', title: 'Status', callback: 'purchaseStatusLabel' }, { name: 'user_name', sortField: 'user_name', title: 'Made by' }, { name: '__component:payments-actions', title: 'Actions' }],
 			selectedPayment: '',
 			isPurchasing: false,
 			dialogActive: false,
@@ -62226,14 +62320,16 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 				lot_purchases: '',
 				price: ''
 			}),
+			approveForm: new Form({
+				id: ''
+			}),
 			categories: '',
 			selectableLots: [],
 			rental_duration: '',
 			totalLots: 0,
 			totalVolume: 0,
 			subPrice: 0,
-			paymentSlip: { name: 'No file selected' },
-			hasSelectedLot: false
+			paymentSlip: { name: 'No file selected' }
 		}, _defineProperty(_ref, 'selectedPayment', ''), _defineProperty(_ref, 'isViewing', false), _defineProperty(_ref, 'submitting', false), _ref;
 	},
 	mounted: function mounted() {
@@ -62256,9 +62352,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 			});
 		},
 		setLotCategories: function setLotCategories(data) {
-			this.categories = data.data;
+			//this.categories = data.data;
 			this.selectableLots = [];
-			this.categories.forEach(function (category) {
+			data.data.forEach(function (category) {
+				category.quantity = 0;
+				category.error = '';
 				category.lots.forEach(function (lot) {
 					if (lot.user_id == null) {
 						lot.selected = false;
@@ -62266,6 +62364,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 					}
 				}.bind(this));
 			}.bind(this));
+			this.categories = data.data;
 
 			this.isPurchasing = this.getParameterByName('new') == 'true';
 		},
@@ -62286,8 +62385,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 			var _this3 = this;
 
 			this.submitting = true;
-			axios.post('/payment/approve', { id: this.selectedPayment.id }).then(function (response) {
-				return _this3.onSuccess;
+			this.approveForm.id = this.selectedPayment.id;
+			this.approveForm.post('/payment/approve').then(function (response) {
+				return _this3.onSuccess();
 			});
 		},
 		back: function back() {
@@ -62301,14 +62401,20 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 			this.totalVolume = 0;
 			this.subPrice = 0;
 			this.rental_duration = '';
-			this.hasSelectedLot = false;
 		},
 		submit: function submit() {
 			var _this4 = this;
 
-			var selectedLots = _.filter(this.selectableLots, function (lot) {
-				return lot.selected;
+			var selectedLots = [];
+			this.categories.forEach(function (category) {
+				var lots = [];
+				lots = _.take(category.lots, category.quantity);
+				lots.forEach(function (lot) {
+					selectedLots.push(lot);
+				});
 			});
+
+			//let selectedLots = _.filter(this.selectableLots, function(lot){ return lot.selected; });
 			this.form.lot_purchases = selectedLots.map(function (lot) {
 				var obj = {};
 				obj['id'] = lot.id;
@@ -62346,10 +62452,26 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 				this.subPrice -= lot.price;
 				this.totalLots--;
 			}
+		},
+		updateTotals: function updateTotals(category) {
+			category.error = "";
+			var quantity = parseInt(category.quantity);
+			var availableLotCount = this.availableLots(category).length;
 
-			this.hasSelectedLot = _.filter(this.selectableLots, function (lot) {
-				return lot.selected;
-			}).length > 0;
+			if (availableLotCount < quantity) {
+				category.quantity = 0;
+				category.error = "We only have " + availableLotCount + " of " + category.name + " lots left";
+			}
+
+			this.subPrice = _.sumBy(this.categories, function (category) {
+				return parseInt(category.quantity) * category.price;
+			});
+			this.totalVolume = _.sumBy(this.categories, function (category) {
+				return parseInt(category.quantity) * category.volume;
+			});
+			this.totalLots = _.sumBy(this.categories, function (category) {
+				return parseInt(category.quantity);
+			});
 		},
 		availableLots: function availableLots(category) {
 			var availableLots = [];
@@ -62378,7 +62500,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 			return this.subPrice * this.rental_duration;
 		},
 		canSubmit: function canSubmit() {
-			return this.hasSelectedLot && !this.form.errors.any();
+			return this.totalLots > 0 && !this.form.errors.any();
 		},
 		canPurchase: function canPurchase() {
 			return !this.selectableLots.length == 0;
@@ -62392,7 +62514,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 		submitTooltipText: function submitTooltipText() {
 			var text = '';
 
-			if (!this.hasSelectedLot) {
+			if (!this.totalLots > 0) {
 				text = 'Please select at least one lot';
 			}
 
@@ -62770,141 +62892,74 @@ var render = function() {
                         }),
                         _vm._v(" "),
                         _c(
-                          "div",
-                          { staticClass: "accordions" },
-                          _vm._l(_vm.categories, function(category) {
-                            return _vm.availableLots(category).length > 0
-                              ? _c(
-                                  "Accordion",
-                                  { key: category.id },
-                                  [
-                                    _c("template", { slot: "title" }, [
-                                      _vm._v(
-                                        "\n\t\t\t\t\t\t\t\t\t" +
-                                          _vm._s(category.name) +
-                                          "\n\t\t\t\t\t\t\t\t"
-                                      )
-                                    ]),
-                                    _vm._v(" "),
-                                    _c(
-                                      "table",
-                                      {
-                                        staticClass:
-                                          "table is-hoverable is-fullwidth"
-                                      },
-                                      [
-                                        _c("thead", [
-                                          _c("tr", [
-                                            _c("th", [_vm._v("Name")]),
-                                            _vm._v(" "),
-                                            _c("th", [_vm._v("Volume(cm³)")]),
-                                            _vm._v(" "),
-                                            _c("th", [
-                                              _vm._v("Price(RM) / Month")
-                                            ]),
-                                            _vm._v(" "),
-                                            _c("th", [_vm._v("Purchase")])
-                                          ])
-                                        ]),
-                                        _vm._v(" "),
-                                        _c(
-                                          "tbody",
-                                          _vm._l(
-                                            _vm.availableLots(category),
-                                            function(lot) {
-                                              return lot.user_id == null
-                                                ? _c("tr", [
-                                                    _c("td", [
-                                                      _vm._v(
-                                                        "\n\t\t\t\t\t\t\t\t\t\t\t\t" +
-                                                          _vm._s(lot.lot.name) +
-                                                          "\n\t\t\t\t\t\t\t\t\t\t\t"
-                                                      )
-                                                    ]),
-                                                    _vm._v(" "),
-                                                    _c("td", [
-                                                      _vm._v(
-                                                        "\n\t\t\t\t\t\t\t\t\t\t\t\t" +
-                                                          _vm._s(
-                                                            lot.lot.volume
-                                                          ) +
-                                                          "\n\t\t\t\t\t\t\t\t\t\t\t"
-                                                      )
-                                                    ]),
-                                                    _vm._v(" "),
-                                                    _c("td", [
-                                                      _vm._v(
-                                                        "\n\t\t\t\t\t\t\t\t\t\t\t\t" +
-                                                          _vm._s(
-                                                            lot.lot.price
-                                                          ) +
-                                                          "\n\t\t\t\t\t\t\t\t\t\t\t"
-                                                      )
-                                                    ]),
-                                                    _vm._v(" "),
-                                                    _c(
-                                                      "td",
-                                                      [
-                                                        _c("checkbox-input", {
-                                                          attrs: {
-                                                            defaultChecked:
-                                                              _vm
-                                                                .selectableLots[
-                                                                lot.index
-                                                              ].selected,
-                                                            required: false,
-                                                            name:
-                                                              "lot-" +
-                                                              lot.lot.id,
-                                                            editable: true,
-                                                            index: _vm.index
-                                                          },
-                                                          on: {
-                                                            input: function(
-                                                              $event
-                                                            ) {
-                                                              _vm.toggleCheck(
-                                                                lot.lot
-                                                              )
-                                                            }
-                                                          },
-                                                          model: {
-                                                            value:
-                                                              _vm
-                                                                .selectableLots[
-                                                                lot.index
-                                                              ].selected,
-                                                            callback: function(
-                                                              $$v
-                                                            ) {
-                                                              _vm.$set(
-                                                                _vm
-                                                                  .selectableLots[
-                                                                  lot.index
-                                                                ],
-                                                                "selected",
-                                                                $$v
-                                                              )
-                                                            },
-                                                            expression:
-                                                              "selectableLots[lot.index].selected"
-                                                          }
-                                                        })
-                                                      ],
-                                                      1
-                                                    )
-                                                  ])
-                                                : _vm._e()
+                          "table",
+                          { staticClass: "table is-hoverable is-fullwidth" },
+                          [
+                            _c("thead", [
+                              _c("th", [_vm._v("Lot type")]),
+                              _vm._v(" "),
+                              _c("th", [_vm._v("Price")]),
+                              _vm._v(" "),
+                              _c("th", [_vm._v("Volume")]),
+                              _vm._v(" "),
+                              _c("th", [_vm._v("Quantity")])
+                            ]),
+                            _vm._v(" "),
+                            _c(
+                              "tbody",
+                              _vm._l(_vm.categories, function(category, index) {
+                                return _c("tr", [
+                                  _c("td", [_vm._v(_vm._s(category.name))]),
+                                  _vm._v(" "),
+                                  _c("td", [_vm._v(_vm._s(category.price))]),
+                                  _vm._v(" "),
+                                  _c("td", [_vm._v(_vm._s(category.volume))]),
+                                  _vm._v(" "),
+                                  _vm.availableLots(category).length > 0
+                                    ? _c(
+                                        "td",
+                                        [
+                                          _c("text-input", {
+                                            ref: "category-" + category.id,
+                                            refInFor: true,
+                                            attrs: {
+                                              defaultValue:
+                                                _vm.categories[index].quantity,
+                                              label: "Quantity",
+                                              required: true,
+                                              type: "number",
+                                              editable: true,
+                                              hideLabel: true,
+                                              name: "quantity",
+                                              error: _vm.categories[index].error
+                                            },
+                                            on: {
+                                              input: function($event) {
+                                                _vm.updateTotals(category)
+                                              }
+                                            },
+                                            model: {
+                                              value:
+                                                _vm.categories[index].quantity,
+                                              callback: function($$v) {
+                                                _vm.$set(
+                                                  _vm.categories[index],
+                                                  "quantity",
+                                                  $$v
+                                                )
+                                              },
+                                              expression:
+                                                "categories[index].quantity"
                                             }
-                                          )
-                                        )
-                                      ]
-                                    )
-                                  ],
-                                  2
-                                )
-                              : _vm._e()
-                          })
+                                          })
+                                        ],
+                                        1
+                                      )
+                                    : _c("td", [_vm._v("Sold out")])
+                                ])
+                              })
+                            )
+                          ]
                         ),
                         _vm._v(" "),
                         _c("div", {
@@ -63112,17 +63167,19 @@ var render = function() {
                 )
               ]),
               _vm._v(" "),
-              _vm.can_manage && !_vm.selectedPayment.status == "true"
+              _vm.can_manage
                 ? _c("template", { slot: "footer" }, [
-                    _c(
-                      "button",
-                      {
-                        staticClass: "button is-primary",
-                        class: _vm.approveLoadingClass,
-                        on: { click: _vm.approve }
-                      },
-                      [_vm._v("Approve")]
-                    )
+                    _vm.selectedPayment.status !== "true"
+                      ? _c(
+                          "button",
+                          {
+                            staticClass: "button is-primary",
+                            class: _vm.approveLoadingClass,
+                            on: { click: _vm.approve }
+                          },
+                          [_vm._v("Approve")]
+                        )
+                      : _vm._e()
                   ])
                 : _vm._e()
             ],
