@@ -14,7 +14,7 @@
                     <form method="POST" action="{{ route('login') }}">
                         {{ csrf_field() }}
                         <div class="field">
-                            <text-input 
+                            <text-input
                                 label="Email" 
                                 required="true"
                                 name="email"

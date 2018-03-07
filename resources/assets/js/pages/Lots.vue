@@ -62,14 +62,14 @@
 					</selector-input>
 	          	</div>
 
-	          	<div class="field">
+	          	<!-- <div class="field">
 					<checkbox-input v-model="override" :defaultChecked="override"
 								label="Overwrite volume" 
 								:required="false"
 								name="override"
 								:editable="true">
 					</checkbox-input>
-				</div>
+				</div> -->
 
 				<transition name="fade">
 					<div v-if="override || this.form.volume || this.form.price">
@@ -103,7 +103,7 @@
 		</modal>
 
 		<modal :active="dialogUserActive" @close="dialogUserActive = false">
-			<template slot="header">Assign lot</template>
+			<template slot="header">Manage owner</template>
 
 			<form @submit.prevent="submitOwner" 
 				@keydown="ownerForm.errors.clear($event.target.name)" 
@@ -125,7 +125,8 @@
           	</form>
 
           	<template slot="footer">
-				<button class="button is-primary" @click="submitOwner">Submit</button>
+				<button class="button is-primary" @click="submitOwner">Reassign</button>
+				<button class="button is-danger" @click="unassignOwner" v-if="selectedUser">Unassign</button>
           	</template>
 		</modal>
 	</div>
@@ -216,6 +217,12 @@
 
 			submitOwner() {
 				this.ownerForm.post('/lot/assign/' + this.selectedLot.id)
+					.then(data => this.onSuccess())
+					.catch(error => this.onFail(error));
+			},
+
+			unassignOwner() {
+				this.ownerForm.post('/lot/unassign/' + this.selectedLot.id)
 					.then(data => this.onSuccess())
 					.catch(error => this.onFail(error));
 			},

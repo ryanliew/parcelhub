@@ -41,6 +41,7 @@ Route::group(['prefix' => 'lot'], function() {
 	Route::post('store', 'LotController@store');
 	Route::post('update', 'LotController@update');
 	Route::post('assign/{lot}', 'LotController@assign');
+	Route::post('unassign/{lot}', 'LotController@unassign');
 });
 
 Route::get('categories', 'CategoryController@page')->name('lots.categories');

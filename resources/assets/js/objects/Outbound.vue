@@ -143,6 +143,31 @@
 
 					</div>
 				</div>
+				<div class="card">
+					<div class="card-header">
+						<div class="card-header-title level">
+							<div class="level-left">
+								<div class="level-item">
+									Recipient details
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="card-content">
+						<text-input :defaultValue="outbound.recipient_name"
+								:editable="false"
+								name="recipient_name"
+								label="Name">
+						</text-input>
+
+						<text-input :defaultValue="outbound.recipient_address"
+								:editable="false"
+								name="recipient_address"
+								label="Name">
+						</text-input>
+
+					</div>
+				</div>
 			</div>
 		</div>
 

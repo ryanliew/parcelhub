@@ -35,6 +35,8 @@ class OutboundController extends Controller
                                                                     'process_status',
                                                                     'couriers.name as courier',
                                                                     'outbounds.created_at',
+                                                                    'outbounds.recipient_name',
+                                                                    'outbounds.recipient_address',
                                                                     'users.name as customer'
                                                                     )
                                                                 ->leftJoin('couriers', 'courier_id', '=', 'couriers.id')
@@ -45,7 +47,9 @@ class OutboundController extends Controller
                                                                     'amount_insured',
                                                                     'process_status',
                                                                     'couriers.name as courier',
-                                                                    'outbounds.created_at'
+                                                                    'outbounds.created_at',
+                                                                    'outbounds.recipient_name',
+                                                                    'outbounds.recipient_address'
                                                                     )
                                                             ->leftJoin('couriers', 'courier_id', '=', 'couriers.id') );
 

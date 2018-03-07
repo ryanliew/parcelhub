@@ -99,9 +99,38 @@
 
 						<div class="is-divider" data-content="SELECT LOTS"></div>
 						
-						<div class="accordions">
+						<table class="table is-hoverable is-fullwidth">
+							<thead>
+								<th>Lot type</th>
+								<th>Price</th>
+								<th>Volume</th>
+								<th>Quantity</th>
+							</thead>
+							<tbody>
+								<tr v-for="(category, index) in categories">
+									<td>{{ category.name }}</td>
+									<td>{{ category.price }}</td>
+									<td>{{ category.volume }}</td>
+									<td v-if="availableLots(category).length > 0">
+										<text-input v-model="categories[index].quantity" :defaultValue="categories[index].quantity"
+				          						:label="'Quantity'"
+				          						:required="true"
+				          						type="number"
+				          						:editable="true"
+				          						:hideLabel="true"
+				          						name="quantity"
+				          						@input="updateTotals(category)"
+				          						:error="categories[index].error"
+				          						:ref="'category-'+category.id">
+				          				</text-input>
+									</td>
+									<td v-else>Sold out</td>
+								</tr>
+							</tbody>
+						</table>
+						<!-- <div class="accordions">
 							<Accordion 
-								v-for="category in categories" 
+								v-for="category in categories"
 								:key="category.id"
 								v-if="availableLots(category).length > 0">
 								<template slot="title">
@@ -142,7 +171,7 @@
 									</tbody>
 								</table>
 							</Accordion>
-						</div>
+						</div> -->
 						
 						<div class="is-divider" data-content="FILL IN DETAILS"></div>
 						
@@ -238,8 +267,8 @@
 				</div>
 			</div>
 
-          	<template slot="footer" v-if="can_manage && !selectedPayment.status == 'true'">
-				<button class="button is-primary" :class="approveLoadingClass" @click="approve">Approve</button>
+          	<template slot="footer" v-if="can_manage">
+				<button v-if="selectedPayment.status !== 'true'" class="button is-primary" :class="approveLoadingClass" @click="approve">Approve</button>
           	</template>
 		</modal>
 		
@@ -260,7 +289,7 @@
 					{name: 'created_at', sortField: 'created_at', title: 'Purchase date', callback: 'date'},
 					{name: 'price', sortField: 'price'},
 					{name: 'status', sortField: 'status', title: 'Status', callback: 'purchaseStatusLabel'},
-					{name: 'expired_at', sortField: 'expired_at', title: 'Expire date', callback: 'date'},
+					{name: 'user_name', sortField: 'user_name', title: 'Made by'},
 					{name: '__component:payments-actions', title: 'Actions'}
 				],
 				selectedPayment: '',
@@ -272,6 +301,9 @@
 					lot_purchases: '',
 					price: ''
 				}),
+				approveForm: new Form({
+					id: ''
+				}),
 				categories: '',
 				selectableLots: [],
 				rental_duration: '',
@@ -279,7 +311,6 @@
 				totalVolume: 0,
 				subPrice: 0,
 				paymentSlip: {name: 'No file selected'},
-				hasSelectedLot: false,
 				selectedPayment: '',
 				isViewing: false,
 				submitting: false,
@@ -299,9 +330,11 @@
 			},
 
 			setLotCategories(data) {
-				this.categories = data.data;
+				//this.categories = data.data;
 				this.selectableLots = [];
-				this.categories.forEach(function(category){
+				data.data.forEach(function(category){
+					category.quantity = 0;
+					category.error = '';
 					category.lots.forEach(function(lot){
 						if(lot.user_id == null)
 						{
@@ -310,6 +343,7 @@
 						}
 					}.bind(this))
 				}.bind(this));
+				this.categories = data.data;
 
 				this.isPurchasing = this.getParameterByName('new') == 'true';
 			},
@@ -331,8 +365,9 @@
 
 			approve() {
 				this.submitting = true;
-				axios.post('/payment/approve', {id: this.selectedPayment.id})
-					.then(response => this.onSuccess);
+				this.approveForm.id = this.selectedPayment.id;
+				this.approveForm.post('/payment/approve')
+					.then(response => this.onSuccess());
 			},
 
 			back(){
@@ -347,11 +382,19 @@
 				this.totalVolume = 0;
 				this.subPrice = 0;
 				this.rental_duration = '';
-				this.hasSelectedLot = false;
 			},
 
 			submit() {
-				let selectedLots = _.filter(this.selectableLots, function(lot){ return lot.selected; });
+				let selectedLots = [];
+				this.categories.forEach(function(category){
+					let lots = [];
+					lots = _.take(category.lots, category.quantity);
+					lots.forEach(function(lot){
+						selectedLots.push(lot);
+					});
+				});
+
+				//let selectedLots = _.filter(this.selectableLots, function(lot){ return lot.selected; });
 				this.form.lot_purchases = selectedLots.map(function(lot) {
 					let obj = {};
 					obj['id'] = lot.id;
@@ -395,8 +438,21 @@
 					this.totalLots--;
 				}
 
-				this.hasSelectedLot = _.filter(this.selectableLots, function(lot){ return lot.selected; }).length > 0;
+			},
 
+			updateTotals(category) {
+				category.error = "";
+				let quantity = parseInt(category.quantity);
+				let availableLotCount = this.availableLots(category).length;
+
+				if( availableLotCount < quantity) {
+					category.quantity = 0;
+					category.error = "We only have " + availableLotCount + " of " + category.name + " lots left";
+				}
+
+				this.subPrice =_.sumBy(this.categories, function(category){ return  parseInt(category.quantity)* category.price; });
+				this.totalVolume =_.sumBy(this.categories, function(category){ return parseInt(category.quantity) * category.volume; });
+				this.totalLots =_.sumBy(this.categories, function(category){ return parseInt(category.quantity); });
 			},
 
 			availableLots(category) {
@@ -431,7 +487,7 @@
 			},
 
 			canSubmit() {
-				return this.hasSelectedLot && !this.form.errors.any();
+				return this.totalLots > 0 && !this.form.errors.any();
 			},
 
 			canPurchase() {
@@ -449,7 +505,7 @@
 			submitTooltipText() {
 				let text = '';
 
-				if(!this.hasSelectedLot){
+				if(!this.totalLots > 0){
 					text = 'Please select at least one lot';
 				}
 
