@@ -110,3 +110,7 @@ body .logo img {width: 113px; height: auto;}
     50% {background-position: -210px center;}
     75% {background-position: 0px center;}
     100% {background-position: -210px center;}}
+
+.active{
+	color: #8fd7ad!important;
+}
