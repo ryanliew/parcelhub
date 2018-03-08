@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddProcessingStatusToOutboundsTable extends Migration
+class AddAddressesToOutbound extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,11 @@ class AddProcessingStatusToOutboundsTable extends Migration
     public function up()
     {
         Schema::table('outbounds', function (Blueprint $table) {
-            $table->string('process_status')->default('pending');
+            $table->string('recipient_address_2')->nullable();
+            $table->string('recipient_phone')->nullable();
+            $table->string('recipient_state')->nullable();
+            $table->string('recipient_postcode')->nullable();
+            $table->string('recipient_country')->nullable();
         });
     }
 
@@ -26,7 +30,7 @@ class AddProcessingStatusToOutboundsTable extends Migration
     public function down()
     {
         Schema::table('outbounds', function (Blueprint $table) {
-            $table->dropColumn('process_status');
+            $table->dropColumn(['recipient_address_2', 'recipient_phone', 'recipient_state', 'recipient_postcode', 'recipient_country'])->change();
         });
     }
 }

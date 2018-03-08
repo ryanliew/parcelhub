@@ -12,6 +12,16 @@ use PDF;
 class OutboundController extends Controller
 {
     /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
+    /**
      * Return the page view for outbounds
      * @return \Illuminate\Http\Response
      */
@@ -37,6 +47,11 @@ class OutboundController extends Controller
                                                                     'outbounds.created_at',
                                                                     'outbounds.recipient_name',
                                                                     'outbounds.recipient_address',
+                                                                    'outbounds.recipient_address_2',
+                                                                    'outbounds.recipient_phone',
+                                                                    'outbounds.recipient_state',
+                                                                    'outbounds.recipient_country',
+                                                                    'outbounds.recipient_postcode',
                                                                     'users.name as customer'
                                                                     )
                                                                 ->leftJoin('couriers', 'courier_id', '=', 'couriers.id')
@@ -49,7 +64,12 @@ class OutboundController extends Controller
                                                                     'couriers.name as courier',
                                                                     'outbounds.created_at',
                                                                     'outbounds.recipient_name',
-                                                                    'outbounds.recipient_address'
+                                                                    'outbounds.recipient_address',
+                                                                    'outbounds.recipient_address_2',
+                                                                    'outbounds.recipient_phone',
+                                                                    'outbounds.recipient_state',
+                                                                    'outbounds.recipient_country',
+                                                                    'outbounds.recipient_postcode'
                                                                     )
                                                             ->leftJoin('couriers', 'courier_id', '=', 'couriers.id') );
 
@@ -100,6 +120,10 @@ class OutboundController extends Controller
         $this->validate($request, [
             'recipient_name' => 'required',
             'recipient_address' => 'required',
+            'recipient_phone' => 'required',
+            'recipient_postcode' => 'required',
+            'recipient_state' => 'required',
+            'recipient_country' => 'required',
             'courier_id' => 'required',
             'amount_insured' => 'required_if:insurance,==,1|numeric|min:0',
             'outbound_products' => 'required',
@@ -123,6 +147,7 @@ class OutboundController extends Controller
             $outbound->amount_insured = $outbound->insurance ? request()->amount_insured : 0;
             $outbound->user_id = $user->id;
             $outbound->status = 'true';
+            $outbound->process_status = 'pending';
             $outbound->save();
 
             foreach ($outboundProducts as $outboundProduct) {
