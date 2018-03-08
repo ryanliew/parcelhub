@@ -140,7 +140,7 @@
 							<p class="title" :class="statusClass">
 								{{ outbound.process_status | unslug | capitalize }}
 							</p>
-							<button class="button is-danger" v-if="outbound.status=='pending'" @click="confirmation = true">Cancel order</button>
+							<button class="button is-danger" v-if="outbound.process_status == 'pending'" @click="confirmation = true">Cancel order</button>
 						</div>
 
 					</div>
@@ -297,11 +297,14 @@
 				let color = 'is-success';
 				let value = this.outbound.process_status;
 				switch(value) {
-					case 'processing':
+					case 'pending':
 						color = 'is-warning';
 						break;
-					case 'delivering':
+					case 'processing':
 						color = 'is-info';
+						break;
+					case 'delivering':
+						color = 'is-primary';
 						break;
 					case 'completed':
 						color = 'is-success';
