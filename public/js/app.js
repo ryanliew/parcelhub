@@ -48320,6 +48320,9 @@ Vue.filter('formatOutboundStatus', function (value) {
 	var color = 'is-success';
 	var text = _.capitalize(_.replace(value, '_', ' '));
 	switch (value) {
+		case 'pending':
+			color = 'is-warning';
+			break;
 		case 'processing':
 			color = 'is-info';
 			break;
@@ -61094,11 +61097,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			var color = 'is-success';
 			var value = this.outbound.process_status;
 			switch (value) {
-				case 'processing':
+				case 'pending':
 					color = 'is-warning';
 					break;
-				case 'delivering':
+				case 'processing':
 					color = 'is-info';
+					break;
+				case 'delivering':
+					color = 'is-primary';
 					break;
 				case 'completed':
 					color = 'is-success';
@@ -61374,7 +61380,7 @@ var render = function() {
                       )
                     ]),
                     _vm._v(" "),
-                    _vm.outbound.status == "pending"
+                    _vm.outbound.process_status == "pending"
                       ? _c(
                           "button",
                           {
