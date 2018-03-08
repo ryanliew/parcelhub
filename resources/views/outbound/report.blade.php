@@ -88,7 +88,10 @@
         <p>Receiver</p>
         <div class="md-text-box">
             {{ $outbound->recipient_name }} <br>
-            {{ $outbound->recipient_address }}
+            {{ $outbound->recipient_address }}, <br>
+            {{ $outbound->recipient_address_2 }}, <br>
+            {{ $outbound->recipient_postcode }}, {{ $outbound->recipient_state }}, {{ $outbound->recipient_country }} <br>
+            {{ $outbound->recipient_phone }}
         </div>
     </div>
 
