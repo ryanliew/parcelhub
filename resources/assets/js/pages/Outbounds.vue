@@ -74,19 +74,71 @@
 								</text-input>
 							</div>
 							<div class="column">
-								<text-input v-model="form.recipient_address" :defaultValue="form.recipient_address" 
-											label="Recipient address" 
+								<text-input v-model="form.recipient_phone" :defaultValue="form.recipient_phone" 
+											label="Recipient phone" 
+											:required="true"
+											name="recipient_phone"
+											type="text"
+											:editable="true"
+											:error="form.errors.get('recipient_phone')">
+								</text-input>
+							</div>
+						</div>
+						<div class="field">
+							<text-input v-model="form.recipient_address" :defaultValue="form.recipient_address" 
+											label="Recipient address line 1" 
 											:required="true"
 											name="recipient_address"
 											type="text"
 											:editable="true"
 											:error="form.errors.get('recipient_address')">
+							</text-input>
+						</div>
+						<div class="field">
+							<text-input v-model="form.recipient_address_2" :defaultValue="form.recipient_address_2" 
+											label="Recipient address line 2" 
+											:required="false"
+											name="recipient_address_2"
+											type="text"
+											:editable="true"
+											:error="form.errors.get('recipient_address_2')">
+							</text-input>
+						</div>
+						<div class="columns">
+							<div class="column">
+								<text-input v-model="form.recipient_postcode" :defaultValue="form.recipient_postcode" 
+												label="Recipient postcode" 
+												:required="true"
+												name="recipient_postcode"
+												type="text"
+												:editable="true"
+												:error="form.errors.get('recipient_postcode')">
+								</text-input>
+							</div>
+							<div class="column">
+								<text-input v-model="form.recipient_state" :defaultValue="form.recipient_state" 
+												label="Recipient state" 
+												:required="true"
+												name="recipient_state"
+												type="text"
+												:editable="true"
+												:error="form.errors.get('recipient_state')">
+								</text-input>
+							</div>
+							<div class="column">
+								<text-input v-model="form.recipient_country" :defaultValue="form.recipient_country" 
+												label="Recipient country" 
+												:required="true"
+												name="recipient_country"
+												type="text"
+												:editable="true"
+												:error="form.errors.get('recipient_country')">
 								</text-input>
 							</div>
 						</div>
 						<div class="field">
 							<selector-input v-model="selectedCourier" :defaultData="selectedCourier" 
-													label="Couriers"
+													label="Courier"
 													name="couriers" 
 													:required="true"
 													:potentialData="couriersOptions"
@@ -211,7 +263,12 @@
 				dialogActive: false,
 				form: new Form({
 					recipient_name: '',
+					recipient_phone: '',
 					recipient_address: '',
+					recipient_address_2: '',
+					recipient_state: '',
+					recipient_postcode: '',
+					recipient_country: '',
 					insurance: '',
 					amount_insured: 0,
 					courier_id: '',

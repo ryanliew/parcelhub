@@ -60514,6 +60514,58 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -60531,7 +60583,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 			dialogActive: false,
 			form: new Form({
 				recipient_name: '',
+				recipient_phone: '',
 				recipient_address: '',
+				recipient_address_2: '',
+				recipient_state: '',
+				recipient_postcode: '',
+				recipient_country: '',
 				insurance: '',
 				amount_insured: 0,
 				courier_id: '',
@@ -60935,6 +60992,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	props: ['outbound', 'canManage'],
@@ -60951,6 +61018,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 				label: this.$options.filters.capitalize(this.$options.filters.unslug(this.outbound.process_status))
 			},
 			processStatusOptions: [{
+				value: 'pending',
+				label: 'Pending'
+			}, {
 				value: 'processing',
 				label: 'Processing'
 			}, {
@@ -61226,7 +61296,7 @@ var render = function() {
             _vm._m(2),
             _vm._v(" "),
             _c("div", { staticClass: "card-content" }, [
-              _vm.canManage
+              _vm.can_manage
                 ? _c(
                     "form",
                     {
@@ -61302,7 +61372,22 @@ var render = function() {
                           ) +
                           "\n\t\t\t\t\t\t\t"
                       )
-                    ])
+                    ]),
+                    _vm._v(" "),
+                    _vm.outbound.status == "pending"
+                      ? _c(
+                          "button",
+                          {
+                            staticClass: "button is-danger",
+                            on: {
+                              click: function($event) {
+                                _vm.confirmation = true
+                              }
+                            }
+                          },
+                          [_vm._v("Cancel order")]
+                        )
+                      : _vm._e()
                   ])
             ])
           ]),
@@ -61310,30 +61395,50 @@ var render = function() {
           _c("div", { staticClass: "card" }, [
             _vm._m(4),
             _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "card-content" },
-              [
-                _c("text-input", {
-                  attrs: {
-                    defaultValue: _vm.outbound.recipient_name,
-                    editable: false,
-                    name: "recipient_name",
-                    label: "Name"
-                  }
-                }),
-                _vm._v(" "),
-                _c("text-input", {
-                  attrs: {
-                    defaultValue: _vm.outbound.recipient_address,
-                    editable: false,
-                    name: "recipient_address",
-                    label: "Name"
-                  }
-                })
-              ],
-              1
-            )
+            _c("div", { staticClass: "card-content" }, [
+              _c("p", { staticClass: "heading" }, [
+                _vm._v("\n\t\t\t\t\t\t\tName\n\t\t\t\t\t\t")
+              ]),
+              _vm._v(
+                "\n\t\t\t\t\t\t" +
+                  _vm._s(_vm.outbound.recipient_name) +
+                  "\n\t\t\t\t\t\t\n\t\t\t\t\t\t"
+              ),
+              _c("hr"),
+              _vm._v(" "),
+              _c("p", { staticClass: "heading" }, [
+                _vm._v("\n\t\t\t\t\t\t\tAddress\n\t\t\t\t\t\t")
+              ]),
+              _vm._v(
+                "\n\t\t\t\t\t\t" + _vm._s(_vm.outbound.recipient_address) + ", "
+              ),
+              _c("br"),
+              _vm._v(
+                "\n\t\t\t\t\t\t" +
+                  _vm._s(_vm.outbound.recipient_address_2) +
+                  ", "
+              ),
+              _c("br"),
+              _vm._v(
+                "\n\t\t\t\t\t\t" +
+                  _vm._s(_vm.outbound.recipient_postcode) +
+                  " " +
+                  _vm._s(_vm.outbound.recipient_state) +
+                  ", " +
+                  _vm._s(_vm.outbound.recipient_country) +
+                  "\n\t\t\t\t\t\t"
+              ),
+              _c("hr"),
+              _vm._v(" "),
+              _c("p", { staticClass: "heading" }, [
+                _vm._v("\n\t\t\t\t\t\t\tPhone\n\t\t\t\t\t\t")
+              ]),
+              _vm._v(
+                "\n\t\t\t\t\t\t" +
+                  _vm._s(_vm.outbound.recipient_phone) +
+                  "\n\t\t\t\t\t\t\t\n\n\n\t\t\t\t\t"
+              )
+            ])
           ])
         ])
       ]),
@@ -61660,20 +61765,152 @@ var render = function() {
                           [
                             _c("text-input", {
                               attrs: {
-                                defaultValue: _vm.form.recipient_address,
-                                label: "Recipient address",
+                                defaultValue: _vm.form.recipient_phone,
+                                label: "Recipient phone",
                                 required: true,
-                                name: "recipient_address",
+                                name: "recipient_phone",
                                 type: "text",
                                 editable: true,
-                                error: _vm.form.errors.get("recipient_address")
+                                error: _vm.form.errors.get("recipient_phone")
                               },
                               model: {
-                                value: _vm.form.recipient_address,
+                                value: _vm.form.recipient_phone,
                                 callback: function($$v) {
-                                  _vm.$set(_vm.form, "recipient_address", $$v)
+                                  _vm.$set(_vm.form, "recipient_phone", $$v)
                                 },
-                                expression: "form.recipient_address"
+                                expression: "form.recipient_phone"
+                              }
+                            })
+                          ],
+                          1
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        { staticClass: "field" },
+                        [
+                          _c("text-input", {
+                            attrs: {
+                              defaultValue: _vm.form.recipient_address,
+                              label: "Recipient address line 1",
+                              required: true,
+                              name: "recipient_address",
+                              type: "text",
+                              editable: true,
+                              error: _vm.form.errors.get("recipient_address")
+                            },
+                            model: {
+                              value: _vm.form.recipient_address,
+                              callback: function($$v) {
+                                _vm.$set(_vm.form, "recipient_address", $$v)
+                              },
+                              expression: "form.recipient_address"
+                            }
+                          })
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        { staticClass: "field" },
+                        [
+                          _c("text-input", {
+                            attrs: {
+                              defaultValue: _vm.form.recipient_address_2,
+                              label: "Recipient address line 2",
+                              required: false,
+                              name: "recipient_address_2",
+                              type: "text",
+                              editable: true,
+                              error: _vm.form.errors.get("recipient_address_2")
+                            },
+                            model: {
+                              value: _vm.form.recipient_address_2,
+                              callback: function($$v) {
+                                _vm.$set(_vm.form, "recipient_address_2", $$v)
+                              },
+                              expression: "form.recipient_address_2"
+                            }
+                          })
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "columns" }, [
+                        _c(
+                          "div",
+                          { staticClass: "column" },
+                          [
+                            _c("text-input", {
+                              attrs: {
+                                defaultValue: _vm.form.recipient_postcode,
+                                label: "Recipient postcode",
+                                required: true,
+                                name: "recipient_postcode",
+                                type: "text",
+                                editable: true,
+                                error: _vm.form.errors.get("recipient_postcode")
+                              },
+                              model: {
+                                value: _vm.form.recipient_postcode,
+                                callback: function($$v) {
+                                  _vm.$set(_vm.form, "recipient_postcode", $$v)
+                                },
+                                expression: "form.recipient_postcode"
+                              }
+                            })
+                          ],
+                          1
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          { staticClass: "column" },
+                          [
+                            _c("text-input", {
+                              attrs: {
+                                defaultValue: _vm.form.recipient_state,
+                                label: "Recipient state",
+                                required: true,
+                                name: "recipient_state",
+                                type: "text",
+                                editable: true,
+                                error: _vm.form.errors.get("recipient_state")
+                              },
+                              model: {
+                                value: _vm.form.recipient_state,
+                                callback: function($$v) {
+                                  _vm.$set(_vm.form, "recipient_state", $$v)
+                                },
+                                expression: "form.recipient_state"
+                              }
+                            })
+                          ],
+                          1
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          { staticClass: "column" },
+                          [
+                            _c("text-input", {
+                              attrs: {
+                                defaultValue: _vm.form.recipient_country,
+                                label: "Recipient country",
+                                required: true,
+                                name: "recipient_country",
+                                type: "text",
+                                editable: true,
+                                error: _vm.form.errors.get("recipient_country")
+                              },
+                              model: {
+                                value: _vm.form.recipient_country,
+                                callback: function($$v) {
+                                  _vm.$set(_vm.form, "recipient_country", $$v)
+                                },
+                                expression: "form.recipient_country"
                               }
                             })
                           ],
@@ -61688,7 +61925,7 @@ var render = function() {
                           _c("selector-input", {
                             attrs: {
                               defaultData: _vm.selectedCourier,
-                              label: "Couriers",
+                              label: "Courier",
                               name: "couriers",
                               required: true,
                               potentialData: _vm.couriersOptions,

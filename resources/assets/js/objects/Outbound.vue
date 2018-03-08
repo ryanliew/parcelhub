@@ -114,24 +114,25 @@
 							@keydown="form.errors.clear($event.target.name)" 
 							@input="form.errors.clear($event.target.name)"
 							@keyup.enter="submit"
-							v-if="canManage">
+							v-if="can_manage">
 							
 							<div class="field">
 								<selector-input v-model="selectedStatus" :defaultData="selectedStatus"
-													label="Status"
-													:required="true"
-													name="process_status"
-													:potentialData="processStatusOptions"
-													@input="statusUpdate($event)"
-													:editable="true"
-													placeholder="Select a status"
-													:unclearable="true"
-													:error="form.errors.get('process_status')">
+												label="Status"
+												:required="true"
+												name="process_status"
+												:potentialData="processStatusOptions"
+												@input="statusUpdate($event)"
+												:editable="true"
+												placeholder="Select a status"
+												:unclearable="true"
+												:error="form.errors.get('process_status')">
 								</selector-input>
 							</div>
 
 							<div class="field">
 								<button type="submit" class="button is-success is-pulled-right">Change status</button>
+
 							</div>
 							<div class="is-clearfix"></div>
           				</form>
@@ -139,6 +140,7 @@
 							<p class="title" :class="statusClass">
 								{{ outbound.process_status | unslug | capitalize }}
 							</p>
+							<button class="button is-danger" v-if="outbound.status=='pending'" @click="confirmation = true">Cancel order</button>
 						</div>
 
 					</div>
@@ -154,17 +156,25 @@
 						</div>
 					</div>
 					<div class="card-content">
-						<text-input :defaultValue="outbound.recipient_name"
-								:editable="false"
-								name="recipient_name"
-								label="Name">
-						</text-input>
+						<p class="heading">
+							Name
+						</p>
+						{{ outbound.recipient_name }}
+						
+						<hr>
+						<p class="heading">
+							Address
+						</p>
+						{{ outbound.recipient_address }}, <br>
+						{{ outbound.recipient_address_2 }}, <br>
+						{{ outbound.recipient_postcode }} {{ outbound.recipient_state }}, {{ outbound.recipient_country }}
+						<hr>
+						<p class="heading">
+							Phone
+						</p>
+						{{ outbound.recipient_phone }}
+							
 
-						<text-input :defaultValue="outbound.recipient_address"
-								:editable="false"
-								name="recipient_address"
-								label="Name">
-						</text-input>
 
 					</div>
 				</div>
@@ -199,6 +209,10 @@
 					label: this.$options.filters.capitalize(this.$options.filters.unslug(this.outbound.process_status))
 				},
 				processStatusOptions: [
+					{
+						value: 'pending',
+						label: 'Pending'
+					},
 					{
 						value: 'processing',
 						label: 'Processing'
