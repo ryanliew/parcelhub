@@ -142,23 +142,13 @@
 	import Product from '../objects/Product.vue';
 
 	export default {
-		props: [''],
+		props: ['can_manage'],
 
 		components: { TableView, Product },
 
 		data() {
 			return {
-				fields: [
-					{name: 'picture', callback: 'image', title: 'Image'},
-					{name: 'sku', sortField: 'sku', title: 'SKU'},
-					{name: 'name', sortField: 'name'},
-					{name: 'volume', title: 'Volume(cm³)'},
-					{name: 'is_dangerous', title: 'Dangerous', sortField: 'is_dangerous', callback: 'dangerousTag'},
-					{name: 'is_fragile', title: 'Fragile', sortField: 'is_fragile', callback: 'fragileTag'},
-					{name: '__component:products-actions', title: 'Actions'}	
-				],
 				detailRow: 'ProductDetailRow',
-				searchables: "name,sku",
 				selectedProduct: '',
 				isViewing: false,
 				dialogActive: false,
@@ -251,6 +241,37 @@
 			action() {
 				let action = this.selectedProduct ? "update" : "store";
 				return "/product/" + action;
+			},
+
+			fields() {
+				let field = [
+					{name: 'picture', callback: 'image', title: 'Image'},
+					{name: 'sku', sortField: 'sku', title: 'SKU'},
+					{name: 'product_name', sortField: 'product_name', title: 'Name'},
+					{name: 'volume', title: 'Volume(cm³)'},
+					{name: 'is_dangerous', title: 'Dangerous', sortField: 'is_dangerous', callback: 'dangerousTag'},
+					{name: 'is_fragile', title: 'Fragile', sortField: 'is_fragile', callback: 'fragileTag'}	
+				];
+
+				if(this.can_manage)
+				{
+					field.push({name: 'user_name', title: 'Owner', sortField: 'user_name'});
+				}
+
+				field.push({name: '__component:products-actions', title: 'Actions'});
+
+				return field;
+			},
+
+			searchables() {
+				let searchable = "products.name,sku";
+
+				if(this.can_manage)
+				{
+					searchable += ",users.name";
+				}
+
+				return searchable;
 			}
 		}
 	}

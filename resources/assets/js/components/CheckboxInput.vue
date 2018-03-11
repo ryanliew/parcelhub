@@ -6,8 +6,8 @@
 		            <input :id="name" 
 		            		class="styled" 
 		            		type="checkbox" 
-		            		:checked="defaultChecked" @input="updateValue($event.target.checked)">
-		            <label :for="name" v-text="label"></label>
+		            		:checked="defaultChecked" @click="updateValue">
+		            <label :for="name" v-text="label" @click="updateValue"></label>
 		        </div>
 		    </p>
 		</div>
@@ -25,7 +25,8 @@
 
 		methods: {
 			updateValue(value) {
-				this.$emit('input', value);
+				console.log("Updating");
+				this.$emit('input', !this.defaultChecked);
 			}
 		},
 
