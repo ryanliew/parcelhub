@@ -107,9 +107,9 @@
 
 		methods: {
 			submit() {
-				this.form.post(this.action)
+				this.form.post(this.action)	
 					.then(data => this.onSuccess())
-					.catch(error => this.onFail(error));;
+					.catch(error => this.onFail(error));
 			},
 
 			onSuccess() {

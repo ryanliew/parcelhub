@@ -113,8 +113,6 @@ class Form {
         }
 
         this.errors.clear();
-
-        this.submitting = false;
     }
 
 
@@ -165,19 +163,27 @@ class Form {
      * @param {string} url
      */
     submit(requestType, url) {
-        this.submitting = true;
+        if(!this.submitting)
+        {
+            this.submitting = true;
+
+
+            return new Promise((resolve, reject) => {
+                axios[requestType](url, this.data())
+                    .then(response => {
+                        this.onSuccess(response.data);
+
+                        resolve(response.data);
+                    })
+                    .catch(error => {
+                        this.onFail(error.response.data);
+
+                        reject(error.response.data);
+                    });
+            });
+        }
         return new Promise((resolve, reject) => {
-            axios[requestType](url, this.data())
-                .then(response => {
-                    this.onSuccess(response.data);
-
-                    resolve(response.data);
-                })
-                .catch(error => {
-                    this.onFail(error.response.data);
-
-                    reject(error.response.data);
-                });
+            reject();
         });
     }
 

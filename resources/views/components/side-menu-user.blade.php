@@ -1,6 +1,11 @@
 <aside class="menu">
     <ul class="menu-list">
         <li>
+            <a @if( url()->current() == route('profile') ) class="is-active" @endif href="{{ route('profile') }}">
+                My profile
+            </a>
+        </li>
+        <li>
             <a @if( url()->current() == route('products') ) class="is-active" @endif href="{{ route('products') }}">
                 My products
             </a>

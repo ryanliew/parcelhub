@@ -29,7 +29,7 @@
 		<modal :active="dialogActive" @close="dialogActive = false">
 			<template slot="header">{{ dialogTitle }}</template>
 
-			<form @submit.prevent="onSubmit" 
+			<form @submit.prevent="submit" 
 					@keydown="form.errors.clear($event.target.name)" 
 					@input="form.errors.clear($event.target.name)"
 					@keyup.enter="submit">
@@ -130,7 +130,7 @@
 
 			deleteSuccess(response) {
 				this.isDeleting = false;
-				flash(response.message);
+				flash(response.data.message);
 				this.$refs.couriers.refreshTable();
 			},
 

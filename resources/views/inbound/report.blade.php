@@ -83,6 +83,7 @@
     <div class="pull-right width-half">
         <p>Ref No : ___________________</p>
         <p>Date : <u>{{ $inbound->created_at->toDateString() }}</u></p>
+        <p>Arrival date : <u>{{ $inbound->arrival_date->toDateString() }}</u></p>
     </div>
 
     <div class="clear-both"></div>
@@ -90,7 +91,10 @@
     <div class="pull-left width-half">
         <p>Sender : {{ $inbound->user->name }}</p>
         <div class="md-text-box">
-            {{ $inbound->user->name }}
+            {{ $inbound->user->address }}, <br>
+            {{ $inbound->user->address_2 }}, <br>
+            {{ $inbound->user->postcode }} {{ $inbound->user->state }}, {{ $inbound->user->country }} <br>
+            <b>Tel</b>: {{ $inbound->user->phone }}
         </div>
     </div>
 

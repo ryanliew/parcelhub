@@ -27,6 +27,8 @@ Route::get('products', 'ProductController@page')->name('products');
 Route::get('inbounds', 'InboundController@page')->name('inbounds');
 Route::get('outbounds', 'OutboundController@page')->name('outbounds');
 Route::get('purchase', 'PaymentController@page')->name('payment');
+Route::get('users', 'UserController@page')->name('users');
+Route::get('profile', 'UserController@page')->name('profile');
 
 /* Route for Socialite authentication */
 Route::group(['prefix' => 'auth', 'as' => 'auth.social.'], function() {
@@ -71,7 +73,9 @@ Route::group(['prefix' => 'internal'], function() {
 	Route::get('outbound/admin', 'Admin\OutboundController@index');
 	Route::get('outbound/{outbound}', 'OutboundController@show');
 	Route::get('payments', 'PaymentController@index');
+	Route::get('users/list', 'UserController@page');
 	Route::get('users', 'UserController@index');
+	Route::get('user', 'UserController@show');
 });
 
 Route::group(['prefix' => 'courier'], function() {
@@ -131,4 +135,9 @@ Route::group(['prefix' => 'payment'], function() {
     Route::post('store', 'PaymentController@store')->name('payment.store');
     Route::post('approve', 'PaymentController@approve')->name('payment.approve');
     Route::post('purchase', 'PaymentController@purchase')->name('payment.purchase');
+});
+
+
+Route::group(['prefix' => 'user'], function(){
+	Route::post('update', 'UserController@update')->name('user.update');
 });

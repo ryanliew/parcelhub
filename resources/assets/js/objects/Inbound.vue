@@ -11,7 +11,7 @@
 					<div class="level-right">
 						<div class="level-item">
 							<button class="button is-primary" @click="back()">
-								<i class="fa fa-arrow-alt-circle-left"></i>
+								<i class="fa fa-arrow-circle-left"></i>
 								<span class="pl-5">Back to list</span>
 							</button>
 							<a class="button is-primary ml-5" :href="download" target="_blank">
@@ -24,6 +24,16 @@
 			</div>
 			<div class="card-content">
 				<div class="level">
+					<div class="level-item has-text-centered">
+						<div>
+							<p class="heading">
+								Order date
+							</p>
+							<p class="title">
+								{{ inbound.created_at | date }}
+							</p>
+						</div>
+					</div>
 					<div class="level-item has-text-centered">
 						<div>
 							<p class="heading">
