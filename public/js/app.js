@@ -54294,7 +54294,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 	methods: {
 		updateValue: function updateValue(value) {
-			this.$emit('input', value);
+			console.log("Updating");
+			this.$emit('input', !this.defaultChecked);
 		}
 	},
 
@@ -54317,16 +54318,13 @@ var render = function() {
           staticClass: "styled",
           attrs: { id: _vm.name, type: "checkbox" },
           domProps: { checked: _vm.defaultChecked },
-          on: {
-            input: function($event) {
-              _vm.updateValue($event.target.checked)
-            }
-          }
+          on: { click: _vm.updateValue }
         }),
         _vm._v(" "),
         _c("label", {
           attrs: { for: _vm.name },
-          domProps: { textContent: _vm._s(_vm.label) }
+          domProps: { textContent: _vm._s(_vm.label) },
+          on: { click: _vm.updateValue }
         })
       ]),
       _vm._v(" "),
