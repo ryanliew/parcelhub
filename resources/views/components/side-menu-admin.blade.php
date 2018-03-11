@@ -20,6 +20,11 @@
                 Products
             </a>
         </li>
+        <li>
+            <a @if( url()->current() == route('users') ) class="is-active" @endif href="{{ route('users') }}">
+                Users
+            </a>
+        </li>
     </ul>
     <p class="menu-label">
         Orders

@@ -306,9 +306,11 @@
 					{name: 'name', sortField: 'name'},
 					
 					{name: 'category_name', sortField: 'category_name', title: 'Category'},
-					{name: 'volume', sortField: 'volume', title: 'Volume (cm³)'},
-					{name: 'price', sortField: 'price', title: 'Price (RM)'},
-					{name: 'expired_at', sortField: 'expired_at', title: 'Rental expire', callback: 'date'}
+					// {name: 'volume', sortField: 'volume', title: 'Volume (cm³)'},
+					// {name: 'price', sortField: 'price', title: 'Price (RM)'},
+					{name: 'lot_usage', sortField: 'lot_usage', title: 'Usage (cm³)'},
+					{name: 'products.length', title: 'No. item'},
+					{name: 'expired_at', sortField: 'expired_at', title: 'Rental expire', callback: 'date'},
 					
 				];
 
@@ -319,7 +321,7 @@
 				}
 				else
 				{
-					displayFields.push({name: 'left_volume', sortField: 'left_volume', title: 'Volume left (cm³)'});
+					
 					displayFields.push({name: 'lot_status', sortField: 'lot_status', title: 'Rental status', callback: 'purchaseStatusLabel'});
 				}
 				return displayFields;

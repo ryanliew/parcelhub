@@ -33,7 +33,7 @@
 		props: ['defaultValue', 'label', 'required', 'error', 'name', 'type', 'editable', 'focus', 'hideLabel'],
 		data() {
 			return {
-				
+				localValue: ''
 			};
 		},
 
@@ -46,7 +46,7 @@
 
 		methods: {
 			updateValue(value) {
-				this.finalValue = value;
+				this.localValue = value;
 				this.$emit('input', value);
 			}
 		},
@@ -67,7 +67,7 @@
 
 			inputClass(){
 				let theClass = [];
-				if( this.value !== '' || this.type == 'date') {
+				if( ( this.value !== '' && this.value !== null && this.value ) || this.type == 'date') {
 					theClass.push('input--filled');
 				}
 
@@ -79,6 +79,11 @@
 			},
 
 			value() {
+				if(this.defaultValue === undefined)
+				{
+					return this.localValue;
+				}
+
 				return !this.editable && this.type == 'date' ? moment(this.defaultValue).fromNow() : this.defaultValue;
 			}
 		},

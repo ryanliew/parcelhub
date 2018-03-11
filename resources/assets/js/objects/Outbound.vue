@@ -11,7 +11,7 @@
 					<div class="level-right">
 						<div class="level-item">
 							<button class="button is-primary" @click="back()">
-								<i class="fa fa-arrow-alt-circle-left"></i>
+								<i class="fa fa-arrow-circle-left"></i>
 								<span class="pl-5">Back to list</span>
 							</button>
 							<a class="button is-info ml-5" :href="download" target="_blank">
@@ -30,7 +30,7 @@
 								Order date
 							</p>
 							<p class="title">
-								{{ outbound.arrival_date | date }}
+								{{ outbound.created_at | date }}
 							</p>
 						</div>
 					</div>
