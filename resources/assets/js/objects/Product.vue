@@ -5,7 +5,7 @@
 				<div class="card-header-title level">
 					<div class="level-left">
 						<div class="level-item">
-							<span v-text="product.name"></span>
+							<span v-text="product.product_name"></span>
 						</div>
 					</div>
 					<div class="level-right">
@@ -38,6 +38,10 @@
 								</text-input>
 								<text-input :defaultValue="product.volume"
 											label="Volume(cm³)"
+											:editable="false">
+								</text-input>
+								<text-input :defaultValue="product.user_name"
+											label="Owner"
 											:editable="false">
 								</text-input>
 								<p class="heading">

@@ -108,4 +108,9 @@ class Product extends Model
     public function getOutboundProductLotAttribute() {
         return Lot::find($this->pivot->lot_id);
     }
+
+    public function getOwnerNameAttribute()
+    {
+        return $this->user->name;
+    }
 }

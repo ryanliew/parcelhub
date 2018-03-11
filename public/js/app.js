@@ -57978,15 +57978,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-	props: [''],
+	props: ['can_manage'],
 
 	components: { TableView: __WEBPACK_IMPORTED_MODULE_0__components_TableView_vue___default.a, Product: __WEBPACK_IMPORTED_MODULE_1__objects_Product_vue___default.a },
 
 	data: function data() {
 		return {
-			fields: [{ name: 'picture', callback: 'image', title: 'Image' }, { name: 'sku', sortField: 'sku', title: 'SKU' }, { name: 'name', sortField: 'name' }, { name: 'volume', title: 'Volume(cm³)' }, { name: 'is_dangerous', title: 'Dangerous', sortField: 'is_dangerous', callback: 'dangerousTag' }, { name: 'is_fragile', title: 'Fragile', sortField: 'is_fragile', callback: 'fragileTag' }, { name: '__component:products-actions', title: 'Actions' }],
 			detailRow: 'ProductDetailRow',
-			searchables: "name,sku",
 			selectedProduct: '',
 			isViewing: false,
 			dialogActive: false,
@@ -58075,6 +58073,26 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		action: function action() {
 			var action = this.selectedProduct ? "update" : "store";
 			return "/product/" + action;
+		},
+		fields: function fields() {
+			var field = [{ name: 'picture', callback: 'image', title: 'Image' }, { name: 'sku', sortField: 'sku', title: 'SKU' }, { name: 'product_name', sortField: 'product_name', title: 'Name' }, { name: 'volume', title: 'Volume(cm³)' }, { name: 'is_dangerous', title: 'Dangerous', sortField: 'is_dangerous', callback: 'dangerousTag' }, { name: 'is_fragile', title: 'Fragile', sortField: 'is_fragile', callback: 'fragileTag' }];
+
+			if (this.can_manage) {
+				field.push({ name: 'user_name', title: 'Owner', sortField: 'user_name' });
+			}
+
+			field.push({ name: '__component:products-actions', title: 'Actions' });
+
+			return field;
+		},
+		searchables: function searchables() {
+			var searchable = "products.name,sku";
+
+			if (this.can_manage) {
+				searchable += ",users.name";
+			}
+
+			return searchable;
 		}
 	}
 });
@@ -58087,6 +58105,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_moment__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_moment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_moment__);
+//
+//
+//
+//
 //
 //
 //
@@ -58261,7 +58283,7 @@ var render = function() {
           _c("div", { staticClass: "level-left" }, [
             _c("div", { staticClass: "level-item" }, [
               _c("span", {
-                domProps: { textContent: _vm._s(_vm.product.name) }
+                domProps: { textContent: _vm._s(_vm.product.product_name) }
               })
             ])
           ]),
@@ -58323,6 +58345,14 @@ var render = function() {
                     attrs: {
                       defaultValue: _vm.product.volume,
                       label: "Volume(cm³)",
+                      editable: false
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c("text-input", {
+                    attrs: {
+                      defaultValue: _vm.product.user_name,
+                      label: "Owner",
                       editable: false
                     }
                   }),

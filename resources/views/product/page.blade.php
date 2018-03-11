@@ -8,7 +8,7 @@
 					@include('components.side-menu')
 				</div>
 				<div class="column">
-					<products-page></products-page>
+					<products-page can_manage="{{ auth()->user()->hasRole('admin') }}"></products-page>
 				</div>	
 			</div>
 		</section>
