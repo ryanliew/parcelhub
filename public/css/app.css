@@ -12208,12 +12208,17 @@ th {
   width: 150px !important;
 }
 
-.products-list .columns {
+.products-list .row {
   border-bottom: 1px solid #ddd;
+  padding-top: calc(1.5rem - 0.75rem);
 }
 
-.products-list .columns:last-child {
+.products-list .row:last-child {
   border-bottom: 0px solid transparent;
+}
+
+.products-list .row .columns:not(:last-child) {
+  margin-bottom: 0;
 }
 
 /* Custom helper classes */
@@ -12342,6 +12347,10 @@ th {
 .v-select .dropdown-toggle {
   width: 100%;
   text-transform: capitalize;
+}
+
+.v-select input[type="search"] {
+  width: 130px !important;
 }
 
 .product-display .background {

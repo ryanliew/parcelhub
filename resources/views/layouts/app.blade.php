@@ -13,7 +13,7 @@
     @yield('css')
     
     <!-- Stylesheet -->
-    <link rel="stylesheet" href="{{ asset('css/app.css?v=1.0.6') }}">
+    <link rel="stylesheet" href="{{ asset('css/app.css?v=1.0.7') }}">
     
     <script>
         window.App = {!! json_encode([
@@ -25,7 +25,7 @@
 <body>
     <div id="app">
         @if(auth()->check())
-            <navigation title="{{ config('app.name', 'Laravel') }}"></navigation>
+            <navigation can_manage="{{ auth()->user()->hasRole('admin') }}" title="{{ config('app.name', 'Laravel') }}" user="{{ auth()->user()->name }}"></navigation>
         @endif
 
         @yield('content')
@@ -47,8 +47,8 @@
 
     </footer>
     @endif
-    <script src="{{ asset('js/form.js?v=1.0.4') }}"></script>
-    <script src="{{ asset('js/app.js?v=1.7.1') }}"></script>
+    <script src="{{ asset('js/form.js?v=1.0.5') }}"></script>
+    <script src="{{ asset('js/app.js?v=1.7.5') }}"></script>
 
     @yield('js')
 

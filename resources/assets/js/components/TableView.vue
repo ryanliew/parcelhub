@@ -147,6 +147,10 @@
 
 			date(value){
 				return this.$options.filters.date(value);
+			},
+
+			customer(value){
+				return value ? value : "N/A";
 			}
 
 

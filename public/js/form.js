@@ -111,7 +111,7 @@ class Form {
         for (let field in this.originalData) {
             this[field] = this.originalData[field];
         }
-
+        this.submitting = false;
         this.errors.clear();
     }
 
@@ -176,14 +176,17 @@ class Form {
                         resolve(response.data);
                     })
                     .catch(error => {
-                        this.onFail(error.response.data);
+                        this.onFail(error.response);
 
                         reject(error.response.data);
                     });
             });
         }
         return new Promise((resolve, reject) => {
+            this.submitting = false;
             reject();
+
+
         });
     }
 
@@ -208,11 +211,15 @@ class Form {
     onFail(errors) {
         let error = 'Oops! Something went wrong. Please check your input.';
 
-        if(errors.message) error = errors.message;
+        if(errors.status == 500) { error = 'Something went wrong, please try again'; }
+        else {
+            if(errors.data.message) error = errors.message;
+            
+            //console.log(errors);
+            this.errors.record(errors.data);
+        }
 
         flash(error, 'danger');
-        //console.log(errors);
-        this.errors.record(errors);
 
         this.submitting = false;
     }

@@ -83,7 +83,6 @@
 							</div>
 				        </div>
 			          	<div class="products-list">
-			          		<p class="is-danger header" v-text="errorForProducts"></p>
 				          	<div class="columns">
 				          		<div class="column is-narrow">
 				          			#
@@ -93,6 +92,9 @@
 								</div>
 								<div class="column">
 									<b>Quantity</b>
+								</div>
+								<div class="column">
+									<b>Consuming volume</b>
 								</div>
 								<div class="column is-2">
 									<div class="button is-primary is-small" @click="addRow">
@@ -128,6 +130,11 @@
 				          						name="quantity">
 				          			</text-input>
 								</div>
+								<div class="column">
+									<span v-if="productRows[index].product">
+										{{ productRows[index].product.volume * productRows[index].quantity }}
+									</span>
+								</div>
 								<div class="column is-2">
 									<div class="button is-danger is-small" @click="removeRow(index)">
 										<i class="fa fa-minus"></i>
@@ -135,6 +142,7 @@
 									</div>
 								</div>
 				          	</div>
+			          		<p class="is-danger header" v-text="errorForProducts"></p>
 				        </div>
 			    
 				        <button class="button is-primary mt-15" :disabled="this.form.errors.any()" :class="buttonClass" type="submit">Submit</button>

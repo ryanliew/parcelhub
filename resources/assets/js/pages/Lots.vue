@@ -129,6 +129,68 @@
 				<button class="button is-danger" @click="unassignOwner" v-if="selectedUser">Unassign</button>
           	</template>
 		</modal>
+
+		<modal :active="dialogPaymentActive" @close="dialogPaymentActive = false" v-if="selectedPayment">
+			<template slot="header">Payment details</template>
+			
+			<loader v-if="isPaymentLoading"></loader>
+			<div class="columns">
+				<div class="column">
+					<figure class="image">
+						<img :src="selectedPayment.picture">
+					</figure>
+				</div>
+				<div class="column">
+					<text-input :defaultValue="selectedPayment.user.name"
+							:editable="false"
+							:required="false"
+							label="Paid by"
+							type="text">
+					</text-input>
+					<text-input :defaultValue="'RM' + selectedPayment.price"
+							:editable="false"
+							:required="false"
+							label="Amount payable"
+							type="text">
+					</text-input>
+					<text-input :defaultValue="selectedPayment.lots[0].rental_duration + ' months'"
+							:editable="false"
+							:required="false"
+							label="Rental duration"
+							type="text">
+					</text-input>
+					<div v-if="selectedPayment.lots[0].expired_at">
+						<text-input :defaultValue="selectedPayment.lots[0].expired_at | date"
+							:editable="false"
+							:required="false"
+							label="Expire date"
+							type="text">
+						</text-input>
+					</div>
+					
+					<div class="is-divider" data-content="Lots purchased"></div>
+
+					<table class="table is-hoverable is-fullwidth">
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th>Price</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr v-for="lot in selectedPayment.lots">
+								<td v-text="lot.name"></td>
+								<td v-text="lot.price"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+          	<template slot="footer" v-if="can_manage">
+				<button v-if="selectedPayment.status !== 'true'" class="button is-primary" :class="approveLoadingClass" @click="approvePayment">Approve</button>
+          	</template>
+		</modal>
 	</div>
 </template>
 
@@ -151,6 +213,7 @@
 				selectedCategory: '',
 				dialogActive: false,
 				dialogUserActive: false,
+				dialogPaymentActive: false,
 				override: false,
 				form: new Form({
 					id: '',
@@ -163,8 +226,14 @@
 					user_id: '',
 					id: ''
 				}),
+				approveForm: new Form({
+					id: ''
+				}),
 				userOptions: [],
-				selectedUser: ''
+				selectedUser: '',
+				selectedPayment: '',
+				isPaymentLoading: false,
+				paymentApproving: false
 			};
 		},
 
@@ -173,6 +242,7 @@
 
 			this.$events.on('edit', data => this.edit(data));
 			this.$events.on('assign', data => this.editOwner(data));
+			this.$events.on('approve', data => this.approveOwner(data));
 		},
 
 		methods: {
@@ -198,6 +268,25 @@
 			fetchUsers() {
 				axios.get('/internal/users')
 					.then(response => this.setUsers(response));
+			},
+
+			approveOwner(data) {
+				this.dialogPaymentActive = true;
+				this.isPaymentLoading = true;
+				axios.get('/internal/payment/' + data.id)
+					.then(response => this.setPayment(response));
+			},
+
+			setPayment(response) {
+				this.selectedPayment = response.data;
+				this.isPaymentLoading = false;
+			},
+
+			approvePayment() {
+				this.submitting = true;
+				this.approveForm.id = this.selectedPayment.id;
+				this.approveForm.post('/payment/approve')
+					.then(response => this.onSuccess());
 			},
 
 			setUsers(response) {
@@ -230,6 +319,7 @@
 			onSuccess() {
 				this.dialogActive = false;
 				this.dialogUserActive = false;
+				this.dialogPaymentActive = false;
 				this.$refs.lots.refreshTable();
 			},
 
@@ -255,6 +345,7 @@
 			},
 
 			editOwner(data) {
+				this.ownerForm.reset();
 				this.selectedLot = data;
 				if(data.user_name)
 					this.selectedUser = {
@@ -316,7 +407,7 @@
 
 				if(this.can_manage)
 				{
-					displayFields.push({name: 'user_name', sortField: 'user_name', title: 'Customer'});
+					displayFields.push({name: 'user_name', sortField: 'user_name', title: 'Customer', callback: 'customer'});
 					displayFields.push({name: '__component:lots-actions', title: 'Actions'});
 				}
 				else
@@ -325,7 +416,11 @@
 					displayFields.push({name: 'lot_status', sortField: 'lot_status', title: 'Rental status', callback: 'purchaseStatusLabel'});
 				}
 				return displayFields;
-			}
+			},
+
+			approveLoadingClass() {
+				return this.paymentApproving ? 'is-loading' : '';
+			},
 		}
 	}
 </script>

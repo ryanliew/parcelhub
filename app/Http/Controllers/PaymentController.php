@@ -120,8 +120,9 @@ class PaymentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Lot $lot)
     {
+        return $lot->payments()->with('user')->with('lots')->latest()->where('user_id', $lot->user_id)->first();
     }
 
     /**

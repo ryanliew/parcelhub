@@ -97,106 +97,110 @@
 							</div>
 						</div>
 
-						<div class="is-divider" data-content="SELECT LOTS"></div>
-						
-						<table class="table is-hoverable is-fullwidth">
-							<thead>
-								<th>Lot type</th>
-								<th>Price</th>
-								<th>Volume</th>
-								<th>Quantity</th>
-							</thead>
-							<tbody>
-								<tr v-for="(category, index) in categories">
-									<td>{{ category.name }}</td>
-									<td>{{ category.price }}</td>
-									<td>{{ category.volume }}</td>
-									<td v-if="availableLots(category).length > 0">
-										<text-input v-model="categories[index].quantity" :defaultValue="categories[index].quantity"
-				          						:label="'Quantity'"
-				          						:required="true"
-				          						type="number"
-				          						:editable="true"
-				          						:hideLabel="true"
-				          						name="quantity"
-				          						@input="updateTotals(category)"
-				          						:error="categories[index].error"
-				          						:ref="'category-'+category.id">
-				          				</text-input>
-									</td>
-									<td v-else>Sold out</td>
-								</tr>
-							</tbody>
-						</table>
-						<!-- <div class="accordions">
-							<Accordion 
-								v-for="category in categories"
-								:key="category.id"
-								v-if="availableLots(category).length > 0">
-								<template slot="title">
-									{{ category.name }}
-								</template>
+						<div class="is-divider" data-content="PURCHASE DETAILS"></div>
+						<div class="columns">
+							<div class="column">
 								<table class="table is-hoverable is-fullwidth">
 									<thead>
-										<tr>
-											<th>Name</th>
-											<th>Volume(cm³)</th>
-											<th>Price(RM) / Month</th>
-											<th>Purchase</th>
-										</tr>
+										<th>Lot type</th>
+										<th>Price</th>
+										<th>Volume</th>
+										<th>Quantity</th>
 									</thead>
 									<tbody>
-										<tr v-for="lot in availableLots(category)" v-if="lot.user_id == null">
-											<td>
-												{{ lot.lot.name }}
+										<tr v-for="(category, index) in categories">
+											<td>{{ category.name }}</td>
+											<td>{{ category.price }}</td>
+											<td>{{ category.volume }}</td>
+											<td v-if="availableLots(category).length > 0">
+												<text-input v-model="categories[index].quantity" :defaultValue="categories[index].quantity"
+						          						:label="'Quantity'"
+						          						:required="true"
+						          						type="number"
+						          						:editable="true"
+						          						:hideLabel="true"
+						          						name="quantity"
+						          						@input="updateTotals(category)"
+						          						:error="categories[index].error"
+						          						:ref="'category-'+category.id">
+						          				</text-input>
 											</td>
-											<td>
-												{{ lot.lot.volume }}
-											</td>
-											<td>
-												{{ lot.lot.price }}
-											</td>
-											<td>
-												<checkbox-input
-													v-model="selectableLots[lot.index].selected"
-													:defaultChecked="selectableLots[lot.index].selected"
-													:required="false"
-													:name="'lot-' + lot.lot.id"
-													:editable="true"
-													:index="index"
-													@input="toggleCheck(lot.lot)">
-												</checkbox-input>
-											</td>
+											<td v-else>Sold out</td>
 										</tr>
 									</tbody>
 								</table>
-							</Accordion>
-						</div> -->
-						
-						<div class="is-divider" data-content="FILL IN DETAILS"></div>
-						
-						<div class="field">
-							<text-input
-								v-model="rental_duration"
-								:defaultValue="rental_duration"
-								:required="true"
-								label="Rental duration (months)"
-								name="lot_purchases.0.rental_duration"
-								type="number"
-								:editable="true"
-								:error="form.errors.get('lot_purchases.0.rental_duration') ? 'Rental duration is required' : ''">
-							</text-input>
-						</div>
+								<!-- <div class="accordions">
+									<Accordion 
+										v-for="category in categories"
+										:key="category.id"
+										v-if="availableLots(category).length > 0">
+										<template slot="title">
+											{{ category.name }}
+										</template>
+										<table class="table is-hoverable is-fullwidth">
+											<thead>
+												<tr>
+													<th>Name</th>
+													<th>Volume(cm³)</th>
+													<th>Price(RM) / Month</th>
+													<th>Purchase</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr v-for="lot in availableLots(category)" v-if="lot.user_id == null">
+													<td>
+														{{ lot.lot.name }}
+													</td>
+													<td>
+														{{ lot.lot.volume }}
+													</td>
+													<td>
+														{{ lot.lot.price }}
+													</td>
+													<td>
+														<checkbox-input
+															v-model="selectableLots[lot.index].selected"
+															:defaultChecked="selectableLots[lot.index].selected"
+															:required="false"
+															:name="'lot-' + lot.lot.id"
+															:editable="true"
+															:index="index"
+															@input="toggleCheck(lot.lot)">
+														</checkbox-input>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</Accordion>
+								</div> -->
+							</div>
+							<div class="is-divider-vertical"></div>
+							<div class="column">
+							
+								<div class="field">
+									<text-input
+										v-model="rental_duration"
+										:defaultValue="rental_duration"
+										:required="true"
+										label="Rental duration (months)"
+										name="lot_purchases.0.rental_duration"
+										type="number"
+										:editable="true"
+										:error="form.errors.get('lot_purchases.0.rental_duration') ? 'Rental duration is required' : ''">
+									</text-input>
+								</div>
 
-						<div class="field mt-10">
-					    	<image-input v-model="paymentSlip" :defaultImage="paymentSlip"
-					    				@loaded="changePaymentSlipImage"
-					    				label="payment slip"
-					    				name="payment_slip"
-					    				:required="true"
-					    				:error="form.errors.get('payment_slip')">
-					    	</image-input>
-					    </div>	
+								<div class="field mt-10">
+							    	<image-input v-model="paymentSlip" :defaultImage="paymentSlip"
+							    				@loaded="changePaymentSlipImage"
+							    				label="payment slip"
+							    				name="payment_slip"
+							    				:required="true"
+							    				:error="form.errors.get('payment_slip')">
+							    	</image-input>
+							    </div>	
+							</div>
+						</div>
 						
 						<button type="submit" :disabled="!canSubmit" class="button is-primary is-tooltip-danger is-tooltip-right" :class="submitTooltipClass" :data-tooltip="submitTooltipText" >Submit</button>
 					</form>

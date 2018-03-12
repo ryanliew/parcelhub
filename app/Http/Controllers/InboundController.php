@@ -80,11 +80,11 @@ class InboundController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, $this->rules, ['products.required' => "You need to select at least 1 product."]);
+        $this->validate($request, $this->rules, ['products.required' => "Please select at least 1 product."]);
         $auth = auth()->user();
         $now = Carbon::today();
         $compare = Carbon::parse($request->arrival_date);
-        $user_lots = lot::where('volume','>', 0)->where('user_id', $auth->id)->get();
+        $user_lots = $auth->lots()->where('volume','>', 0)->where('status', 'true')->get();
         $collection_index = 0;
         $product_total_volume = 0;
         $products = [];
@@ -100,22 +100,23 @@ class InboundController extends Controller
         // Check for quantity
         if($product_total_volume == 0){
             if(request()->wantsJson()) {
-                return response(json_encode(array('products' => ['You need to have at least 1 product'])), 422);
+                return response(json_encode(array('products' => ['Please select at least 1 product'])), 422);
             }
             return redirect()->back()->withErrors("You need to have at least 1 product");
         }
 
+        $left_volume = $user_lots->sum('left_volume');
         // Check for total left over volume
-        if($product_total_volume > $user_lots->sum('left_volume')){
+        if($product_total_volume > $left_volume){
             if(request()->wantsJson()) {
-                return response(json_encode(array('products' => ['You have exceeded your lot limit'])), 422);
+                return response(json_encode(array('products' => ['You only have ' . $left_volume . 'cm³ of space left but you are trying to fit in ' . $product_total_volume . 'cm³. Please purchase more lots.'])), 422);
             }
             return redirect()->back()->withErrors("You have exceeded your lot limit.");
         }
         // Check for days before order
         if($compare->diffInDays($now) < Settings::get('days_before_order') ){
             if(request()->wantsJson()) {
-                return response(json_encode(array('arrival_date' => ['Inbound must be created before '.Settings::get('days_before_order').' days.'])), 422);
+                return response(json_encode(array('arrival_date' => ['Inbound must be created '.Settings::get('days_before_order').' month(s) before.'])), 422);
             }
             return redirect()->back()->withErrors("Inbound must be created before ".Settings::get('days_before_order')." days.");
         }

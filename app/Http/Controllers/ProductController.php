@@ -58,7 +58,17 @@ class ProductController extends Controller
                                     )
                                 ->leftJoin('users', 'products.user_id', '=', 'users.id'));
             else
-                return Controller::VueTableListResult(auth()->user()->products()->with(["inbounds", "lots", "outbounds"]));
+                return Controller::VueTableListResult(auth()->user()->products()->with(["inbounds", "lots", "outbounds"])->select('products.picture as picture',
+                                        'products.sku as sku',
+                                        'products.name as product_name',
+                                        'products.is_dangerous as is_dangerous',
+                                        'products.is_fragile as is_fragile',
+                                        'products.width as width',
+                                        'products.height as height',
+                                        'products.length as length',
+                                        'users.name as user_name'
+                                    )
+                                ->leftJoin('users', 'products.user_id', '=', 'users.id'));
         }
         
 
@@ -68,13 +78,13 @@ class ProductController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * 
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function selector()
     {
-        //
+        return Controller::VueTableListResult(auth()->user()->products()->with(["inbounds", "lots", "outbounds"]));
     }
 
     /**
