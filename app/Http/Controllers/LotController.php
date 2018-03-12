@@ -70,9 +70,8 @@ class LotController extends Controller
                 return Controller::VueTableListResult(
                     $user->lots()->with(['products'])
                                 ->select('lots.id as id', 
-                                        'lots.name as name',
+                                        'lots.name as name', 
                                         'lots.status as lot_status',
-                                        'lots.volume - lots.left_volume as lot_usage',
                                         'categories.name as category_name', 
                                         'categories.id as category_id',
                                         'categories.volume as category_volume',
@@ -81,6 +80,7 @@ class LotController extends Controller
                                         'users.name as user_name',
                                         'lots.expired_at as expired_at',
                                         'users.id as user_id')
+                                ->selectRaw('lots.volume - lots.left_volume as lot_usage')
                                 ->join('categories', 'categories.id', '=', 'category_id')
                                 ->leftJoin('users', 'users.id', '=', 'user_id')
                     );

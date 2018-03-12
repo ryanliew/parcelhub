@@ -9,12 +9,20 @@
                     <span>Edit</span>
                 </button>
             </div>
-            <div class="column">
+            <div class="column" v-if="rowData.lot_status == 'true' || !rowData.user_id">
                 <button class="button is-info" @click="itemAction('assign', rowData, rowIndex)">
                     <span class="icon">
                         <i class="fa fa-user"></i>
                     </span>
-                    <span>Manage owner</span>
+                    <span>Reassign owner</span>
+                </button>
+            </div>
+            <div class="column" v-if="rowData.user_id && rowData.lot_status == 'false'">
+                <button class="button is-success" @click="itemAction('approve', rowData, rowIndex)">
+                    <span class="icon">
+                        <i class="fa fa-user"></i>
+                    </span>
+                    <span>Approve owner</span>
                 </button>
             </div>
         </div>

@@ -25,7 +25,7 @@
 <body>
     <div id="app">
         @if(auth()->check())
-            <navigation title="{{ config('app.name', 'Laravel') }}"></navigation>
+            <navigation can_manage="{{ auth()->user()->hasRole('admin') }}" title="{{ config('app.name', 'Laravel') }}" user="{{ auth()->user()->name }}"></navigation>
         @endif
 
         @yield('content')

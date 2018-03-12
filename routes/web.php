@@ -66,6 +66,7 @@ Route::group(['prefix' => 'internal'], function() {
 	Route::get('categories', 'CategoryController@index');
 	Route::get('lots', 'LotController@index');
 	Route::get('couriers', 'CourierController@index');
+	Route::get('products/selector', 'ProductController@selector');
 	Route::get('products', 'ProductController@index');
 	Route::get('inbound/user', 'InboundController@index');
 	Route::get('outbound/user', 'OutboundController@index');
@@ -73,6 +74,7 @@ Route::group(['prefix' => 'internal'], function() {
 	Route::get('outbound/admin', 'Admin\OutboundController@index');
 	Route::get('outbound/{outbound}', 'OutboundController@show');
 	Route::get('payments', 'PaymentController@index');
+	Route::get('payment/{lot}', 'PaymentController@show');
 	Route::get('users/list', 'UserController@page');
 	Route::get('users', 'UserController@index');
 	Route::get('user', 'UserController@show');

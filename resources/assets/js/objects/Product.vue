@@ -32,7 +32,7 @@
 											label="SKU"
 											:editable="false">	
 								</text-input>
-								<text-input :defaultValue="product.name"
+								<text-input :defaultValue="product.product_name"
 											label="Name"
 											:editable="false">
 								</text-input>

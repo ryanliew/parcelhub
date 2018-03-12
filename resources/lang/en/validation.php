@@ -117,7 +117,7 @@ return [
         ],
         'outbound_products.*' => [
             'product_exist' => 'One of the selected outbound product doesn\'t exist in your lot',
-            'product_stock' => 'The quantity of :product you requested for outbound has exceeded in your lot',
+            'product_stock' => 'You only have :number :product in your lot',
         ],
     ],
 

@@ -176,7 +176,6 @@
 						
 
 			          	<div class="products-list">
-			          		<p class="is-danger header" v-text="errorForProducts"></p>
 				          	<div class="columns">
 				          		<div class="column is-narrow">
 				          			#
@@ -194,44 +193,47 @@
 									</div>
 								</div>
 				          	</div>
-			          		<div v-for="(row, index) in productRows" class="columns">
-			          			<div class="column is-narrow">
-									{{ index + 1 }}
-			          			</div>
-								<div class="column">
-									<products-selector-input v-model="productRows[index].product" :defaultData="productRows[index].product" 
-												label="Products"
-												name="products" 
-												:required="true"
-												:potentialData="productsOptions"
-												:editable="true"
-												placeholder="Select product"
-												:hideLabel="true"
-												@input="clearProductErrors">
-									</products-selector-input>
-								</div>
-								<div class="column">
-									<text-input v-if="productRows[index]" v-model="productRows[index].quantity" :defaultValue="productRows[index].quantity"
-				          						:label="'Quantity'"
-				          						:required="true"
-				          						type="number"
-				          						:editable="true"
-				          						:hideLabel="true"
-				          						@input="clearProductErrors"
-				          						name="quantity">
-				          			</text-input>
-								</div>
-								<div class="column is-2">
-									<div class="button is-danger is-small" @click="removeRow(index)">
-										<i class="fa fa-minus"></i>
-										<span class="pl-5">Remove product</span>
+			          		<div v-for="(row, index) in productRows" class="row">
+			          			<div class="columns">
+				          			<div class="column is-narrow">
+										{{ index + 1 }}
+				          			</div>
+									<div class="column">
+										<products-selector-input v-model="productRows[index].product" :defaultData="productRows[index].product" 
+													label="Products"
+													name="products" 
+													:required="true"
+													:potentialData="productsOptions"
+													:editable="true"
+													placeholder="Select product"
+													:hideLabel="true"
+													@input="clearProductErrors">
+										</products-selector-input>
+									</div>
+									<div class="column">
+										<text-input v-if="productRows[index]" v-model="productRows[index].quantity" :defaultValue="productRows[index].quantity"
+					          						:label="'Quantity'"
+					          						:required="true"
+					          						type="number"
+					          						:editable="true"
+					          						:hideLabel="true"
+					          						@input="clearProductErrors(index)"
+					          						name="quantity">
+					          			</text-input>
+									</div>
+									<div class="column is-2">
+										<div class="button is-danger is-small" @click="removeRow(index)">
+											<i class="fa fa-minus"></i>
+											<span class="pl-5">Remove product</span>
+										</div>
 									</div>
 								</div>
+								<p class="is-danger header" v-text="form.errors.get('outbound_products.' + index)"></p>
 				          	</div>
 				        </div>	
+						<p class="is-danger header" v-text="this.form.errors.get('outbound_products')"></p>
 
-
-				        <button class="button is-primary mt-15" :disabled="this.form.errors.any()" :class="buttonClass">Submit</button>
+				        <button class="button is-primary mt-15" :disabled="form.errors.any()" :class="buttonClass">Submit</button>
 		          	</form>
 				</div>
 			</div>
@@ -294,7 +296,7 @@
 
 		methods: {
 			getProducts() {
-				axios.get('internal/products')
+				axios.get('internal/products/selector')
 					.then(response => this.setProducts(response));
 			},
 
@@ -324,11 +326,12 @@
 
 			removeRow(index) {
 				this.productRows.splice(index, 1);
-				this.clearProductErrors();
+				this.clearProductErrors(index);
 			},
 
-			clearProductErrors() {
+			clearProductErrors(index) {
 				this.form.errors.clear("outbound_products");
+				this.form.errors.clear("outbound_products." + index);
 				this.errorForProducts = '';
 			},
 
@@ -393,6 +396,7 @@
 
 			couriersUpdate(data) {
 				this.form.courier_id = data.value;
+				this.form.errors.clear('courier_id');
 			},
 
 			productsUpdate(data) {
