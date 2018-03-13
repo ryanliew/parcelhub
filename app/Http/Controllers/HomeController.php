@@ -22,7 +22,11 @@ class HomeController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
+    {   
+        if(auth()->user()->hasRole('admin'))
+        {
+            return redirect(route('dashboard'));
+        }
         return view('home');
     }
 }

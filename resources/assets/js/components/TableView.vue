@@ -13,7 +13,8 @@
 	    		@vuetable:pagination-data="onPaginationData"
 	    		@vuetable:loaded="onLoaded"
 	    		@vuetable-refresh="refreshTable"
-	    		@vuetable:cell-clicked="onCellClicked">	
+	    		@vuetable:cell-clicked="onCellClicked"
+	    		:no-data-template="empty">	
 	    </vuetable>
 	    <div class="level">
 	    	<div class="level-left">
@@ -39,7 +40,7 @@
 	import Loader from './Loader';
 
 	export default {
-		props: ['user', 'fields', 'url', 'searchables', 'detail'],
+		props: ['user', 'fields', 'url', 'searchables', 'detail', 'empty'],
 
 		components: { Vuetable, VuetablePagination, VuetablePaginationInfo, VuetableFilterBar, Loader },
 

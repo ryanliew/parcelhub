@@ -62,10 +62,12 @@ Vue.component('inbounds-page', require('./pages/Inbounds.vue'));
 Vue.component('outbounds-page', require('./pages/Outbounds.vue'));
 Vue.component('payments-page', require('./pages/Payments.vue'));
 Vue.component('users-page', require('./pages/Users.vue'));
+Vue.component('dashboard-page', require('./pages/Dashboard.vue'));
 
 // Single instance view components
 Vue.component('product', require('./objects/Product.vue'));
 Vue.component('inbound', require('./objects/Inbound.vue'));
+Vue.component('outbound', require('./objects/Outbound.vue'));
 
 window.flash = function(message, level = 'success'){
  	window.events.$emit('flash', {message, level});

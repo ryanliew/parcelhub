@@ -36,4 +36,14 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
+
+    protected function authenticate()
+    {
+        if (Auth::attempt(['email' => $email, 'password' => $password])) {
+            if(Auth::user()->hasRole('admin'))
+                return redirect()->intended('dashboard');
+
+            return redirect()->intended('lots');
+        }
+    }
 }

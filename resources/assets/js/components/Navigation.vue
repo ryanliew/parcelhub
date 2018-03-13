@@ -25,7 +25,7 @@
 			  				</a>
 				  			<div class="navbar-dropdown">
 					  			<a class="navbar-item" href="/">Home</a>
-					  			<a class="navbar-item" href="/lots" v-text="panelTitle"></a>
+					  			<a class="navbar-item" :href="panelLink" v-text="panelTitle"></a>
 					  			<a class="navbar-item" @click="logout">Logout</a>
 					  		</div>
 					  	</div>
@@ -72,6 +72,14 @@
 
 			dropdownClass() {
 				return this.dropdownActive ? 'is-active' : '';
+			},
+
+			panelLink() {
+				if(this.can_manage)
+				{
+					return '/dashboard';
+				}
+				return '/lots';
 			}
 		}
 	}

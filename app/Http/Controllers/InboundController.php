@@ -1,13 +1,14 @@
 <?php
 namespace App\Http\Controllers;
-use PDF;
-use Settings;
-use App\Lot;
 use App\Inbound;
-use App\Product;
 use App\InboundProduct;
+use App\Lot;
+use App\Product;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use PDF;
+use Settings;
 class InboundController extends Controller
 {
     protected $rules = [
@@ -45,13 +46,32 @@ class InboundController extends Controller
         {
             $user = auth()->user();
             if($user->hasRole('admin'))
-                 return Controller::VueTableListResult(Inbound::with('products', 'products_with_lots.lots'));
+                 return Controller::VueTableListResult(Inbound::with('products', 'products_with_lots.lots')
+                                                                ->select('arrival_date',
+                                                                        'total_carton',
+                                                                        'process_status',
+                                                                        'inbounds.id as id',
+                                                                        'users.name as customer'
+                                                                        )
+                                                                ->leftJoin('users', 'user_id', '=', 'users.id'));
             else
                 return Controller::VueTableListResult(auth()->user()->inbounds()->with('products', 'products_with_lots.lots'));
         }
         $inbounds = inbound::where('status', 'true')->get();
         $products = product::where('user_id', auth()->user()->id)->where('status', 'true')->get();
         return view('inbound.index')->with('inbounds', $inbounds)->with('products', $products);
+    }
+
+    public function indexToday()
+    {
+        return Controller::VueTableListResult(Inbound::with('products', 'products_with_lots.lots')->select('arrival_date',
+                                                                        'total_carton',
+                                                                        'process_status',
+                                                                        'inbounds.id as id',
+                                                                        'users.name as customer'
+                                                                        )
+                                                                ->leftJoin('users', 'user_id', '=', 'users.id')
+                                                                ->whereDate('arrival_date', DB::raw('CURDATE()')));
     }
     /**
      * Show the form for creating a new resource.

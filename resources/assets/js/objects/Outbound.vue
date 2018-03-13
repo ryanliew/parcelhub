@@ -114,7 +114,7 @@
 							@keydown="form.errors.clear($event.target.name)" 
 							@input="form.errors.clear($event.target.name)"
 							@keyup.enter="submit"
-							v-if="can_manage">
+							v-if="canManage">
 							
 							<div class="field">
 								<selector-input v-model="selectedStatus" :defaultData="selectedStatus"
@@ -145,7 +145,7 @@
 
 					</div>
 				</div>
-				<div class="card">
+				<div class="card mt-10">
 					<div class="card-header">
 						<div class="card-header-title level">
 							<div class="level-left">
