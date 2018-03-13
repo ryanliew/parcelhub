@@ -59641,7 +59641,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		getProducts: function getProducts() {
 			var _this2 = this;
 
-			axios.get('internal/products').then(function (response) {
+			axios.get('internal/products/selector').then(function (response) {
 				return _this2.setProducts(response);
 			});
 		},
