@@ -196,7 +196,7 @@
 
 		methods: {
 			getProducts() {
-				axios.get('internal/products')
+				axios.get('internal/products/selector')
 					.then(response => this.setProducts(response));
 			},
 
