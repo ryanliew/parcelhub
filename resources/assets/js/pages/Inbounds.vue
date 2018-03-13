@@ -164,13 +164,6 @@
 
 		data() {
 			return {
-				fields: [
-					{name: 'id', title: '#'},
-					{name: 'arrival_date', sortField: 'date', title: 'Arrival date', callback: 'date'},
-					{name: 'total_carton', sortField: 'carton', title: 'Total carton'},
-					{name: 'process_status', callback: 'inboundStatusLabel', title: 'Status', sortField: 'process_status'},
-					{name: '__component:inbounds-actions', title: 'Actions'}	
-				],
 				searchables: "process_status",
 				selectedInbound: '',
 				isCreating: false,
@@ -191,7 +184,7 @@
 
 		mounted() {
 			this.getProducts();
-			this.$events.on('view', data => this.view(data));
+			this.$events.on('viewInbound', data => this.view(data));
 		},
 
 		methods: {
@@ -288,6 +281,21 @@
 
 			buttonClass() {
 				return this.form.submitting ? 'is-loading' : '';
+			},
+
+			fields() {
+				let displayFields = [{name: 'id', title: '#'},
+					{name: 'arrival_date', sortField: 'date', title: 'Arrival date', callback: 'date'},
+					{name: 'total_carton', sortField: 'carton', title: 'Total carton'},
+					{name: 'process_status', callback: 'inboundStatusLabel', title: 'Status', sortField: 'process_status'},
+					{name: '__component:inbounds-actions', title: 'Actions'}];
+
+				if(this.can_manage)
+				{
+					displayFields.splice(1, 0, {name: 'customer', sortField: 'users.name', title: 'Customer'});
+				}
+
+				return displayFields;
 			}
 		}
 	}

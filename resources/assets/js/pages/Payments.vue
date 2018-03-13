@@ -20,7 +20,7 @@
 					</div>
 				</div>
 				<div class="card-content">
-					<table-view ref="couriers" 
+					<table-view ref="payments" 
 								:fields="fields" 
 								url="/internal/payments">	
 					</table-view>
@@ -315,7 +315,7 @@
 		},
 
 		mounted() {
-			this.$events.on('view', data => this.view(data));
+			this.$events.on('viewPayment', data => this.view(data));
 
 			this.getLotCategories();
 		},

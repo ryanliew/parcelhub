@@ -2,7 +2,7 @@
     <div>
         <div class="columns is-gapless">
             <div class="column">
-                <button class="button is-info" @click="itemAction('view', rowData, rowIndex)">
+                <button class="button is-info" @click="itemAction('viewInbound', rowData, rowIndex)">
                     <span class="icon">
                         <i class="fa fa-search"></i>
                     </span>

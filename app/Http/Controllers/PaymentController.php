@@ -12,6 +12,16 @@ use Illuminate\Support\Facades\Input;
 
 class PaymentController extends Controller
 {
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
     public function page()
     {
         if(request()->wantsJson()) {
@@ -49,6 +59,11 @@ class PaymentController extends Controller
             return view("payment.user")->with('lots', $lots);
 
         }
+    }
+
+    public function indexPending()
+    {
+        return Controller::VueTableListResult(Payment::with('user')->with('lots')->where('status', 'false'));
     }
 
     /**

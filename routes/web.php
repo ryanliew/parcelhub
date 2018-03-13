@@ -29,6 +29,7 @@ Route::get('outbounds', 'OutboundController@page')->name('outbounds');
 Route::get('purchase', 'PaymentController@page')->name('payment');
 Route::get('users', 'UserController@page')->name('users');
 Route::get('profile', 'UserController@page')->name('profile');
+Route::get('dashboard', 'AdminController@page')->name('dashboard');
 
 /* Route for Socialite authentication */
 Route::group(['prefix' => 'auth', 'as' => 'auth.social.'], function() {
@@ -69,11 +70,14 @@ Route::group(['prefix' => 'internal'], function() {
 	Route::get('products/selector', 'ProductController@selector');
 	Route::get('products', 'ProductController@index');
 	Route::get('inbound/user', 'InboundController@index');
+	Route::get('inbounds/today', 'InboundController@indexToday');
 	Route::get('outbound/user', 'OutboundController@index');
 	Route::get('inbound/admin', 'Admin\InboundController@index');
+	Route::get('outbounds/pending', 'OutboundController@indexPending');
 	Route::get('outbound/admin', 'Admin\OutboundController@index');
 	Route::get('outbound/{outbound}', 'OutboundController@show');
 	Route::get('payments', 'PaymentController@index');
+	Route::get('payments/pending', 'PaymentController@indexPending');
 	Route::get('payment/{lot}', 'PaymentController@show');
 	Route::get('users/list', 'UserController@page');
 	Route::get('users', 'UserController@index');

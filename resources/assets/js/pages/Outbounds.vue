@@ -243,12 +243,11 @@
 
 <script>
 	import TableView from '../components/TableView.vue';
-	import outbound from '../objects/outbound.vue';
 
 	export default {
 		props: ['can_manage'],
 
-		components: { TableView, outbound },
+		components: { TableView },
 
 		data() {
 			return {
@@ -291,7 +290,7 @@
 
 		mounted() {
 			this.getProducts();
-			this.$events.on('view', data => this.view(data));
+			this.$events.on('viewOutbound', data => this.view(data));
 		},
 
 		methods: {

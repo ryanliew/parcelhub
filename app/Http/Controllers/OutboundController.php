@@ -90,6 +90,27 @@ class OutboundController extends Controller
         }
     }
 
+    public function indexPending()
+    {
+       return Controller::VueTableListResult( Outbound::select('outbounds.id as id',
+                                                                    'amount_insured',
+                                                                    'process_status',
+                                                                    'couriers.name as courier',
+                                                                    'outbounds.created_at',
+                                                                    'outbounds.recipient_name',
+                                                                    'outbounds.recipient_address',
+                                                                    'outbounds.recipient_address_2',
+                                                                    'outbounds.recipient_phone',
+                                                                    'outbounds.recipient_state',
+                                                                    'outbounds.recipient_country',
+                                                                    'outbounds.recipient_postcode',
+                                                                    'users.name as customer'
+                                                                    )
+                                                                ->leftJoin('couriers', 'courier_id', '=', 'couriers.id')
+                                                                ->leftJoin('users', 'user_id', '=', 'users.id')
+                                                                ->where('process_status', 'pending') );
+    } 
+
     /**
      * Show the form for creating a new resource.
      *
