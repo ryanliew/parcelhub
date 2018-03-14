@@ -83,7 +83,7 @@
         <div class="md-text-box">
             {{ $outbound->user->name }} <br>
             {{ $outbound->user->address }}, <br>
-            @if( !empty( $outbound->user->address ) ) 
+            @if( !empty( $outbound->user->address_2 ) ) 
                 {{ $outbound->user->address_2 }}, <br>
             @endif
             {{ $outbound->user->postcode }}, {{ $outbound->user->state }}, {{ $outbound->user->country }} <br>
