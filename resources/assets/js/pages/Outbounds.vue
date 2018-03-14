@@ -61,6 +61,7 @@
 						@keydown="form.errors.clear($event.target.name)" 
 						@input="form.errors.clear($event.target.name)"
 						@keyup.enter="submit">
+						<p class="is-danger header" v-if="form.errors.get('overall')" v-text="form.errors.get('overall')"></p> <br>
 						<div class="columns">
 				         	<div class="column">
 				          		<text-input v-model="form.recipient_name" :defaultValue="form.recipient_name" 

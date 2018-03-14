@@ -59608,6 +59608,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 
 
@@ -60577,6 +60578,19 @@ var render = function() {
                       }
                     },
                     [
+                      _vm.form.errors.get("overall")
+                        ? _c("p", {
+                            staticClass: "is-danger header",
+                            domProps: {
+                              textContent: _vm._s(
+                                _vm.form.errors.get("overall")
+                              )
+                            }
+                          })
+                        : _vm._e(),
+                      _vm._v(" "),
+                      _c("br"),
+                      _vm._v(" "),
                       _c("div", { staticClass: "columns" }, [
                         _c(
                           "div",
@@ -60891,6 +60905,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_TableView_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__components_TableView_vue__);
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+//
 //
 //
 //
@@ -61493,6 +61508,19 @@ var render = function() {
                       }
                     },
                     [
+                      _vm.form.errors.get("overall")
+                        ? _c("p", {
+                            staticClass: "is-danger header",
+                            domProps: {
+                              textContent: _vm._s(
+                                _vm.form.errors.get("overall")
+                              )
+                            }
+                          })
+                        : _vm._e(),
+                      _vm._v(" "),
+                      _c("br"),
+                      _vm._v(" "),
                       _c("div", { staticClass: "columns" }, [
                         _c(
                           "div",
@@ -62339,7 +62367,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 			form: new Form({
 				payment_slip: '',
 				lot_purchases: '',
-				price: ''
+				price: '',
+				rental_duration: ''
 			}),
 			approveForm: new Form({
 				id: ''
@@ -62424,16 +62453,16 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 			this.rental_duration = '';
 		},
 		submit: function submit() {
-			var _this4 = this;
-
+			console.log("Submitted!");
 			var selectedLots = [];
 			this.categories.forEach(function (category) {
 				var lots = [];
-				lots = _.take(category.lots, category.quantity);
+				var availableLots = this.availableLots(category);
+				lots = _.take(availableLots, category.quantity);
 				lots.forEach(function (lot) {
-					selectedLots.push(lot);
+					selectedLots.push(lot.lot);
 				});
-			});
+			}.bind(this));
 
 			//let selectedLots = _.filter(this.selectableLots, function(lot){ return lot.selected; });
 			this.form.lot_purchases = selectedLots.map(function (lot) {
@@ -62445,11 +62474,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 			this.form.price = this.totalPrice;
 
-			this.form.post(this.action).then(function (data) {
-				return _this4.onSuccess();
-			}).catch(function (error) {
-				return _this4.onFail(error);
-			});
+			/*this.form.post(this.action)
+   	.then(data => this.onSuccess())
+   	.catch(error => this.onFail(error));*/
 		},
 		onSuccess: function onSuccess() {
 			this.isPurchasing = false;
@@ -62484,15 +62511,17 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 				category.error = "We only have " + availableLotCount + " of " + category.name + " lots left";
 			}
 
-			this.subPrice = _.sumBy(this.categories, function (category) {
-				return parseInt(category.quantity) * category.price;
-			});
-			this.totalVolume = _.sumBy(this.categories, function (category) {
-				return parseInt(category.quantity) * category.volume;
-			});
-			this.totalLots = _.sumBy(this.categories, function (category) {
-				return parseInt(category.quantity);
-			});
+			if (category.quantity) {
+				this.subPrice = _.sumBy(this.categories, function (category) {
+					return parseInt(category.quantity) * category.price;
+				});
+				this.totalVolume = _.sumBy(this.categories, function (category) {
+					return parseInt(category.quantity) * category.volume;
+				});
+				this.totalLots = _.sumBy(this.categories, function (category) {
+					return parseInt(category.quantity);
+				});
+			}
 		},
 		availableLots: function availableLots(category) {
 			var availableLots = [];
@@ -62518,7 +62547,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 			return "/payment/purchase";
 		},
 		totalPrice: function totalPrice() {
-			return this.subPrice * this.rental_duration;
+			return this.subPrice * this.form.rental_duration;
 		},
 		canSubmit: function canSubmit() {
 			return this.totalLots > 0 && !this.form.errors.any();
@@ -63015,24 +63044,24 @@ var render = function() {
                               [
                                 _c("text-input", {
                                   attrs: {
-                                    defaultValue: _vm.rental_duration,
+                                    defaultValue: _vm.form.rental_duration,
                                     required: true,
                                     label: "Rental duration (months)",
-                                    name: "lot_purchases.0.rental_duration",
+                                    name: "rental_duration",
                                     type: "number",
                                     editable: true,
                                     error: _vm.form.errors.get(
-                                      "lot_purchases.0.rental_duration"
+                                      "rental_duration"
                                     )
                                       ? "Rental duration is required"
                                       : ""
                                   },
                                   model: {
-                                    value: _vm.rental_duration,
+                                    value: _vm.form.rental_duration,
                                     callback: function($$v) {
-                                      _vm.rental_duration = $$v
+                                      _vm.$set(_vm.form, "rental_duration", $$v)
                                     },
-                                    expression: "rental_duration"
+                                    expression: "form.rental_duration"
                                   }
                                 })
                               ],
@@ -64468,21 +64497,19 @@ var render = function() {
                             )
                           ]),
                           _vm._v(" "),
-                          _vm.can_manage
-                            ? _c("template", { slot: "footer" }, [
-                                _vm.selectedPayment.status !== "true"
-                                  ? _c(
-                                      "button",
-                                      {
-                                        staticClass: "button is-primary",
-                                        class: _vm.approveLoadingClass,
-                                        on: { click: _vm.approve }
-                                      },
-                                      [_vm._v("Approve")]
-                                    )
-                                  : _vm._e()
-                              ])
-                            : _vm._e()
+                          _c("template", { slot: "footer" }, [
+                            _vm.selectedPayment.status !== "true"
+                              ? _c(
+                                  "button",
+                                  {
+                                    staticClass: "button is-primary",
+                                    class: _vm.approveLoadingClass,
+                                    on: { click: _vm.approve }
+                                  },
+                                  [_vm._v("Approve")]
+                                )
+                              : _vm._e()
+                          ])
                         ],
                         2
                       )

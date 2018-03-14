@@ -81,7 +81,13 @@
     <div class="pull-left width-half">
         <p>Sender</p>
         <div class="md-text-box">
-            {{ $outbound->user->name }}
+            {{ $outbound->user->name }} <br>
+            {{ $outbound->user->address }}, <br>
+            @if( !empty( $outbound->user->address_2 ) ) 
+                {{ $outbound->user->address_2 }}, <br>
+            @endif
+            {{ $outbound->user->postcode }}, {{ $outbound->user->state }}, {{ $outbound->user->country }} <br>
+            <b>Tel:</b> {{ $outbound->user->phone }},
         </div>
     </div>
     <div class="pull-right width-half">
@@ -89,11 +95,11 @@
         <div class="md-text-box">
             {{ $outbound->recipient_name }} <br>
             {{ $outbound->recipient_address }}, <br>
-            @if( !empty( $inbound->user->address_2 ) ) 
-                {{ $inbound->user->address_2 }}, <br>
+            @if( !empty( $outbound->recipient_address_2) ) 
+                {{ $outbound->recipient_address_2 }}, <br>
             @endif
             {{ $outbound->recipient_postcode }}, {{ $outbound->recipient_state }}, {{ $outbound->recipient_country }} <br>
-            {{ $outbound->recipient_phone }}
+            <b>Tel:</b> {{ $outbound->recipient_phone }}
         </div>
     </div>
 
@@ -101,7 +107,7 @@
 
     <div class="pt-2 pull-left width-half">
         <div class="s-text-box">
-            <p>Courier Service : <br>{{ $outbound->courier->name }}</p>
+            Courier Service : <br>{{ $outbound->courier->name }}
         </div>
     </div>
     <div class="pt-2 pull-right width-half">
@@ -115,7 +121,7 @@
     <div class="clear-both"></div>
 
     <div class="pull-left" style="padding-left: 20%">
-        <p>Insurances</p>
+        <p>Insurance</p>
     </div>
     <div class="pull-right width-half">
         <p>
