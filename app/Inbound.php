@@ -39,6 +39,8 @@ use Illuminate\Database\Eloquent\Model;
 class Inbound extends Model
 {
 	protected $guarded = [];
+
+    protected $dates = ["arrival_date"];
 	
     public function user(){
     	return $this->belongsTo('App\User');
