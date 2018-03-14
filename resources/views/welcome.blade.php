@@ -137,7 +137,6 @@
 <table width="100%" border="0" cellpadding="0" cellspacing="0" align="center" class="full" id="service">
     <tbody><tr>
         <td width="100%" valign="top" bgcolor="#f6f6f6">
-
             <table width="100%" border="0" cellpadding="0" cellspacing="0" align="center" class="full">
                 <tbody><tr>
                     <td align="center">
@@ -149,7 +148,7 @@
                                     <!-- Headline Header -->
                                     <table width="600" border="0" cellpadding="0" cellspacing="0" align="center" style="border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;" class="full">
                                         <tbody><tr>
-                                            <td width="100%" height="60"></td>
+                                            <td width="100%" height="35"></td>
                                         </tr>
                                         <tr>
                                             <td width="100%" style="font-size: 18px; color: #191919; text-align: center; font-family: Helvetica, Arial, sans-serif, 'Open Sans'; font-weight: 600; line-height: 24px; vertical-align: top; text-transform: uppercase;" class="fullCenter">  
@@ -338,9 +337,7 @@
                                     <table width="270" border="0" cellpadding="0" cellspacing="0" align="left" style="border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;" class="table50Left">
                                         <tbody><tr>
                                             <td width="100%">
-                                                <a href="#" style="text-decoration: none;">
-                                                    <img src="images/row-3.jpg" alt="" border="0" width="262" height="auto" style="width: 262px; height: auto;">
-                                                </a>
+                                                <img src="images/row-3.jpg" alt="" border="0" width="262" height="auto" style="width: 262px; height: auto;">
                                             </td>
                                         </tr>
                                         <tr>
@@ -408,9 +405,7 @@
                                     <table width="270" border="0" cellpadding="0" cellspacing="0" align="right" style="border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;" class="table50Right">
                                         <tbody><tr>
                                             <td width="100%">
-                                                <a href="#" style="text-decoration: none;">
-                                                    <img src="images/row-4.jpg" alt="" border="0" width="262" height="auto" style="width: 262px; height: auto;">
-                                                </a>
+                                                <img src="images/row-4.jpg" alt="" border="0" width="262" height="auto" style="width: 262px; height: auto;">
                                             </td>
                                         </tr>
                                         <tr>
@@ -912,11 +907,12 @@ $(document).ready(function(){
 
       // Store hash
       var hash = this.hash;
-
+      
       // Using jQuery's animate() method to add smooth page scroll
       // The optional number (800) specifies the number of milliseconds it takes to scroll to the specified area
-      $('html, body').animate({
-        scrollTop: $(hash).offset().top
+      var test = $(hash).offset().top - 50;
+      $('html body').animate({
+        scrollTop: test
       }, 800, function(){
    
         // Add hash (#) to URL when done scrolling (default click behavior)
@@ -943,7 +939,7 @@ $(document).ready(function () {
             menu = target;
         $target = $(target);
         $('html, body').stop().animate({
-            'scrollTop': $target.offset().top+2
+            'scrollTop': $target.offset().top - 50
         }, 500, 'swing', function () {
             window.location.hash = target;
             $(document).on("scroll", onScroll);
@@ -956,7 +952,7 @@ function onScroll(event){
     $('#menu-list a[href^="#"').each(function () {
         var currLink = $(this);
         var refElement = $(currLink.attr("href"));
-        if (refElement.position().top <= scrollPos && refElement.position().top + refElement.height() > scrollPos) {
+        if ((refElement.position().top - 80) <= scrollPos && (refElement.position().top - 80 + refElement.height()) > scrollPos) {
             $('#menu-list tbody tr td a').removeClass("active");
             currLink.addClass("active");
         }
