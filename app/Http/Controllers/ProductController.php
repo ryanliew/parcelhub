@@ -48,6 +48,7 @@ class ProductController extends Controller
             if($user->hasRole('admin'))
                 return Controller::VueTableListResult(Product::with(["inbounds", "lots", "outbounds"])->select('products.picture as picture',
                                         'products.sku as sku',
+                                        'products.id as id',
                                         'products.name as product_name',
                                         'products.is_dangerous as is_dangerous',
                                         'products.is_fragile as is_fragile',
@@ -60,6 +61,7 @@ class ProductController extends Controller
             else
                 return Controller::VueTableListResult(auth()->user()->products()->with(["inbounds", "lots", "outbounds"])->select('products.picture as picture',
                                         'products.sku as sku',
+                                        'products.id as id',
                                         'products.name as product_name',
                                         'products.is_dangerous as is_dangerous',
                                         'products.is_fragile as is_fragile',

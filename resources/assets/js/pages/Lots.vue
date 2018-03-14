@@ -341,7 +341,8 @@
 					price: data.category_price
 				};
 				this.dialogActive = true;
-				this.override = data.category_volume !== data.volume || data.category_price !== data.price;
+				//this.override = data.category_volume !== data.volume || data.category_price !== data.price;
+
 			},
 
 			editOwner(data) {

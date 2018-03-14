@@ -263,7 +263,7 @@
 			},
 
 			onSuccess() {
-
+				this.form.id = this.outbound.id;
 			},
 
 			onError() {
