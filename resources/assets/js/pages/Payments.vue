@@ -179,14 +179,14 @@
 							
 								<div class="field">
 									<text-input
-										v-model="rental_duration"
-										:defaultValue="rental_duration"
+										v-model="form.rental_duration"
+										:defaultValue="form.rental_duration"
 										:required="true"
 										label="Rental duration (months)"
-										name="lot_purchases.0.rental_duration"
+										name="rental_duration"
 										type="number"
 										:editable="true"
-										:error="form.errors.get('lot_purchases.0.rental_duration') ? 'Rental duration is required' : ''">
+										:error="form.errors.get('rental_duration') ? 'Rental duration is required' : ''">
 									</text-input>
 								</div>
 
@@ -296,7 +296,8 @@
 				form: new Form({
 					payment_slip: '',
 					lot_purchases: '',
-					price: ''
+					price: '',
+					rental_duration: ''
 				}),
 				approveForm: new Form({
 					id: ''
@@ -382,14 +383,16 @@
 			},
 
 			submit() {
+				console.log("Submitted!")
 				let selectedLots = [];
 				this.categories.forEach(function(category){
 					let lots = [];
-					lots = _.take(category.lots, category.quantity);
+					let availableLots = this.availableLots(category);
+					lots = _.take(availableLots, category.quantity);
 					lots.forEach(function(lot){
-						selectedLots.push(lot);
+						selectedLots.push(lot.lot);
 					});
-				});
+				}.bind(this));
 
 				//let selectedLots = _.filter(this.selectableLots, function(lot){ return lot.selected; });
 				this.form.lot_purchases = selectedLots.map(function(lot) {
@@ -401,9 +404,9 @@
 
 				this.form.price = this.totalPrice;
 				
-				this.form.post(this.action)
+				/*this.form.post(this.action)
 					.then(data => this.onSuccess())
-					.catch(error => this.onFail(error));
+					.catch(error => this.onFail(error));*/
 			},
 
 			onSuccess() {
@@ -447,9 +450,11 @@
 					category.error = "We only have " + availableLotCount + " of " + category.name + " lots left";
 				}
 
-				this.subPrice =_.sumBy(this.categories, function(category){ return  parseInt(category.quantity)* category.price; });
-				this.totalVolume =_.sumBy(this.categories, function(category){ return parseInt(category.quantity) * category.volume; });
-				this.totalLots =_.sumBy(this.categories, function(category){ return parseInt(category.quantity); });
+				if(category.quantity) {
+					this.subPrice =_.sumBy(this.categories, function(category){ return  parseInt(category.quantity)* category.price; });
+					this.totalVolume =_.sumBy(this.categories, function(category){ return parseInt(category.quantity) * category.volume; });
+					this.totalLots =_.sumBy(this.categories, function(category){ return parseInt(category.quantity); });
+				}
 			},
 
 			availableLots(category) {
@@ -480,7 +485,7 @@
 			},
 
 			totalPrice() {
-				return this.subPrice * this.rental_duration;
+				return this.subPrice * this.form.rental_duration;
 			},
 
 			canSubmit() {

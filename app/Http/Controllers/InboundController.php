@@ -51,7 +51,8 @@ class InboundController extends Controller
                                                                         'total_carton',
                                                                         'process_status',
                                                                         'inbounds.id as id',
-                                                                        'users.name as customer'
+                                                                        'users.name as customer',
+                                                                        'inbounds.created_at as created_at'
                                                                         )
                                                                 ->leftJoin('users', 'user_id', '=', 'users.id'));
             else
@@ -68,7 +69,8 @@ class InboundController extends Controller
                                                                         'total_carton',
                                                                         'process_status',
                                                                         'inbounds.id as id',
-                                                                        'users.name as customer'
+                                                                        'users.name as customer',
+                                                                        'inbounds.created_at as created_at'
                                                                         )
                                                                 ->leftJoin('users', 'user_id', '=', 'users.id')
                                                                 ->whereDate('arrival_date', DB::raw('CURDATE()')));
@@ -102,6 +104,12 @@ class InboundController extends Controller
     {
         $this->validate($request, $this->rules, ['products.required' => "Please select at least 1 product."]);
         $auth = auth()->user();
+
+        if(empty(auth()->user()->address))
+        {
+            return response(json_encode(array('overall' => ['You must update your contact details in the My Profile page before proceeding'])), 422);
+        }
+        
         $now = Carbon::today();
         $compare = Carbon::parse($request->arrival_date);
         $user_lots = $auth->lots()->where('volume','>', 0)->where('status', 'true')->get();
@@ -136,7 +144,7 @@ class InboundController extends Controller
         // Check for days before order
         if($compare->diffInDays($now) < Settings::get('days_before_order') ){
             if(request()->wantsJson()) {
-                return response(json_encode(array('arrival_date' => ['Inbound must be created '.Settings::get('days_before_order').' month(s) before.'])), 422);
+                return response(json_encode(array('arrival_date' => ['Inbound must be created '.Settings::get('days_before_order').' day(s) before.'])), 422);
             }
             return redirect()->back()->withErrors("Inbound must be created before ".Settings::get('days_before_order')." days.");
         }

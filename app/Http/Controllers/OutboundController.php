@@ -150,6 +150,11 @@ class OutboundController extends Controller
             'outbound_products' => 'required',
         ]);
 
+        if(empty(auth()->user()->address))
+        {
+            return response(json_encode(array('overall' => ['You must update your contact details in the My Profile page before proceeding'])), 422);
+        }
+
         try {
             $outboundProducts = json_decode($request['outbound_products'], true);
 

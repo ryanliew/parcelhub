@@ -24,11 +24,7 @@ class PaymentController extends Controller
     
     public function page()
     {
-        if(request()->wantsJson()) {
-            if(auth()->user()->hasRole('admin'))
-                return Controller::VueTableListResult(Payment::with('user')->with('lots'));
-            return Controller::VueTableListResult(auth()->user()->payments()->with('user')->with('lots'));
-        }
+        
 
         return view("payment.page");
 
@@ -41,7 +37,9 @@ class PaymentController extends Controller
     public function index()
     {
         if(request()->wantsJson()) {
-            return Controller::VueTableListResult(Payment::with('user')->with('lots'));
+            if(auth()->user()->hasRole('admin'))
+                return Controller::VueTableListResult(Payment::with('user')->with('lots'));
+            return Controller::VueTableListResult(auth()->user()->payments()->with('user')->with('lots'));
         }
 
         if(\Entrust::hasRole('admin')) {
@@ -80,6 +78,7 @@ class PaymentController extends Controller
 
         $this->validate($request, [
             'payment_slip' => 'required|image',
+            'rental_duration' => 'required'
         ]);
 
         try {

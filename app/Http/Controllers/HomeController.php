@@ -27,6 +27,6 @@ class HomeController extends Controller
         {
             return redirect(route('dashboard'));
         }
-        return view('home');
+        return redirect(route('lots'));
     }
 }
