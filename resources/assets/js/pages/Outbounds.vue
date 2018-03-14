@@ -271,7 +271,7 @@
 					recipient_postcode: '',
 					recipient_country: '',
 					insurance: '',
-					amount_insured: 0,
+					amount_insured: '0',
 					courier_id: '',
 					outbound_products: [],
 				}),

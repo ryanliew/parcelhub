@@ -215,7 +215,7 @@
 			},
 
 			onSuccess() {
-
+				this.form.id = this.inbound.id;
 			},
 
 			onError() {

@@ -195,7 +195,7 @@
 				this.selectedProduct = data;
 				this.form.id = data.id;
 				this.form.sku = data.sku;
-				this.form.name = data.name;
+				this.form.name = data.product_name;
 				this.form.height = data.height;
 				this.form.width = data.width;
 				this.form.length = data.length;
