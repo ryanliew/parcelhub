@@ -166,7 +166,7 @@
 							Address
 						</p>
 						{{ outbound.recipient_address }}, <br>
-						{{ outbound.recipient_address_2 }}, <br>
+						<div v-if="outbound.recipient_address_2">{{ outbound.recipient_address_2 }}, <br></div> 
 						{{ outbound.recipient_postcode }} {{ outbound.recipient_state }}, {{ outbound.recipient_country }}
 						<hr>
 						<p class="heading">

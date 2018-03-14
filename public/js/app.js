@@ -65268,14 +65268,15 @@ var render = function() {
                 "\n\t\t\t\t\t\t" + _vm._s(_vm.outbound.recipient_address) + ", "
               ),
               _c("br"),
+              _vm._v(" "),
+              _vm.outbound.recipient_address_2
+                ? _c("div", [
+                    _vm._v(_vm._s(_vm.outbound.recipient_address_2) + ", "),
+                    _c("br")
+                  ])
+                : _vm._e(),
               _vm._v(
-                "\n\t\t\t\t\t\t" +
-                  _vm._s(_vm.outbound.recipient_address_2) +
-                  ", "
-              ),
-              _c("br"),
-              _vm._v(
-                "\n\t\t\t\t\t\t" +
+                " \n\t\t\t\t\t\t" +
                   _vm._s(_vm.outbound.recipient_postcode) +
                   " " +
                   _vm._s(_vm.outbound.recipient_state) +
