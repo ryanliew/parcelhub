@@ -92,7 +92,9 @@
         <p>Sender : {{ $inbound->user->name }}</p>
         <div class="md-text-box">
             {{ $inbound->user->address }}, <br>
-            {{ $inbound->user->address_2 }}, <br>
+            @if( !empty( $inbound->user->address_2 ) ) 
+                {{ $inbound->user->address_2 }}, <br>
+            @endif
             {{ $inbound->user->postcode }} {{ $inbound->user->state }}, {{ $inbound->user->country }} <br>
             <b>Tel</b>: {{ $inbound->user->phone }}
         </div>
