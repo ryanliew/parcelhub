@@ -163,7 +163,6 @@ class ProductController extends Controller
 
         $auth_id = auth()->user()->id;
         $product = product::find($request->id);
-        dd($request->id);
         $product->name = $request->name;
         $product->height = $request->height;
         $product->length = $request->length;
