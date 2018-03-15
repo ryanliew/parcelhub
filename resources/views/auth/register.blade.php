@@ -11,6 +11,17 @@
                             ParcelHub
                         </h2>
                     </div>
+                    @if($errors->any())
+                        <article class="message is-danger">
+                            <div class="message-body">
+                                <ul>
+                                    @foreach($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </article>
+                    @endif
                     <form method="POST" action="{{ route('register') }}">
                         {{ csrf_field() }}
                         <div class="field">
