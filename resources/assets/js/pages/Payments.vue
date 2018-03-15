@@ -397,7 +397,7 @@
 				this.form.lot_purchases = selectedLots.map(function(lot) {
 					let obj = {};
 					obj['id'] = lot.id;
-					obj['rental_duration'] = this.rental_duration;
+					obj['rental_duration'] = this.form.rental_duration;
 					return obj;
 				}.bind(this));
 
