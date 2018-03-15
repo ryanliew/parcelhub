@@ -63395,7 +63395,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 	data: function data() {
 		return {
 			fields: [{ name: 'name', sortField: 'name', title: 'Name' }, { name: 'created_at', sortField: 'created_at', title: 'Member since', callback: 'date' }, { name: 'email', sortField: 'email' }, { name: 'phone', sortField: 'phone' }, { name: '__component:users-actions', title: 'Actions' }],
-			searchables: "name, email",
+			searchables: "name,email",
 			selectedInbound: '',
 			isViewing: false
 		};

@@ -47,7 +47,7 @@
 					{name: 'phone', sortField: 'phone'},
 					{name: '__component:users-actions', title: 'Actions'}	
 				],
-				searchables: "name, email",
+				searchables: "name,email",
 				selectedInbound: '',
 				isViewing: false
 			};
