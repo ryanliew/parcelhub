@@ -12204,10 +12204,6 @@ th {
   display: none;
 }
 
-.v-select input[type="search"] {
-  width: 20% !important;
-}
-
 .products-list .row {
   border-bottom: 1px solid #ddd;
   padding-top: calc(1.5rem - 0.75rem);

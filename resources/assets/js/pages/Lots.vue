@@ -98,7 +98,7 @@
           	</form>
 
           	<template slot="footer">
-				<button class="button is-primary" @click="submit">Submit</button>
+				<button class="button is-primary" :disabled="form.errors.any()" @click="submit">Submit</button>
           	</template>
 		</modal>
 
@@ -365,6 +365,9 @@
 					this.form.volume = data.volume; 
 					this.form.price = data.price; 
 				}
+				this.form.errors.clear('price');
+				this.form.errors.clear('volume');
+				this.form.errors.clear('category_id');
 			},
 
 			userUpdate(data) {
