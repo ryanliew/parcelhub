@@ -126,7 +126,7 @@
 
           	<template slot="footer">
 				<button class="button is-primary" @click="submitOwner">Reassign</button>
-				<button class="button is-danger" @click="unassignOwner" v-if="selectedUser">Unassign</button>
+				<button class="button is-danger" @click="unassignOwner" v-if="selectedLot.user_id">Unassign</button>
           	</template>
 		</modal>
 

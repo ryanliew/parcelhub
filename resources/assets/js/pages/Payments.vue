@@ -383,7 +383,6 @@
 			},
 
 			submit() {
-				console.log("Submitted!")
 				let selectedLots = [];
 				this.categories.forEach(function(category){
 					let lots = [];
@@ -404,9 +403,9 @@
 
 				this.form.price = this.totalPrice;
 				
-				/*this.form.post(this.action)
+				this.form.post(this.action)
 					.then(data => this.onSuccess())
-					.catch(error => this.onFail(error));*/
+					.catch(error => this.onFail(error));
 			},
 
 			onSuccess() {

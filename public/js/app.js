@@ -57670,7 +57670,7 @@ var render = function() {
               [_vm._v("Reassign")]
             ),
             _vm._v(" "),
-            _vm.selectedUser
+            _vm.selectedLot.user_id
               ? _c(
                   "button",
                   {
@@ -62482,7 +62482,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 			this.rental_duration = '';
 		},
 		submit: function submit() {
-			console.log("Submitted!");
+			var _this4 = this;
+
 			var selectedLots = [];
 			this.categories.forEach(function (category) {
 				var lots = [];
@@ -62503,9 +62504,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 			this.form.price = this.totalPrice;
 
-			/*this.form.post(this.action)
-   	.then(data => this.onSuccess())
-   	.catch(error => this.onFail(error));*/
+			this.form.post(this.action).then(function (data) {
+				return _this4.onSuccess();
+			}).catch(function (error) {
+				return _this4.onFail(error);
+			});
 		},
 		onSuccess: function onSuccess() {
 			this.isPurchasing = false;
