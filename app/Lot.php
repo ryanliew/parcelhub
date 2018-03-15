@@ -42,6 +42,8 @@ use Illuminate\Database\Eloquent\Model;
 class Lot extends Model
 {
 	protected $guarded = [];
+
+    protected $appends = ['usage'];
 	
     public function user(){
     	return $this->belongsTo('App\User');
@@ -58,5 +60,10 @@ class Lot extends Model
 
     public function payments() {
         return $this->belongsToMany('App\Payment');
+    }
+
+    public function getUsageAttribute()
+    {
+        return $this->left_volume . '/' . $this->volume;
     }
 }
