@@ -450,9 +450,27 @@
 				}
 
 				if(category.quantity) {
-					this.subPrice =_.sumBy(this.categories, function(category){ return  parseInt(category.quantity)* category.price; });
-					this.totalVolume =_.sumBy(this.categories, function(category){ return parseInt(category.quantity) * category.volume; });
-					this.totalLots =_.sumBy(this.categories, function(category){ return parseInt(category.quantity); });
+					this.subPrice =_.sumBy(this.categories, function(category){ 
+						if(category.quantity)
+							return parseInt(category.quantity)* category.price; 
+						return 0;
+
+					});
+					this.totalVolume =_.sumBy(this.categories, function(category){ 
+						if(category.quantity)
+							return parseInt(category.quantity) * category.volume; 
+						return 0;
+					});
+					this.totalLots =_.sumBy(this.categories, function(category){ 
+						if(category.quantity)
+							return parseInt(category.quantity); 
+						return 0;
+					});
+				}
+				else {
+					this.subPrice = 0;
+					this.totalVolume = 0;
+					this.totalLots = 0;
 				}
 			},
 

@@ -62545,14 +62545,21 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 			if (category.quantity) {
 				this.subPrice = _.sumBy(this.categories, function (category) {
-					return parseInt(category.quantity) * category.price;
+					if (category.quantity) return parseInt(category.quantity) * category.price;
+					return 0;
 				});
 				this.totalVolume = _.sumBy(this.categories, function (category) {
-					return parseInt(category.quantity) * category.volume;
+					if (category.quantity) return parseInt(category.quantity) * category.volume;
+					return 0;
 				});
 				this.totalLots = _.sumBy(this.categories, function (category) {
-					return parseInt(category.quantity);
+					if (category.quantity) return parseInt(category.quantity);
+					return 0;
 				});
+			} else {
+				this.subPrice = 0;
+				this.totalVolume = 0;
+				this.totalLots = 0;
 			}
 		},
 		availableLots: function availableLots(category) {
