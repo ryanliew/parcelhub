@@ -64,6 +64,6 @@ class Lot extends Model
 
     public function getUsageAttribute()
     {
-        return $this->left_volume . '/' . $this->volume;
+        return ($this->volume - $this->left_volume) . '/' . $this->volume;
     }
 }
