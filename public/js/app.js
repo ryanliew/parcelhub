@@ -57303,6 +57303,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 				this.form.volume = data.volume;
 				this.form.price = data.price;
 			}
+			this.form.errors.clear('price');
+			this.form.errors.clear('volume');
+			this.form.errors.clear('category_id');
 		},
 		userUpdate: function userUpdate(data) {
 			this.selectedUser = data;
@@ -57572,7 +57575,11 @@ var render = function() {
           _c("template", { slot: "footer" }, [
             _c(
               "button",
-              { staticClass: "button is-primary", on: { click: _vm.submit } },
+              {
+                staticClass: "button is-primary",
+                attrs: { disabled: _vm.form.errors.any() },
+                on: { click: _vm.submit }
+              },
               [_vm._v("Submit")]
             )
           ])
