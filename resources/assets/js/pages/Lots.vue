@@ -58,7 +58,7 @@
 									@input="categoryUpdate($event)"
 									:editable="true"
 									placeholder="Select a category"
-									:error="form.errors.get('category_id')">
+									:error="form.errors.get('category')">
 					</selector-input>
 	          	</div>
 
@@ -367,7 +367,7 @@
 				}
 				this.form.errors.clear('price');
 				this.form.errors.clear('volume');
-				this.form.errors.clear('category_id');
+				this.form.errors.clear('category');
 			},
 
 			userUpdate(data) {
