@@ -52,7 +52,7 @@ class Product extends Model
 {
 	protected $guarded = [];
     
-    protected $appends = ['volume', 'total'];
+    protected $appends = ['volume', 'total_quantity'];
     
     public function lots() {
     	return $this->belongsToMany('App\Lot')->withPivot('quantity');

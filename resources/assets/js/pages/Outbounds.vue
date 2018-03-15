@@ -215,7 +215,7 @@
 										</products-selector-input>
 									</div>
 									<div class="column">
-										<p v-if="productRows[index].product">{{ productRows[index].product.total }}</p><p v-else>0</p>
+										<p v-if="productRows[index].product">{{ productRows[index].product.total_quantity }}</p><p v-else>0</p>
 									</div>
 									<div class="column">
 										<text-input v-if="productRows[index]" v-model="productRows[index].quantity" :defaultValue="productRows[index].quantity"
