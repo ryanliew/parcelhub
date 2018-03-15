@@ -15,7 +15,7 @@ class LotController extends Controller
         'name' => 'required',
         'volume' => 'required',
         'price' => 'required',
-        'category_id' => 'required'
+        'category' => 'required'
     ];
 
     /**
@@ -117,7 +117,7 @@ class LotController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, $this->rules, ['category_id.required' => 'The category field is required']);
+        $this->validate($request, $this->rules, ['category.required' => 'The category field is required']);
 
         $lot = new lot;
         $lot->name = $request->name;
@@ -168,7 +168,7 @@ class LotController extends Controller
      */
     public function update(Request $request)
     {
-        $this->validate($request, $this->rules, ['category_id.required' => 'The category field is required']);
+        $this->validate($request, $this->rules, ['category.required' => 'The category field is required']);
         
         $lot = lot::find($request->id);
         $lot->name = $request->name;
