@@ -62484,7 +62484,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 		submit: function submit() {
 			var _this4 = this;
 
-			console.log("Submitted!");
 			var selectedLots = [];
 			this.categories.forEach(function (category) {
 				var lots = [];
@@ -63136,8 +63135,7 @@ var render = function() {
                             class: _vm.submitTooltipClass,
                             attrs: {
                               type: "submit",
-                              disabled:
-                                !_vm.canSubmit && !_vm.form.errors.any(),
+                              disabled: !_vm.canSubmit || _vm.form.errors.any(),
                               "data-tooltip": _vm.submitTooltipText
                             }
                           },

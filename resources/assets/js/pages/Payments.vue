@@ -202,7 +202,7 @@
 							</div>
 						</div>
 						
-						<button type="submit" :disabled="!canSubmit && !form.errors.any()" class="button is-primary is-tooltip-danger is-tooltip-right" :class="submitTooltipClass" :data-tooltip="submitTooltipText" >Submit</button>
+						<button type="submit" :disabled="!canSubmit || form.errors.any()" class="button is-primary is-tooltip-danger is-tooltip-right" :class="submitTooltipClass" :data-tooltip="submitTooltipText" >Submit</button>
 					</form>
 					<article class="message" v-else>
 						<div class="message-body">
@@ -383,7 +383,6 @@
 			},
 
 			submit() {
-				console.log("Submitted!")
 				let selectedLots = [];
 				this.categories.forEach(function(category){
 					let lots = [];
