@@ -398,9 +398,8 @@
 					{name: 'name', sortField: 'name'},
 					
 					{name: 'category_name', sortField: 'category_name', title: 'Category'},
-					// {name: 'volume', sortField: 'volume', title: 'Volume (cm³)'},
+					{name: 'usage', title: 'Usage (cm³)'},
 					// {name: 'price', sortField: 'price', title: 'Price (RM)'},
-					{name: 'lot_usage', sortField: 'lot_usage', title: 'Usage (cm³)'},
 					{name: 'products.length', title: 'No. item'},
 					{name: 'expired_at', sortField: 'expired_at', title: 'Rental expire', callback: 'date'},
 					

@@ -185,7 +185,10 @@
 									<b>Product</b>
 								</div>
 								<div class="column">
-									<b>Quantity</b>
+									<b>Remaining stock</b>
+								</div>
+								<div class="column">
+									<b>Outbound quantity</b>
 								</div>
 								<div class="column is-2">
 									<div class="button is-primary is-small" @click="addRow">
@@ -210,6 +213,9 @@
 													:hideLabel="true"
 													@input="clearProductErrors">
 										</products-selector-input>
+									</div>
+									<div class="column">
+										<p v-if="productRows[index].product">{{ productRows[index].product.total }}</p><p v-else>0</p>
 									</div>
 									<div class="column">
 										<text-input v-if="productRows[index]" v-model="productRows[index].quantity" :defaultValue="productRows[index].quantity"

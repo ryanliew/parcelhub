@@ -31,6 +31,7 @@
             </a>
         </li>
     </ul>
+
     <p class="menu-label">
         Orders
     </p>
@@ -48,6 +49,17 @@
         <li>
             <a @if( url()->current() == route('payment') ) class="is-active" @endif href="{{ route('payment') }}">
                 Purchases
+            </a>
+        </li>
+    </ul>
+
+    <p class="menu-label">
+        Misc
+    </p>
+    <ul class="menu-list">
+        <li>
+            <a @if( url()->current() == route('setting.index') ) class="is-active" @endif href="{{ route('setting.index') }}">
+                System settings
             </a>
         </li>
     </ul>

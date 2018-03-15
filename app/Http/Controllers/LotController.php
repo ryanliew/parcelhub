@@ -59,6 +59,7 @@ class LotController extends Controller
                                 'categories.price as category_price',
                                 'lots.volume as volume', 
                                 'lots.price as price',
+                                'lots.left_volume as left_volume',
                                 'users.name as user_name',
                                 'lots.expired_at as expired_at',
                                 'users.id as user_id')
@@ -78,6 +79,7 @@ class LotController extends Controller
                                         'categories.volume as category_volume',
                                         'categories.price as category_price',
                                         'lots.volume as volume', 
+                                        'lots.left_volume as left_volume',
                                         'lots.price as price',
                                         'users.name as user_name',
                                         'lots.expired_at as expired_at',

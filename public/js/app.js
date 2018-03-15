@@ -19143,6 +19143,7 @@ Vue.component('outbounds-page', __webpack_require__(361));
 Vue.component('payments-page', __webpack_require__(364));
 Vue.component('users-page', __webpack_require__(370));
 Vue.component('dashboard-page', __webpack_require__(376));
+Vue.component('settings-page', __webpack_require__(389));
 
 // Single instance view components
 Vue.component('product', __webpack_require__(179));
@@ -57325,10 +57326,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			return "/lot/" + action;
 		},
 		fields: function fields() {
-			var displayFields = [{ name: 'name', sortField: 'name' }, { name: 'category_name', sortField: 'category_name', title: 'Category' },
-			// {name: 'volume', sortField: 'volume', title: 'Volume (cm³)'},
+			var displayFields = [{ name: 'name', sortField: 'name' }, { name: 'category_name', sortField: 'category_name', title: 'Category' }, { name: 'usage', title: 'Usage (cm³)' },
 			// {name: 'price', sortField: 'price', title: 'Price (RM)'},
-			{ name: 'lot_usage', sortField: 'lot_usage', title: 'Usage (cm³)' }, { name: 'products.length', title: 'No. item' }, { name: 'expired_at', sortField: 'expired_at', title: 'Rental expire', callback: 'date' }];
+			{ name: 'products.length', title: 'No. item' }, { name: 'expired_at', sortField: 'expired_at', title: 'Rental expire', callback: 'date' }];
 
 			if (this.can_manage) {
 				displayFields.push({ name: 'user_name', sortField: 'user_name', title: 'Customer', callback: 'customer' });
@@ -61149,6 +61149,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 
 
@@ -61824,7 +61830,11 @@ var render = function() {
                             ]),
                             _vm._v(" "),
                             _c("div", { staticClass: "column" }, [
-                              _c("b", [_vm._v("Quantity")])
+                              _c("b", [_vm._v("Remaining stock")])
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "column" }, [
+                              _c("b", [_vm._v("Outbound quantity")])
                             ]),
                             _vm._v(" "),
                             _c("div", { staticClass: "column is-2" }, [
@@ -61888,6 +61898,18 @@ var render = function() {
                                   ],
                                   1
                                 ),
+                                _vm._v(" "),
+                                _c("div", { staticClass: "column" }, [
+                                  _vm.productRows[index].product
+                                    ? _c("p", [
+                                        _vm._v(
+                                          _vm._s(
+                                            _vm.productRows[index].product.total
+                                          )
+                                        )
+                                      ])
+                                    : _c("p", [_vm._v("0")])
+                                ]),
                                 _vm._v(" "),
                                 _c(
                                   "div",
@@ -65449,6 +65471,289 @@ if (false) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 383 */,
+/* 384 */,
+/* 385 */,
+/* 386 */,
+/* 387 */,
+/* 388 */,
+/* 389 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(390)
+/* template */
+var __vue_template__ = __webpack_require__(391)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources\\assets\\js\\pages\\Settings.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-dd2693cc", Component.options)
+  } else {
+    hotAPI.reload("data-v-dd2693cc", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 390 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_TableView_vue__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_TableView_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__components_TableView_vue__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+	props: ['setting'],
+
+	components: { TableView: __WEBPACK_IMPORTED_MODULE_0__components_TableView_vue___default.a },
+
+	data: function data() {
+		return {
+			form: new Form({
+				days_before_order: '',
+				rental_duration: ''
+			})
+		};
+	},
+	created: function created() {
+		this.form.rental_duration = this.setting[0].value;
+		this.form.days_before_order = this.setting[1].value;
+	},
+
+
+	methods: {
+		submit: function submit() {
+			var _this = this;
+
+			this.form.post(this.action).then(function (data) {
+				return _this.onSuccess(data);
+			}).catch(function (error) {
+				return _this.onFail(error);
+			});
+		},
+		onSuccess: function onSuccess(data) {
+			console.log(data);
+			this.form.rental_duration = data.setting[0].value;
+			this.form.days_before_order = data.setting[1].value;
+		},
+		onFail: function onFail() {}
+	},
+
+	computed: {
+		action: function action() {
+			return "/setting/update";
+		}
+	}
+});
+
+/***/ }),
+/* 391 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("div", { staticClass: "card" }, [
+      _vm._m(0),
+      _vm._v(" "),
+      _c("div", { staticClass: "card-content" }, [
+        _c(
+          "form",
+          {
+            on: {
+              submit: function($event) {
+                $event.preventDefault()
+                _vm.submit($event)
+              },
+              keydown: function($event) {
+                _vm.form.errors.clear($event.target.name)
+              },
+              input: function($event) {
+                _vm.form.errors.clear($event.target.name)
+              },
+              keyup: function($event) {
+                if (
+                  !("button" in $event) &&
+                  _vm._k($event.keyCode, "enter", 13, $event.key)
+                ) {
+                  return null
+                }
+                _vm.submit($event)
+              }
+            }
+          },
+          [
+            _c(
+              "div",
+              { staticClass: "field" },
+              [
+                _c("text-input", {
+                  attrs: {
+                    defaultValue: _vm.form.days_before_order,
+                    label: "Days before inbound",
+                    required: true,
+                    name: "days_before_order",
+                    type: "number",
+                    editable: true,
+                    error: _vm.form.errors.get("days_before_order"),
+                    focus: true
+                  },
+                  model: {
+                    value: _vm.form.days_before_order,
+                    callback: function($$v) {
+                      _vm.$set(_vm.form, "days_before_order", $$v)
+                    },
+                    expression: "form.days_before_order"
+                  }
+                })
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "field" },
+              [
+                _c("text-input", {
+                  attrs: {
+                    defaultValue: _vm.form.rental_duration,
+                    label: "Minimum rental duration (months)",
+                    required: true,
+                    name: "rental_duration",
+                    type: "number",
+                    editable: true,
+                    error: _vm.form.errors.get("rental_duration"),
+                    focus: true
+                  },
+                  model: {
+                    value: _vm.form.rental_duration,
+                    callback: function($$v) {
+                      _vm.$set(_vm.form, "rental_duration", $$v)
+                    },
+                    expression: "form.rental_duration"
+                  }
+                })
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c("button", { staticClass: "button is-primary" }, [
+              _vm._v("Submit")
+            ])
+          ]
+        )
+      ])
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "card-header" }, [
+      _c("div", { staticClass: "card-header-title level" }, [
+        _c("div", { staticClass: "level-left" }, [
+          _c("div", { staticClass: "level-item" }, [
+            _vm._v("\n\t\t\t\t\t\tSystem settings\n\t\t\t\t\t")
+          ])
+        ])
+      ])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-dd2693cc", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);

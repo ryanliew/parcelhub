@@ -12205,7 +12205,7 @@ th {
 }
 
 .v-select input[type="search"] {
-  width: 150px !important;
+  width: 20% !important;
 }
 
 .products-list .row {
@@ -12347,10 +12347,6 @@ th {
 .v-select .dropdown-toggle {
   width: 100%;
   text-transform: capitalize;
-}
-
-.v-select input[type="search"] {
-  width: 130px !important;
 }
 
 .product-display .background {

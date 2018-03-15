@@ -14,9 +14,11 @@ class SettingsController extends Controller
      */
     public function index()
     {
-        $settings = Settings::all();
+        return view('setting.page')->with('settings', Settings::all());
 
-        return view('setting.index')->with('settings', $settings);
+        // $settings = Settings::all();
+
+        // return view('setting.index')->with('settings', $settings);
     }
 
     /**
@@ -69,13 +71,27 @@ class SettingsController extends Controller
      * @param  \App\Settings  $settings
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        $settings = Settings::find($id);
-        $settings->value = $request->get('setting_value');
+        $this->validate($request, [
+            'days_before_order' => 'required',
+            'rental_duration' => 'required'
+        ]);
+
+        $settings = Settings::find(1);
+        $settings->value = $request->get('rental_duration');
         $settings->save();
 
-        return redirect()->back()->withSuccess("Edit successfully.");
+        $settings = Settings::find(2);
+        $settings->value = $request->get('days_before_order');
+        $settings->save();
+
+        if($request->wantsJson())
+        {
+            return ['message' => 'Settings updated successfully', 'setting' => Settings::all()];
+        }
+
+        return redirect()->back()->withSuccess("Settings updated successfully.");
     }
 
     /**
