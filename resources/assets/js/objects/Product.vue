@@ -52,7 +52,7 @@
 							</div>
 							<div class="column is-one-third has-text-centered">
 								<p class="heading">Stocks available</p>
-								<p class="title" v-text="product.total"></p>
+								<p class="title" v-text="product.total_quantity"></p>
 								<p class="heading">Height(cm)</p>
 								<p class="title" v-text="product.height"></p>
 								<p class="heading">Width(cm)</p>

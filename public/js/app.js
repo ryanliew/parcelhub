@@ -58542,7 +58542,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			return "/product/" + action;
 		},
 		fields: function fields() {
-			var field = [{ name: 'picture', callback: 'image', title: 'Image' }, { name: 'sku', sortField: 'sku', title: 'SKU' }, { name: 'product_name', sortField: 'product_name', title: 'Name' }, { name: 'volume', title: 'Volume(cm³)' }, { name: 'is_dangerous', title: 'Dangerous', sortField: 'is_dangerous', callback: 'dangerousTag' }, { name: 'is_fragile', title: 'Fragile', sortField: 'is_fragile', callback: 'fragileTag' }];
+			var field = [{ name: 'picture', callback: 'image', title: 'Image' }, { name: 'sku', sortField: 'sku', title: 'SKU' }, { name: 'product_name', sortField: 'product_name', title: 'Name' }, { name: 'volume', title: 'Volume(cm³)' }, { name: 'total_quantity', title: 'Stock' }, { name: 'is_dangerous', title: 'Dangerous', sortField: 'is_dangerous', callback: 'dangerousTag' }, { name: 'is_fragile', title: 'Fragile', sortField: 'is_fragile', callback: 'fragileTag' }];
 
 			if (this.can_manage) {
 				field.push({ name: 'user_name', title: 'Owner', sortField: 'user_name' });
@@ -58853,7 +58853,9 @@ var render = function() {
                   _vm._v(" "),
                   _c("p", {
                     staticClass: "title",
-                    domProps: { textContent: _vm._s(_vm.product.total) }
+                    domProps: {
+                      textContent: _vm._s(_vm.product.total_quantity)
+                    }
                   }),
                   _vm._v(" "),
                   _c("p", { staticClass: "heading" }, [_vm._v("Height(cm)")]),
@@ -61911,7 +61913,8 @@ var render = function() {
                                     ? _c("p", [
                                         _vm._v(
                                           _vm._s(
-                                            _vm.productRows[index].product.total
+                                            _vm.productRows[index].product
+                                              .total_quantity
                                           )
                                         )
                                       ])

@@ -70,13 +70,33 @@ class InboundController extends Controller
      */
     public function update(Request $request)
     {
+
         $inbound = inbound::find($request->id);
+        if($inbound->process_status == "canceled")
+        {
+            return response(json_encode(array('process_status' => ['Inbound has been canceled.'])), 422);
+        }
+       
+
+        if($request->process_status == 'canceled') {
+            // Remove the lot product and its quantity
+            foreach($inbound->products_with_lots as $inboundproduct)
+            {
+                foreach($inboundproduct->lots as $lot)
+                {
+                    $lot->left_volume = $lot->left_volume + ($inboundproduct->product->volume * $inboundproduct->quantity);
+                    $lot->products()->detach($inboundproduct->product_id);
+                    $lot->save();
+                }
+            }
+        }
+
         $inbound->process_status = $request->process_status;
         $inbound->save();
 
         if(request()->wantsJson())
         {   
-            return ["message" => "inbound " . $inbound->name . ' updated successfully.'];
+            return ["message" => "Inbound updated successfully."];
         }
 
         return redirect()->back()->withSuccess($inbound->name . ' updated successfully.');

@@ -249,6 +249,7 @@
 					{name: 'sku', sortField: 'sku', title: 'SKU'},
 					{name: 'product_name', sortField: 'product_name', title: 'Name'},
 					{name: 'volume', title: 'Volume(cm³)'},
+					{name: 'total_quantity', title: 'Stock'},
 					{name: 'is_dangerous', title: 'Dangerous', sortField: 'is_dangerous', callback: 'dangerousTag'},
 					{name: 'is_fragile', title: 'Fragile', sortField: 'is_fragile', callback: 'fragileTag'}	
 				];
