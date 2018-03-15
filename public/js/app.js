@@ -58946,7 +58946,11 @@ var render = function() {
                   _vm._l(_vm.sortedOutbound, function(outbound) {
                     return _c("tr", [
                       _c("td", {
-                        domProps: { textContent: _vm._s(outbound.date) }
+                        domProps: {
+                          textContent: _vm._s(
+                            _vm.$options.filters.date(outbound.created_at)
+                          )
+                        }
                       }),
                       _vm._v(" "),
                       _c("td", {
@@ -59024,7 +59028,7 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("thead", [
       _c("tr", [
-        _c("th", [_vm._v("Export Date")]),
+        _c("th", [_vm._v("Order Date")]),
         _vm._v(" "),
         _c("th", [_vm._v("Amount")]),
         _vm._v(" "),
