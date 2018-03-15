@@ -202,7 +202,7 @@
 							</div>
 						</div>
 						
-						<button type="submit" :disabled="!canSubmit" class="button is-primary is-tooltip-danger is-tooltip-right" :class="submitTooltipClass" :data-tooltip="submitTooltipText" >Submit</button>
+						<button type="submit" :disabled="!canSubmit && !form.errors.any()" class="button is-primary is-tooltip-danger is-tooltip-right" :class="submitTooltipClass" :data-tooltip="submitTooltipText" >Submit</button>
 					</form>
 					<article class="message" v-else>
 						<div class="message-body">
@@ -383,6 +383,7 @@
 			},
 
 			submit() {
+				console.log("Submitted!")
 				let selectedLots = [];
 				this.categories.forEach(function(category){
 					let lots = [];
@@ -449,24 +450,11 @@
 					category.error = "We only have " + availableLotCount + " of " + category.name + " lots left";
 				}
 
-
-				this.subPrice =_.sumBy(this.categories, function(category){ 
-					if(category.quantity)
-						return parseInt(category.quantity)* category.price; 
-					return 0;
-
-				});
-				this.totalVolume =_.sumBy(this.categories, function(category){ 
-					if(category.quantity)
-						return parseInt(category.quantity) * category.volume; 
-					return 0;
-				});
-				this.totalLots =_.sumBy(this.categories, function(category){ 
-					if(category.quantity)
-						return parseInt(category.quantity); 
-					return 0;
-				});
-
+				if(category.quantity) {
+					this.subPrice =_.sumBy(this.categories, function(category){ return  parseInt(category.quantity)* category.price; });
+					this.totalVolume =_.sumBy(this.categories, function(category){ return parseInt(category.quantity) * category.volume; });
+					this.totalLots =_.sumBy(this.categories, function(category){ return parseInt(category.quantity); });
+				}
 			},
 
 			availableLots(category) {
@@ -501,7 +489,7 @@
 			},
 
 			canSubmit() {
-				return this.totalLots > 0 && !this.form.errors.any();
+				return this.totalLots > 0;
 			},
 
 			canPurchase() {

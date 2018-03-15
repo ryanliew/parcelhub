@@ -62484,6 +62484,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 		submit: function submit() {
 			var _this4 = this;
 
+			console.log("Submitted!");
 			var selectedLots = [];
 			this.categories.forEach(function (category) {
 				var lots = [];
@@ -62543,18 +62544,17 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 				category.error = "We only have " + availableLotCount + " of " + category.name + " lots left";
 			}
 
-			this.subPrice = _.sumBy(this.categories, function (category) {
-				if (category.quantity) return parseInt(category.quantity) * category.price;
-				return 0;
-			});
-			this.totalVolume = _.sumBy(this.categories, function (category) {
-				if (category.quantity) return parseInt(category.quantity) * category.volume;
-				return 0;
-			});
-			this.totalLots = _.sumBy(this.categories, function (category) {
-				if (category.quantity) return parseInt(category.quantity);
-				return 0;
-			});
+			if (category.quantity) {
+				this.subPrice = _.sumBy(this.categories, function (category) {
+					return parseInt(category.quantity) * category.price;
+				});
+				this.totalVolume = _.sumBy(this.categories, function (category) {
+					return parseInt(category.quantity) * category.volume;
+				});
+				this.totalLots = _.sumBy(this.categories, function (category) {
+					return parseInt(category.quantity);
+				});
+			}
 		},
 		availableLots: function availableLots(category) {
 			var availableLots = [];
@@ -62583,7 +62583,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 			return this.subPrice * this.form.rental_duration;
 		},
 		canSubmit: function canSubmit() {
-			return this.totalLots > 0 && !this.form.errors.any();
+			return this.totalLots > 0;
 		},
 		canPurchase: function canPurchase() {
 			return !this.selectableLots.length == 0;
@@ -63136,7 +63136,8 @@ var render = function() {
                             class: _vm.submitTooltipClass,
                             attrs: {
                               type: "submit",
-                              disabled: !_vm.canSubmit,
+                              disabled:
+                                !_vm.canSubmit && !_vm.form.errors.any(),
                               "data-tooltip": _vm.submitTooltipText
                             }
                           },
