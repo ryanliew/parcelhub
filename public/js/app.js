@@ -57305,7 +57305,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			}
 			this.form.errors.clear('price');
 			this.form.errors.clear('volume');
-			this.form.errors.clear('category_id');
+			this.form.errors.clear('category');
 		},
 		userUpdate: function userUpdate(data) {
 			this.selectedUser = data;
@@ -57492,7 +57492,7 @@ var render = function() {
                       potentialData: _vm.categoriesOptions,
                       editable: true,
                       placeholder: "Select a category",
-                      error: _vm.form.errors.get("category_id")
+                      error: _vm.form.errors.get("category")
                     },
                     on: {
                       input: function($event) {
