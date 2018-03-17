@@ -79,7 +79,7 @@
 					</div>
 
 		          	<template slot="footer">
-						<button v-if="selectedPayment.status !== 'true'" class="button is-primary" :class="approveLoadingClass" @click="approve">Approve</button>
+						<button v-if="selectedPayment.status !== 'true'" class="button is-primary" :class="approveLoadingClass" @click="approvePayment">Approve</button>
 		          	</template>
 				</modal>
 				<!-- Pending payment -->
