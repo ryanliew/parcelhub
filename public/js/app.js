@@ -64327,6 +64327,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		back: function back() {
 			this.isViewingOutbound = false;
 			this.isViewingInbound = false;
+		},
+		onSuccess: function onSuccess() {
+			this.isViewingPayment = false;
+			this.$refs.payments.refreshTable();
 		}
 	},
 
