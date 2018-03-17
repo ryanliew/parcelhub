@@ -199,7 +199,12 @@
 			back() {
 				this.isViewingOutbound = false;
 				this.isViewingInbound = false;
-			}
+			},
+
+			onSuccess() {
+				this.isViewingPayment = false;
+				this.$refs.payments.refreshTable();
+			},
 		},
 
 		computed: {
