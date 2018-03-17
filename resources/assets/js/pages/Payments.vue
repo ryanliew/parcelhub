@@ -422,7 +422,8 @@
 			changePaymentSlipImage(e) {
 				//console.log(e);
 				this.paymentSlip = { src: e.src, file: e.file };
-				this.form.payment_slip = e.file;	
+				this.form.payment_slip = e.file;
+				this.form.errors.clear('payment_slip');
 			},
 
 			toggleCheck(lot){

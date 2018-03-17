@@ -383,6 +383,7 @@
 				this.dialogActive = false;
 				this.back();
 				this.$refs.outbounds.refreshTable();
+				this.getProducts();
 			},
 
 			view(data) {
