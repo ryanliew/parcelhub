@@ -79,7 +79,7 @@
 					</div>
 
 		          	<template slot="footer">
-						<button v-if="selectedPayment.status !== 'true'" class="button is-primary" :class="approveLoadingClass" @click="approvePayment">Approve</button>
+						<button v-if="selectedPayment.status !== 'true'" class="button is-primary" :class="approvePaymentLoadingClass" @click="approvePayment">Approve</button>
 		          	</template>
 				</modal>
 				<!-- Pending payment -->
@@ -181,8 +181,8 @@
 			},
 
 			approvePayment() {
-				this.approveForm.id = this.selectedPayment.id;
-				this.approveForm.post('/payment/approve')
+				this.paymentForm.id = this.selectedPayment.id;
+				this.paymentForm.post('/payment/approve')
 					.then(response => this.onSuccess());
 			},	
 
