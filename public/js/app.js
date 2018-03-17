@@ -64311,8 +64311,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		approvePayment: function approvePayment() {
 			var _this2 = this;
 
-			this.approveForm.id = this.selectedPayment.id;
-			this.approveForm.post('/payment/approve').then(function (response) {
+			this.paymentForm.id = this.selectedPayment.id;
+			this.paymentForm.post('/payment/approve').then(function (response) {
 				return _this2.onSuccess();
 			});
 		},
@@ -64544,7 +64544,7 @@ var render = function() {
                                   "button",
                                   {
                                     staticClass: "button is-primary",
-                                    class: _vm.approveLoadingClass,
+                                    class: _vm.approvePaymentLoadingClass,
                                     on: { click: _vm.approvePayment }
                                   },
                                   [_vm._v("Approve")]
