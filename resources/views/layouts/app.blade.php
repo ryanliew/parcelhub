@@ -13,7 +13,7 @@
     @yield('css')
     
     <!-- Stylesheet -->
-    <link rel="stylesheet" href="{{ asset('css/app.css?v=1.0.7') }}">
+    <link rel="stylesheet" href="{{ asset('css/app.css?v=1.0.8') }}">
     
     <script>
         window.App = {!! json_encode([
