@@ -23,7 +23,7 @@
 				</div>
 
 				<modal :active="isViewingPayment" @close="isViewingPayment = false" v-if="selectedPayment">
-					<template slot="header">{{ dialogTitlePayment }}</template>
+					<template slot="header">{{ dialogTitle }}</template>
 
 					<div class="columns">
 						<div class="column">
@@ -58,6 +58,9 @@
 									type="text">
 								</text-input>
 							</div>
+							<div>
+								<div v-html="$options.filters.formatPaymentStatus(selectedPayment.status)"></div>
+							</div>
 							
 							<div class="is-divider" data-content="Lots purchased"></div>
 
@@ -65,13 +68,15 @@
 								<thead>
 									<tr>
 										<th>Name</th>
-										<th>Price</th>
+										<th>Monthly fee</th>
+										<th>Volume</th>
 									</tr>
 								</thead>
 								<tbody>
 									<tr v-for="lot in selectedPayment.lots">
 										<td v-text="lot.name"></td>
 										<td v-text="lot.price"></td>
+										<td v-text="lot.volume"></td>
 									</tr>
 								</tbody>
 							</table>
@@ -220,7 +225,7 @@
 				let displayFields = [
 					{name: 'user.name', title: 'Made by'},
 					{name: 'created_at', sortField: 'created_at', title: 'Purchase date', callback: 'date'},
-					{name: 'price', sortField: 'price'},
+					{name: 'price', sortField: 'price', title: 'Amount payable'},
 					{name: 'status', sortField: 'status', title: 'Status', callback: 'purchaseStatusLabel'},
 					{name: '__component:payments-actions', title: 'Actions'}
 				];
