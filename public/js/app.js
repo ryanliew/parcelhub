@@ -48341,6 +48341,18 @@ Vue.filter('formatOutboundStatus', function (value) {
 	return '<span class="tag ' + color + '">' + text + '</span>';
 });
 
+Vue.filter('formatPaymentStatus', function (value) {
+	var color = 'is-warning';
+	var text = 'Processing';
+	switch (value) {
+		case 'true':
+			color = 'is-success';
+			text = 'Approved';
+			break;
+	}
+	return '<span class="tag ' + color + '">' + text + '</span>';
+});
+
 Vue.filter('date', function (value) {
 	if (__WEBPACK_IMPORTED_MODULE_0_moment___default()(value).isValid()) return __WEBPACK_IMPORTED_MODULE_0_moment___default()(value).format('L');
 	return 'N/A';
@@ -49579,7 +49591,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			if (this.detail == 'LotDetailRow' || this.detail == 'ProductDetailRow') this.$refs.vuetable.toggleDetailRow(data.id);
 		},
 		purchaseStatusLabel: function purchaseStatusLabel(value) {
-			return value == 'true' ? '<span class="tag is-success">Approved</span>' : '<span class="tag is-warning">Processing</span>';
+			return this.$options.filters.formatPaymentStatus(value);
+			/*return value == 'true' 
+   	? '<span class="tag is-success">Approved</span>'
+   	: '<span class="tag is-warning">Processing</span>'*/
 		},
 		incomeLabel: function incomeLabel(value) {
 			return value === 'income' || value === 'profit' ? '<span class="tag is-success">Profit</span>' : '<span class="tag is-danger">Expense</span>';
@@ -62385,6 +62400,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -62620,7 +62642,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 	}), _defineProperty(_computed, 'mainTitle', function mainTitle() {
 		return this.can_manage ? 'Purchases' : 'Purchase history';
 	}), _defineProperty(_computed, 'fields', function fields() {
-		var displayFields = [{ name: 'user.name', title: 'Made by' }, { name: 'created_at', sortField: 'created_at', title: 'Purchase date', callback: 'date' }, { name: 'price', sortField: 'price' }, { name: 'status', sortField: 'status', title: 'Status', callback: 'purchaseStatusLabel' }, { name: '__component:payments-actions', title: 'Actions' }];
+		var displayFields = [{ name: 'user.name', title: 'Made by' }, { name: 'created_at', sortField: 'created_at', title: 'Purchase date', callback: 'date' }, { name: 'price', sortField: 'price', title: 'Amount payable' }, { name: 'status', sortField: 'status', title: 'Status', callback: 'purchaseStatusLabel' }, { name: '__component:payments-actions', title: 'Actions' }];
 
 		if (!this.can_manage) {
 			displayFields = _.drop(displayFields);
@@ -63243,39 +63265,67 @@ var render = function() {
                         )
                       : _vm._e(),
                     _vm._v(" "),
-                    _c("div", {
-                      staticClass: "is-divider",
-                      attrs: { "data-content": "Lots purchased" }
-                    }),
+                    _c("div", [
+                      _c("div", {
+                        domProps: {
+                          innerHTML: _vm._s(
+                            _vm.$options.filters.formatPaymentStatus(
+                              _vm.selectedPayment.status
+                            )
+                          )
+                        }
+                      })
+                    ]),
                     _vm._v(" "),
-                    _c(
-                      "table",
-                      { staticClass: "table is-hoverable is-fullwidth" },
-                      [
-                        _c("thead", [
-                          _c("tr", [
-                            _c("th", [_vm._v("Name")]),
-                            _vm._v(" "),
-                            _c("th", [_vm._v("Price")])
-                          ])
-                        ]),
-                        _vm._v(" "),
-                        _c(
-                          "tbody",
-                          _vm._l(_vm.selectedPayment.lots, function(lot) {
-                            return _c("tr", [
-                              _c("td", {
-                                domProps: { textContent: _vm._s(lot.name) }
-                              }),
+                    _vm.can_manage || _vm.selectedPayment.status == "true"
+                      ? _c("div", [
+                          _c("div", {
+                            staticClass: "is-divider",
+                            attrs: { "data-content": "Lots purchased" }
+                          }),
+                          _vm._v(" "),
+                          _c(
+                            "table",
+                            { staticClass: "table is-hoverable is-fullwidth" },
+                            [
+                              _c("thead", [
+                                _c("tr", [
+                                  _c("th", [_vm._v("Name")]),
+                                  _vm._v(" "),
+                                  _c("th", [_vm._v("Monthly fee")]),
+                                  _vm._v(" "),
+                                  _c("th", [_vm._v("Volume")])
+                                ])
+                              ]),
                               _vm._v(" "),
-                              _c("td", {
-                                domProps: { textContent: _vm._s(lot.price) }
-                              })
-                            ])
-                          })
-                        )
-                      ]
-                    )
+                              _c(
+                                "tbody",
+                                _vm._l(_vm.selectedPayment.lots, function(lot) {
+                                  return _c("tr", [
+                                    _c("td", {
+                                      domProps: {
+                                        textContent: _vm._s(lot.name)
+                                      }
+                                    }),
+                                    _vm._v(" "),
+                                    _c("td", {
+                                      domProps: {
+                                        textContent: _vm._s(lot.price)
+                                      }
+                                    }),
+                                    _vm._v(" "),
+                                    _c("td", {
+                                      domProps: {
+                                        textContent: _vm._s(lot.volume)
+                                      }
+                                    })
+                                  ])
+                                })
+                              )
+                            ]
+                          )
+                        ])
+                      : _vm._e()
                   ],
                   1
                 )
@@ -64267,6 +64317,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
 
 
 
@@ -64342,7 +64397,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			return this.paymentForm.submitting ? 'is-loading' : '';
 		},
 		paymentFields: function paymentFields() {
-			var displayFields = [{ name: 'user.name', title: 'Made by' }, { name: 'created_at', sortField: 'created_at', title: 'Purchase date', callback: 'date' }, { name: 'price', sortField: 'price' }, { name: 'status', sortField: 'status', title: 'Status', callback: 'purchaseStatusLabel' }, { name: '__component:payments-actions', title: 'Actions' }];
+			var displayFields = [{ name: 'user.name', title: 'Made by' }, { name: 'created_at', sortField: 'created_at', title: 'Purchase date', callback: 'date' }, { name: 'price', sortField: 'price', title: 'Amount payable' }, { name: 'status', sortField: 'status', title: 'Status', callback: 'purchaseStatusLabel' }, { name: '__component:payments-actions', title: 'Actions' }];
 
 			return displayFields;
 		},
@@ -64425,7 +64480,7 @@ var render = function() {
                         },
                         [
                           _c("template", { slot: "header" }, [
-                            _vm._v(_vm._s(_vm.dialogTitlePayment))
+                            _vm._v(_vm._s(_vm.dialogTitle))
                           ]),
                           _vm._v(" "),
                           _c("div", { staticClass: "columns" }, [
@@ -64495,6 +64550,18 @@ var render = function() {
                                     )
                                   : _vm._e(),
                                 _vm._v(" "),
+                                _c("div", [
+                                  _c("div", {
+                                    domProps: {
+                                      innerHTML: _vm._s(
+                                        _vm.$options.filters.formatPaymentStatus(
+                                          _vm.selectedPayment.status
+                                        )
+                                      )
+                                    }
+                                  })
+                                ]),
+                                _vm._v(" "),
                                 _c("div", {
                                   staticClass: "is-divider",
                                   attrs: { "data-content": "Lots purchased" }
@@ -64511,7 +64578,9 @@ var render = function() {
                                       _c("tr", [
                                         _c("th", [_vm._v("Name")]),
                                         _vm._v(" "),
-                                        _c("th", [_vm._v("Price")])
+                                        _c("th", [_vm._v("Monthly fee")]),
+                                        _vm._v(" "),
+                                        _c("th", [_vm._v("Volume")])
                                       ])
                                     ]),
                                     _vm._v(" "),
@@ -64530,6 +64599,12 @@ var render = function() {
                                           _c("td", {
                                             domProps: {
                                               textContent: _vm._s(lot.price)
+                                            }
+                                          }),
+                                          _vm._v(" "),
+                                          _c("td", {
+                                            domProps: {
+                                              textContent: _vm._s(lot.volume)
                                             }
                                           })
                                         ])

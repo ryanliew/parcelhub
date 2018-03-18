@@ -251,23 +251,30 @@
 							type="text">
 						</text-input>
 					</div>
+					<div>
+						<div v-html="$options.filters.formatPaymentStatus(selectedPayment.status)"></div>
+					</div>
 					
-					<div class="is-divider" data-content="Lots purchased"></div>
+					<div v-if="can_manage || selectedPayment.status == 'true'">
+						<div class="is-divider" data-content="Lots purchased"></div>
 
-					<table class="table is-hoverable is-fullwidth">
-						<thead>
-							<tr>
-								<th>Name</th>
-								<th>Price</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr v-for="lot in selectedPayment.lots">
-								<td v-text="lot.name"></td>
-								<td v-text="lot.price"></td>
-							</tr>
-						</tbody>
-					</table>
+						<table class="table is-hoverable is-fullwidth">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Monthly fee</th>
+									<th>Volume</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr v-for="lot in selectedPayment.lots">
+									<td v-text="lot.name"></td>
+									<td v-text="lot.price"></td>
+									<td v-text="lot.volume"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
 				</div>
 			</div>
 
@@ -533,7 +540,7 @@
 				let displayFields = [
 					{name: 'user.name', title: 'Made by'},
 					{name: 'created_at', sortField: 'created_at', title: 'Purchase date', callback: 'date'},
-					{name: 'price', sortField: 'price'},
+					{name: 'price', sortField: 'price', title: 'Amount payable'},
 					{name: 'status', sortField: 'status', title: 'Status', callback: 'purchaseStatusLabel'},
 					{name: '__component:payments-actions', title: 'Actions'}
 				];

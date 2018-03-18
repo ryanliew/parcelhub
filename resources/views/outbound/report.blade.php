@@ -87,7 +87,7 @@
                 {{ $outbound->user->address_2 }}, <br>
             @endif
             {{ $outbound->user->postcode }}, {{ $outbound->user->state }}, {{ $outbound->user->country }} <br>
-            <b>Tel:</b> {{ $outbound->user->phone }},
+            <b>Tel:</b> {{ $outbound->user->phone }}
         </div>
     </div>
     <div class="pull-right width-half">

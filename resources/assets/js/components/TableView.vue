@@ -103,9 +103,10 @@
 			},
 
 			purchaseStatusLabel(value) {
-				return value == 'true' 
+				return this.$options.filters.formatPaymentStatus(value);
+				/*return value == 'true' 
 					? '<span class="tag is-success">Approved</span>'
-					: '<span class="tag is-warning">Processing</span>'
+					: '<span class="tag is-warning">Processing</span>'*/
 			},
 
 			incomeLabel(value) {
