@@ -68,7 +68,7 @@
 								<thead>
 									<tr>
 										<th>Name</th>
-										<th>Monthly fee</th>
+										<th>Monthly fee(RM)</th>
 										<th>Volume(m³)</th>
 									</tr>
 								</thead>

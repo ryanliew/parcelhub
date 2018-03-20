@@ -63459,9 +63459,9 @@ var render = function() {
                                 _c("thead", [
                                   _c("th", [_vm._v("Lot type")]),
                                   _vm._v(" "),
-                                  _c("th", [_vm._v("Price")]),
+                                  _c("th", [_vm._v("Price (RM)")]),
                                   _vm._v(" "),
-                                  _c("th", [_vm._v("Volume")]),
+                                  _c("th", [_vm._v("Volume (m³)")]),
                                   _vm._v(" "),
                                   _c("th", [_vm._v("Quantity")])
                                 ]),
@@ -63728,9 +63728,9 @@ var render = function() {
                                 _c("tr", [
                                   _c("th", [_vm._v("Name")]),
                                   _vm._v(" "),
-                                  _c("th", [_vm._v("Monthly fee")]),
+                                  _c("th", [_vm._v("Monthly fee(RM)")]),
                                   _vm._v(" "),
-                                  _c("th", [_vm._v("Volume")])
+                                  _c("th", [_vm._v("Volume(m³)")])
                                 ])
                               ]),
                               _vm._v(" "),
@@ -65079,7 +65079,7 @@ var render = function() {
                                       _c("tr", [
                                         _c("th", [_vm._v("Name")]),
                                         _vm._v(" "),
-                                        _c("th", [_vm._v("Monthly fee")]),
+                                        _c("th", [_vm._v("Monthly fee(RM)")]),
                                         _vm._v(" "),
                                         _c("th", [_vm._v("Volume(m³)")])
                                       ])
