@@ -43,6 +43,13 @@
 	          	</form>
 			</div>
 		</div>
+
+		<confirmation :isConfirming="confirmSubmit"
+        				title="Confirmation"
+        				message="Confirm changing settings?"
+        				@close="confirmSubmit = false"
+        				@confirm="onSubmit">
+        </confirmation>
 	</div>
 </template>
 
@@ -59,7 +66,8 @@
 				form: new Form({
 					days_before_order: '',
 					rental_duration: '',
-				})
+				}),
+				confirmSubmit: false
 			};
 		},
 
@@ -70,6 +78,11 @@
 
 		methods: {
 			submit() {
+				this.confirmSubmit = true;
+			},
+
+			onSubmit() {
+				this.confirmSubmit = false;
 				this.form.post(this.action)
 					.then(data => this.onSuccess(data))
 					.catch(error => this.onFail(error));

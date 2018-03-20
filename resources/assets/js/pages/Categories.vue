@@ -29,7 +29,7 @@
 		<modal :active="dialogActive" @close="dialogActive = false">
 			<template slot="header">{{ dialogTitle }}</template>
 
-			<form @submit.prevent="onSubmit" 
+			<form @submit.prevent="submit" 
 					@keydown="form.errors.clear($event.target.name)" 
 					@input="form.errors.clear($event.target.name)"
 					@keyup.enter="submit">
@@ -47,7 +47,7 @@
 	          	</div>
 	          	<div class="field">
 	          		<text-input v-model="form.volume" :defaultValue="form.volume" 
-								label="Volume(cm³)" 
+								label="Volume(m³)" 
 								:required="true"
 								name="volume"
 								type="text"
@@ -71,6 +71,13 @@
 				<button class="button is-primary" @click="submit">Submit</button>
           	</template>
 		</modal>
+
+		<confirmation :isConfirming="confirmSubmit"
+        				title="Confirmation"
+        				:message="confirmationMessage"
+        				@close="confirmSubmit = false"
+        				@confirm="onSubmit">
+        </confirmation>
 	</div>
 </template>
 
@@ -86,7 +93,7 @@
 			return {
 				fields: [
 					{name: 'name', sortField: 'name'},
-					{name: 'volume', sortFiled: 'volume', title: 'Volume (cm³)'},
+					{name: 'volume', sortFiled: 'volume', title: 'Volume (m³)', callback: 'convertToM'},
 					{name: 'price', sortFiled: 'price', title: 'Price (RM)'},
 					{name: '__component:categories-actions', title: 'Actions'}	
 				],
@@ -98,6 +105,7 @@
 					price: '',
 					volume: ''
 				}),
+				confirmSubmit: false
 			};
 		},
 
@@ -107,6 +115,11 @@
 
 		methods: {
 			submit() {
+				this.confirmSubmit = true;
+			},
+
+			onSubmit() {
+				this.confirmSubmit = false;
 				this.form.post(this.action)	
 					.then(data => this.onSuccess())
 					.catch(error => this.onFail(error));
@@ -125,7 +138,7 @@
 				this.selectedCategory = data;
 				this.form.id = data.id;
 				this.form.name = data.name;
-				this.form.volume = data.volume;
+				this.form.volume = data.volume / 100;
 				this.form.price = data.price;
 				this.dialogActive = true;
 			},
@@ -147,6 +160,12 @@
 			action() {
 				let action = this.selectedCategory ? "update" : "store";
 				return "/category/" + action;
+			},
+
+			confirmationMessage() {
+				return this.selectedCategory
+						? "Confirm category update?"
+						: "Confirm adding new category?";
 			}
 		}
 	}

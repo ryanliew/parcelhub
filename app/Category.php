@@ -31,4 +31,9 @@ class Category extends Model
     public function lots() {
     	return $this->hasMany('App\Lot');
     }
+
+    public function setVolumeAttribute($value)
+    {
+    	return $this->attributes['volume'] = $value * 100;
+    }
 }

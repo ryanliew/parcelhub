@@ -120,7 +120,7 @@
 						</div>
 					</div>
 					<div class="card-content">
-						<form @submit.prevent="onSubmit" 
+						<form @submit.prevent="submit" 
 							@keydown="form.errors.clear($event.target.name)" 
 							@input="form.errors.clear($event.target.name)"
 							@keyup.enter="submit"
@@ -165,6 +165,13 @@
 				<button class="button is-danger" @click="confirmCancel">Cancel</button>
           	</template>
         </modal>
+
+        <confirmation :isConfirming="confirmSubmit"
+        				title="Confirmation"
+        				message="Confirm changing the status of the inbound order?"
+        				@close="confirmSubmit = false"
+        				@confirm="onSubmit">
+        </confirmation>
 	</div>
 </template>
 
@@ -199,7 +206,8 @@
 						label: 'Canceled'
 					}
 				],
-				confirmation: false
+				confirmation: false,
+				confirmSubmit: false
 			};
 		},
 
@@ -208,7 +216,12 @@
 				this.$emit('back');
 			},
 
+			submit() {
+				this.confirmSubmit = true;
+			},
+
 			onSubmit() {
+				this.confirmSubmit = false;
 				this.form.post(this.action)
 						.then(response => this.onSuccess(response))
 						.catch(response => this.onError(response));
