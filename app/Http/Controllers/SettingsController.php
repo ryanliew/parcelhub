@@ -14,10 +14,7 @@ class SettingsController extends Controller
      */
     public function index()
     {
-        return view('setting.page')->with('settings', Settings::all());
-
-        // $settings = Settings::all();
-
+        return view('setting.page')->with('settings', Settings::getAll());
         // return view('setting.index')->with('settings', $settings);
     }
 

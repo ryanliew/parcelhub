@@ -120,7 +120,7 @@
 								<div class="card-header-title level">
 									<div class="level-left">
 										<div class="level-item">
-											Outbounds today
+											Incomplete outbounds
 										</div>
 									</div>
 								</div>
@@ -129,7 +129,7 @@
 								<table-view ref="outbounds" 
 											:fields="outboundFields" 
 											url="/internal/outbounds/pending"
-											empty="No outbound orders scheduled today">	
+											empty="All outbound orders have been completed">	
 								</table-view>
 							</div>
 						</div>

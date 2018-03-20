@@ -110,8 +110,8 @@ class OutboundController extends Controller
                                                                     )
                                                                 ->leftJoin('couriers', 'courier_id', '=', 'couriers.id')
                                                                 ->leftJoin('users', 'user_id', '=', 'users.id')
-                                                                ->whereNot('outbounds.process_status', 'completed')
-                                                                ->whereNot('outbounds.process_status', 'canceled')
+                                                                ->where('outbounds.process_status', '<>', 'completed')
+                                                                ->where('outbounds.process_status', '<>', 'canceled')
                                                                 ->orderBy('outbounds.created_at', 'desc'));
     } 
 
