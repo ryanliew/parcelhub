@@ -238,7 +238,7 @@
 								<p class="is-danger header" v-text="form.errors.get('outbound_products.' + index)"></p>
 				          	</div>
 				        </div>	
-						<p class="is-danger header" v-text="this.form.errors.get('outbound_products')"></p>
+						<p class="is-danger header" v-text="form.errors.get('outbound_products')"></p>
 
 				        <button class="button is-primary mt-15" :disabled="form.errors.any()" :class="buttonClass">Submit</button>
 		          	</form>
@@ -260,7 +260,7 @@
 			return {
 				userField: [
 					{name: 'id', title: '#'},
-					{name: 'created_at', sortField: 'created_at', title: 'Order date', callback: 'date'},
+					{name: 'created_at', sortField: 'created_at', title: 'Order date'},
 					{name: 'courier', sortField: 'couriers.name', title: 'Courier'},
 					{name: 'amount_insured', sortField: 'amount_insured', title: 'Insurance'},
 					{name: 'process_status', callback: 'outboundStatusLabel', title: 'Status', sortField: 'process_status'},

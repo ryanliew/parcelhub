@@ -61193,7 +61193,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 	data: function data() {
 		return _defineProperty({
-			userField: [{ name: 'id', title: '#' }, { name: 'created_at', sortField: 'created_at', title: 'Order date', callback: 'date' }, { name: 'courier', sortField: 'couriers.name', title: 'Courier' }, { name: 'amount_insured', sortField: 'amount_insured', title: 'Insurance' }, { name: 'process_status', callback: 'outboundStatusLabel', title: 'Status', sortField: 'process_status' }, { name: '__component:outbounds-actions', title: 'Actions' }],
+			userField: [{ name: 'id', title: '#' }, { name: 'created_at', sortField: 'created_at', title: 'Order date' }, { name: 'courier', sortField: 'couriers.name', title: 'Courier' }, { name: 'amount_insured', sortField: 'amount_insured', title: 'Insurance' }, { name: 'process_status', callback: 'outboundStatusLabel', title: 'Status', sortField: 'process_status' }, { name: '__component:outbounds-actions', title: 'Actions' }],
 			userSearchables: "process_status",
 			selectedoutbound: '',
 			dialogActive: false,
@@ -62023,7 +62023,7 @@ var render = function() {
                         staticClass: "is-danger header",
                         domProps: {
                           textContent: _vm._s(
-                            this.form.errors.get("outbound_products")
+                            _vm.form.errors.get("outbound_products")
                           )
                         }
                       }),

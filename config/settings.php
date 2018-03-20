@@ -9,7 +9,7 @@ return [
 	| Cache configuration path
 	|
 	*/
-	'cache_file' => storage_path('settings.json'),
+	// 'cache_file' => storage_path('settings.json'),
 
 	/*
 	|--------------------------------------------------------------------------
@@ -19,7 +19,7 @@ return [
 	| Info: If you change this table name, dont forget to update your settings migrations file.
 	|
 	*/
-	'db_table' => 'settings__lists',
+	'db_table' => 'settings',
 
 	/*
 	|--------------------------------------------------------------------------

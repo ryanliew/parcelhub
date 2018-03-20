@@ -54,9 +54,10 @@ class InboundController extends Controller
                                                                         'users.name as customer',
                                                                         'inbounds.created_at as created_at'
                                                                         )
-                                                                ->leftJoin('users', 'user_id', '=', 'users.id'));
+                                                                ->leftJoin('users', 'user_id', '=', 'users.id')
+                                                                ->orderBy('arrival_date', 'desc'));
             else
-                return Controller::VueTableListResult(auth()->user()->inbounds()->with('products', 'products_with_lots.lots'));
+                return Controller::VueTableListResult(auth()->user()->inbounds()->with('products', 'products_with_lots.lots')->orderBy('arrival_date', 'desc'));
         }
         $inbounds = inbound::where('status', 'true')->get();
         $products = product::where('user_id', auth()->user()->id)->where('status', 'true')->get();
@@ -65,7 +66,8 @@ class InboundController extends Controller
 
     public function indexToday()
     {
-        return Controller::VueTableListResult(Inbound::with('products', 'products_with_lots.lots')->select('arrival_date',
+        return Controller::VueTableListResult(Inbound::with('products', 'products_with_lots.lots')
+                                                                ->select('arrival_date',
                                                                         'total_carton',
                                                                         'process_status',
                                                                         'inbounds.id as id',
@@ -73,7 +75,8 @@ class InboundController extends Controller
                                                                         'inbounds.created_at as created_at'
                                                                         )
                                                                 ->leftJoin('users', 'user_id', '=', 'users.id')
-                                                                ->whereDate('arrival_date', DB::raw('CURDATE()')));
+                                                                ->whereDate('arrival_date', DB::raw('CURDATE()'))
+                                                                ->orderBy('arrival_date', 'desc'));
     }
     /**
      * Show the form for creating a new resource.
