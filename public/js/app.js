@@ -60986,7 +60986,7 @@ var render = function() {
                             ]),
                             _vm._v(" "),
                             _c("div", { staticClass: "column" }, [
-                              _c("b", [_vm._v("Consuming volume")])
+                              _c("b", [_vm._v("Consuming volume(m³)")])
                             ]),
                             _vm._v(" "),
                             _c("div", { staticClass: "column is-2" }, [
@@ -61094,7 +61094,8 @@ var render = function() {
                                           _vm._s(
                                             _vm.productRows[index].product
                                               .volume *
-                                              _vm.productRows[index].quantity
+                                              _vm.productRows[index].quantity /
+                                              100
                                           ) +
                                           "\n\t\t\t\t\t\t\t\t"
                                       )
