@@ -45,6 +45,6 @@ class Controller extends BaseController
             
         }
 
-    	return $result->paginate(10);
+    	return $result->paginate(50);
     }
 }

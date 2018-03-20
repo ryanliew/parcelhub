@@ -69,14 +69,14 @@
 									<tr>
 										<th>Name</th>
 										<th>Monthly fee</th>
-										<th>Volume</th>
+										<th>Volume(m³)</th>
 									</tr>
 								</thead>
 								<tbody>
 									<tr v-for="lot in selectedPayment.lots">
 										<td v-text="lot.name"></td>
 										<td v-text="lot.price"></td>
-										<td v-text="lot.volume"></td>
+										<td v-text="lot.volume / 100"></td>
 									</tr>
 								</tbody>
 							</table>

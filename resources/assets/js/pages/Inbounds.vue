@@ -95,7 +95,7 @@
 									<b>Quantity</b>
 								</div>
 								<div class="column">
-									<b>Consuming volume</b>
+									<b>Consuming volume(m³)</b>
 								</div>
 								<div class="column is-2">
 									<div class="button is-primary is-small" @click="addRow">
@@ -133,7 +133,7 @@
 								</div>
 								<div class="column">
 									<span v-if="productRows[index].product">
-										{{ productRows[index].product.volume * productRows[index].quantity }}
+										{{ productRows[index].product.volume * productRows[index].quantity / 100 }}
 									</span>
 								</div>
 								<div class="column is-2">

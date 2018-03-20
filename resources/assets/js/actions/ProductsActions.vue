@@ -14,6 +14,12 @@
                     </span>
                     <span>Edit</span>
                 </button>
+                <button class="button is-danger" @click="itemAction('delete', rowData, rowIndex)">
+                    <span class="icon">
+                        <i class="fa fa-times"></i>
+                    </span>
+                    <span>Delete</span>
+                </button>
             </div>
         </div>
     </div>

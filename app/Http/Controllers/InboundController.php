@@ -140,7 +140,7 @@ class InboundController extends Controller
         // Check for total left over volume
         if($product_total_volume > $left_volume){
             if(request()->wantsJson()) {
-                return response(json_encode(array('products' => ['You only have ' . $left_volume . 'cm³ of space left but you are trying to fit in ' . $product_total_volume . 'cm³. Please purchase more lots.'])), 422);
+                return response(json_encode(array('products' => ['You only have ' . $left_volume / 100 . 'm³ of space left but you are trying to fit in ' . $product_total_volume / 100 . 'm³. Please purchase more lots.'])), 422);
             }
             return redirect()->back()->withErrors("You have exceeded your lot limit.");
         }

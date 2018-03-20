@@ -141,6 +141,13 @@
         				@close="confirmSubmit = false"
         				@confirm="onSubmit">
         </confirmation>
+
+        <confirmation :isConfirming="confirmDelete"
+        				title="Confirmation"
+        				message="Confirm delete product?"
+        				@close="confirmSubmit = false"
+        				@confirm="onDelete">
+        </confirmation>
 	</div>
 </template>
 
@@ -172,13 +179,18 @@
 					is_dangerous: '',
 					is_fragile: '',
 				}),
-				confirmSubmit: false
+				deleteForm: new Form({
+
+				}),
+				confirmSubmit: false,
+				confirmDelete: false
 			};
 		},
 
 		mounted() {
 			this.$events.on('edit', data => this.edit(data));
 			this.$events.on('view', data => this.view(data));
+			this.$events.on('delete', data => this.delete(data));
 		},
 
 		methods: {
@@ -217,6 +229,18 @@
 				this.productImage = {name: data.picture, src: data.picture};
 				
 				this.dialogActive = true;
+			},
+
+			delete(data) {
+				this.selectedProduct = data;
+				this.confirmDelete = true;
+			},
+
+			onDelete() {
+				this.confirmDelete = false;
+				this.deleteForm.delete('/internal/products/' + this.selectedProduct.id)
+					.then(response => this.onSuccess())
+					.catch(error => this.onFail(error));
 			},
 
 			view(data) {

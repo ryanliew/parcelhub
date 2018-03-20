@@ -68,7 +68,7 @@
 							<div class="level-item has-text-centered">
 								<div>
 									<p class="heading">
-										Total volume (cm³)
+										Total volume (m³)
 									</p>
 									<p class="title">
 										{{ totalVolume }}
@@ -111,7 +111,7 @@
 										<tr v-for="(category, index) in categories">
 											<td>{{ category.name }}</td>
 											<td>{{ category.price }}</td>
-											<td>{{ category.volume }}</td>
+											<td>{{ category.volume / 100 }}</td>
 											<td v-if="availableLots(category).length > 0">
 												<text-input v-model="categories[index].quantity" :defaultValue="categories[index].quantity"
 						          						:label="'Quantity'"
@@ -270,7 +270,7 @@
 								<tr v-for="lot in selectedPayment.lots">
 									<td v-text="lot.name"></td>
 									<td v-text="lot.price"></td>
-									<td v-text="lot.volume"></td>
+									<td v-text="lot.volume / 100"></td>
 								</tr>
 							</tbody>
 						</table>
@@ -485,7 +485,7 @@
 
 				if(category.quantity) {
 					this.subPrice =_.sumBy(this.categories, function(category){ return  parseInt(category.quantity)* category.price; });
-					this.totalVolume =_.sumBy(this.categories, function(category){ return parseInt(category.quantity) * category.volume; });
+					this.totalVolume =_.sumBy(this.categories, function(category){ return parseInt(category.quantity) * category.volume / 100; });
 					this.totalLots =_.sumBy(this.categories, function(category){ return parseInt(category.quantity); });
 				}
 			},
@@ -566,7 +566,7 @@
 				let displayFields = [
 					{name: 'user.name', title: 'Made by'},
 					{name: 'created_at', sortField: 'created_at', title: 'Purchase date', callback: 'date'},
-					{name: 'price', sortField: 'price', title: 'Amount payable'},
+					{name: 'price', sortField: 'price', title: 'Amount payable(RM)'},
 					{name: 'status', sortField: 'status', title: 'Status', callback: 'purchaseStatusLabel'},
 					{name: '__component:payments-actions', title: 'Actions'}
 				];
