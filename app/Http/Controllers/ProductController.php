@@ -90,7 +90,7 @@ class ProductController extends Controller
      */
     public function selector()
     {
-        return Controller::VueTableListResult(auth()->user()->products()->with(["inbounds", "lots", "outbounds"]));
+        return Controller::VueTableListResult(auth()->user()->products()->with(["inbounds", "lots", "outbounds"])->where('status', 'true'));
     }
 
     /**
