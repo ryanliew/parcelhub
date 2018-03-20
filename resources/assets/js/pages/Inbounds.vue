@@ -55,10 +55,10 @@
 					</div>
 				</div>
 				<div class="card-content">
-					<form @submit.prevent="onSubmit" 
+					<form @submit.prevent="submit" 
 							@keydown="form.errors.clear($event.target.name)" 
 							@input="form.errors.clear($event.target.name)"
-							@keyup.enter="onSubmit">
+							@keyup.enter="submit">
 						<p class="is-danger header" v-if="form.errors.get('overall')" v-text="form.errors.get('overall')"></p> <br>
 						<div class="columns">
 				         	<div class="column">
@@ -208,7 +208,7 @@
 				this.clearProductErrors();
 			},
 
-			onSubmit() {
+			submit() {
 				
 				this.processProduct();
 

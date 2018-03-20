@@ -120,7 +120,7 @@
 								<div class="card-header-title level">
 									<div class="level-left">
 										<div class="level-item">
-											Pending outbounds
+											Outbounds today
 										</div>
 									</div>
 								</div>
@@ -129,7 +129,7 @@
 								<table-view ref="outbounds" 
 											:fields="outboundFields" 
 											url="/internal/outbounds/pending"
-											empty="All outbounds have been processed">	
+											empty="No outbound orders scheduled today">	
 								</table-view>
 							</div>
 						</div>
@@ -148,6 +148,13 @@
 						v-if="isViewingOutbound">
 			</outbound>
 		</transition>
+
+		<confirmation :isConfirming="confirmSubmit"
+        				title="Confirmation"
+        				message="Confirm payment approval?"
+        				@close="confirmSubmit = false"
+        				@confirm="onSubmit">
+        </confirmation>
 	</div>
 </template>
 
@@ -169,7 +176,8 @@
 				selectedInbound: '',
 				isViewingInbound: false,
 				selectedOutbound: '',
-				isViewingOutbound: false
+				isViewingOutbound: false,
+				confirmSubmit: false
 			};
 		},
 
@@ -184,8 +192,13 @@
 				this.selectedPayment = data;
 				this.isViewingPayment = true;
 			},
-
+			
 			approvePayment() {
+				this.confirmSubmit = true;
+			},
+
+			onSubmit() {
+				this.confirmSubmit = false;
 				this.paymentForm.id = this.selectedPayment.id;
 				this.paymentForm.post('/payment/approve')
 					.then(response => this.onSuccess());
@@ -225,7 +238,7 @@
 				let displayFields = [
 					{name: 'user.name', title: 'Made by'},
 					{name: 'created_at', sortField: 'created_at', title: 'Purchase date', callback: 'date'},
-					{name: 'price', sortField: 'price', title: 'Amount payable'},
+					{name: 'price', sortField: 'price', title: 'Amount payable (RM)'},
 					{name: 'status', sortField: 'status', title: 'Status', callback: 'purchaseStatusLabel'},
 					{name: '__component:payments-actions', title: 'Actions'}
 				];

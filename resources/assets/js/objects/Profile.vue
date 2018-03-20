@@ -2,109 +2,115 @@
 	<div>
 		<loader v-if="loading"></loader>
 		<div class="card">
-				<div class="card-header">
-					<div class="card-header-title level">
-						<div class="level-left">
-							<div class="level-item">
-								Profile
-							</div>
+			<div class="card-header">
+				<div class="card-header-title level">
+					<div class="level-left">
+						<div class="level-item">
+							Profile
 						</div>
-						<div class="level-right" v-if="canManage">
-							<div class="level-item">
-								<button class="button is-primary" @click="back()">
-									<i class="fa fa-arrow-circle-left"></i>
-									<span class="pl-5">Back to list</span>
-								</button>
-							</div>
+					</div>
+					<div class="level-right" v-if="canManage">
+						<div class="level-item">
+							<button class="button is-primary" @click="back()">
+								<i class="fa fa-arrow-circle-left"></i>
+								<span class="pl-5">Back to list</span>
+							</button>
 						</div>
 					</div>
 				</div>
-				
-				<div class="card-content">
-					<form @submit.prevent="onSubmit" 
-						@keydown="form.errors.clear($event.target.name)" 
-						@input="form.errors.clear($event.target.name)"
-						@keyup.enter="onSubmit">
-						<div class="columns">
-				         	<div class="column">
-				          		<text-input v-model="form.name" :defaultValue="form.name" 
-											label="Name" 
-											:required="true"
-											name="name"
-											type="text"
-											:editable="true"
-											:error="form.errors.get('name')"
-											:focus="true">
-								</text-input>
-							</div>
-							<div class="column">
-								<text-input v-model="form.phone" :defaultValue="form.phone" 
-											label="Phone" 
-											:required="true"
-											name="phone"
-											type="text"
-											:editable="true"
-											:error="form.errors.get('phone')">
-								</text-input>
-							</div>
-						</div>
-						<div class="field">
-							<text-input v-model="form.address" :defaultValue="form.address" 
-											label="Address line 1" 
-											:required="true"
-											name="address"
-											type="text"
-											:editable="true"
-											:error="form.errors.get('address')">
-							</text-input>
-						</div>
-						<div class="field">
-							<text-input v-model="form.address_2" :defaultValue="form.address_2" 
-											label="Address line 2" 
-											:required="false"
-											name="address_2"
-											type="text"
-											:editable="true"
-											:error="form.errors.get('address_2')">
-							</text-input>
-						</div>
-						<div class="columns">
-							<div class="column">
-								<text-input v-model="form.postcode" :defaultValue="form.postcode" 
-												label="Postcode" 
-												:required="true"
-												name="postcode"
-												type="text"
-												:editable="true"
-												:error="form.errors.get('postcode')">
-								</text-input>
-							</div>
-							<div class="column">
-								<text-input v-model="form.state" :defaultValue="form.state" 
-												label="State" 
-												:required="true"
-												name="state"
-												type="text"
-												:editable="true"
-												:error="form.errors.get('state')">
-								</text-input>
-							</div>
-							<div class="column">
-								<text-input v-model="form.country" :defaultValue="form.country" 
-												label="Country" 
-												:required="true"
-												name="country"
-												type="text"
-												:editable="true"
-												:error="form.errors.get('country')">
-								</text-input>
-							</div>
-						</div>
-
-				        <button class="button is-primary mt-15" :disabled="this.form.errors.any()" :class="buttonClass">Update</button>
-		          	</form>
-				</div>
 			</div>
+			
+			<div class="card-content">
+				<form @submit.prevent="submit" 
+					@keydown="form.errors.clear($event.target.name)" 
+					@input="form.errors.clear($event.target.name)"
+					@keyup.enter="submit">
+					<div class="columns">
+			         	<div class="column">
+			          		<text-input v-model="form.name" :defaultValue="form.name" 
+										label="Name" 
+										:required="true"
+										name="name"
+										type="text"
+										:editable="true"
+										:error="form.errors.get('name')"
+										:focus="true">
+							</text-input>
+						</div>
+						<div class="column">
+							<text-input v-model="form.phone" :defaultValue="form.phone" 
+										label="Phone" 
+										:required="true"
+										name="phone"
+										type="text"
+										:editable="true"
+										:error="form.errors.get('phone')">
+							</text-input>
+						</div>
+					</div>
+					<div class="field">
+						<text-input v-model="form.address" :defaultValue="form.address" 
+										label="Address line 1" 
+										:required="true"
+										name="address"
+										type="text"
+										:editable="true"
+										:error="form.errors.get('address')">
+						</text-input>
+					</div>
+					<div class="field">
+						<text-input v-model="form.address_2" :defaultValue="form.address_2" 
+										label="Address line 2" 
+										:required="false"
+										name="address_2"
+										type="text"
+										:editable="true"
+										:error="form.errors.get('address_2')">
+						</text-input>
+					</div>
+					<div class="columns">
+						<div class="column">
+							<text-input v-model="form.postcode" :defaultValue="form.postcode" 
+											label="Postcode" 
+											:required="true"
+											name="postcode"
+											type="text"
+											:editable="true"
+											:error="form.errors.get('postcode')">
+							</text-input>
+						</div>
+						<div class="column">
+							<text-input v-model="form.state" :defaultValue="form.state" 
+											label="State" 
+											:required="true"
+											name="state"
+											type="text"
+											:editable="true"
+											:error="form.errors.get('state')">
+							</text-input>
+						</div>
+						<div class="column">
+							<text-input v-model="form.country" :defaultValue="form.country" 
+											label="Country" 
+											:required="true"
+											name="country"
+											type="text"
+											:editable="true"
+											:error="form.errors.get('country')">
+							</text-input>
+						</div>
+					</div>
+
+			        <button class="button is-primary mt-15" :disabled="this.form.errors.any()" :class="buttonClass">Update</button>
+	          	</form>
+			</div>
+		</div>
+		<confirmation :isConfirming="confirmSubmit"
+        				title="Confirmation"
+        				message="Confirm profile update?"
+        				@close="confirmSubmit = false"
+        				@confirm="onSubmit">
+        </confirmation>
 	</div>
 </template>
 
@@ -124,7 +130,8 @@
 					country: '',
 					id: ''
 				}),
-				profile: ''
+				profile: '',
+				confirmSubmit: false
 			};
 		},
 
@@ -167,7 +174,12 @@
 				this.$emit('back');
 			},
 
+			submit() {
+				this.confirmSubmit = true;
+			},
+
 			onSubmit() {
+				this.confirmSubmit = false;
 				this.form.post(this.action)
 						.then(response => this.onSuccess(response))
 						.catch(response => this.onError(response));

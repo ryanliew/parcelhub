@@ -62,8 +62,13 @@ class Lot extends Model
         return $this->belongsToMany('App\Payment');
     }
 
+    public function setVolumeAttribute($value)
+    {
+        return $this->attributes['volume'] = $value * 100;
+    }
+
     public function getUsageAttribute()
     {
-        return ($this->volume - $this->left_volume) . '/' . $this->volume;
+        return ($this->volume - $this->left_volume) / 100 . '/' . $this->volume / 100;
     }
 }

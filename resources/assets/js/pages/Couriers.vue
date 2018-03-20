@@ -61,6 +61,13 @@
 				<button class="button is-primary" @click="confirmDeletion">Confirm</button>
           	</template>
         </modal>
+
+        <confirmation :isConfirming="confirmSubmit"
+        				title="Confirmation"
+        				:message="confirmationMessage"
+        				@close="confirmSubmit = false"
+        				@confirm="onSubmit">
+        </confirmation>
 	</div>
 </template>
 
@@ -85,7 +92,8 @@
 					id: '',
 					name: '',
 				}),
-				isDeleting: false
+				isDeleting: false,
+				confirmSubmit: false
 			};
 		},
 
@@ -96,6 +104,11 @@
 
 		methods: {
 			submit() {
+				this.confirmSubmit = true;
+			},
+
+			onSubmit() {
+				this.confirmSubmit = false;
 				this.form.post(this.action)
 					.then(data => this.onSuccess())
 					.catch(error => this.onFail(error));
@@ -151,6 +164,12 @@
 			action() {
 				let action = this.selectedCourier ? "update" : "store";
 				return "/courier/" + action;
+			},
+
+			confirmationMessage() {
+				return this.selectedCourier 
+						? "Confirm editing courier information?"
+						: "Confirm adding new courier?";
 			}
 		}
 	}

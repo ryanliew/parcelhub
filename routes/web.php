@@ -19,6 +19,10 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Auth::routes();
 
+Route::get('phpinfo', function() {
+	return phpinfo();
+});
+
 // Pages route
 Route::get('couriers', 'CourierController@page')->name('couriers');
 Route::get('lots/categories', 'CategoryController@page')->name('lots.categories');

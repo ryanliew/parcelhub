@@ -19109,6 +19109,7 @@ Vue.use(__WEBPACK_IMPORTED_MODULE_2_vue_animate_number___default.a);
  */
 // Base components
 Vue.component('flash', __webpack_require__(212));
+Vue.component('confirmation', __webpack_require__(392));
 Vue.component('loader', __webpack_require__(162));
 Vue.component('navigation', __webpack_require__(220));
 Vue.component('modal', __webpack_require__(223));
@@ -49625,6 +49626,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		},
 		customer: function customer(value) {
 			return value ? value : "N/A";
+		},
+		convertToM: function convertToM(value) {
+			return value / 100;
 		}
 	}
 });
@@ -56604,6 +56608,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -56614,7 +56625,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 	data: function data() {
 		return {
-			fields: [{ name: 'name', sortField: 'name' }, { name: 'volume', sortFiled: 'volume', title: 'Volume (cm³)' }, { name: 'price', sortFiled: 'price', title: 'Price (RM)' }, { name: '__component:categories-actions', title: 'Actions' }],
+			fields: [{ name: 'name', sortField: 'name' }, { name: 'volume', sortFiled: 'volume', title: 'Volume (m³)', callback: 'convertToM' }, { name: 'price', sortFiled: 'price', title: 'Price (RM)' }, { name: '__component:categories-actions', title: 'Actions' }],
 			selectedCategory: '',
 			dialogActive: false,
 			form: new Form({
@@ -56622,7 +56633,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 				name: '',
 				price: '',
 				volume: ''
-			})
+			}),
+			confirmSubmit: false
 		};
 	},
 	mounted: function mounted() {
@@ -56636,8 +56648,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 	methods: {
 		submit: function submit() {
+			this.confirmSubmit = true;
+		},
+		onSubmit: function onSubmit() {
 			var _this2 = this;
 
+			this.confirmSubmit = false;
 			this.form.post(this.action).then(function (data) {
 				return _this2.onSuccess();
 			}).catch(function (error) {
@@ -56653,7 +56669,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			this.selectedCategory = data;
 			this.form.id = data.id;
 			this.form.name = data.name;
-			this.form.volume = data.volume;
+			this.form.volume = data.volume / 100;
 			this.form.price = data.price;
 			this.dialogActive = true;
 		},
@@ -56671,6 +56687,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		action: function action() {
 			var action = this.selectedCategory ? "update" : "store";
 			return "/category/" + action;
+		},
+		confirmationMessage: function confirmationMessage() {
+			return this.selectedCategory ? "Confirm category update?" : "Confirm adding new category?";
 		}
 	}
 });
@@ -56748,7 +56767,7 @@ var render = function() {
               on: {
                 submit: function($event) {
                   $event.preventDefault()
-                  _vm.onSubmit($event)
+                  _vm.submit($event)
                 },
                 keydown: function($event) {
                   _vm.form.errors.clear($event.target.name)
@@ -56802,7 +56821,7 @@ var render = function() {
                   _c("text-input", {
                     attrs: {
                       defaultValue: _vm.form.volume,
-                      label: "Volume(cm³)",
+                      label: "Volume(m³)",
                       required: true,
                       name: "volume",
                       type: "text",
@@ -56858,7 +56877,21 @@ var render = function() {
           ])
         ],
         2
-      )
+      ),
+      _vm._v(" "),
+      _c("confirmation", {
+        attrs: {
+          isConfirming: _vm.confirmSubmit,
+          title: "Confirmation",
+          message: _vm.confirmationMessage
+        },
+        on: {
+          close: function($event) {
+            _vm.confirmSubmit = false
+          },
+          confirm: _vm.onSubmit
+        }
+      })
     ],
     1
   )
@@ -57135,6 +57168,34 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -57174,7 +57235,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			selectedUser: '',
 			selectedPayment: '',
 			isPaymentLoading: false,
-			paymentApproving: false
+			paymentApproving: false,
+			confirmSubmit: false,
+			confirmSubmitUser: false,
+			confirmSubmitPayment: false,
+			confirmUnassignOwner: false
 		};
 	},
 	mounted: function mounted() {
@@ -57236,8 +57301,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			this.isPaymentLoading = false;
 		},
 		approvePayment: function approvePayment() {
+			this.confirmSubmitPayment = true;
+		},
+		onSubmitPayment: function onSubmitPayment() {
 			var _this5 = this;
 
+			this.confirmSubmitPayment = false;
 			this.submitting = true;
 			this.approveForm.id = this.selectedPayment.id;
 			this.approveForm.post('/payment/approve').then(function (response) {
@@ -57253,8 +57322,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			});
 		},
 		submit: function submit() {
+			this.confirmSubmit = true;
+		},
+		onSubmit: function onSubmit() {
 			var _this6 = this;
 
+			this.confirmSubmit = false;
 			this.form.post(this.action).then(function (data) {
 				return _this6.onSuccess();
 			}).catch(function (error) {
@@ -57262,8 +57335,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			});
 		},
 		submitOwner: function submitOwner() {
+			this.confirmSubmitUser = true;
+		},
+		onSubmitOwner: function onSubmitOwner() {
 			var _this7 = this;
 
+			this.confirmSubmitUser = false;
 			this.ownerForm.post('/lot/assign/' + this.selectedLot.id).then(function (data) {
 				return _this7.onSuccess();
 			}).catch(function (error) {
@@ -57271,8 +57348,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			});
 		},
 		unassignOwner: function unassignOwner() {
+			this.confirmUnassignOwner = true;
+		},
+		onUnassignOwner: function onUnassignOwner() {
 			var _this8 = this;
 
+			this.confirmUnassignOwner = false;
 			this.ownerForm.post('/lot/unassign/' + this.selectedLot.id).then(function (data) {
 				return _this8.onSuccess();
 			}).catch(function (error) {
@@ -57287,10 +57368,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		},
 		onFail: function onFail(error) {},
 		edit: function edit(data) {
+			this.form.reset();
 			this.selectedLot = data;
 			this.form.id = data.id;
 			this.form.name = data.name;
-			this.form.volume = data.volume;
+			this.form.volume = data.volume / 100;
 			this.form.category = data.category_id;
 			this.form.price = data.price;
 			this.selectedCategory = {
@@ -57315,7 +57397,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			this.selectedCategory = data;
 			this.form.category = data.value;
 			if (!this.override) {
-				this.form.volume = data.volume;
+				this.form.volume = data.volume / 100;
 				this.form.price = data.price;
 			}
 			this.form.errors.clear('price');
@@ -57344,7 +57426,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			return "/lot/" + action;
 		},
 		fields: function fields() {
-			var displayFields = [{ name: 'name', sortField: 'name' }, { name: 'category_name', sortField: 'category_name', title: 'Category' }, { name: 'usage', title: 'Usage (cm³)' },
+			var displayFields = [{ name: 'name', sortField: 'name' }, { name: 'category_name', sortField: 'category_name', title: 'Category' }, { name: 'usage', title: 'Usage (m³)' },
 			// {name: 'price', sortField: 'price', title: 'Price (RM)'},
 			{ name: 'products.length', title: 'No. item' }, { name: 'expired_at', sortField: 'expired_at', title: 'Rental expire', callback: 'date' }];
 
@@ -57359,6 +57441,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		},
 		approveLoadingClass: function approveLoadingClass() {
 			return this.paymentApproving ? 'is-loading' : '';
+		},
+		confirmationMessage: function confirmationMessage() {
+			return this.selectedLot ? "Confirm editing lot information?" : "Confirm adding new lot?";
 		}
 	}
 });
@@ -57536,7 +57621,7 @@ var render = function() {
                           _c("text-input", {
                             attrs: {
                               defaultValue: _vm.form.volume,
-                              label: "Volume (cm³)",
+                              label: "Volume (m³)",
                               required: true,
                               name: "volume",
                               type: "text",
@@ -57835,7 +57920,63 @@ var render = function() {
             ],
             2
           )
-        : _vm._e()
+        : _vm._e(),
+      _vm._v(" "),
+      _c("confirmation", {
+        attrs: {
+          isConfirming: _vm.confirmSubmit,
+          title: "Confirmation",
+          message: _vm.confirmationMessage
+        },
+        on: {
+          close: function($event) {
+            _vm.confirmSubmit = false
+          },
+          confirm: _vm.onSubmit
+        }
+      }),
+      _vm._v(" "),
+      _c("confirmation", {
+        attrs: {
+          isConfirming: _vm.confirmSubmitUser,
+          title: "Confirmation",
+          message: "Confirm customer reassignment?"
+        },
+        on: {
+          close: function($event) {
+            _vm.confirmSubmitUser = false
+          },
+          confirm: _vm.onSubmitOwner
+        }
+      }),
+      _vm._v(" "),
+      _c("confirmation", {
+        attrs: {
+          isConfirming: _vm.confirmSubmitPayment,
+          title: "Confirmation",
+          message: "Confirm payment approval?"
+        },
+        on: {
+          close: function($event) {
+            _vm.confirmSubmitPayment = false
+          },
+          confirm: _vm.onSubmitPayment
+        }
+      }),
+      _vm._v(" "),
+      _c("confirmation", {
+        attrs: {
+          isConfirming: _vm.confirmUnassignOwner,
+          title: "Confirmation",
+          message: "Confirm unassigning the current owner?"
+        },
+        on: {
+          close: function($event) {
+            _vm.confirmUnassignOwner = false
+          },
+          confirm: _vm.onUnassignOwner
+        }
+      })
     ],
     1
   )
@@ -57982,6 +58123,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -58000,7 +58148,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 				id: '',
 				name: ''
 			}),
-			isDeleting: false
+			isDeleting: false,
+			confirmSubmit: false
 		};
 	},
 	mounted: function mounted() {
@@ -58017,8 +58166,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 	methods: {
 		submit: function submit() {
+			this.confirmSubmit = true;
+		},
+		onSubmit: function onSubmit() {
 			var _this2 = this;
 
+			this.confirmSubmit = false;
 			this.form.post(this.action).then(function (data) {
 				return _this2.onSuccess();
 			}).catch(function (error) {
@@ -58067,6 +58220,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		action: function action() {
 			var action = this.selectedCourier ? "update" : "store";
 			return "/courier/" + action;
+		},
+		confirmationMessage: function confirmationMessage() {
+			return this.selectedCourier ? "Confirm editing courier information?" : "Confirm adding new courier?";
 		}
 	}
 });
@@ -58233,7 +58389,21 @@ var render = function() {
           ])
         ],
         2
-      )
+      ),
+      _vm._v(" "),
+      _c("confirmation", {
+        attrs: {
+          isConfirming: _vm.confirmSubmit,
+          title: "Confirmation",
+          message: _vm.confirmationMessage
+        },
+        on: {
+          close: function($event) {
+            _vm.confirmSubmit = false
+          },
+          confirm: _vm.onSubmit
+        }
+      })
     ],
     1
   )
@@ -58455,6 +58625,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -58482,7 +58659,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 				picture: '',
 				is_dangerous: '',
 				is_fragile: ''
-			})
+			}),
+			confirmSubmit: false
 		};
 	},
 	mounted: function mounted() {
@@ -58499,8 +58677,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 	methods: {
 		submit: function submit() {
+			this.confirmSubmit = true;
+		},
+		onSubmit: function onSubmit() {
 			var _this2 = this;
 
+			this.confirmSubmit = false;
 			this.form.post(this.action).then(function (data) {
 				return _this2.onSuccess();
 			}).catch(function (error) {
@@ -58555,6 +58737,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		action: function action() {
 			var action = this.selectedProduct ? "update" : "store";
 			return "/product/" + action;
+		},
+		confirmationMessage: function confirmationMessage() {
+			return this.selectedProduct ? "Confirm editing the product information?" : "Confirm adding new product?";
 		},
 		fields: function fields() {
 			var field = [{ name: 'picture', callback: 'image', title: 'Image' }, { name: 'sku', sortField: 'sku', title: 'SKU' }, { name: 'product_name', sortField: 'product_name', title: 'Name' }, { name: 'volume', title: 'Volume(cm³)' }, { name: 'total_quantity', title: 'Stock' }, { name: 'is_dangerous', title: 'Dangerous', sortField: 'is_dangerous', callback: 'dangerousTag' }, { name: 'is_fragile', title: 'Fragile', sortField: 'is_fragile', callback: 'fragileTag' }];
@@ -59163,7 +59348,7 @@ var render = function() {
               on: {
                 submit: function($event) {
                   $event.preventDefault()
-                  _vm.onSubmit($event)
+                  _vm.submit($event)
                 },
                 keydown: function($event) {
                   _vm.form.errors.clear($event.target.name)
@@ -59409,7 +59594,21 @@ var render = function() {
           ])
         ],
         2
-      )
+      ),
+      _vm._v(" "),
+      _c("confirmation", {
+        attrs: {
+          isConfirming: _vm.confirmSubmit,
+          title: "Confirmation",
+          message: _vm.confirmationMessage
+        },
+        on: {
+          close: function($event) {
+            _vm.confirmSubmit = false
+          },
+          confirm: _vm.onSubmit
+        }
+      })
     ],
     1
   )
@@ -59694,7 +59893,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			this.productRows.splice(index, 1);
 			this.clearProductErrors();
 		},
-		onSubmit: function onSubmit() {
+		submit: function submit() {
 			var _this3 = this;
 
 			this.processProduct();
@@ -59947,6 +60146,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	props: ['inbound', 'canManage'],
@@ -59973,7 +60179,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 				value: 'canceled',
 				label: 'Canceled'
 			}],
-			confirmation: false
+			confirmation: false,
+			confirmSubmit: false
 		};
 	},
 
@@ -59982,9 +60189,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		back: function back() {
 			this.$emit('back');
 		},
+		submit: function submit() {
+			this.confirmSubmit = true;
+		},
 		onSubmit: function onSubmit() {
 			var _this = this;
 
+			this.confirmSubmit = false;
 			this.form.post(this.action).then(function (response) {
 				return _this.onSuccess(response);
 			}).catch(function (response) {
@@ -60248,7 +60459,7 @@ var render = function() {
                       on: {
                         submit: function($event) {
                           $event.preventDefault()
-                          _vm.onSubmit($event)
+                          _vm.submit($event)
                         },
                         keydown: function($event) {
                           _vm.form.errors.clear($event.target.name)
@@ -60366,7 +60577,21 @@ var render = function() {
           ])
         ],
         2
-      )
+      ),
+      _vm._v(" "),
+      _c("confirmation", {
+        attrs: {
+          isConfirming: _vm.confirmSubmit,
+          title: "Confirmation",
+          message: "Confirm changing the status of the inbound order?"
+        },
+        on: {
+          close: function($event) {
+            _vm.confirmSubmit = false
+          },
+          confirm: _vm.onSubmit
+        }
+      })
     ],
     1
   )
@@ -60586,7 +60811,7 @@ var render = function() {
                       on: {
                         submit: function($event) {
                           $event.preventDefault()
-                          _vm.onSubmit($event)
+                          _vm.submit($event)
                         },
                         keydown: function($event) {
                           _vm.form.errors.clear($event.target.name)
@@ -60601,7 +60826,7 @@ var render = function() {
                           ) {
                             return null
                           }
-                          _vm.onSubmit($event)
+                          _vm.submit($event)
                         }
                       }
                     },
@@ -62407,6 +62632,20 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -62439,7 +62678,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 			totalVolume: 0,
 			subPrice: 0,
 			paymentSlip: { name: 'No file selected' }
-		}, _defineProperty(_ref, 'selectedPayment', ''), _defineProperty(_ref, 'isViewing', false), _defineProperty(_ref, 'submitting', false), _ref;
+		}, _defineProperty(_ref, 'selectedPayment', ''), _defineProperty(_ref, 'isViewing', false), _defineProperty(_ref, 'submitting', false), _defineProperty(_ref, 'confirmSubmit', false), _defineProperty(_ref, 'confirmPayment', false), _ref;
 	},
 	mounted: function mounted() {
 		var _this = this;
@@ -62491,8 +62730,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 			this.isViewing = true;
 		},
 		approve: function approve() {
+			this.confirmSubmit = true;
+		},
+		onApprove: function onApprove() {
 			var _this3 = this;
 
+			this.confirmSubmit = false;
 			this.submitting = true;
 			this.approveForm.id = this.selectedPayment.id;
 			this.approveForm.post('/payment/approve').then(function (response) {
@@ -62512,8 +62755,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 			this.rental_duration = '';
 		},
 		submit: function submit() {
+			this.confirmPayment = true;
+		},
+		onSubmit: function onSubmit() {
 			var _this4 = this;
 
+			this.confirmPayment = false;
 			var selectedLots = [];
 			this.categories.forEach(function (category) {
 				var lots = [];
@@ -63349,7 +63596,35 @@ var render = function() {
             ],
             2
           )
-        : _vm._e()
+        : _vm._e(),
+      _vm._v(" "),
+      _c("confirmation", {
+        attrs: {
+          isConfirming: _vm.confirmSubmit,
+          title: "Confirmation",
+          message: "Confirm payment approval?"
+        },
+        on: {
+          close: function($event) {
+            _vm.confirmSubmit = false
+          },
+          confirm: _vm.onApprove
+        }
+      }),
+      _vm._v(" "),
+      _c("confirmation", {
+        attrs: {
+          isConfirming: _vm.confirmPayment,
+          title: "Confirmation",
+          message: "Confirm payment approval?"
+        },
+        on: {
+          close: function($event) {
+            _vm.confirmPayment = false
+          },
+          confirm: _vm.onSubmit
+        }
+      })
     ],
     1
   )
@@ -63657,6 +63932,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	props: ['canManage', 'user'],
@@ -63673,7 +63954,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 				country: '',
 				id: ''
 			}),
-			profile: ''
+			profile: '',
+			confirmSubmit: false
 		};
 	},
 	mounted: function mounted() {
@@ -63712,9 +63994,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		back: function back() {
 			this.$emit('back');
 		},
+		submit: function submit() {
+			this.confirmSubmit = true;
+		},
 		onSubmit: function onSubmit() {
 			var _this2 = this;
 
+			this.confirmSubmit = false;
 			this.form.post(this.action).then(function (response) {
 				return _this2.onSuccess(response);
 			}).catch(function (response) {
@@ -63797,7 +64083,7 @@ var render = function() {
               on: {
                 submit: function($event) {
                   $event.preventDefault()
-                  _vm.onSubmit($event)
+                  _vm.submit($event)
                 },
                 keydown: function($event) {
                   _vm.form.errors.clear($event.target.name)
@@ -63812,7 +64098,7 @@ var render = function() {
                   ) {
                     return null
                   }
-                  _vm.onSubmit($event)
+                  _vm.submit($event)
                 }
               }
             },
@@ -64016,7 +64302,21 @@ var render = function() {
             ]
           )
         ])
-      ])
+      ]),
+      _vm._v(" "),
+      _c("confirmation", {
+        attrs: {
+          isConfirming: _vm.confirmSubmit,
+          title: "Confirmation",
+          message: "Confirm profile update?"
+        },
+        on: {
+          close: function($event) {
+            _vm.confirmSubmit = false
+          },
+          confirm: _vm.onSubmit
+        }
+      })
     ],
     1
   )
@@ -64322,6 +64622,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -64340,7 +64647,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			selectedInbound: '',
 			isViewingInbound: false,
 			selectedOutbound: '',
-			isViewingOutbound: false
+			isViewingOutbound: false,
+			confirmSubmit: false
 		};
 	},
 	mounted: function mounted() {
@@ -64364,8 +64672,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			this.isViewingPayment = true;
 		},
 		approvePayment: function approvePayment() {
+			this.confirmSubmit = true;
+		},
+		onSubmit: function onSubmit() {
 			var _this2 = this;
 
+			this.confirmSubmit = false;
 			this.paymentForm.id = this.selectedPayment.id;
 			this.paymentForm.post('/payment/approve').then(function (response) {
 				return _this2.onSuccess();
@@ -64397,7 +64709,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			return this.paymentForm.submitting ? 'is-loading' : '';
 		},
 		paymentFields: function paymentFields() {
-			var displayFields = [{ name: 'user.name', title: 'Made by' }, { name: 'created_at', sortField: 'created_at', title: 'Purchase date', callback: 'date' }, { name: 'price', sortField: 'price', title: 'Amount payable' }, { name: 'status', sortField: 'status', title: 'Status', callback: 'purchaseStatusLabel' }, { name: '__component:payments-actions', title: 'Actions' }];
+			var displayFields = [{ name: 'user.name', title: 'Made by' }, { name: 'created_at', sortField: 'created_at', title: 'Purchase date', callback: 'date' }, { name: 'price', sortField: 'price', title: 'Amount payable (RM)' }, { name: 'status', sortField: 'status', title: 'Status', callback: 'purchaseStatusLabel' }, { name: '__component:payments-actions', title: 'Actions' }];
 
 			return displayFields;
 		},
@@ -64443,7 +64755,7 @@ var render = function() {
                         _c("div", { staticClass: "level-left" }, [
                           _c("div", { staticClass: "level-item" }, [
                             _vm._v(
-                              "\n\t\t\t\t\t\t\t\tNew purchases\n\t\t\t\t\t\t\t"
+                              "\n\t\t\t\t\t\t\t\t\tNew purchases\n\t\t\t\t\t\t\t\t"
                             )
                           ])
                         ])
@@ -64646,7 +64958,7 @@ var render = function() {
                               _c("div", { staticClass: "level-left" }, [
                                 _c("div", { staticClass: "level-item" }, [
                                   _vm._v(
-                                    "\n\t\t\t\t\t\t\t\t\t\tInbounds today\n\t\t\t\t\t\t\t\t\t"
+                                    "\n\t\t\t\t\t\t\t\t\t\t\tInbounds today\n\t\t\t\t\t\t\t\t\t\t"
                                   )
                                 ])
                               ])
@@ -64682,7 +64994,7 @@ var render = function() {
                               _c("div", { staticClass: "level-left" }, [
                                 _c("div", { staticClass: "level-item" }, [
                                   _vm._v(
-                                    "\n\t\t\t\t\t\t\t\t\t\tPending outbounds\n\t\t\t\t\t\t\t\t\t"
+                                    "\n\t\t\t\t\t\t\t\t\t\t\tOutbounds today\n\t\t\t\t\t\t\t\t\t\t"
                                   )
                                 ])
                               ])
@@ -64699,7 +65011,7 @@ var render = function() {
                               attrs: {
                                 fields: _vm.outboundFields,
                                 url: "/internal/outbounds/pending",
-                                empty: "All outbounds have been processed"
+                                empty: "No outbound orders scheduled today"
                               }
                             })
                           ],
@@ -64736,7 +65048,21 @@ var render = function() {
             : _vm._e()
         ],
         1
-      )
+      ),
+      _vm._v(" "),
+      _c("confirmation", {
+        attrs: {
+          isConfirming: _vm.confirmSubmit,
+          title: "Confirmation",
+          message: "Confirm payment approval?"
+        },
+        on: {
+          close: function($event) {
+            _vm.confirmSubmit = false
+          },
+          confirm: _vm.onSubmit
+        }
+      })
     ],
     1
   )
@@ -64854,6 +65180,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -64867,7 +65200,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			form: new Form({
 				days_before_order: '',
 				rental_duration: ''
-			})
+			}),
+			confirmSubmit: false
 		};
 	},
 	created: function created() {
@@ -64878,8 +65212,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 	methods: {
 		submit: function submit() {
+			this.confirmSubmit = true;
+		},
+		onSubmit: function onSubmit() {
 			var _this = this;
 
+			this.confirmSubmit = false;
 			this.form.post(this.action).then(function (data) {
 				return _this.onSuccess(data);
 			}).catch(function (error) {
@@ -64909,99 +65247,117 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c("div", { staticClass: "card" }, [
-      _vm._m(0),
-      _vm._v(" "),
-      _c("div", { staticClass: "card-content" }, [
-        _c(
-          "form",
-          {
-            on: {
-              submit: function($event) {
-                $event.preventDefault()
-                _vm.submit($event)
-              },
-              keydown: function($event) {
-                _vm.form.errors.clear($event.target.name)
-              },
-              input: function($event) {
-                _vm.form.errors.clear($event.target.name)
-              },
-              keyup: function($event) {
-                if (
-                  !("button" in $event) &&
-                  _vm._k($event.keyCode, "enter", 13, $event.key)
-                ) {
-                  return null
+  return _c(
+    "div",
+    [
+      _c("div", { staticClass: "card" }, [
+        _vm._m(0),
+        _vm._v(" "),
+        _c("div", { staticClass: "card-content" }, [
+          _c(
+            "form",
+            {
+              on: {
+                submit: function($event) {
+                  $event.preventDefault()
+                  _vm.submit($event)
+                },
+                keydown: function($event) {
+                  _vm.form.errors.clear($event.target.name)
+                },
+                input: function($event) {
+                  _vm.form.errors.clear($event.target.name)
+                },
+                keyup: function($event) {
+                  if (
+                    !("button" in $event) &&
+                    _vm._k($event.keyCode, "enter", 13, $event.key)
+                  ) {
+                    return null
+                  }
+                  _vm.submit($event)
                 }
-                _vm.submit($event)
               }
-            }
+            },
+            [
+              _c(
+                "div",
+                { staticClass: "field" },
+                [
+                  _c("text-input", {
+                    attrs: {
+                      defaultValue: _vm.form.days_before_order,
+                      label: "Days before inbound",
+                      required: true,
+                      name: "days_before_order",
+                      type: "number",
+                      editable: true,
+                      error: _vm.form.errors.get("days_before_order"),
+                      focus: true
+                    },
+                    model: {
+                      value: _vm.form.days_before_order,
+                      callback: function($$v) {
+                        _vm.$set(_vm.form, "days_before_order", $$v)
+                      },
+                      expression: "form.days_before_order"
+                    }
+                  })
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "field" },
+                [
+                  _c("text-input", {
+                    attrs: {
+                      defaultValue: _vm.form.rental_duration,
+                      label: "Minimum rental duration (months)",
+                      required: true,
+                      name: "rental_duration",
+                      type: "number",
+                      editable: true,
+                      error: _vm.form.errors.get("rental_duration"),
+                      focus: true
+                    },
+                    model: {
+                      value: _vm.form.rental_duration,
+                      callback: function($$v) {
+                        _vm.$set(_vm.form, "rental_duration", $$v)
+                      },
+                      expression: "form.rental_duration"
+                    }
+                  })
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c("button", { staticClass: "button is-primary" }, [
+                _vm._v("Submit")
+              ])
+            ]
+          )
+        ])
+      ]),
+      _vm._v(" "),
+      _c("confirmation", {
+        attrs: {
+          isConfirming: _vm.confirmSubmit,
+          title: "Confirmation",
+          message: "Confirm changing settings?"
+        },
+        on: {
+          close: function($event) {
+            _vm.confirmSubmit = false
           },
-          [
-            _c(
-              "div",
-              { staticClass: "field" },
-              [
-                _c("text-input", {
-                  attrs: {
-                    defaultValue: _vm.form.days_before_order,
-                    label: "Days before inbound",
-                    required: true,
-                    name: "days_before_order",
-                    type: "number",
-                    editable: true,
-                    error: _vm.form.errors.get("days_before_order"),
-                    focus: true
-                  },
-                  model: {
-                    value: _vm.form.days_before_order,
-                    callback: function($$v) {
-                      _vm.$set(_vm.form, "days_before_order", $$v)
-                    },
-                    expression: "form.days_before_order"
-                  }
-                })
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "field" },
-              [
-                _c("text-input", {
-                  attrs: {
-                    defaultValue: _vm.form.rental_duration,
-                    label: "Minimum rental duration (months)",
-                    required: true,
-                    name: "rental_duration",
-                    type: "number",
-                    editable: true,
-                    error: _vm.form.errors.get("rental_duration"),
-                    focus: true
-                  },
-                  model: {
-                    value: _vm.form.rental_duration,
-                    callback: function($$v) {
-                      _vm.$set(_vm.form, "rental_duration", $$v)
-                    },
-                    expression: "form.rental_duration"
-                  }
-                })
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _c("button", { staticClass: "button is-primary" }, [
-              _vm._v("Submit")
-            ])
-          ]
-        )
-      ])
-    ])
-  ])
+          confirm: _vm.onSubmit
+        }
+      })
+    ],
+    1
+  )
 }
 var staticRenderFns = [
   function() {
@@ -65012,7 +65368,7 @@ var staticRenderFns = [
       _c("div", { staticClass: "card-header-title level" }, [
         _c("div", { staticClass: "level-left" }, [
           _c("div", { staticClass: "level-item" }, [
-            _vm._v("\n\t\t\t\t\t\tSystem settings\n\t\t\t\t\t")
+            _vm._v("\n\t\t\t\t\t\t\tSystem settings\n\t\t\t\t\t\t")
           ])
         ])
       ])
@@ -65276,6 +65632,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	props: ['outbound', 'canManage'],
@@ -65307,7 +65670,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 				value: 'canceled',
 				label: 'Canceled'
 			}],
-			confirmation: false
+			confirmation: false,
+			confirmSubmit: false
 		};
 	},
 	mounted: function mounted() {
@@ -65333,9 +65697,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		back: function back() {
 			this.$emit('back');
 		},
+		submit: function submit() {
+			this.confirmSubmit = true;
+		},
 		onSubmit: function onSubmit() {
 			var _this2 = this;
 
+			this.confirmSubmit = false;
 			this.form.post(this.action).then(function (response) {
 				return _this2.onSuccess(response);
 			}).catch(function (response) {
@@ -65582,7 +65950,7 @@ var render = function() {
                       on: {
                         submit: function($event) {
                           $event.preventDefault()
-                          _vm.onSubmit($event)
+                          _vm.submit($event)
                         },
                         keydown: function($event) {
                           _vm.form.errors.clear($event.target.name)
@@ -65750,7 +66118,21 @@ var render = function() {
           ])
         ],
         2
-      )
+      ),
+      _vm._v(" "),
+      _c("confirmation", {
+        attrs: {
+          isConfirming: _vm.confirmSubmit,
+          title: "Confirmation",
+          message: "Confirm changing the status of the outbound order?"
+        },
+        on: {
+          close: function($event) {
+            _vm.confirmSubmit = false
+          },
+          confirm: _vm.onSubmit
+        }
+      })
     ],
     1
   )
@@ -65846,6 +66228,133 @@ if (false) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 386 */,
+/* 387 */,
+/* 388 */,
+/* 389 */,
+/* 390 */,
+/* 391 */,
+/* 392 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(393)
+/* template */
+var __vue_template__ = __webpack_require__(394)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources\\assets\\js\\components\\Confirmation.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-71eeeea8", Component.options)
+  } else {
+    hotAPI.reload("data-v-71eeeea8", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 393 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: ['title', 'message', 'isConfirming'],
+
+    methods: {
+        close: function close() {
+            this.$emit('close');
+        },
+        confirm: function confirm() {
+            this.$emit('confirm');
+        }
+    }
+});
+
+/***/ }),
+/* 394 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    [
+      _c(
+        "modal",
+        { attrs: { active: _vm.isConfirming }, on: { close: _vm.close } },
+        [
+          _c("template", { slot: "header" }, [_vm._v(_vm._s(_vm.title))]),
+          _vm._v("\n        \n        " + _vm._s(_vm.message) + "\n\n        "),
+          _c("template", { slot: "footer" }, [
+            _c(
+              "button",
+              { staticClass: "button is-primary", on: { click: _vm.confirm } },
+              [_vm._v("Confirm")]
+            )
+          ])
+        ],
+        2
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-71eeeea8", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);
