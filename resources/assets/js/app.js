@@ -28,6 +28,7 @@ Vue.use(VueAnimateNumber);
  */
 // Base components
 Vue.component('flash', require('./components/Flash.vue'));
+Vue.component('confirmation', require('./components/Confirmation.vue'));
 Vue.component('loader', require('./components/Loader.vue'));
 Vue.component('navigation', require('./components/Navigation.vue'));
 Vue.component('modal', require('./components/Modal.vue'));

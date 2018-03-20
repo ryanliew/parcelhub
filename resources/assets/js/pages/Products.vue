@@ -37,7 +37,7 @@
 		<modal :active="dialogActive" @close="dialogActive = false">
 			<template slot="header">{{ dialogTitle }}</template>
 
-			<form @submit.prevent="onSubmit" 
+			<form @submit.prevent="submit" 
 					@keydown="form.errors.clear($event.target.name)" 
 					@input="form.errors.clear($event.target.name)"
 					@keyup.enter="submit">
@@ -134,6 +134,13 @@
 				<button class="button is-primary" @click="submit">Submit</button>
           	</template>
 		</modal>
+
+		<confirmation :isConfirming="confirmSubmit"
+        				title="Confirmation"
+        				:message="confirmationMessage"
+        				@close="confirmSubmit = false"
+        				@confirm="onSubmit">
+        </confirmation>
 	</div>
 </template>
 
@@ -165,6 +172,7 @@
 					is_dangerous: '',
 					is_fragile: '',
 				}),
+				confirmSubmit: false
 			};
 		},
 
@@ -175,8 +183,12 @@
 
 		methods: {
 			
-
 			submit() {
+				this.confirmSubmit = true;
+			},
+
+			onSubmit() {
+				this.confirmSubmit = false;
 				this.form.post(this.action)
 					.then(data => this.onSuccess())
 					.catch(error => this.onFail(error));
@@ -241,6 +253,12 @@
 			action() {
 				let action = this.selectedProduct ? "update" : "store";
 				return "/product/" + action;
+			},
+
+			confirmationMessage() {
+				return this.selectedProduct
+						? "Confirm editing the product information?"
+						: "Confirm adding new product?";
 			},
 
 			fields() {

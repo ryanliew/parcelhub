@@ -153,6 +153,10 @@
 
 			customer(value){
 				return value ? value : "N/A";
+			},
+
+			convertToM(value){
+				return value / 100;
 			}
 
 

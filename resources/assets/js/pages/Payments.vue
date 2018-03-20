@@ -282,6 +282,20 @@
 				<button v-if="selectedPayment.status !== 'true'" class="button is-primary" :class="approveLoadingClass" @click="approve">Approve</button>
           	</template>
 		</modal>
+
+		<confirmation :isConfirming="confirmSubmit"
+        				title="Confirmation"
+        				message="Confirm payment approval?"
+        				@close="confirmSubmit = false"
+        				@confirm="onApprove">
+        </confirmation>
+
+        <confirmation :isConfirming="confirmPayment"
+        				title="Confirmation"
+        				message="Confirm payment approval?"
+        				@close="confirmPayment = false"
+        				@confirm="onSubmit">
+        </confirmation>
 		
 	</div>
 </template>
@@ -319,6 +333,8 @@
 				selectedPayment: '',
 				isViewing: false,
 				submitting: false,
+				confirmSubmit: false,
+				confirmPayment: false,
 			};
 		},
 
@@ -369,6 +385,11 @@
 			},
 
 			approve() {
+				this.confirmSubmit = true;
+			},
+
+			onApprove() {
+				this.confirmSubmit = false;
 				this.submitting = true;
 				this.approveForm.id = this.selectedPayment.id;
 				this.approveForm.post('/payment/approve')
@@ -390,6 +411,11 @@
 			},
 
 			submit() {
+				this.confirmPayment = true;
+			},
+
+			onSubmit() {
+				this.confirmPayment = false;
 				let selectedLots = [];
 				this.categories.forEach(function(category){
 					let lots = [];

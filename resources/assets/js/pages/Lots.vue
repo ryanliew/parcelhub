@@ -75,7 +75,7 @@
 					<div v-if="override || this.form.volume || this.form.price">
 			          	<div class="field">
 			          		<text-input v-model="form.volume" :defaultValue="form.volume" 
-										label="Volume (cm³)" 
+										label="Volume (m³)" 
 										:required="true"
 										name="volume"
 										type="text"
@@ -191,6 +191,34 @@
 				<button v-if="selectedPayment.status !== 'true'" class="button is-primary" :class="approveLoadingClass" @click="approvePayment">Approve</button>
           	</template>
 		</modal>
+
+		<confirmation :isConfirming="confirmSubmit"
+        				title="Confirmation"
+        				:message="confirmationMessage"
+        				@close="confirmSubmit = false"
+        				@confirm="onSubmit">
+        </confirmation>
+
+        <confirmation :isConfirming="confirmSubmitUser"
+        				title="Confirmation"
+        				message="Confirm customer reassignment?"
+        				@close="confirmSubmitUser = false"
+        				@confirm="onSubmitOwner">
+        </confirmation>
+
+        <confirmation :isConfirming="confirmSubmitPayment"
+        				title="Confirmation"
+        				message="Confirm payment approval?"
+        				@close="confirmSubmitPayment = false"
+        				@confirm="onSubmitPayment">
+        </confirmation>
+
+        <confirmation :isConfirming="confirmUnassignOwner"
+        				title="Confirmation"
+        				message="Confirm unassigning the current owner?"
+        				@close="confirmUnassignOwner = false"
+        				@confirm="onUnassignOwner">
+        </confirmation>
 	</div>
 </template>
 
@@ -233,7 +261,11 @@
 				selectedUser: '',
 				selectedPayment: '',
 				isPaymentLoading: false,
-				paymentApproving: false
+				paymentApproving: false,
+				confirmSubmit: false,
+				confirmSubmitUser: false,
+				confirmSubmitPayment: false,
+				confirmUnassignOwner: false
 			};
 		},
 
@@ -283,6 +315,11 @@
 			},
 
 			approvePayment() {
+				this.confirmSubmitPayment = true;
+			},
+
+			onSubmitPayment() {
+				this.confirmSubmitPayment = false;
 				this.submitting = true;
 				this.approveForm.id = this.selectedPayment.id;
 				this.approveForm.post('/payment/approve')
@@ -299,18 +336,33 @@
 			},
 
 			submit() {
+				this.confirmSubmit = true;
+			},
+
+			onSubmit() {
+				this.confirmSubmit = false;
 				this.form.post(this.action)
 					.then(data => this.onSuccess())
 					.catch(error => this.onFail(error));
 			},
 
 			submitOwner() {
+				this.confirmSubmitUser = true;
+			},
+
+			onSubmitOwner() {
+				this.confirmSubmitUser = false;
 				this.ownerForm.post('/lot/assign/' + this.selectedLot.id)
 					.then(data => this.onSuccess())
 					.catch(error => this.onFail(error));
 			},
 
 			unassignOwner() {
+				this.confirmUnassignOwner = true;
+			},
+
+			onUnassignOwner() {
+				this.confirmUnassignOwner = false;
 				this.ownerForm.post('/lot/unassign/' + this.selectedLot.id)
 					.then(data => this.onSuccess())
 					.catch(error => this.onFail(error));
@@ -328,10 +380,11 @@
 			},
 
 			edit(data) {
+				this.form.reset();
 				this.selectedLot = data;
 				this.form.id = data.id;
 				this.form.name = data.name;
-				this.form.volume = data.volume;
+				this.form.volume = data.volume / 100;
 				this.form.category = data.category_id;
 				this.form.price = data.price;
 				this.selectedCategory = {
@@ -362,7 +415,7 @@
 				this.selectedCategory = data;
 				this.form.category = data.value;
 				if(!this.override) {
-					this.form.volume = data.volume; 
+					this.form.volume = data.volume / 100; 
 					this.form.price = data.price; 
 				}
 				this.form.errors.clear('price');
@@ -401,7 +454,7 @@
 					{name: 'name', sortField: 'name'},
 					
 					{name: 'category_name', sortField: 'category_name', title: 'Category'},
-					{name: 'usage', title: 'Usage (cm³)'},
+					{name: 'usage', title: 'Usage (m³)'},
 					// {name: 'price', sortField: 'price', title: 'Price (RM)'},
 					{name: 'products.length', title: 'No. item'},
 					{name: 'expired_at', sortField: 'expired_at', title: 'Rental expire', callback: 'date'},
@@ -424,6 +477,12 @@
 			approveLoadingClass() {
 				return this.paymentApproving ? 'is-loading' : '';
 			},
+
+			confirmationMessage() {
+				return this.selectedLot 
+						? "Confirm editing lot information?"
+						: "Confirm adding new lot?";
+			}
 		}
 	}
 </script>
