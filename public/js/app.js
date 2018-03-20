@@ -55864,6 +55864,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: {
@@ -55917,6 +55923,19 @@ var render = function() {
             }
           },
           [_vm._m(1), _vm._v(" "), _c("span", [_vm._v("Edit")])]
+        ),
+        _vm._v(" "),
+        _c(
+          "button",
+          {
+            staticClass: "button is-danger",
+            on: {
+              click: function($event) {
+                _vm.itemAction("delete", _vm.rowData, _vm.rowIndex)
+              }
+            }
+          },
+          [_vm._m(2), _vm._v(" "), _c("span", [_vm._v("Delete")])]
         )
       ])
     ])
@@ -55937,6 +55956,14 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("span", { staticClass: "icon" }, [
       _c("i", { staticClass: "fa fa-edit" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "icon" }, [
+      _c("i", { staticClass: "fa fa-times" })
     ])
   }
 ]
@@ -58632,6 +58659,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -58660,7 +58694,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 				is_dangerous: '',
 				is_fragile: ''
 			}),
-			confirmSubmit: false
+			deleteForm: new Form({}),
+			confirmSubmit: false,
+			confirmDelete: false
 		};
 	},
 	mounted: function mounted() {
@@ -58671,6 +58707,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		});
 		this.$events.on('view', function (data) {
 			return _this.view(data);
+		});
+		this.$events.on('delete', function (data) {
+			return _this.delete(data);
 		});
 	},
 
@@ -58708,6 +58747,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			this.productImage = { name: data.picture, src: data.picture };
 
 			this.dialogActive = true;
+		},
+		delete: function _delete(data) {
+			this.selectedProduct = data;
+			this.confirmDelete = true;
+		},
+		onDelete: function onDelete() {
+			var _this3 = this;
+
+			this.confirmDelete = false;
+			this.deleteForm.delete('/internal/products/' + this.selectedProduct.id).then(function (response) {
+				return _this3.onSuccess();
+			}).catch(function (error) {
+				return _this3.onFail(error);
+			});
 		},
 		view: function view(data) {
 			this.selectedProduct = data;
@@ -59607,6 +59660,20 @@ var render = function() {
             _vm.confirmSubmit = false
           },
           confirm: _vm.onSubmit
+        }
+      }),
+      _vm._v(" "),
+      _c("confirmation", {
+        attrs: {
+          isConfirming: _vm.confirmDelete,
+          title: "Confirmation",
+          message: "Confirm delete product?"
+        },
+        on: {
+          close: function($event) {
+            _vm.confirmSubmit = false
+          },
+          confirm: _vm.onDelete
         }
       })
     ],
@@ -62826,7 +62893,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 					return parseInt(category.quantity) * category.price;
 				});
 				this.totalVolume = _.sumBy(this.categories, function (category) {
-					return parseInt(category.quantity) * category.volume;
+					return parseInt(category.quantity) * category.volume / 100;
 				});
 				this.totalLots = _.sumBy(this.categories, function (category) {
 					return parseInt(category.quantity);
@@ -62889,7 +62956,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 	}), _defineProperty(_computed, 'mainTitle', function mainTitle() {
 		return this.can_manage ? 'Purchases' : 'Purchase history';
 	}), _defineProperty(_computed, 'fields', function fields() {
-		var displayFields = [{ name: 'user.name', title: 'Made by' }, { name: 'created_at', sortField: 'created_at', title: 'Purchase date', callback: 'date' }, { name: 'price', sortField: 'price', title: 'Amount payable' }, { name: 'status', sortField: 'status', title: 'Status', callback: 'purchaseStatusLabel' }, { name: '__component:payments-actions', title: 'Actions' }];
+		var displayFields = [{ name: 'user.name', title: 'Made by' }, { name: 'created_at', sortField: 'created_at', title: 'Purchase date', callback: 'date' }, { name: 'price', sortField: 'price', title: 'Amount payable(RM)' }, { name: 'status', sortField: 'status', title: 'Status', callback: 'purchaseStatusLabel' }, { name: '__component:payments-actions', title: 'Actions' }];
 
 		if (!this.can_manage) {
 			displayFields = _.drop(displayFields);
@@ -63194,7 +63261,7 @@ var render = function() {
                               _c("div", [
                                 _c("p", { staticClass: "heading" }, [
                                   _vm._v(
-                                    "\n\t\t\t\t\t\t\t\t\t\tTotal volume (cm³)\n\t\t\t\t\t\t\t\t\t"
+                                    "\n\t\t\t\t\t\t\t\t\t\tTotal volume (m³)\n\t\t\t\t\t\t\t\t\t"
                                   )
                                 ]),
                                 _vm._v(" "),
@@ -63291,7 +63358,7 @@ var render = function() {
                                       ]),
                                       _vm._v(" "),
                                       _c("td", [
-                                        _vm._v(_vm._s(category.volume))
+                                        _vm._v(_vm._s(category.volume / 100))
                                       ]),
                                       _vm._v(" "),
                                       _vm.availableLots(category).length > 0
@@ -63563,7 +63630,7 @@ var render = function() {
                                     _vm._v(" "),
                                     _c("td", {
                                       domProps: {
-                                        textContent: _vm._s(lot.volume)
+                                        textContent: _vm._s(lot.volume / 100)
                                       }
                                     })
                                   ])
@@ -64892,7 +64959,7 @@ var render = function() {
                                         _vm._v(" "),
                                         _c("th", [_vm._v("Monthly fee")]),
                                         _vm._v(" "),
-                                        _c("th", [_vm._v("Volume")])
+                                        _c("th", [_vm._v("Volume(m³)")])
                                       ])
                                     ]),
                                     _vm._v(" "),
@@ -64916,7 +64983,9 @@ var render = function() {
                                           _vm._v(" "),
                                           _c("td", {
                                             domProps: {
-                                              textContent: _vm._s(lot.volume)
+                                              textContent: _vm._s(
+                                                lot.volume / 100
+                                              )
                                             }
                                           })
                                         ])

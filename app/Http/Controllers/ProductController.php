@@ -57,20 +57,24 @@ class ProductController extends Controller
                                         'products.length as length',
                                         'users.name as user_name'
                                     )
-                                ->leftJoin('users', 'products.user_id', '=', 'users.id'));
+                                ->leftJoin('users', 'products.user_id', '=', 'users.id')
+                                ->where('status', 'true'));
             else
-                return Controller::VueTableListResult(auth()->user()->products()->with(["inbounds", "lots", "outbounds"])->select('products.picture as picture',
-                                        'products.sku as sku',
-                                        'products.id as id',
-                                        'products.name as product_name',
-                                        'products.is_dangerous as is_dangerous',
-                                        'products.is_fragile as is_fragile',
-                                        'products.width as width',
-                                        'products.height as height',
-                                        'products.length as length',
-                                        'users.name as user_name'
-                                    )
-                                ->leftJoin('users', 'products.user_id', '=', 'users.id'));
+                return Controller::VueTableListResult(auth()->user()->products()->with(["inbounds", "lots", "outbounds"])
+                                                                                ->select('products.picture as picture',
+                                                                                        'products.sku as sku',
+                                                                                        'products.id as id',
+                                                                                        'products.name as product_name',
+                                                                                        'products.is_dangerous as is_dangerous',
+                                                                                        'products.is_fragile as is_fragile',
+                                                                                        'products.width as width',
+                                                                                        'products.height as height',
+                                                                                        'products.length as length',
+                                                                                        'users.name as user_name'
+                                                                                    )
+                                                                                ->leftJoin('users', 'products.user_id', '=', 'users.id')
+                                                                                ->where('status', 'true')
+                                                                            );
         }
         
 
@@ -192,11 +196,16 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Product $product)
     {
-        $product = product::find($id);
+        if($product->total_quantity > 0)
+            return ['message' => 'Product with stock shall not be deleted'];
+
+
         $product->status = "false";
         $product->save();
+
+        return ['message' => "Product deleted"];
 
         return redirect()->back()->withSuccess($product->name . ' deleted successfully.');
     }
