@@ -55,7 +55,8 @@ class OutboundController extends Controller
                                                                     'users.name as customer'
                                                                     )
                                                                 ->leftJoin('couriers', 'courier_id', '=', 'couriers.id')
-                                                                ->leftJoin('users', 'user_id', '=', 'users.id') );
+                                                                ->leftJoin('users', 'user_id', '=', 'users.id')
+                                                                ->orderBy('outbounds.created_at', 'desc') );
             else
                 return Controller::VueTableListResult( $user->outbounds()
                                                             ->select('outbounds.id as id',
@@ -71,7 +72,8 @@ class OutboundController extends Controller
                                                                     'outbounds.recipient_country',
                                                                     'outbounds.recipient_postcode'
                                                                     )
-                                                            ->leftJoin('couriers', 'courier_id', '=', 'couriers.id') );
+                                                            ->leftJoin('couriers', 'courier_id', '=', 'couriers.id')
+                                                            ->orderBy('outbounds.created_at', 'desc') );
 
         }
 
@@ -108,7 +110,9 @@ class OutboundController extends Controller
                                                                     )
                                                                 ->leftJoin('couriers', 'courier_id', '=', 'couriers.id')
                                                                 ->leftJoin('users', 'user_id', '=', 'users.id')
-                                                                ->where('process_status', 'pending') );
+                                                                ->where('outbounds.process_status', '<>', 'completed')
+                                                                ->where('outbounds.process_status', '<>', 'canceled')
+                                                                ->orderBy('outbounds.created_at', 'desc'));
     } 
 
     /**

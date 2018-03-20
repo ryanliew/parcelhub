@@ -72,8 +72,8 @@
 		},
 
 		created() {
-			this.form.rental_duration = this.setting[0].value;
-			this.form.days_before_order = this.setting[1].value;
+			this.form.rental_duration = this.setting.rental_duration;
+			this.form.days_before_order = this.setting.days_before_order;
 		},
 
 		methods: {
@@ -90,8 +90,8 @@
 
 			onSuccess(data) {
 				console.log(data);
-				this.form.rental_duration = data.setting[0].value;
-				this.form.days_before_order = data.setting[1].value;
+				this.form.rental_duration = data.setting.rental_duration;
+				this.form.days_before_order = data.setting.days_before_order;
 			},
 
 			onFail() {

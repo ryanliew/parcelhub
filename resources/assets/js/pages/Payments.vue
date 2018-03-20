@@ -103,8 +103,8 @@
 								<table class="table is-hoverable is-fullwidth">
 									<thead>
 										<th>Lot type</th>
-										<th>Price</th>
-										<th>Volume</th>
+										<th>Price (RM)</th>
+										<th>Volume (m³)</th>
 										<th>Quantity</th>
 									</thead>
 									<tbody>
@@ -262,8 +262,8 @@
 							<thead>
 								<tr>
 									<th>Name</th>
-									<th>Monthly fee</th>
-									<th>Volume</th>
+									<th>Monthly fee(RM)</th>
+									<th>Volume(m³)</th>
 								</tr>
 							</thead>
 							<tbody>
