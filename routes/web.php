@@ -86,6 +86,7 @@ Route::group(['prefix' => 'internal'], function() {
 	Route::get('users/list', 'UserController@page');
 	Route::get('users', 'UserController@index');
 	Route::get('user', 'UserController@show');
+	Route::delete('products/{product}', 'ProductController@destroy');
 });
 
 Route::group(['prefix' => 'courier'], function() {
