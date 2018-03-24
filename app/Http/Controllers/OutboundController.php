@@ -192,24 +192,27 @@ class OutboundController extends Controller
                 foreach ($product->lots as $lot) {
 
                     // Check if the lot have enough products supply to the outbound request
-                    if($lot->pivot->quantity >= $quantity) {
+                    $sumOfQuantityAndIncomingQuantity = $lot->pivot->quantity + $lot->pivot->incoming_quantity - $lot->pivot->outgoing_product;
+                    if($sumOfQuantityAndIncomingQuantity >= $quantity) {
 
                         $volumeAfterDeductProduct = $lot->left_volume + ($product->volume * $quantity);
 
                         $lot->update(['left_volume' => $volumeAfterDeductProduct]);
 
                         // Update remaining product left in the lot
-                        $numOfProductLeft = $lot->pivot->quantity - $quantity;
+                        // $numOfProductLeft = $lot->pivot->quantity - $quantity;
 
                         // Lot with 0 quantity will be detach else update the remaining available quantity
-                        if($numOfProductLeft === 0) {
+                        // if($numOfProductLeft === 0) {
 
-                            $product->lots()->detach($lot->id);
+                        //     $product->lots()->detach($lot->id);
 
-                        } else {
+                        // } else {
 
-                            $product->lots()->updateExistingPivot($lot->id, ['quantity' => $numOfProductLeft]);;
-                        }
+                        //     $product->lots()->updateExistingPivot($lot->id, ['quantity' => $numOfProductLeft]);;
+                        // }
+                        $newQuantityForOutgoingProduct = $lot->pivot->outgoing_product + $quantity;
+                        $product->lots()->updateExistingPivot($lot->id, ['outgoing_product' => $newQuantityForOutgoingProduct]);
 
                         $outbound->products()->attach($product->id, ['quantity' => $quantity, 'lot_id' => $lot->id]);
 

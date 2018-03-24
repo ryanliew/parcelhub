@@ -52,10 +52,10 @@ class Product extends Model
 {
 	protected $guarded = [];
     
-    protected $appends = ['volume', 'total_quantity'];
+    protected $appends = ['volume', 'total_quantity', 'total_incoming_quantity', 'total_outgoing_quantity', 'total_usable_quantity'];
     
     public function lots() {
-    	return $this->belongsToMany('App\Lot')->withPivot('quantity');
+    	return $this->belongsToMany('App\Lot')->withPivot('quantity', 'incoming_quantity','outgoing_product');
     }
 
     public function inbounds(){
@@ -103,6 +103,26 @@ class Product extends Model
             $total += $lot->pivot->quantity;
         }
         return $total;
+    }
+
+    public function getTotalIncomingQuantityAttribute() {
+        $total = 0;
+        foreach ($this->lots as $lot) {
+            $total += $lot->pivot->incoming_quantity;
+        }
+        return $total;
+    }
+
+    public function getTotalOutgoingQuantityAttribute() {
+        $total = 0;
+        foreach ($this->lots as $lot) {
+            $total += $lot->pivot->outgoing_product;
+        }
+        return $total;
+    }
+
+    public function getTotalUsableQuantityAttribute() {
+        return $this->total_quantity + $this->total_incoming_quantity - $this->total_outgoing_quantity;
     }
 
     public function getOutboundProductLotAttribute() {
