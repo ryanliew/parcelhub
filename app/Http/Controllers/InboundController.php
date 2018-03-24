@@ -3,9 +3,11 @@ namespace App\Http\Controllers;
 use App\Inbound;
 use App\InboundProduct;
 use App\Lot;
+use App\Notifications\InboundCreatedNotification;
 use App\Product;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use PDF;
 use Settings;
@@ -112,7 +114,7 @@ class InboundController extends Controller
         {
             return response(json_encode(array('overall' => ['You must update your contact details in the My Profile page before proceeding'])), 422);
         }
-        
+
         $now = Carbon::today();
         $compare = Carbon::parse($request->arrival_date);
         $user_lots = $auth->lots()->where('volume','>', 0)->where('status', 'true')->get();
@@ -152,7 +154,7 @@ class InboundController extends Controller
             return redirect()->back()->withErrors("Inbound must be created before ".Settings::get('days_before_order')." days.");
         }
         // Everything is ok, create a new inbound
-        $inbound = new inbound;
+        $inbound = new Inbound();
         $inbound->user_id = $auth->id;
         $inbound->arrival_date = $request->arrival_date;
         $inbound->total_carton = $request->total_carton;
@@ -170,7 +172,7 @@ class InboundController extends Controller
             foreach($lots as $lot)
             {
                 if($product["volume"] > 0) {
-                    $quantityIntoLot = $this->calculateQuantity($lot->left_volume, $product["singleVolume"], $product["quantity"]);                    
+                    $quantityIntoLot = $this->calculateQuantity($lot->left_volume, $product["singleVolume"], $product["quantity"]);
                     if($quantityIntoLot > 0){
                         $lot_products[$key]['quantity'] = $quantityIntoLot;
                         $lot->left_volume = $lot->left_volume - ($quantityIntoLot * $product["singleVolume"]);
@@ -185,9 +187,9 @@ class InboundController extends Controller
             }
         }
         // Assign products to user lots
-        foreach($user_lots as $lot){ 
+        foreach($user_lots as $lot){
             $lot_products = [];
-            foreach($products as $key => $product){ 
+            foreach($products as $key => $product){
                 if($product["volume"] > 0) {
                     // If there are still volume needed to be assigned
                     $quantityIntoLot = $this->calculateQuantity($lot->left_volume, $product["singleVolume"], $product["quantity"]);
@@ -203,13 +205,17 @@ class InboundController extends Controller
             $lot->save();
             $lot->products()->attach($lot_products);
         }
-        
+
+        Auth::user()->notify(new InboundCreatedNotification($inbound));
+
         return ['message' => "Inbound order created"];
     }
+
     public function calculateQuantity($volume, $singleVolume, $quantity){
         $quantityIntoLot = round($volume / $singleVolume, 0, PHP_ROUND_HALF_DOWN);
         return min($quantityIntoLot, $quantity);
     }
+
     public function attachLot($inbound, $product, $lot) {
         // Attach lot to inbound product
         $inbound_product = InboundProduct::where('inbound_id', $inbound)->where('product_id', $product)->first();

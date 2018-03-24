@@ -4,8 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Lot;
+use App\Notifications\OutboundStatusUpdateNotification;
 use App\Outbound;
+use Entrust;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class OutboundController extends Controller
 {
@@ -107,6 +110,16 @@ class OutboundController extends Controller
 
         $outbound->process_status = $request->process_status;
         $outbound->save();
+
+        if(Entrust::hasRole('admin')) {
+
+            Auth::user()->notify(new OutboundStatusUpdateNotification($outbound));
+
+        } else {
+
+            User::admin()->first()->notify(new OutboundStatusUpdateNotification($outbound));
+            Auth::user()->notify(new OutboundStatusUpdateNotification($outbound));
+        }
 
         if(request()->wantsJson())
         {   

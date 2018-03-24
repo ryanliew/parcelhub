@@ -11,7 +11,7 @@
 |
 */
 
-use App\Notifications\AccountVerification;
+use App\Notifications\AccountVerificationNotification;
 use App\UserToken;
 
 Route::get('/', function () {

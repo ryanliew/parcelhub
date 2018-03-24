@@ -96,6 +96,12 @@ class User extends Authenticatable
         return $this->hasOne('App\UserToken');
     }
 
+    public function scopeAdmin($query) {
+        return $query->whereHas('roles', function ($query) {
+            $query->where('name', '=', 'admin');
+        });
+    }
+
     public function getTotalLotLeftVolumeAttribute() {
         return $this->lots->sum('left_volume');
     }

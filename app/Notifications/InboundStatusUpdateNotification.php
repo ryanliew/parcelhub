@@ -7,20 +7,20 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class AccountVerification extends Notification
+class InboundStatusUpdateNotification extends Notification
 {
     use Queueable;
 
-    protected $user;
+    protected $inbound;
 
     /**
      * Create a new notification instance.
      *
-     * @param $user
+     * @param $inbound
      */
-    public function __construct($user)
+    public function __construct($inbound)
     {
-        $this->user = $user;
+        $this->inbound = $inbound;
     }
 
     /**
@@ -42,10 +42,7 @@ class AccountVerification extends Notification
      */
     public function toMail($notifiable)
     {
-        return (new MailMessage)
-                    ->greeting('Verify Your Email Address')
-                    ->action('Verify Account', route('verify', ['token' => $this->user->tokens->token]))
-                    ->line('Thank you for using our application!');
+        return (new MailMessage)->markdown('mail.inbound.status.update', [ 'inbound' => $this->inbound ]);
     }
 
     /**

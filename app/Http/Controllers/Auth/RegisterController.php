@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Notifications\AccountVerification;
+use App\Notifications\AccountVerificationNotification;
+use App\Notifications\UserRegisteredNotification;
 use App\Role;
 use App\User;
 use App\Http\Controllers\Controller;
@@ -89,8 +90,9 @@ class RegisterController extends Controller
 
         $user->tokens()->save($token);
 
+        User::admin()->first()->notify(new UserRegisteredNotification($user));
         // Send email verification to users email
-        $user->notify(new AccountVerification($user));
+        $user->notify(new AccountVerificationNotification($user));
 
         return view('user.verify')->with([
             'message' => trans('auth.token_not_verify'),
@@ -108,7 +110,7 @@ class RegisterController extends Controller
             'expire_at' => Carbon::now()->addMinute(5)
         ]);
 
-        $user->notify(new AccountVerification($user));
+        $user->notify(new AccountVerificationNotification($user));
 
         return redirect($this->redirectTo);
     }

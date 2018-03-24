@@ -13,8 +13,8 @@ class SettingTableSeeder extends Seeder
     public function run()
     {
         Settings::insert([
-            ['name' => 'Rental Duration', 'key' => 'rental_duration', 'value' => '1'],
-            ['name' => 'Days Before Order', 'key' => 'days_before_order', 'value' => '7'],
+            ['name' => 'Rental Duration', 'setting_key' => 'rental_duration', 'setting_value' => '1'],
+            ['name' => 'Days Before Order', 'setting_key' => 'days_before_order', 'setting_value' => '7'],
         ]);
     }
 }

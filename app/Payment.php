@@ -44,4 +44,15 @@ class Payment extends Model
     {
     	return asset(str_replace('public', 'storage', $value));
     }
+
+    public function getTotalPriceAttribute()
+    {
+        $total = 0;
+
+        foreach ($this->lots as $lot) {
+            $total += $lot->price;
+        }
+
+        return $total;
+    }
 }

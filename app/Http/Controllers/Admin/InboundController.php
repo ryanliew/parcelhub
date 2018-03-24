@@ -3,8 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Inbound;
+use App\Notifications\InboundStatusUpdateNotification;
+use App\User;
+use App\UserToken;
+use Entrust;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class InboundController extends Controller
 {
@@ -93,6 +98,16 @@ class InboundController extends Controller
 
         $inbound->process_status = $request->process_status;
         $inbound->save();
+
+        if(Entrust::hasRole('admin')) {
+
+            Auth::user()->notify(new InboundStatusUpdateNotification($inbound));
+
+        } else {
+
+            User::admin()->first()->notify(new InboundStatusUpdateNotification($inbound));
+            Auth::user()->notify(new InboundStatusUpdateNotification($inbound));
+        }
 
         if(request()->wantsJson())
         {   

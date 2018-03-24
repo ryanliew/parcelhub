@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Courier;
+use App\Notifications\OutboundCreatedNotification;
 use App\Outbound;
 use App\Product;
 use Illuminate\Http\Request;
@@ -230,6 +231,8 @@ class OutboundController extends Controller
                     }
                 }
             }
+
+            $user->notify(new OutboundCreatedNotification($outbound));
 
         } catch (\Exception $exception) {
 
