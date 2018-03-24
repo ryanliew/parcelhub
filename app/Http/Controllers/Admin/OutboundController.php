@@ -113,12 +113,15 @@ class OutboundController extends Controller
 
         if(Entrust::hasRole('admin')) {
 
-            Auth::user()->notify(new OutboundStatusUpdateNotification($outbound));
+            $outbound->user->notify(new OutboundStatusUpdateNotification($outbound));
 
         } else {
 
-            User::admin()->first()->notify(new OutboundStatusUpdateNotification($outbound));
-            Auth::user()->notify(new OutboundStatusUpdateNotification($outbound));
+            if($outbound->process_status == 'canceled') {
+                User::admin()->first()->notify(new OutboundStatusUpdateNotification($outbound));
+            }
+
+            $outbound->user->notify(new OutboundStatusUpdateNotification($outbound));
         }
 
         if(request()->wantsJson())

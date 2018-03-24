@@ -101,12 +101,15 @@ class InboundController extends Controller
 
         if(Entrust::hasRole('admin')) {
 
-            Auth::user()->notify(new InboundStatusUpdateNotification($inbound));
+            $inbound->user->notify(new InboundStatusUpdateNotification($inbound));
 
         } else {
 
-            User::admin()->first()->notify(new InboundStatusUpdateNotification($inbound));
-            Auth::user()->notify(new InboundStatusUpdateNotification($inbound));
+            if($inbound->process_status == 'canceled') {
+                User::admin()->first()->notify(new InboundStatusUpdateNotification($inbound));
+            }
+
+            $inbound->user->notify(new InboundStatusUpdateNotification($inbound));
         }
 
         if(request()->wantsJson())

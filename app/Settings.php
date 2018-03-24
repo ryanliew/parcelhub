@@ -30,16 +30,4 @@ use Illuminate\Database\Eloquent\Model;
 class Settings extends Model
 {
     protected $fillable = ['setting_key', 'setting_value'];
-
-    /**
-     * @param $query
-     * @return mixed
-     */
-    public function scopeRentalDuration($query) {
-        return $query->where('key', 'rental_duration')->value('value');
-    }
-
-    public function scopeDaysBeforeOrder($query) {
-        return $query->where('key', 'days_before_order')->value('value');
-    }
 }
