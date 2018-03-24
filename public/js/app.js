@@ -55239,7 +55239,7 @@ var render = function() {
               [
                 _c("text-input", {
                   attrs: {
-                    defaultValue: _vm.lot.pivot.total_incoming_quantity,
+                    defaultValue: product.pivot.total_incoming_quantity,
                     label: "Incoming quantity",
                     required: true,
                     type: "text",
@@ -55256,7 +55256,7 @@ var render = function() {
               [
                 _c("text-input", {
                   attrs: {
-                    defaultValue: _vm.lot.pivot.total_outgoing_quantity,
+                    defaultValue: product.pivot.total_outgoing_quantity,
                     label: "Outgoing quantity",
                     required: true,
                     type: "text",

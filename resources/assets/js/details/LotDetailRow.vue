@@ -27,7 +27,7 @@
                     </text-input>
                 </div>
                 <div class="level-item">
-                    <text-input :defaultValue="lot.pivot.total_incoming_quantity"
+                    <text-input :defaultValue="product.pivot.total_incoming_quantity"
                                 label="Incoming quantity"
                                 :required="true"
                                 type="text"
@@ -35,7 +35,7 @@
                     </text-input>
                 </div>
                 <div class="level-item">
-                    <text-input :defaultValue="lot.pivot.total_outgoing_quantity"
+                    <text-input :defaultValue="product.pivot.total_outgoing_quantity"
                                 label="Outgoing quantity"
                                 :required="true"
                                 type="text"
