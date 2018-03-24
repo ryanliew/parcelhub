@@ -44,6 +44,16 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Outbound processing()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Outbound whereProcessStatus($value)
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\OutboundProduct[] $outbounds_products_lots
+ * @property string|null $recipient_address_2
+ * @property string|null $recipient_phone
+ * @property string|null $recipient_state
+ * @property string|null $recipient_postcode
+ * @property string|null $recipient_country
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Outbound whereRecipientAddress2($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Outbound whereRecipientCountry($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Outbound whereRecipientPhone($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Outbound whereRecipientPostcode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Outbound whereRecipientState($value)
  */
 class Outbound extends Model
 {

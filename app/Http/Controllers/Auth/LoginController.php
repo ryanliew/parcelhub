@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
@@ -31,13 +32,22 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
-    protected function authenticate()
+    public function authenticated()
     {
-        if (Auth::attempt(['email' => $email, 'password' => $password])) {
-            if(Auth::user()->hasRole('admin'))
+        if(Auth::user()->verified) {
+            if(Auth::user()->hasRole('admin')) {
                 return redirect()->intended('dashboard');
+            }
+        } else {
+            $id = Auth::user()->id;
+            Auth::logout();
 
-            return redirect()->intended('lots');
+            return view('user.verify')->with([
+                'message' => trans('auth.token_not_verify'),
+                'id' => $id
+            ]);
         }
+
+        return redirect()->intended('lots');
     }
 }

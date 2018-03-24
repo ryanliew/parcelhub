@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Category;
 use App\Lot;
 use App\Payment;
-use App\Settings;
+use Settings;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -126,7 +126,7 @@ class LotController extends Controller
         $lot->category_id = $request->category;
         $lot->price = $request->price;
         $lot->status = "false";
-        $lot->rental_duration = Settings::rentalDuration();
+        $lot->rental_duration = Settings::get('rental_duration');
         $lot->save();
 
         if(request()->wantsJson())

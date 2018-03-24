@@ -33,6 +33,19 @@ use Zizaco\Entrust\Traits\EntrustUserTrait;
  * @mixin \Eloquent
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Product[] $products
  * @property-read mixed $total_lot_left_volume
+ * @property string|null $address
+ * @property string|null $address_2
+ * @property string|null $phone
+ * @property string|null $state
+ * @property string|null $postcode
+ * @property string|null $country
+ * @property-read \App\UserToken $tokens
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereAddress2($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereCountry($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\User wherePhone($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\User wherePostcode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereState($value)
  */
 class User extends Authenticatable
 {
@@ -77,6 +90,16 @@ class User extends Authenticatable
 
     public function products(){
         return $this->hasMany('App\Product');
+    }
+
+    public function tokens() {
+        return $this->hasOne('App\UserToken');
+    }
+
+    public function scopeAdmin($query) {
+        return $query->whereHas('roles', function ($query) {
+            $query->where('name', '=', 'admin');
+        });
     }
 
     public function getTotalLotLeftVolumeAttribute() {

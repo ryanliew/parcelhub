@@ -22,6 +22,10 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Settings whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Settings whereValue($value)
  * @mixin \Eloquent
+ * @property string $setting_key
+ * @property string $setting_value
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Settings whereSettingKey($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Settings whereSettingValue($value)
  */
 class Settings extends Model
 {

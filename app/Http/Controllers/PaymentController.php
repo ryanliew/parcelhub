@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Notifications\PaymentCreatedNotification;
 use App\Payment;
 use App\Lot;
 use App\Settings;
@@ -111,6 +112,8 @@ class PaymentController extends Controller
                 $lot->payments()->save($payment);
             }
 
+            $user->notify(new PaymentCreatedNotification($payment->load('user', 'lots')));
+
         } catch (\Exception $exception) {
             return response()->json($exception->getMessage(), 422);
         }
@@ -175,24 +178,17 @@ class PaymentController extends Controller
 
     public function approve(Request $request)
     {
-        // $this->validate($request, [
-        //     'payments' => 'required'
-        // ]);
+        $payment = Payment::find($request->id);
+        $payment->update(['status' => 'true']);
 
-        // foreach ($request->input('payments') as $key => $value) {
-        
-            $payment = Payment::find($request->id);
-            $payment->update(['status' => 'true']);
+        $lotIds = $payment->lots()->pluck('lot_id')->toArray();
 
-            $lotIds = $payment->lots()->pluck('lot_id')->toArray();
+        foreach($lotIds as $_key => $_value) {
 
-            foreach($lotIds as $_key => $_value) {
+            $lot = Lot::find($_value);
+            $lot->update(['status' => 'true', 'expired_at' => Carbon::now()->addMonths($lot->rental_duration)]);
 
-                $lot = Lot::find($_value);
-                $lot->update(['status' => 'true', 'expired_at' => Carbon::now()->addMonths($lot->rental_duration)]);
-
-            }
-        //}
+        }
 
         return response()->json(['message' => 'Payment approved']);
     }

@@ -46,6 +46,7 @@ class SocialController extends Controller
         $user = User::create([
             'name' => $user->name,
             'email' => $user->email,
+            'verified' => true
         ]);
 
         $role = Role::where('name', '=', 'user')->first();

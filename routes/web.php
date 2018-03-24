@@ -11,6 +11,9 @@
 |
 */
 
+use App\Notifications\AccountVerificationNotification;
+use App\UserToken;
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -21,6 +24,11 @@ Auth::routes();
 
 Route::get('phpinfo', function() {
 	return phpinfo();
+});
+
+Route::group(['prefix' => 'user/account/'], function() {
+    Route::get('verify/{token}', 'Auth\RegisterController@verify')->name('verify');
+    Route::post('resend/{id}', 'Auth\RegisterController@resend')->name('resend');
 });
 
 // Pages route

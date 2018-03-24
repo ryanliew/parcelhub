@@ -25,6 +25,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Lot[] $lot
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Payment whereLotId($value)
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Lot[] $lots
+ * @property float $price
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Payment wherePrice($value)
  */
 class Payment extends Model
 {
@@ -41,5 +43,16 @@ class Payment extends Model
     public function getPictureAttribute($value)
     {
     	return asset(str_replace('public', 'storage', $value));
+    }
+
+    public function getTotalPriceAttribute()
+    {
+        $total = 0;
+
+        foreach ($this->lots as $lot) {
+            $total += $lot->price;
+        }
+
+        return $total;
     }
 }

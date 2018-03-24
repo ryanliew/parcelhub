@@ -61640,13 +61640,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
 
 
 
@@ -61657,7 +61650,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 	data: function data() {
 		return _defineProperty({
-			userField: [{ name: 'id', title: '#' }, { name: 'created_at', sortField: 'created_at', title: 'Order date', callback: 'date' }, { name: 'courier', sortField: 'couriers.name', title: 'Courier' }, { name: 'amount_insured', sortField: 'amount_insured', title: 'Insurance' }, { name: 'process_status', callback: 'outboundStatusLabel', title: 'Status', sortField: 'process_status' }, { name: '__component:outbounds-actions', title: 'Actions' }],
+			userField: [{ name: 'id', title: '#' }, { name: 'created_at', sortField: 'created_at', title: 'Order date' }, { name: 'courier', sortField: 'couriers.name', title: 'Courier' }, { name: 'amount_insured', sortField: 'amount_insured', title: 'Insurance' }, { name: 'process_status', callback: 'outboundStatusLabel', title: 'Status', sortField: 'process_status' }, { name: '__component:outbounds-actions', title: 'Actions' }],
 			userSearchables: "process_status",
 			selectedoutbound: '',
 			dialogActive: false,
@@ -61761,6 +61754,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 		},
 		modalOpen: function modalOpen() {
 			this.form.reset();
+			this.getProducts();
 			this.isCreating = true;
 		},
 		onError: function onError(error) {
@@ -62308,29 +62302,22 @@ var render = function() {
                       ),
                       _vm._v(" "),
                       _c(
-                        "div",
-                        { staticClass: "products-list" },
+                        "table",
+                        {
+                          staticClass:
+                            "table is-hoverable is-fullwidth is-responsive"
+                        },
                         [
-                          _c("div", { staticClass: "columns" }, [
-                            _c("div", { staticClass: "column is-narrow" }, [
-                              _vm._v(
-                                "\n\t\t\t          \t\t\t#\n\t\t\t          \t\t"
-                              )
-                            ]),
+                          _c("thead", [
+                            _c("th", [_vm._v("#")]),
                             _vm._v(" "),
-                            _c("div", { staticClass: "column" }, [
-                              _c("b", [_vm._v("Product")])
-                            ]),
+                            _c("th", [_vm._v("Product")]),
                             _vm._v(" "),
-                            _c("div", { staticClass: "column" }, [
-                              _c("b", [_vm._v("Remaining stock")])
-                            ]),
+                            _c("th", [_vm._v("Remaining stock")]),
                             _vm._v(" "),
-                            _c("div", { staticClass: "column" }, [
-                              _c("b", [_vm._v("Outbound quantity")])
-                            ]),
+                            _c("th", [_vm._v("Outbound quantity")]),
                             _vm._v(" "),
-                            _c("div", { staticClass: "column is-2" }, [
+                            _c("th", [
                               _c(
                                 "div",
                                 {
@@ -62348,10 +62335,11 @@ var render = function() {
                             ])
                           ]),
                           _vm._v(" "),
-                          _vm._l(_vm.productRows, function(row, index) {
-                            return _c("div", { staticClass: "row" }, [
-                              _c("div", { staticClass: "columns" }, [
-                                _c("div", { staticClass: "column is-narrow" }, [
+                          _c(
+                            "tbody",
+                            _vm._l(_vm.productRows, function(row, index) {
+                              return _c("tr", [
+                                _c("td", [
                                   _vm._v(
                                     "\n\t\t\t\t\t\t\t\t\t" +
                                       _vm._s(index + 1) +
@@ -62360,8 +62348,7 @@ var render = function() {
                                 ]),
                                 _vm._v(" "),
                                 _c(
-                                  "div",
-                                  { staticClass: "column" },
+                                  "td",
                                   [
                                     _c("products-selector-input", {
                                       attrs: {
@@ -62392,13 +62379,13 @@ var render = function() {
                                   1
                                 ),
                                 _vm._v(" "),
-                                _c("div", { staticClass: "column" }, [
+                                _c("td", [
                                   _vm.productRows[index].product
                                     ? _c("p", [
                                         _vm._v(
                                           _vm._s(
                                             _vm.productRows[index].product
-                                              .total_quantity
+                                              .total_usable_quantity
                                           )
                                         )
                                       ])
@@ -62406,8 +62393,7 @@ var render = function() {
                                 ]),
                                 _vm._v(" "),
                                 _c(
-                                  "div",
-                                  { staticClass: "column" },
+                                  "td",
                                   [
                                     _vm.productRows[index]
                                       ? _c("text-input", {
@@ -62419,6 +62405,9 @@ var render = function() {
                                             type: "number",
                                             editable: true,
                                             hideLabel: true,
+                                            error: _vm.form.errors.get(
+                                              "outbound_products." + index
+                                            ),
                                             name: "quantity"
                                           },
                                           on: {
@@ -62445,7 +62434,7 @@ var render = function() {
                                   1
                                 ),
                                 _vm._v(" "),
-                                _c("div", { staticClass: "column is-2" }, [
+                                _c("td", [
                                   _c(
                                     "div",
                                     {
@@ -62465,29 +62454,17 @@ var render = function() {
                                     ]
                                   )
                                 ])
-                              ]),
-                              _vm._v(" "),
-                              _c("p", {
-                                staticClass: "is-danger header",
-                                domProps: {
-                                  textContent: _vm._s(
-                                    _vm.form.errors.get(
-                                      "outbound_products." + index
-                                    )
-                                  )
-                                }
-                              })
-                            ])
-                          })
-                        ],
-                        2
+                              ])
+                            })
+                          )
+                        ]
                       ),
                       _vm._v(" "),
                       _c("p", {
                         staticClass: "is-danger header",
                         domProps: {
                           textContent: _vm._s(
-                            this.form.errors.get("outbound_products")
+                            _vm.form.errors.get("outbound_products")
                           )
                         }
                       }),
@@ -63509,9 +63486,9 @@ var render = function() {
                                 _c("thead", [
                                   _c("th", [_vm._v("Lot type")]),
                                   _vm._v(" "),
-                                  _c("th", [_vm._v("Price")]),
+                                  _c("th", [_vm._v("Price (RM)")]),
                                   _vm._v(" "),
-                                  _c("th", [_vm._v("Volume")]),
+                                  _c("th", [_vm._v("Volume (m³)")]),
                                   _vm._v(" "),
                                   _c("th", [_vm._v("Quantity")])
                                 ]),
@@ -63778,9 +63755,9 @@ var render = function() {
                                 _c("tr", [
                                   _c("th", [_vm._v("Name")]),
                                   _vm._v(" "),
-                                  _c("th", [_vm._v("Monthly fee")]),
+                                  _c("th", [_vm._v("Monthly fee(RM)")]),
                                   _vm._v(" "),
-                                  _c("th", [_vm._v("Volume")])
+                                  _c("th", [_vm._v("Volume(m³)")])
                                 ])
                               ]),
                               _vm._v(" "),
@@ -65129,7 +65106,7 @@ var render = function() {
                                       _c("tr", [
                                         _c("th", [_vm._v("Name")]),
                                         _vm._v(" "),
-                                        _c("th", [_vm._v("Monthly fee")]),
+                                        _c("th", [_vm._v("Monthly fee(RM)")]),
                                         _vm._v(" "),
                                         _c("th", [_vm._v("Volume(m³)")])
                                       ])
@@ -65235,7 +65212,7 @@ var render = function() {
                               _c("div", { staticClass: "level-left" }, [
                                 _c("div", { staticClass: "level-item" }, [
                                   _vm._v(
-                                    "\n\t\t\t\t\t\t\t\t\t\t\tOutbounds today\n\t\t\t\t\t\t\t\t\t\t"
+                                    "\n\t\t\t\t\t\t\t\t\t\t\tIncomplete outbounds\n\t\t\t\t\t\t\t\t\t\t"
                                   )
                                 ])
                               ])
@@ -65252,7 +65229,7 @@ var render = function() {
                               attrs: {
                                 fields: _vm.outboundFields,
                                 url: "/internal/outbounds/pending",
-                                empty: "No outbound orders scheduled today"
+                                empty: "All outbound orders have been completed"
                               }
                             })
                           ],
@@ -65446,8 +65423,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		};
 	},
 	created: function created() {
-		this.form.rental_duration = this.setting[0].value;
-		this.form.days_before_order = this.setting[1].value;
+		this.form.rental_duration = this.setting.rental_duration;
+		this.form.days_before_order = this.setting.days_before_order;
 	},
 
 
@@ -65467,8 +65444,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		},
 		onSuccess: function onSuccess(data) {
 			console.log(data);
-			this.form.rental_duration = data.setting[0].value;
-			this.form.days_before_order = data.setting[1].value;
+			this.form.rental_duration = data.setting.rental_duration;
+			this.form.days_before_order = data.setting.days_before_order;
 		},
 		onFail: function onFail() {}
 	},

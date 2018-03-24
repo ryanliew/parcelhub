@@ -38,6 +38,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\OutboundProduct[] $outbounds_products_lots
  * @property float $price
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Lot wherePrice($value)
+ * @property-read mixed $usage
  */
 class Lot extends Model
 {
@@ -51,7 +52,7 @@ class Lot extends Model
 
     public function products(){
     	return $this->belongsToMany('App\Product')
-                ->withPivot('quantity');
+                ->withPivot('quantity', 'incoming_quantity', 'outgoing_product');
     }
 
     public function category() {

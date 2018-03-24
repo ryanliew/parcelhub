@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Courier;
+use App\Notifications\OutboundCreatedNotification;
 use App\Outbound;
 use App\Product;
 use Illuminate\Http\Request;
@@ -55,7 +56,8 @@ class OutboundController extends Controller
                                                                     'users.name as customer'
                                                                     )
                                                                 ->leftJoin('couriers', 'courier_id', '=', 'couriers.id')
-                                                                ->leftJoin('users', 'user_id', '=', 'users.id') );
+                                                                ->leftJoin('users', 'user_id', '=', 'users.id')
+                                                                ->orderBy('outbounds.created_at', 'desc') );
             else
                 return Controller::VueTableListResult( $user->outbounds()
                                                             ->select('outbounds.id as id',
@@ -71,7 +73,8 @@ class OutboundController extends Controller
                                                                     'outbounds.recipient_country',
                                                                     'outbounds.recipient_postcode'
                                                                     )
-                                                            ->leftJoin('couriers', 'courier_id', '=', 'couriers.id') );
+                                                            ->leftJoin('couriers', 'courier_id', '=', 'couriers.id')
+                                                            ->orderBy('outbounds.created_at', 'desc') );
 
         }
 
@@ -108,7 +111,9 @@ class OutboundController extends Controller
                                                                     )
                                                                 ->leftJoin('couriers', 'courier_id', '=', 'couriers.id')
                                                                 ->leftJoin('users', 'user_id', '=', 'users.id')
-                                                                ->where('process_status', 'pending') );
+                                                                ->where('outbounds.process_status', '<>', 'completed')
+                                                                ->where('outbounds.process_status', '<>', 'canceled')
+                                                                ->orderBy('outbounds.created_at', 'desc'));
     } 
 
     /**
@@ -188,24 +193,27 @@ class OutboundController extends Controller
                 foreach ($product->lots as $lot) {
 
                     // Check if the lot have enough products supply to the outbound request
-                    if($lot->pivot->quantity >= $quantity) {
+                    $sumOfQuantityAndIncomingQuantity = $lot->pivot->quantity + $lot->pivot->incoming_quantity - $lot->pivot->outgoing_product;
+                    if($sumOfQuantityAndIncomingQuantity >= $quantity) {
 
                         $volumeAfterDeductProduct = $lot->left_volume + ($product->volume * $quantity);
 
                         $lot->update(['left_volume' => $volumeAfterDeductProduct]);
 
                         // Update remaining product left in the lot
-                        $numOfProductLeft = $lot->pivot->quantity - $quantity;
+                        // $numOfProductLeft = $lot->pivot->quantity - $quantity;
 
                         // Lot with 0 quantity will be detach else update the remaining available quantity
-                        if($numOfProductLeft === 0) {
+                        // if($numOfProductLeft === 0) {
 
-                            $product->lots()->detach($lot->id);
+                        //     $product->lots()->detach($lot->id);
 
-                        } else {
+                        // } else {
 
-                            $product->lots()->updateExistingPivot($lot->id, ['quantity' => $numOfProductLeft]);;
-                        }
+                        //     $product->lots()->updateExistingPivot($lot->id, ['quantity' => $numOfProductLeft]);;
+                        // }
+                        $newQuantityForOutgoingProduct = $lot->pivot->outgoing_product + $quantity;
+                        $product->lots()->updateExistingPivot($lot->id, ['outgoing_product' => $newQuantityForOutgoingProduct]);
 
                         $outbound->products()->attach($product->id, ['quantity' => $quantity, 'lot_id' => $lot->id]);
 
@@ -226,6 +234,8 @@ class OutboundController extends Controller
                     }
                 }
             }
+
+            $user->notify(new OutboundCreatedNotification($outbound));
 
         } catch (\Exception $exception) {
 

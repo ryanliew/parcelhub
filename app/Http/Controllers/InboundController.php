@@ -3,9 +3,11 @@ namespace App\Http\Controllers;
 use App\Inbound;
 use App\InboundProduct;
 use App\Lot;
+use App\Notifications\InboundCreatedNotification;
 use App\Product;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use PDF;
 use Settings;
@@ -54,9 +56,10 @@ class InboundController extends Controller
                                                                         'users.name as customer',
                                                                         'inbounds.created_at as created_at'
                                                                         )
-                                                                ->leftJoin('users', 'user_id', '=', 'users.id'));
+                                                                ->leftJoin('users', 'user_id', '=', 'users.id')
+                                                                ->orderBy('arrival_date', 'desc'));
             else
-                return Controller::VueTableListResult(auth()->user()->inbounds()->with('products', 'products_with_lots.lots'));
+                return Controller::VueTableListResult(auth()->user()->inbounds()->with('products', 'products_with_lots.lots')->orderBy('arrival_date', 'desc'));
         }
         $inbounds = inbound::where('status', 'true')->get();
         $products = product::where('user_id', auth()->user()->id)->where('status', 'true')->get();
@@ -65,7 +68,8 @@ class InboundController extends Controller
 
     public function indexToday()
     {
-        return Controller::VueTableListResult(Inbound::with('products', 'products_with_lots.lots')->select('arrival_date',
+        return Controller::VueTableListResult(Inbound::with('products', 'products_with_lots.lots')
+                                                                ->select('arrival_date',
                                                                         'total_carton',
                                                                         'process_status',
                                                                         'inbounds.id as id',
@@ -73,7 +77,8 @@ class InboundController extends Controller
                                                                         'inbounds.created_at as created_at'
                                                                         )
                                                                 ->leftJoin('users', 'user_id', '=', 'users.id')
-                                                                ->whereDate('arrival_date', DB::raw('CURDATE()')));
+                                                                ->whereDate('arrival_date', DB::raw('CURDATE()'))
+                                                                ->orderBy('arrival_date', 'desc'));
     }
     /**
      * Show the form for creating a new resource.
@@ -109,7 +114,7 @@ class InboundController extends Controller
         {
             return response(json_encode(array('overall' => ['You must update your contact details in the My Profile page before proceeding'])), 422);
         }
-        
+
         $now = Carbon::today();
         $compare = Carbon::parse($request->arrival_date);
         $user_lots = $auth->lots()->where('volume','>', 0)->where('status', 'true')->get();
@@ -149,7 +154,7 @@ class InboundController extends Controller
             return redirect()->back()->withErrors("Inbound must be created before ".Settings::get('days_before_order')." days.");
         }
         // Everything is ok, create a new inbound
-        $inbound = new inbound;
+        $inbound = new Inbound();
         $inbound->user_id = $auth->id;
         $inbound->arrival_date = $request->arrival_date;
         $inbound->total_carton = $request->total_carton;
@@ -167,9 +172,9 @@ class InboundController extends Controller
             foreach($lots as $lot)
             {
                 if($product["volume"] > 0) {
-                    $quantityIntoLot = $this->calculateQuantity($lot->left_volume, $product["singleVolume"], $product["quantity"]);                    
+                    $quantityIntoLot = $this->calculateQuantity($lot->left_volume, $product["singleVolume"], $product["quantity"]);
                     if($quantityIntoLot > 0){
-                        $lot_products[$key]['quantity'] = $quantityIntoLot;
+                        $lot_products[$key]['incoming_quantity'] = $quantityIntoLot;
                         $lot->left_volume = $lot->left_volume - ($quantityIntoLot * $product["singleVolume"]);
                         $products[$key]["volume"] = $product["volume"] - ( $product["singleVolume"] * $quantityIntoLot );
                         $products[$key]["quantity"] = $product["quantity"] - $quantityIntoLot;
@@ -177,19 +182,19 @@ class InboundController extends Controller
                     }
                 }
                 $lot->save();
-                $new_quantity = $lot->pivot->quantity + $quantityIntoLot;
-                $lot->products()->updateExistingPivot($key, ["quantity" => $new_quantity]);
+                $new_quantity = $lot->pivot->incoming_quantity + $quantityIntoLot;
+                $lot->products()->updateExistingPivot($key, ["incoming_quantity" => $new_quantity]);
             }
         }
         // Assign products to user lots
-        foreach($user_lots as $lot){ 
+        foreach($user_lots as $lot){
             $lot_products = [];
-            foreach($products as $key => $product){ 
+            foreach($products as $key => $product){
                 if($product["volume"] > 0) {
                     // If there are still volume needed to be assigned
                     $quantityIntoLot = $this->calculateQuantity($lot->left_volume, $product["singleVolume"], $product["quantity"]);
                     if($quantityIntoLot > 0){
-                        $lot_products[$key]['quantity'] = $quantityIntoLot;
+                        $lot_products[$key]['incoming_quantity'] = $quantityIntoLot;
                         $lot->left_volume = $lot->left_volume - ($quantityIntoLot * $product["singleVolume"]);
                         $products[$key]["volume"] = $product["volume"] - $product["singleVolume"] * $quantityIntoLot;
                         $products[$key]["quantity"] = $product["quantity"] - $quantityIntoLot;
@@ -200,13 +205,17 @@ class InboundController extends Controller
             $lot->save();
             $lot->products()->attach($lot_products);
         }
-        
+
+        Auth::user()->notify(new InboundCreatedNotification($inbound));
+
         return ['message' => "Inbound order created"];
     }
+
     public function calculateQuantity($volume, $singleVolume, $quantity){
         $quantityIntoLot = round($volume / $singleVolume, 0, PHP_ROUND_HALF_DOWN);
         return min($quantityIntoLot, $quantity);
     }
+
     public function attachLot($inbound, $product, $lot) {
         // Attach lot to inbound product
         $inbound_product = InboundProduct::where('inbound_id', $inbound)->where('product_id', $product)->first();

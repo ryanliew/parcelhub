@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Settings;
+use Settings;
 use Illuminate\Http\Request;
 
 class SettingsController extends Controller
@@ -14,10 +14,7 @@ class SettingsController extends Controller
      */
     public function index()
     {
-        return view('setting.page')->with('settings', Settings::all());
-
-        // $settings = Settings::all();
-
+        return view('setting.page')->with('settings', Settings::getAll());
         // return view('setting.index')->with('settings', $settings);
     }
 
@@ -78,17 +75,12 @@ class SettingsController extends Controller
             'rental_duration' => 'required'
         ]);
 
-        $settings = Settings::find(1);
-        $settings->value = $request->get('rental_duration');
-        $settings->save();
-
-        $settings = Settings::find(2);
-        $settings->value = $request->get('days_before_order');
-        $settings->save();
+        Settings::set('rental_duration', $request->get('rental_duration'));
+        Settings::set('days_before_order', $request->get('days_before_order'));
 
         if($request->wantsJson())
         {
-            return ['message' => 'Settings updated successfully', 'setting' => Settings::all()];
+            return ['message' => 'Settings updated successfully', 'setting' => Settings::getAll()];
         }
 
         return redirect()->back()->withSuccess("Settings updated successfully.");
