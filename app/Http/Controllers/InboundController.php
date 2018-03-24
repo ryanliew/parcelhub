@@ -174,7 +174,7 @@ class InboundController extends Controller
                 if($product["volume"] > 0) {
                     $quantityIntoLot = $this->calculateQuantity($lot->left_volume, $product["singleVolume"], $product["quantity"]);
                     if($quantityIntoLot > 0){
-                        $lot_products[$key]['quantity'] = $quantityIntoLot;
+                        $lot_products[$key]['incoming_quantity'] = $quantityIntoLot;
                         $lot->left_volume = $lot->left_volume - ($quantityIntoLot * $product["singleVolume"]);
                         $products[$key]["volume"] = $product["volume"] - ( $product["singleVolume"] * $quantityIntoLot );
                         $products[$key]["quantity"] = $product["quantity"] - $quantityIntoLot;
@@ -182,8 +182,8 @@ class InboundController extends Controller
                     }
                 }
                 $lot->save();
-                $new_quantity = $lot->pivot->quantity + $quantityIntoLot;
-                $lot->products()->updateExistingPivot($key, ["quantity" => $new_quantity]);
+                $new_quantity = $lot->pivot->incoming_quantity + $quantityIntoLot;
+                $lot->products()->updateExistingPivot($key, ["incoming_quantity" => $new_quantity]);
             }
         }
         // Assign products to user lots
@@ -194,7 +194,7 @@ class InboundController extends Controller
                     // If there are still volume needed to be assigned
                     $quantityIntoLot = $this->calculateQuantity($lot->left_volume, $product["singleVolume"], $product["quantity"]);
                     if($quantityIntoLot > 0){
-                        $lot_products[$key]['quantity'] = $quantityIntoLot;
+                        $lot_products[$key]['incoming_quantity'] = $quantityIntoLot;
                         $lot->left_volume = $lot->left_volume - ($quantityIntoLot * $product["singleVolume"]);
                         $products[$key]["volume"] = $product["volume"] - $product["singleVolume"] * $quantityIntoLot;
                         $products[$key]["quantity"] = $product["quantity"] - $quantityIntoLot;

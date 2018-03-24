@@ -38,7 +38,7 @@ class ProductValidator extends Validator
 
         $product = \Auth::user()->products()->find($value['id']);
 
-        return $value['quantity'] <= $product->total_quantity;
+        return $value['quantity'] <= $product->total_usable_quantity;
     }
 
     public function replaceProductStock($message, $attribute, $rule, $parameters) {
@@ -46,7 +46,7 @@ class ProductValidator extends Validator
 
         $product = Product::find($value['id']);
         $name = $product->name;
-        $number = $product->total_quantity;
+        $number = $product->total_usable_quantity;
 
         return str_replace([':number'], $number, str_replace([':product'], $name, $message));
     }
