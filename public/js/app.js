@@ -54307,7 +54307,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		},
 		inputClass: function inputClass() {
 			var theClass = [];
-			if (this.value !== '' && this.value !== null && this.value || this.type == 'date') {
+			if (this.value !== '' && this.value !== null && this.value || this.type == 'date' || !this.editable) {
 				theClass.push('input--filled');
 			}
 
@@ -55324,6 +55324,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: {
@@ -55389,8 +55405,42 @@ var render = function() {
               [
                 _c("text-input", {
                   attrs: {
-                    defaultValue: lot.pivot.quantity,
+                    defaultValue: lot.pivot.total_quantity,
                     label: "Quantity",
+                    required: true,
+                    type: "text",
+                    editable: false
+                  }
+                })
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "level-item" },
+              [
+                _c("text-input", {
+                  attrs: {
+                    defaultValue: lot.pivot.total_incoming_quantity,
+                    label: "Incoming quantity",
+                    required: true,
+                    type: "text",
+                    editable: false
+                  }
+                })
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "level-item" },
+              [
+                _c("text-input", {
+                  attrs: {
+                    defaultValue: lot.pivot.total_outgoing_quantity,
+                    label: "Outgoing quantity",
                     required: true,
                     type: "text",
                     editable: false

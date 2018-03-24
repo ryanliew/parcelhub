@@ -67,7 +67,7 @@
 
 			inputClass(){
 				let theClass = [];
-				if( ( this.value !== '' && this.value !== null && this.value ) || this.type == 'date') {
+				if( ( this.value !== '' && this.value !== null && this.value ) || this.type == 'date' || !this.editable ) {
 					theClass.push('input--filled');
 				}
 
