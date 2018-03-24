@@ -163,9 +163,9 @@ class OutboundController extends Controller
         try {
             $outboundProducts = json_decode($request['outbound_products'], true);
 
-            $json_validator = Validator::make(['outbound_products' => $outboundProducts], [
-                'outbound_products.*' => 'bail|product_exist|product_stock',
-            ]);
+            $json_validator = Validator::make($outboundProducts,
+                ['outbound_products.*' => 'bail|product_exist|product_stock']
+            );
 
             if($json_validator->fails()) {
                 return response()->json($json_validator->messages(), 422);
