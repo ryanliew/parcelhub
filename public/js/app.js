@@ -55222,7 +55222,7 @@ var render = function() {
               [
                 _c("text-input", {
                   attrs: {
-                    defaultValue: product.pivot.total_quantity,
+                    defaultValue: product.pivot.quantity,
                     label: "Quantity",
                     required: true,
                     type: "text",
@@ -55239,7 +55239,7 @@ var render = function() {
               [
                 _c("text-input", {
                   attrs: {
-                    defaultValue: _vm.lot.pivot.total_incoming_quantity,
+                    defaultValue: product.pivot.incoming_quantity,
                     label: "Incoming quantity",
                     required: true,
                     type: "text",
@@ -55256,7 +55256,7 @@ var render = function() {
               [
                 _c("text-input", {
                   attrs: {
-                    defaultValue: _vm.lot.pivot.total_outgoing_quantity,
+                    defaultValue: product.pivot.outgoing_product,
                     label: "Outgoing quantity",
                     required: true,
                     type: "text",
@@ -55455,7 +55455,7 @@ var render = function() {
               [
                 _c("text-input", {
                   attrs: {
-                    defaultValue: lot.pivot.total_quantity,
+                    defaultValue: lot.pivot.quantity,
                     label: "Quantity",
                     required: true,
                     type: "text",
@@ -55472,7 +55472,7 @@ var render = function() {
               [
                 _c("text-input", {
                   attrs: {
-                    defaultValue: lot.pivot.total_incoming_quantity,
+                    defaultValue: lot.pivot.incoming_quantity,
                     label: "Incoming quantity",
                     required: true,
                     type: "text",
@@ -55489,7 +55489,7 @@ var render = function() {
               [
                 _c("text-input", {
                   attrs: {
-                    defaultValue: lot.pivot.total_outgoing_quantity,
+                    defaultValue: lot.pivot.outgoing_product,
                     label: "Outgoing quantity",
                     required: true,
                     type: "text",
