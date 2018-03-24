@@ -187,14 +187,14 @@ class OutboundController extends Controller
 
                 // Quantity used to mark down how many number of product
                 // going to retrieve from user's lots
-                $quantity = $outboundProduct['quantity'];
+                $quantity = $outboundProduct['quantity']; //20
 
                 foreach ($product->lots as $lot) {
 
                     // Check if the lot have enough products supply to the outbound request
-                    $sumOfQuantityAndIncomingQuantity = $lot->pivot->quantity + $lot->pivot->incoming_quantity - $lot->pivot->outgoing_product;
+                    $sumOfQuantityAndIncomingQuantity = $lot->pivot->quantity + $lot->pivot->incoming_quantity - $lot->pivot->outgoing_product; //10
                     if($sumOfQuantityAndIncomingQuantity >= $quantity) {
-
+                        // We do not need to go to next lot anymore
                         $volumeAfterDeductProduct = $lot->left_volume + ($product->volume * $quantity);
 
                         $lot->update(['left_volume' => $volumeAfterDeductProduct]);
@@ -219,17 +219,19 @@ class OutboundController extends Controller
                         break;
 
                     } else {
-
+                        // If we still need to go to next lot to get product, means take everything out
                         $volumeAfterDeductProduct = $lot->left_volume + ($product->volume * $lot->pivot->quantity);
 
                         $lot->update(['left_volume' => $volumeAfterDeductProduct]);
 
-                        $product->lots()->detach($lot->id);
+                        $newQuantityForOutgoingProduct = $lot->pivot->outgoing_product + $sumOfQuantityAndIncomingQuantity;
+
+                        $product->lots()->updateExistingPivot($lot->id, ['outgoing_product' => $newQuantityForOutgoingProduct]);
 
                         $outbound->products()->attach($product->id, ['quantity' => $lot->pivot->quantity, 'lot_id' => $lot->id]);
 
                         // Update how many quantity left require to acquire from the other lot
-                        $quantity -= $lot->pivot->quantity;
+                        $quantity -= $sumOfQuantityAndIncomingQuantity;
                     }
                 }
             }

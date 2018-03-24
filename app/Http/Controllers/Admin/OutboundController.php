@@ -107,6 +107,7 @@ class OutboundController extends Controller
                 $lot_product = $lot->products()->where('product_id', $product->id)->first();
                 $new_outgoing_quantity = $lot_product->pivot->outgoing_product - $product->pivot->quantity;
                 $new_quantity = $lot_product->pivot->quantity - $product->pivot->quantity;
+                
                 $lot->products()->updateExistingPivot($product->id, ['outgoing_product' => $new_outgoing_quantity, 'quantity' => $new_quantity]);
                 $lot->save();
             }
