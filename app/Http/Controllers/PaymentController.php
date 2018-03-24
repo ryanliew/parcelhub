@@ -79,7 +79,7 @@ class PaymentController extends Controller
         $this->validate($request, [
             'payment_slip' => 'required|image',
             'rental_duration' => 'required|integer|min:' . Settings::get('rental_duration')
-        ]);
+        ], ['rental_duration.min' => 'The minimum rental duration is ' . Settings::get('rental_duration')]);
 
         try {
             $lot_purchases = json_decode($request['lot_purchases'], true);
