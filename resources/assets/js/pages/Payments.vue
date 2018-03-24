@@ -186,7 +186,7 @@
 										name="rental_duration"
 										type="number"
 										:editable="true"
-										:error="form.errors.get('rental_duration') ? 'Rental duration is required' : ''">
+										:error="form.errors.get('rental_duration')">
 									</text-input>
 								</div>
 
