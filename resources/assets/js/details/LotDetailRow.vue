@@ -19,8 +19,24 @@
                     </text-input>
                 </div>
                 <div class="level-item">
-                    <text-input :defaultValue="product.pivot.quantity"
+                    <text-input :defaultValue="product.pivot.total_quantity"
                                 label="Quantity"
+                                :required="true"
+                                type="text"
+                                :editable="false">
+                    </text-input>
+                </div>
+                <div class="level-item">
+                    <text-input :defaultValue="lot.pivot.total_incoming_quantity"
+                                label="Incoming quantity"
+                                :required="true"
+                                type="text"
+                                :editable="false">
+                    </text-input>
+                </div>
+                <div class="level-item">
+                    <text-input :defaultValue="lot.pivot.total_outgoing_quantity"
+                                label="Outgoing quantity"
                                 :required="true"
                                 type="text"
                                 :editable="false">
