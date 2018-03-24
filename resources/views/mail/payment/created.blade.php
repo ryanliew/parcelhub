@@ -3,7 +3,7 @@
 # Thank You for your purchase!
 
 @component('mail::table')
-| Category                      | Volume                | Rental Duration               | Price                         |
+| Category                      | Volume(m³)                | Rental Duration(months)               | Price(RM)                         |
 | ----------------- | ----------------------------: | --------------------: | ----------------------------: | ----------------------------: |
 @foreach($payment->lots as $lot)
 | {{ $lot->category->name }}    | {{ $lot->volume }}    | {{ $lot->rental_duration }}   | RM{{ $lot->price }}           |
