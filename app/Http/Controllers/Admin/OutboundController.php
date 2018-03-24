@@ -94,16 +94,23 @@ class OutboundController extends Controller
             {
                 $lot = Lot::find($product->pivot->lot_id);
                 $lot_product = $lot->products()->where('product_id', $product->id)->first();
-                if(is_null($lot_product))
-                {
-                    $lot->products()->attach($product, ['quantity' => $product->pivot->quantity]);
-                }
-                else
-                {
-                    $new_quantity = $lot_product->pivot->quantity + $product->pivot->quantity;
-                    $lot->products()->updateExistingPivot($product->id, ['quantity' => $new_quantity]);
-                }
+                $new_outgoing_quantity = $lot_product->pivot->outgoing_product - $product->pivot->quantity;
+                $lot->products()->updateExistingPivot($product->id, ['outgoing_product' => $new_outgoing_quantity]);
+                
                 $lot->left_volume = $lot->left_volume - ($product->volume * $product->pivot->quantity);
+                $lot->save();
+            }
+        }
+
+        if($request->process_status == 'completed') {
+            // Remove the lot product and its quantity
+            foreach($outbound->products as $product)
+            {
+                $lot = Lot::find($product->pivot->lot_id);
+                $lot_product = $lot->products()->where('product_id', $product->id)->first();
+                $new_outgoing_quantity = $lot_product->pivot->outgoing_product - $product->pivot->quantity;
+                $new_quantity = $lot_product->pivot->quantity - $product->pivot->quantity;
+                $lot->products()->updateExistingPivot($product->id, ['outgoing_product' => $new_outgoing_quantity, 'quantity' => $new_quantity]);
                 $lot->save();
             }
         }

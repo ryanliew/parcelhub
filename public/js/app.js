@@ -54307,7 +54307,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		},
 		inputClass: function inputClass() {
 			var theClass = [];
-			if (this.value !== '' && this.value !== null && this.value || this.type == 'date') {
+			if (this.value !== '' && this.value !== null && this.value || this.type == 'date' || !this.editable) {
 				theClass.push('input--filled');
 			}
 
@@ -55135,6 +55135,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: {
@@ -55208,6 +55224,40 @@ var render = function() {
                   attrs: {
                     defaultValue: product.pivot.quantity,
                     label: "Quantity",
+                    required: true,
+                    type: "text",
+                    editable: false
+                  }
+                })
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "level-item" },
+              [
+                _c("text-input", {
+                  attrs: {
+                    defaultValue: product.pivot.incoming_quantity,
+                    label: "Incoming quantity",
+                    required: true,
+                    type: "text",
+                    editable: false
+                  }
+                })
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "level-item" },
+              [
+                _c("text-input", {
+                  attrs: {
+                    defaultValue: product.pivot.outgoing_product,
+                    label: "Outgoing quantity",
                     required: true,
                     type: "text",
                     editable: false
@@ -55324,6 +55374,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: {
@@ -55391,6 +55457,40 @@ var render = function() {
                   attrs: {
                     defaultValue: lot.pivot.quantity,
                     label: "Quantity",
+                    required: true,
+                    type: "text",
+                    editable: false
+                  }
+                })
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "level-item" },
+              [
+                _c("text-input", {
+                  attrs: {
+                    defaultValue: lot.pivot.incoming_quantity,
+                    label: "Incoming quantity",
+                    required: true,
+                    type: "text",
+                    editable: false
+                  }
+                })
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "level-item" },
+              [
+                _c("text-input", {
+                  attrs: {
+                    defaultValue: lot.pivot.outgoing_product,
+                    label: "Outgoing quantity",
                     required: true,
                     type: "text",
                     editable: false
@@ -61590,13 +61690,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
 
 
 
@@ -61711,6 +61804,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 		},
 		modalOpen: function modalOpen() {
 			this.form.reset();
+			this.getProducts();
 			this.isCreating = true;
 		},
 		onError: function onError(error) {
@@ -62258,29 +62352,22 @@ var render = function() {
                       ),
                       _vm._v(" "),
                       _c(
-                        "div",
-                        { staticClass: "products-list" },
+                        "table",
+                        {
+                          staticClass:
+                            "table is-hoverable is-fullwidth is-responsive"
+                        },
                         [
-                          _c("div", { staticClass: "columns" }, [
-                            _c("div", { staticClass: "column is-narrow" }, [
-                              _vm._v(
-                                "\n\t\t\t          \t\t\t#\n\t\t\t          \t\t"
-                              )
-                            ]),
+                          _c("thead", [
+                            _c("th", [_vm._v("#")]),
                             _vm._v(" "),
-                            _c("div", { staticClass: "column" }, [
-                              _c("b", [_vm._v("Product")])
-                            ]),
+                            _c("th", [_vm._v("Product")]),
                             _vm._v(" "),
-                            _c("div", { staticClass: "column" }, [
-                              _c("b", [_vm._v("Remaining stock")])
-                            ]),
+                            _c("th", [_vm._v("Remaining stock")]),
                             _vm._v(" "),
-                            _c("div", { staticClass: "column" }, [
-                              _c("b", [_vm._v("Outbound quantity")])
-                            ]),
+                            _c("th", [_vm._v("Outbound quantity")]),
                             _vm._v(" "),
-                            _c("div", { staticClass: "column is-2" }, [
+                            _c("th", [
                               _c(
                                 "div",
                                 {
@@ -62298,10 +62385,11 @@ var render = function() {
                             ])
                           ]),
                           _vm._v(" "),
-                          _vm._l(_vm.productRows, function(row, index) {
-                            return _c("div", { staticClass: "row" }, [
-                              _c("div", { staticClass: "columns" }, [
-                                _c("div", { staticClass: "column is-narrow" }, [
+                          _c(
+                            "tbody",
+                            _vm._l(_vm.productRows, function(row, index) {
+                              return _c("tr", [
+                                _c("td", [
                                   _vm._v(
                                     "\n\t\t\t\t\t\t\t\t\t" +
                                       _vm._s(index + 1) +
@@ -62310,8 +62398,7 @@ var render = function() {
                                 ]),
                                 _vm._v(" "),
                                 _c(
-                                  "div",
-                                  { staticClass: "column" },
+                                  "td",
                                   [
                                     _c("products-selector-input", {
                                       attrs: {
@@ -62342,13 +62429,13 @@ var render = function() {
                                   1
                                 ),
                                 _vm._v(" "),
-                                _c("div", { staticClass: "column" }, [
+                                _c("td", [
                                   _vm.productRows[index].product
                                     ? _c("p", [
                                         _vm._v(
                                           _vm._s(
                                             _vm.productRows[index].product
-                                              .total_quantity
+                                              .total_usable_quantity
                                           )
                                         )
                                       ])
@@ -62356,8 +62443,7 @@ var render = function() {
                                 ]),
                                 _vm._v(" "),
                                 _c(
-                                  "div",
-                                  { staticClass: "column" },
+                                  "td",
                                   [
                                     _vm.productRows[index]
                                       ? _c("text-input", {
@@ -62369,6 +62455,9 @@ var render = function() {
                                             type: "number",
                                             editable: true,
                                             hideLabel: true,
+                                            error: _vm.form.errors.get(
+                                              "outbound_products." + index
+                                            ),
                                             name: "quantity"
                                           },
                                           on: {
@@ -62395,7 +62484,7 @@ var render = function() {
                                   1
                                 ),
                                 _vm._v(" "),
-                                _c("div", { staticClass: "column is-2" }, [
+                                _c("td", [
                                   _c(
                                     "div",
                                     {
@@ -62415,22 +62504,10 @@ var render = function() {
                                     ]
                                   )
                                 ])
-                              ]),
-                              _vm._v(" "),
-                              _c("p", {
-                                staticClass: "is-danger header",
-                                domProps: {
-                                  textContent: _vm._s(
-                                    _vm.form.errors.get(
-                                      "outbound_products." + index
-                                    )
-                                  )
-                                }
-                              })
-                            ])
-                          })
-                        ],
-                        2
+                              ])
+                            })
+                          )
+                        ]
                       ),
                       _vm._v(" "),
                       _c("p", {

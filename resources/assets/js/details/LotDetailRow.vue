@@ -26,6 +26,22 @@
                                 :editable="false">
                     </text-input>
                 </div>
+                <div class="level-item">
+                    <text-input :defaultValue="product.pivot.incoming_quantity"
+                                label="Incoming quantity"
+                                :required="true"
+                                type="text"
+                                :editable="false">
+                    </text-input>
+                </div>
+                <div class="level-item">
+                    <text-input :defaultValue="product.pivot.outgoing_product"
+                                label="Outgoing quantity"
+                                :required="true"
+                                type="text"
+                                :editable="false">
+                    </text-input>
+                </div>
             </div> 
         </div>
         <div class="has-text-centered" v-if="rowData.products.length == 0">

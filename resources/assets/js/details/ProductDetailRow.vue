@@ -21,6 +21,22 @@
                                 :editable="false">
                     </text-input>
                 </div>
+                <div class="level-item">
+                    <text-input :defaultValue="lot.pivot.incoming_quantity"
+                                label="Incoming quantity"
+                                :required="true"
+                                type="text"
+                                :editable="false">
+                    </text-input>
+                </div>
+                <div class="level-item">
+                    <text-input :defaultValue="lot.pivot.outgoing_product"
+                                label="Outgoing quantity"
+                                :required="true"
+                                type="text"
+                                :editable="false">
+                    </text-input>
+                </div>
             </div>
             
         </div>
