@@ -38,6 +38,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\OutboundProduct[] $outbounds_products_lots
  * @property float $price
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Lot wherePrice($value)
+ * @property-read mixed $usage
  */
 class Lot extends Model
 {

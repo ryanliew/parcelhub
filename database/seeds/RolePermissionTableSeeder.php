@@ -44,7 +44,8 @@ class RolePermissionTableSeeder extends Seeder
         $admin = \App\User::create([
             'name' => 'admin',
             'email' => 'admin@gmail.com',
-            'password' => bcrypt('P@ssw0rd')
+            'password' => bcrypt('P@ssw0rd'),
+            'verified' => true
         ]);
 
         $admin->attachRole($adminRole);

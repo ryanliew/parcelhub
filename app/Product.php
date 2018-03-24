@@ -47,6 +47,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\OutboundProduct[] $outbounds_products_lots
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\OutboundProduct[] $outbounds_with_lots
  * @property-read mixed $total_quantity
+ * @property-read mixed $outbound_product_lot
+ * @property-read mixed $owner_name
  */
 class Product extends Model
 {
