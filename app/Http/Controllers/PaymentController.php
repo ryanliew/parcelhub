@@ -80,7 +80,7 @@ class PaymentController extends Controller
 //        $rental = 'required|min:'.(int)Settings::get('rental_duration');
         $this->validate($request, [
             'payment_slip' => 'required|image',
-            'rental_duration' => 'required'
+            'rental_duration' => 'required|integer|min:' . Settings::get('rental_duration')
         ]);
 
         try {
