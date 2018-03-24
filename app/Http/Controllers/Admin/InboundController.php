@@ -94,9 +94,10 @@ class InboundController extends Controller
                     $new_incoming_quantity = $lot_product->pivot->incoming_quantity - $inboundproduct->quantity;
                     $lot->products()->updateExistingPivot($lot_product->id, ["incoming_quantity" => $new_incoming_quantity]);
 
-                        if($lot_product->pivot->quantity <= 0 && $lot_product->pivot->incoming_quantity <= 0){
-                            $lot->products()->detach($lot_product->id);
-                        }
+                    if($lot_product->pivot->quantity <= 0 && $lot_product->pivot->incoming_quantity <= 0){
+                        $lot->products()->detach($lot_product->id);
+                    }
+                    
                     $lot->save();
                 }
             }
@@ -110,9 +111,9 @@ class InboundController extends Controller
                 {
                     $lot_product = $lot->products()->where('product_id', $inboundproduct->product_id)->first();
                     $new_incoming_quantity = $lot_product->pivot->incoming_quantity - $inboundproduct->quantity;
-                    $lot->products()->updateExistingPivot($lot_product->id, ["incoming_quantity" => $new_incoming_quantity]);
                     $new_quantity = $lot_product->pivot->quantity + $inboundproduct->quantity;
-                    $lot->products()->updateExistingPivot($lot_product->id, ["quantity" => $new_quantity]);
+
+                    $lot->products()->updateExistingPivot($lot_product->id, ["incoming_quantity" => $new_incoming_quantity, "quantity" => $new_quantity]);
                     $lot->save();
                 }
             }

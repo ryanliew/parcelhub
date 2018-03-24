@@ -27,7 +27,6 @@ class ProductValidatorTest extends TestCase
         $this->actingAs($this->user);
     }
 
-
     public function test_whenOutboundProductsNotExistInRequestParameter_shouldFail()
     {
         $rule = [
@@ -51,6 +50,11 @@ class ProductValidatorTest extends TestCase
 
     public function test_ValidateProductExist_whenRequestedProductExist_shouldPass()
     {
+        //Mock authenticated user
+        $this->user = factory(User::class)->create(['name' => 'test_user']);
+
+        $this->actingAs($this->user);
+
         $products = factory(Product::class, 1)->create(['user_id' => $this->user->id])->each(function ($p) {
             $lot = factory(Lot::class)->create(['user_id' => $this->user->id]);
             $lot->products()->attach($p->id, ['quantity' => 1]);

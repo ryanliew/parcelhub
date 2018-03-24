@@ -106,10 +106,18 @@ class OutboundController extends Controller
             // Remove the lot product and its quantity
             foreach($outbound->products as $product)
             {
+                if($product->total_quantity < $product->pivot->quantity)
+                {
+                    return response(json_encode(array('process_status' => ['We do not have enough ' . $product->name . ' in the warehouse.'])), 422);
+                }                
+            }
+
+            foreach($outbound->products as $product) {
                 $lot = Lot::find($product->pivot->lot_id);
                 $lot_product = $lot->products()->where('product_id', $product->id)->first();
                 $new_outgoing_quantity = $lot_product->pivot->outgoing_product - $product->pivot->quantity;
                 $new_quantity = $lot_product->pivot->quantity - $product->pivot->quantity;
+
                 $lot->products()->updateExistingPivot($product->id, ['outgoing_product' => $new_outgoing_quantity, 'quantity' => $new_quantity]);
                 $lot->save();
             }

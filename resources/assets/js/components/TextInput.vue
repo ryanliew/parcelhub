@@ -158,6 +158,7 @@
 	padding: 1em 0.15em;
 	width: 100%;
 	background: transparent;
+	min-width: 120px;
 }
 
 .input--nolabel .input__field--hoshi {
