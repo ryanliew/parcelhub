@@ -63629,8 +63629,6 @@ var render = function() {
                                     error: _vm.form.errors.get(
                                       "rental_duration"
                                     )
-                                      ? "Rental duration is required"
-                                      : ""
                                   },
                                   model: {
                                     value: _vm.form.rental_duration,
