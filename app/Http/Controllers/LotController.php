@@ -253,4 +253,20 @@ class LotController extends Controller
 
         return ['message' => 'Lot unassigned successfully.'];
     }
+
+    public function editStock(Request $request)
+    {
+        $lot_products = json_decode($request['lot_products'], true);
+
+        foreach($lot_products as $lotproduct)
+        {
+            $lot = Lot::find($lotproduct['lot_id']);
+            if($lot->products()->where('product_id', $lotproduct['product_id'])->count() > 0)
+                $lot->products()->updateExistingPivot($lotproduct['product_id'], ['quantity' => $lotproduct['quantity']]);
+            else
+                $lot->products()->attach($lotproduct['product_id'], ['quantity' => $lotproduct['quantity']]);
+        }
+
+        return ['message' => 'Stock updated successfully'];
+    }
 }

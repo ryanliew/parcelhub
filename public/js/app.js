@@ -58909,6 +58909,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 
 
@@ -59232,18 +59233,205 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-	props: ['product'],
+	props: ['product', 'can_manage'],
 	data: function data() {
-		return {};
+		return {
+			isEditing: false,
+			actualProduct: false,
+			confirmStockUpdate: false,
+			newLots: [],
+			form: new Form({
+				lot_products: [],
+				new_lot_products: []
+			}),
+			action: 'lots/products/update',
+			lotsOptions: ''
+		};
+	},
+	mounted: function mounted() {
+		this.actualProduct = this.product.lots.map(function (lot) {
+			var obj = {};
+			obj['lot_id'] = lot.id;
+			obj['quantity'] = lot.pivot.quantity;
+
+			return obj;
+		});
+
+		this.getLots();
 	},
 
 
 	methods: {
+		getLots: function getLots() {
+			var _this = this;
+
+			axios.get('/internal/user/' + this.product.user_id + '/lots').then(function (data) {
+				return _this.setLots(data);
+			});
+		},
+		setLots: function setLots(data) {
+			this.lotsOptions = data.data.map(function (lot) {
+				var obj = {};
+				obj['value'] = lot.id;
+				obj['label'] = lot.name;
+
+				return obj;
+			});
+		},
 		back: function back() {
 			this.$emit('back');
+		},
+		editQuantity: function editQuantity() {
+			this.isEditing = true;
+		},
+		submit: function submit() {
+			this.confirmStockUpdate = true;
+		},
+		onSubmit: function onSubmit() {
+			var _this2 = this;
+
+			this.newLots = _.filter(this.newLots, function (lot) {
+				return lot.lot;
+			});
+
+			this.form.lot_products = this.actualProduct.map(function (lot) {
+				var obj = {};
+				obj['lot_id'] = lot.lot_id;
+				obj['product_id'] = _this2.product.id;
+				obj['quantity'] = lot.quantity;
+				return obj;
+			});
+
+			var newlots = this.newLots.map(function (lot) {
+				var obj = {};
+				obj['lot_id'] = lot.lot.value;
+				obj['product_id'] = _this2.product.id;
+				obj['quantity'] = lot.quantity;
+
+				return obj;
+			});
+
+			newlots.forEach(function (lot) {
+				_this2.form.lot_products.push(lot);
+			});
+
+			this.confirmStockUpdate = false;
+
+			this.form.post(this.action).then(function (data) {
+				return _this2.onSuccess();
+			}).catch(function (error) {
+				return _this2.onFail(error);
+			});
+		},
+		onSuccess: function onSuccess() {
+			this.isEditing = false;
+			this.back();
+		},
+		onFail: function onFail() {},
+		onCancel: function onCancel() {
+			this.isEditing = false;
+		},
+		updateStock: function updateStock(event, index) {
+			this.actualProduct[index].quantity = event;
+		},
+		addLots: function addLots() {
+			this.newLots.push({ lot: false, quantity: 0 });
 		}
 	},
 
@@ -59268,34 +59456,243 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c("div", { staticClass: "card" }, [
-      _c("div", { staticClass: "card-header" }, [
-        _c("div", { staticClass: "card-header-title level" }, [
-          _c("div", { staticClass: "level-left" }, [
-            _c("div", { staticClass: "level-item" }, [
-              _c("span", {
-                domProps: { textContent: _vm._s(_vm.product.product_name) }
-              })
-            ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "level-right" }, [
-            _c("div", { staticClass: "level-item" }, [
-              _c(
-                "button",
-                {
-                  staticClass: "button is-primary",
-                  on: {
-                    click: function($event) {
-                      _vm.back()
+  return _c(
+    "div",
+    [
+      _c("div", { staticClass: "card" }, [
+        _c("div", { staticClass: "card-header" }, [
+          _c("div", { staticClass: "card-header-title level" }, [
+            _c("div", { staticClass: "level-left" }, [
+              _c("div", { staticClass: "level-item" }, [
+                _c("span", {
+                  domProps: { textContent: _vm._s(_vm.product.product_name) }
+                })
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "level-right" }, [
+              _c("div", { staticClass: "level-item" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "button is-primary",
+                    on: {
+                      click: function($event) {
+                        _vm.back()
+                      }
                     }
-                  }
+                  },
+                  [
+                    _c("i", { staticClass: "fa fa-arrow-circle-left" }),
+                    _vm._v(" "),
+                    _c("span", { staticClass: "pl-5" }, [
+                      _vm._v("Back to list")
+                    ])
+                  ]
+                )
+              ])
+            ])
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "card-content" }, [
+          _c("div", { staticClass: "columns product-display" }, [
+            _c("div", { staticClass: "column is-one-third" }, [
+              _c("figure", { staticClass: "image" }, [
+                _c("img", { attrs: { src: _vm.product.picture } })
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "column" }, [
+              _c("div", { staticClass: "columns" }, [
+                _c(
+                  "div",
+                  { staticClass: "column is-one-third" },
+                  [
+                    _c("text-input", {
+                      attrs: {
+                        defaultValue: _vm.product.sku,
+                        label: "SKU",
+                        editable: false
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("text-input", {
+                      attrs: {
+                        defaultValue: _vm.product.product_name,
+                        label: "Name",
+                        editable: false
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("text-input", {
+                      attrs: {
+                        defaultValue: _vm.product.volume,
+                        label: "Volume(cm³)",
+                        editable: false
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("text-input", {
+                      attrs: {
+                        defaultValue: _vm.product.user_name,
+                        label: "Owner",
+                        editable: false
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("p", { staticClass: "heading" }, [
+                      _vm._v("\n\t\t\t\t\t\t\t\t\tAttributes\n\t\t\t\t\t\t\t\t")
+                    ]),
+                    _vm._v(" "),
+                    _vm.product.is_dangerous
+                      ? _c("span", { staticClass: "tag is-danger" }, [
+                          _vm._v("Dangerous")
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.product.is_fragile
+                      ? _c("span", { staticClass: "tag is-warning" }, [
+                          _vm._v("Fragile")
+                        ])
+                      : _vm._e()
+                  ],
+                  1
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "column is-one-third has-text-centered" },
+                  [
+                    _c("p", { staticClass: "heading" }, [
+                      _vm._v("Stocks available")
+                    ]),
+                    _vm._v(" "),
+                    _c("p", {
+                      staticClass: "title",
+                      domProps: {
+                        textContent: _vm._s(_vm.product.total_quantity)
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("p", { staticClass: "heading" }, [
+                      _vm._v("Incoming stocks")
+                    ]),
+                    _vm._v(" "),
+                    _c("p", {
+                      staticClass: "title",
+                      domProps: {
+                        textContent: _vm._s(_vm.product.total_incoming_quantity)
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("p", { staticClass: "heading" }, [
+                      _vm._v("Outgoing stocks")
+                    ]),
+                    _vm._v(" "),
+                    _c("p", {
+                      staticClass: "title",
+                      domProps: {
+                        textContent: _vm._s(_vm.product.total_outgoing_quantity)
+                      }
+                    })
+                  ]
+                )
+              ])
+            ])
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "columns mt-15" }, [
+        _c("div", { staticClass: "column" }, [
+          _c("div", { staticClass: "card" }, [
+            _vm._m(0),
+            _vm._v(" "),
+            _c("div", { staticClass: "card-content" }, [
+              _c(
+                "table",
+                {
+                  staticClass: "table is-hoverable is-fullwidth is-responsive"
                 },
                 [
-                  _c("i", { staticClass: "fa fa-arrow-circle-left" }),
+                  _vm._m(1),
                   _vm._v(" "),
-                  _c("span", { staticClass: "pl-5" }, [_vm._v("Back to list")])
+                  _c(
+                    "tbody",
+                    _vm._l(_vm.sortedInbound, function(inbound) {
+                      return _c("tr", [
+                        _c("td", [
+                          _vm._v(_vm._s(_vm._f("date")(inbound.arrival_date)))
+                        ]),
+                        _vm._v(" "),
+                        _c("td", {
+                          domProps: {
+                            textContent: _vm._s(inbound.pivot.quantity)
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("td", {
+                          domProps: {
+                            innerHTML: _vm._s(
+                              _vm.$options.filters.formatInboundStatus(
+                                inbound.process_status
+                              )
+                            )
+                          }
+                        })
+                      ])
+                    })
+                  )
+                ]
+              )
+            ])
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "column" }, [
+          _c("div", { staticClass: "card" }, [
+            _vm._m(2),
+            _vm._v(" "),
+            _c("div", { staticClass: "card-content" }, [
+              _c(
+                "table",
+                {
+                  staticClass: "table is-hoverable is-fullwidth is-responsive"
+                },
+                [
+                  _vm._m(3),
+                  _vm._v(" "),
+                  _c(
+                    "tbody",
+                    _vm._l(_vm.sortedOutbound, function(outbound) {
+                      return _c("tr", [
+                        _c("td", {
+                          domProps: {
+                            textContent: _vm._s(
+                              _vm.$options.filters.date(outbound.created_at)
+                            )
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("td", {
+                          domProps: {
+                            textContent: _vm._s(outbound.pivot.quantity)
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("td", {
+                          domProps: {
+                            innerHTML: _vm._s(
+                              _vm.$options.filters.formatOutboundStatus(
+                                outbound.process_status
+                              )
+                            )
+                          }
+                        })
+                      ])
+                    })
+                  )
                 ]
               )
             ])
@@ -59303,206 +59700,223 @@ var render = function() {
         ])
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "card-content" }, [
-        _c("div", { staticClass: "columns product-display" }, [
-          _c("div", { staticClass: "column is-one-third" }, [
-            _c("figure", { staticClass: "image" }, [
-              _c("img", { attrs: { src: _vm.product.picture } })
-            ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "column" }, [
-            _c("div", { staticClass: "columns" }, [
-              _c(
-                "div",
-                { staticClass: "column is-one-third" },
-                [
-                  _c("text-input", {
-                    attrs: {
-                      defaultValue: _vm.product.sku,
-                      label: "SKU",
-                      editable: false
-                    }
-                  }),
-                  _vm._v(" "),
-                  _c("text-input", {
-                    attrs: {
-                      defaultValue: _vm.product.product_name,
-                      label: "Name",
-                      editable: false
-                    }
-                  }),
-                  _vm._v(" "),
-                  _c("text-input", {
-                    attrs: {
-                      defaultValue: _vm.product.volume,
-                      label: "Volume(cm³)",
-                      editable: false
-                    }
-                  }),
-                  _vm._v(" "),
-                  _c("text-input", {
-                    attrs: {
-                      defaultValue: _vm.product.user_name,
-                      label: "Owner",
-                      editable: false
-                    }
-                  }),
-                  _vm._v(" "),
-                  _c("p", { staticClass: "heading" }, [
-                    _vm._v("\n\t\t\t\t\t\t\t\tAttributes\n\t\t\t\t\t\t\t")
-                  ]),
-                  _vm._v(" "),
-                  _vm.product.is_dangerous
-                    ? _c("span", { staticClass: "tag is-danger" }, [
-                        _vm._v("Dangerous")
-                      ])
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _vm.product.is_fragile
-                    ? _c("span", { staticClass: "tag is-warning" }, [
-                        _vm._v("Fragile")
-                      ])
-                    : _vm._e()
-                ],
-                1
-              ),
+      _c("div", { staticClass: "card" }, [
+        _c("div", { staticClass: "card-header" }, [
+          _c("div", { staticClass: "card-header-title level" }, [
+            _vm._m(4),
+            _vm._v(" "),
+            _vm.can_manage
+              ? _c("div", { staticClass: "level-right" }, [
+                  _c("div", { staticClass: "level-item" }, [
+                    !_vm.isEditing
+                      ? _c(
+                          "button",
+                          {
+                            staticClass: "button is-primary",
+                            on: {
+                              click: function($event) {
+                                _vm.editQuantity()
+                              }
+                            }
+                          },
+                          [
+                            _c("i", { staticClass: "fa fa-edit" }),
+                            _vm._v(" "),
+                            _c("span", { staticClass: "pl-5" }, [
+                              _vm._v("Edit stock details")
+                            ])
+                          ]
+                        )
+                      : _c("div", [
+                          _c(
+                            "button",
+                            {
+                              staticClass: "button is-danger",
+                              on: {
+                                click: function($event) {
+                                  _vm.onCancel()
+                                }
+                              }
+                            },
+                            [
+                              _c("i", { staticClass: "fa fa-times" }),
+                              _vm._v(" "),
+                              _c("span", { staticClass: "pl-5" }, [
+                                _vm._v("Cancel")
+                              ])
+                            ]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "button",
+                            {
+                              staticClass: "button is-success",
+                              on: {
+                                click: function($event) {
+                                  _vm.submit()
+                                }
+                              }
+                            },
+                            [
+                              _c("i", { staticClass: "fa fa-check" }),
+                              _vm._v(" "),
+                              _c("span", { staticClass: "pl-5" }, [
+                                _vm._v("Confirm changes")
+                              ])
+                            ]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "button",
+                            {
+                              staticClass: "button is-primary",
+                              on: {
+                                click: function($event) {
+                                  _vm.addLots()
+                                }
+                              }
+                            },
+                            [
+                              _c("i", { staticClass: "fa fa-plus" }),
+                              _vm._v(" "),
+                              _c("span", { staticClass: "pl-5" }, [
+                                _vm._v("Add lots")
+                              ])
+                            ]
+                          )
+                        ])
+                  ])
+                ])
+              : _vm._e()
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "card-content" }, [
+          _c(
+            "table",
+            { staticClass: "table is-responsive is-fullwidth is-hoverable" },
+            [
+              _vm._m(5),
               _vm._v(" "),
               _c(
-                "div",
-                { staticClass: "column is-one-third has-text-centered" },
+                "tbody",
                 [
-                  _c("p", { staticClass: "heading" }, [
-                    _vm._v("Stocks available")
-                  ]),
-                  _vm._v(" "),
-                  _c("p", {
-                    staticClass: "title",
-                    domProps: {
-                      textContent: _vm._s(_vm.product.total_quantity)
-                    }
-                  }),
-                  _vm._v(" "),
-                  _c("p", { staticClass: "heading" }, [_vm._v("Height(cm)")]),
-                  _vm._v(" "),
-                  _c("p", {
-                    staticClass: "title",
-                    domProps: { textContent: _vm._s(_vm.product.height) }
-                  }),
-                  _vm._v(" "),
-                  _c("p", { staticClass: "heading" }, [_vm._v("Width(cm)")]),
-                  _vm._v(" "),
-                  _c("p", {
-                    staticClass: "title",
-                    domProps: { textContent: _vm._s(_vm.product.width) }
-                  }),
-                  _vm._v(" "),
-                  _c("p", { staticClass: "heading" }, [_vm._v("Length(cm)")]),
-                  _vm._v(" "),
-                  _c("p", {
-                    staticClass: "title",
-                    domProps: { textContent: _vm._s(_vm.product.length) }
-                  })
-                ]
-              )
-            ])
-          ])
-        ])
-      ])
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "columns mt-15" }, [
-      _c("div", { staticClass: "column" }, [
-        _c("div", { staticClass: "card" }, [
-          _vm._m(0),
-          _vm._v(" "),
-          _c("div", { staticClass: "card-content" }, [
-            _c(
-              "table",
-              { staticClass: "table is-hoverable is-fullwidth is-responsive" },
-              [
-                _vm._m(1),
-                _vm._v(" "),
-                _c(
-                  "tbody",
-                  _vm._l(_vm.sortedInbound, function(inbound) {
+                  _vm._l(_vm.product.lots, function(lot, index) {
                     return _c("tr", [
-                      _c("td", [
-                        _vm._v(_vm._s(_vm._f("date")(inbound.arrival_date)))
-                      ]),
+                      _c("td", [_vm._v(_vm._s(lot.name))]),
                       _vm._v(" "),
-                      _c("td", {
-                        domProps: {
-                          textContent: _vm._s(inbound.pivot.quantity)
-                        }
-                      }),
+                      _c(
+                        "td",
+                        [
+                          _c("text-input", {
+                            attrs: {
+                              defaultValue:
+                                _vm.product.lots[index].pivot.quantity,
+                              editable: _vm.isEditing,
+                              name:
+                                "lot-quantity-" + _vm.product.lots[index].id,
+                              hideLabel: true,
+                              required: true
+                            },
+                            on: {
+                              input: function($event) {
+                                _vm.updateStock($event, index)
+                              }
+                            }
+                          })
+                        ],
+                        1
+                      ),
                       _vm._v(" "),
-                      _c("td", {
-                        domProps: {
-                          innerHTML: _vm._s(
-                            _vm.$options.filters.formatInboundStatus(
-                              inbound.process_status
-                            )
-                          )
-                        }
-                      })
+                      _c("td", [_vm._v(_vm._s(lot.pivot.incoming_quantity))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(lot.pivot.outgoing_product))])
+                    ])
+                  }),
+                  _vm._v(" "),
+                  _vm._l(_vm.newLots, function(lot, index) {
+                    return _c("tr", [
+                      _c(
+                        "td",
+                        [
+                          _c("selector-input", {
+                            attrs: {
+                              hideLabel: true,
+                              potentialData: _vm.lotsOptions,
+                              editable: true,
+                              placeholder: "Select lot"
+                            },
+                            model: {
+                              value: _vm.newLots[index].lot,
+                              callback: function($$v) {
+                                _vm.$set(_vm.newLots[index], "lot", $$v)
+                              },
+                              expression: "newLots[index].lot"
+                            }
+                          })
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "td",
+                        [
+                          _vm.newLots[index]
+                            ? _c("text-input", {
+                                attrs: {
+                                  editable: true,
+                                  name: "quantity",
+                                  hideLabel: true,
+                                  required: true,
+                                  type: "number"
+                                },
+                                model: {
+                                  value: _vm.newLots[index].quantity,
+                                  callback: function($$v) {
+                                    _vm.$set(
+                                      _vm.newLots[index],
+                                      "quantity",
+                                      $$v
+                                    )
+                                  },
+                                  expression: "newLots[index].quantity"
+                                }
+                              })
+                            : _vm._e()
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c("td", [_vm._v("-")]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v("-")])
                     ])
                   })
-                )
-              ]
-            )
-          ])
+                ],
+                2
+              )
+            ]
+          )
         ])
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "column" }, [
-        _c("div", { staticClass: "card" }, [
-          _vm._m(2),
-          _vm._v(" "),
-          _c("div", { staticClass: "card-content" }, [
-            _c(
-              "table",
-              { staticClass: "table is-hoverable is-fullwidth is-responsive" },
-              [
-                _vm._m(3),
-                _vm._v(" "),
-                _c(
-                  "tbody",
-                  _vm._l(_vm.sortedOutbound, function(outbound) {
-                    return _c("tr", [
-                      _c("td", {
-                        domProps: {
-                          textContent: _vm._s(
-                            _vm.$options.filters.date(outbound.created_at)
-                          )
-                        }
-                      }),
-                      _vm._v(" "),
-                      _c("td", {
-                        domProps: {
-                          textContent: _vm._s(outbound.pivot.quantity)
-                        }
-                      }),
-                      _vm._v(" "),
-                      _c("td", {
-                        domProps: {
-                          innerHTML: _vm._s(
-                            _vm.$options.filters.formatOutboundStatus(
-                              outbound.process_status
-                            )
-                          )
-                        }
-                      })
-                    ])
-                  })
-                )
-              ]
-            )
-          ])
-        ])
-      ])
-    ])
-  ])
+      _c("confirmation", {
+        attrs: {
+          isConfirming: _vm.confirmStockUpdate,
+          title: "Confirmation",
+          message:
+            "Confirm updating stock? Rows without a lot selected will be removed."
+        },
+        on: {
+          close: function($event) {
+            _vm.confirmStockUpdate = false
+          },
+          confirm: _vm.onSubmit
+        }
+      })
+    ],
+    1
+  )
 }
 var staticRenderFns = [
   function() {
@@ -59513,7 +59927,9 @@ var staticRenderFns = [
       _c("div", { staticClass: "card-header-title level" }, [
         _c("div", { staticClass: "level-left" }, [
           _c("div", { staticClass: "level-item" }, [
-            _vm._v("\n\t\t\t\t\t\t\t\tRecent inbound history\n\t\t\t\t\t\t\t")
+            _vm._v(
+              "\n\t\t\t\t\t\t\t\t\tRecent inbound history\n\t\t\t\t\t\t\t\t"
+            )
           ])
         ])
       ])
@@ -59541,7 +59957,9 @@ var staticRenderFns = [
       _c("div", { staticClass: "card-header-title level" }, [
         _c("div", { staticClass: "level-left" }, [
           _c("div", { staticClass: "level-item" }, [
-            _vm._v("\n\t\t\t\t\t\t\t\tRecent outbound history\n\t\t\t\t\t\t\t")
+            _vm._v(
+              "\n\t\t\t\t\t\t\t\t\tRecent outbound history\n\t\t\t\t\t\t\t\t"
+            )
           ])
         ])
       ])
@@ -59559,6 +59977,30 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("Status")])
       ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "level-left" }, [
+      _c("div", { staticClass: "level-item" }, [
+        _c("span", [_vm._v("Stock details")])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("th", [_vm._v("Lot")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Quantity")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Incoming quantity")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Outgoing quantity")])
     ])
   }
 ]
@@ -59645,7 +60087,10 @@ var render = function() {
                 )
               ])
             : _c("product", {
-                attrs: { product: _vm.selectedProduct },
+                attrs: {
+                  product: _vm.selectedProduct,
+                  can_manage: _vm.can_manage
+                },
                 on: { back: _vm.back }
               })
         ],
