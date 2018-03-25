@@ -59900,7 +59900,7 @@ var render = function() {
         },
         on: {
           close: function($event) {
-            _vm.confirmSubmit = false
+            _vm.confirmDelete = false
           },
           confirm: _vm.onDelete
         }
