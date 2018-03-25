@@ -56,7 +56,8 @@ class ProductController extends Controller
                                         'products.width as width',
                                         'products.height as height',
                                         'products.length as length',
-                                        'users.name as user_name'
+                                        'users.name as user_name',
+                                        'users.id as user_id'
                                     )
                                 ->leftJoin('users', 'products.user_id', '=', 'users.id')
                                 ->where('status', 'true'));
@@ -71,7 +72,8 @@ class ProductController extends Controller
                                                                                         'products.width as width',
                                                                                         'products.height as height',
                                                                                         'products.length as length',
-                                                                                        'users.name as user_name'
+                                                                                        'users.name as user_name',
+                                                                                        'users.id as user_id'
                                                                                     )
                                                                                 ->leftJoin('users', 'products.user_id', '=', 'users.id')
                                                                                 ->where('status', 'true')

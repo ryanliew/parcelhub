@@ -30,7 +30,8 @@
 				</div>
 			</div>
 			<product :product="selectedProduct" v-else
-					@back="back">
+					@back="back"
+					:can_manage="can_manage">
 			</product>
 		</transition>
 
