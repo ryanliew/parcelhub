@@ -14,6 +14,7 @@ class ProductController extends Controller
         'length' => 'required',
         'width' => 'required',
         'sku' => 'required',
+        'user_id' => 'required'
     ];
 
     /**
@@ -103,7 +104,8 @@ class ProductController extends Controller
     {
         $this->validate($request, $this->rules);
 
-        $auth_id = auth()->user()->id;
+        //$auth_id = auth()->user()->id;
+        $auth_id = $request->user_id;
         $product = new product;
         $product->name = $request->name;
         $product->height = $request->height;

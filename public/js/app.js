@@ -58895,6 +58895,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -58921,11 +58935,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 				sku: '',
 				picture: '',
 				is_dangerous: '',
-				is_fragile: ''
+				is_fragile: '',
+				user_id: ''
 			}),
 			deleteForm: new Form({}),
 			confirmSubmit: false,
-			confirmDelete: false
+			confirmDelete: false,
+			userOptions: [],
+			selectedUser: false
 		};
 	},
 	mounted: function mounted() {
@@ -58944,17 +58961,41 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 	methods: {
+		getUsers: function getUsers() {
+			var _this2 = this;
+
+			if (this.can_manage) axios.get('internal/users/selector').then(function (response) {
+				return _this2.setUsers(response);
+			});else axios.get('internal/user').then(function (response) {
+				return _this2.setUsers(response);
+			});
+		},
+		setUsers: function setUsers(data) {
+			if (this.can_manage) {
+				this.userOptions = data.data.map(function (user) {
+					var obj = {};
+					obj['label'] = user.name;
+					obj['value'] = user.id;
+					return obj;
+				});
+			} else {
+				this.form.user_id = data.data.id;
+			}
+		},
+		userUpdate: function userUpdate(data) {
+			this.form.user_id = data.value;
+		},
 		submit: function submit() {
 			this.confirmSubmit = true;
 		},
 		onSubmit: function onSubmit() {
-			var _this2 = this;
+			var _this3 = this;
 
 			this.confirmSubmit = false;
 			this.form.post(this.action).then(function (data) {
-				return _this2.onSuccess();
+				return _this3.onSuccess();
 			}).catch(function (error) {
-				return _this2.onFail(error);
+				return _this3.onFail(error);
 			});
 		},
 		onSuccess: function onSuccess() {
@@ -58972,6 +59013,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			this.form.length = data.length;
 			this.form.is_dangerous = data.is_dangerous;
 			this.form.is_fragile = data.is_fragile;
+			this.form.user_id = 1;
 
 			this.productImage = { name: data.picture, src: data.picture };
 
@@ -58982,13 +59024,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			this.confirmDelete = true;
 		},
 		onDelete: function onDelete() {
-			var _this3 = this;
+			var _this4 = this;
 
 			this.confirmDelete = false;
 			this.deleteForm.delete('/internal/products/' + this.selectedProduct.id).then(function (response) {
-				return _this3.onSuccess();
+				return _this4.onSuccess();
 			}).catch(function (error) {
-				return _this3.onFail(error);
+				return _this4.onFail(error);
 			});
 		},
 		view: function view(data) {
@@ -59006,6 +59048,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		},
 		modalOpen: function modalOpen() {
 			this.form.reset();
+			this.getUsers();
 			this.productImage = { name: 'No file selected' };
 			this.selectedProduct = '';
 			this.dialogActive = true;
@@ -59014,7 +59057,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 	computed: {
 		dialogTitle: function dialogTitle() {
-			return this.selectedProduct ? "Edit " + this.selectedProduct.name : "Create new product";
+			return this.selectedProduct ? "Edit " + this.selectedProduct.product_name : "Create new product";
 		},
 		action: function action() {
 			var action = this.selectedProduct ? "update" : "store";
@@ -59553,30 +59596,28 @@ var render = function() {
                       ])
                     ]),
                     _vm._v(" "),
-                    !_vm.can_manage
-                      ? _c("div", { staticClass: "level-right" }, [
-                          _c("div", { staticClass: "level-item" }, [
-                            _c(
-                              "button",
-                              {
-                                staticClass: "button is-primary",
-                                on: {
-                                  click: function($event) {
-                                    _vm.modalOpen()
-                                  }
-                                }
-                              },
-                              [
-                                _c("i", { staticClass: "fa fa-plus-circle" }),
-                                _vm._v(" "),
-                                _c("span", { staticClass: "pl-5" }, [
-                                  _vm._v("Create new product")
-                                ])
-                              ]
-                            )
-                          ])
-                        ])
-                      : _vm._e()
+                    _c("div", { staticClass: "level-right" }, [
+                      _c("div", { staticClass: "level-item" }, [
+                        _c(
+                          "button",
+                          {
+                            staticClass: "button is-primary",
+                            on: {
+                              click: function($event) {
+                                _vm.modalOpen()
+                              }
+                            }
+                          },
+                          [
+                            _c("i", { staticClass: "fa fa-plus-circle" }),
+                            _vm._v(" "),
+                            _c("span", { staticClass: "pl-5" }, [
+                              _vm._v("Create new product")
+                            ])
+                          ]
+                        )
+                      ])
+                    ])
                   ])
                 ]),
                 _vm._v(" "),
@@ -59863,7 +59904,41 @@ var render = function() {
                   })
                 ],
                 1
-              )
+              ),
+              _vm._v(" "),
+              _vm.can_manage && !_vm.selectedProduct
+                ? _c(
+                    "div",
+                    { staticClass: "field" },
+                    [
+                      _c("selector-input", {
+                        attrs: {
+                          defaultData: _vm.selectedUser,
+                          label: "Product owner",
+                          name: "user_id",
+                          required: true,
+                          potentialData: _vm.userOptions,
+                          editable: true,
+                          placeholder: "Select product owner",
+                          error: _vm.form.errors.get("user_id")
+                        },
+                        on: {
+                          input: function($event) {
+                            _vm.userUpdate($event)
+                          }
+                        },
+                        model: {
+                          value: _vm.selectedUser,
+                          callback: function($$v) {
+                            _vm.selectedUser = $$v
+                          },
+                          expression: "selectedUser"
+                        }
+                      })
+                    ],
+                    1
+                  )
+                : _vm._e()
             ]
           ),
           _vm._v(" "),
