@@ -145,7 +145,7 @@
         <confirmation :isConfirming="confirmDelete"
         				title="Confirmation"
         				message="Confirm delete product?"
-        				@close="confirmSubmit = false"
+        				@close="confirmDelete = false"
         				@confirm="onDelete">
         </confirmation>
 	</div>
