@@ -133,7 +133,7 @@
 								</div>
 								<div class="column">
 									<span v-if="productRows[index].product">
-										{{ productRows[index].product.volume * productRows[index].quantity / 100 }}
+										{{ productRows[index].product.volume * productRows[index].quantity | convertToMeterCube }}
 									</span>
 								</div>
 								<div class="column is-2">
@@ -286,8 +286,8 @@
 
 			fields() {
 				let displayFields = [{name: 'id', title: '#'},
-					{name: 'arrival_date', sortField: 'date', title: 'Arrival date', callback: 'date'},
-					{name: 'total_carton', sortField: 'carton', title: 'Total carton'},
+					{name: 'arrival_date', sortField: 'arrival_date', title: 'Arrival date', callback: 'date'},
+					{name: 'total_carton', sortField: 'total_carton', title: 'Total carton'},
 					{name: 'process_status', callback: 'inboundStatusLabel', title: 'Status', sortField: 'process_status'},
 					{name: '__component:inbounds-actions', title: 'Actions'}];
 

@@ -48359,6 +48359,14 @@ Vue.filter('date', function (value) {
 	return 'N/A';
 });
 
+Vue.filter('convertToMeterCube', function (value) {
+	return value / 1000000;
+});
+
+Vue.filter('convertToCentimeterCube', function (value) {
+	return value * 1000000;
+});
+
 /***/ }),
 /* 208 */
 /***/ (function(module, exports, __webpack_require__) {
@@ -49749,7 +49757,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			return value ? value : "N/A";
 		},
 		convertToM: function convertToM(value) {
-			return value / 100;
+			return this.$options.filters.convertToMeterCube(value);
 		}
 	}
 });
@@ -56917,7 +56925,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			this.selectedCategory = data;
 			this.form.id = data.id;
 			this.form.name = data.name;
-			this.form.volume = data.volume / 100;
+			this.form.volume = this.$options.filters.convertToMeterCube(data.volume);
 			this.form.price = data.price;
 			this.dialogActive = true;
 		},
@@ -57620,7 +57628,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			this.selectedLot = data;
 			this.form.id = data.id;
 			this.form.name = data.name;
-			this.form.volume = data.volume / 100;
+			this.form.volume = this.$options.filters.convertToMeterCube(data.volume);
 			this.form.category = data.category_id;
 			this.form.price = data.price;
 			this.selectedCategory = {
@@ -57645,7 +57653,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			this.selectedCategory = data;
 			this.form.category = data.value;
 			if (!this.override) {
-				this.form.volume = data.volume / 100;
+				this.form.volume = this.$options.filters.convertToMeterCube(data.volume);
 				this.form.price = data.price;
 			}
 			this.form.errors.clear('price');
@@ -60247,7 +60255,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			return this.form.submitting ? 'is-loading' : '';
 		},
 		fields: function fields() {
-			var displayFields = [{ name: 'id', title: '#' }, { name: 'arrival_date', sortField: 'date', title: 'Arrival date', callback: 'date' }, { name: 'total_carton', sortField: 'carton', title: 'Total carton' }, { name: 'process_status', callback: 'inboundStatusLabel', title: 'Status', sortField: 'process_status' }, { name: '__component:inbounds-actions', title: 'Actions' }];
+			var displayFields = [{ name: 'id', title: '#' }, { name: 'arrival_date', sortField: 'arrival_date', title: 'Arrival date', callback: 'date' }, { name: 'total_carton', sortField: 'total_carton', title: 'Total carton' }, { name: 'process_status', callback: 'inboundStatusLabel', title: 'Status', sortField: 'process_status' }, { name: '__component:inbounds-actions', title: 'Actions' }];
 
 			if (this.can_manage) {
 				displayFields.splice(1, 0, { name: 'customer', sortField: 'users.name', title: 'Customer' });
@@ -61313,10 +61321,11 @@ var render = function() {
                                       _vm._v(
                                         "\n\t\t\t\t\t\t\t\t\t" +
                                           _vm._s(
-                                            _vm.productRows[index].product
-                                              .volume *
-                                              _vm.productRows[index].quantity /
-                                              100
+                                            _vm._f("convertToMeterCube")(
+                                              _vm.productRows[index].product
+                                                .volume *
+                                                _vm.productRows[index].quantity
+                                            )
                                           ) +
                                           "\n\t\t\t\t\t\t\t\t"
                                       )
@@ -63092,7 +63101,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 					return parseInt(category.quantity) * category.price;
 				});
 				this.totalVolume = _.sumBy(this.categories, function (category) {
-					return parseInt(category.quantity) * category.volume / 100;
+					return this.$options.filters.convertToMeterCube(parseInt(category.quantity) * category.volume);
 				});
 				this.totalLots = _.sumBy(this.categories, function (category) {
 					return parseInt(category.quantity);
@@ -63557,7 +63566,13 @@ var render = function() {
                                       ]),
                                       _vm._v(" "),
                                       _c("td", [
-                                        _vm._v(_vm._s(category.volume / 100))
+                                        _vm._v(
+                                          _vm._s(
+                                            _vm._f("convertToMeterCube")(
+                                              category.volume
+                                            )
+                                          )
+                                        )
                                       ]),
                                       _vm._v(" "),
                                       _vm.availableLots(category).length > 0
@@ -63825,11 +63840,15 @@ var render = function() {
                                       }
                                     }),
                                     _vm._v(" "),
-                                    _c("td", {
-                                      domProps: {
-                                        textContent: _vm._s(lot.volume / 100)
-                                      }
-                                    })
+                                    _c("td", [
+                                      _vm._v(
+                                        _vm._s(
+                                          _vm._f("convertToMeterCube")(
+                                            lot.volume
+                                          )
+                                        )
+                                      )
+                                    ])
                                   ])
                                 })
                               )
@@ -65178,13 +65197,15 @@ var render = function() {
                                             }
                                           }),
                                           _vm._v(" "),
-                                          _c("td", {
-                                            domProps: {
-                                              textContent: _vm._s(
-                                                lot.volume / 100
+                                          _c("td", [
+                                            _vm._v(
+                                              _vm._s(
+                                                _vm._f("convertToMeterCube")(
+                                                  lot.volume
+                                                )
                                               )
-                                            }
-                                          })
+                                            )
+                                          ])
                                         ])
                                       })
                                     )

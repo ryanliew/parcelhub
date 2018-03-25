@@ -138,7 +138,7 @@
 				this.selectedCategory = data;
 				this.form.id = data.id;
 				this.form.name = data.name;
-				this.form.volume = data.volume / 100;
+				this.form.volume = this.$options.filters.convertToMeterCube(data.volume);
 				this.form.price = data.price;
 				this.dialogActive = true;
 			},

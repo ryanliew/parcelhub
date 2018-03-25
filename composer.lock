@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "23e9937fd60b0ec4d376c610bdfb3c4e",
+    "content-hash": "6fd72024dc2fee63065b4a3bf22aa6ba",
     "packages": [
         {
             "name": "barryvdh/laravel-debugbar",
@@ -1079,6 +1079,50 @@
                 "url"
             ],
             "time": "2017-03-20T17:10:46+00:00"
+        },
+        {
+            "name": "if4lcon/laravel-clear-orders-by",
+            "version": "1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/awssat/laravel-clear-orders-by.git",
+                "reference": "f506cb99af152eae910525a5078bca26388beaa2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/awssat/laravel-clear-orders-by/zipball/f506cb99af152eae910525a5078bca26388beaa2",
+                "reference": "f506cb99af152eae910525a5078bca26388beaa2",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/database": "5.*",
+                "illuminate/support": "5.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Bader\\ClearOrdersBy\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Bader Almutairi",
+                    "email": "b@bder.email"
+                }
+            ],
+            "description": "Clear orders by in Laravel query builder",
+            "keywords": [
+                "builder",
+                "clear",
+                "laravel",
+                "orderby",
+                "orders"
+            ],
+            "time": "2017-08-08T04:58:09+00:00"
         },
         {
             "name": "jakub-onderka/php-console-color",

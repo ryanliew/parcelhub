@@ -76,7 +76,7 @@
 									<tr v-for="lot in selectedPayment.lots">
 										<td v-text="lot.name"></td>
 										<td v-text="lot.price"></td>
-										<td v-text="lot.volume / 100"></td>
+										<td>{{ lot.volume | convertToMeterCube }}</td>
 									</tr>
 								</tbody>
 							</table>

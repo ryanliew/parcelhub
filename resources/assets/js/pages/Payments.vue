@@ -111,7 +111,7 @@
 										<tr v-for="(category, index) in categories">
 											<td>{{ category.name }}</td>
 											<td>{{ category.price }}</td>
-											<td>{{ category.volume / 100 }}</td>
+											<td>{{ category.volume | convertToMeterCube}}</td>
 											<td v-if="availableLots(category).length > 0">
 												<text-input v-model="categories[index].quantity" :defaultValue="categories[index].quantity"
 						          						:label="'Quantity'"
@@ -270,7 +270,7 @@
 								<tr v-for="lot in selectedPayment.lots">
 									<td v-text="lot.name"></td>
 									<td v-text="lot.price"></td>
-									<td v-text="lot.volume / 100"></td>
+									<td>{{ lot.volume | convertToMeterCube }}</td>
 								</tr>
 							</tbody>
 						</table>
@@ -485,7 +485,7 @@
 
 				if(category.quantity) {
 					this.subPrice =_.sumBy(this.categories, function(category){ return  parseInt(category.quantity)* category.price; });
-					this.totalVolume =_.sumBy(this.categories, function(category){ return parseInt(category.quantity) * category.volume / 100; });
+					this.totalVolume =_.sumBy(this.categories, function(category){ return this.$options.filters.convertToMeterCube(parseInt(category.quantity) * category.volume); });
 					this.totalLots =_.sumBy(this.categories, function(category){ return parseInt(category.quantity); });
 				}
 			},
