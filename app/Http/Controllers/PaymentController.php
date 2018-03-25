@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Notifications\PaymentCreatedNotification;
 use App\Payment;
 use App\Lot;
-use App\Settings;
+use Settings;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -77,10 +77,11 @@ class PaymentController extends Controller
 
     public function purchase(Request $request) {
 
+//        $rental = 'required|min:'.(int)Settings::get('rental_duration');
         $this->validate($request, [
             'payment_slip' => 'required|image',
-            'rental_duration' => 'required'
-        ]);
+            'rental_duration' => 'required|integer|min:' . Settings::get('rental_duration')
+        ], ['rental_duration.min' => 'The minimum rental duration is ' . Settings::get('rental_duration') . ' months']);
 
         try {
             $lot_purchases = json_decode($request['lot_purchases'], true);

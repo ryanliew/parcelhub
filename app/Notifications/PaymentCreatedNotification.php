@@ -42,7 +42,8 @@ class PaymentCreatedNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        return (new MailMessage)->markdown('mail.payment.created', [ 'payment' => $this->payment ]);
+        return (new MailMessage)
+            ->markdown('mail.payment.created', [ 'payment' => $this->payment ]);
     }
 
     /**

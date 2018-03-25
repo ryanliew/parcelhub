@@ -106,13 +106,19 @@ class OutboundController extends Controller
             // Remove the lot product and its quantity
             foreach($outbound->products as $product)
             {
+                if($product->total_quantity < $product->pivot->quantity)
+                {
+                    return response(json_encode(array('process_status' => ['We do not have enough ' . $product->name . ' in the warehouse.'])), 422);
+                }                
+            }
+
+            foreach($outbound->products as $product) {
                 $lot = Lot::find($product->pivot->lot_id);
                 $lot_product = $lot->products()->where('product_id', $product->id)->first();
                 $new_outgoing_quantity = $lot_product->pivot->outgoing_product - $product->pivot->quantity;
                 $new_quantity = $lot_product->pivot->quantity - $product->pivot->quantity;
+
                 $lot->products()->updateExistingPivot($product->id, ['outgoing_product' => $new_outgoing_quantity, 'quantity' => $new_quantity]);
-                
-                $lot->left_volume = $lot->left_volume - ($product->volume * $product->pivot->quantity);
                 $lot->save();
             }
         }
@@ -122,12 +128,15 @@ class OutboundController extends Controller
 
         if(Entrust::hasRole('admin')) {
 
-            Auth::user()->notify(new OutboundStatusUpdateNotification($outbound));
+            $outbound->user->notify(new OutboundStatusUpdateNotification($outbound));
 
         } else {
 
-            User::admin()->first()->notify(new OutboundStatusUpdateNotification($outbound));
-            Auth::user()->notify(new OutboundStatusUpdateNotification($outbound));
+            if($outbound->process_status == 'canceled') {
+                User::admin()->first()->notify(new OutboundStatusUpdateNotification($outbound));
+            }
+
+            $outbound->user->notify(new OutboundStatusUpdateNotification($outbound));
         }
 
         if(request()->wantsJson())

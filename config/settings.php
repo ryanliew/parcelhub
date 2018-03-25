@@ -9,7 +9,7 @@ return [
 	| Cache configuration path
 	|
 	*/
-	// 'cache_file' => storage_path('settings.json'),
+	'cache_file' => storage_path('settings.json'),
 
 	/*
 	|--------------------------------------------------------------------------
