@@ -92,6 +92,7 @@ Route::group(['prefix' => 'internal'], function() {
 	Route::get('payments/pending', 'PaymentController@indexPending');
 	Route::get('payment/{lot}', 'PaymentController@show');
 	Route::get('users/list', 'UserController@page');
+	Route::get('users/selector', 'UserController@selector');
 	Route::get('users', 'UserController@index');
 	Route::get('user', 'UserController@show');
 	Route::delete('products/{product}', 'ProductController@destroy');
