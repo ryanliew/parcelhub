@@ -84,3 +84,11 @@ Vue.filter('date', function(value){
 		return moment(value).format('L');
 	return 'N/A';
 });
+
+Vue.filter('convertToMeterCube', function(value){
+	return value / 1000000;
+});
+
+Vue.filter('convertToCentimeterCube', function(value){
+	return value * 1000000;
+});

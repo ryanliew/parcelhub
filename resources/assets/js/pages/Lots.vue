@@ -384,7 +384,7 @@
 				this.selectedLot = data;
 				this.form.id = data.id;
 				this.form.name = data.name;
-				this.form.volume = data.volume / 100;
+				this.form.volume = this.$options.filters.convertToMeterCube(data.volume);
 				this.form.category = data.category_id;
 				this.form.price = data.price;
 				this.selectedCategory = {
@@ -415,7 +415,7 @@
 				this.selectedCategory = data;
 				this.form.category = data.value;
 				if(!this.override) {
-					this.form.volume = data.volume / 100; 
+					this.form.volume = this.$options.filters.convertToMeterCube(data.volume); 
 					this.form.price = data.price; 
 				}
 				this.form.errors.clear('price');

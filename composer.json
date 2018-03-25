@@ -11,6 +11,7 @@
         "barryvdh/laravel-ide-helper": "^2.4",
         "doctrine/dbal": "^2.6",
         "efriandika/laravel-settings": "^1.2",
+        "if4lcon/laravel-clear-orders-by": "^1.0",
         "laravel/framework": "5.4.*",
         "laravel/socialite": "^3.0",
         "laravel/tinker": "~1.0",

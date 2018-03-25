@@ -156,7 +156,7 @@
 			},
 
 			convertToM(value){
-				return value / 100;
+				return this.$options.filters.convertToMeterCube(value);
 			}
 
 

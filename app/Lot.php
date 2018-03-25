@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Utilities;
 
 /**
  * App\Lot
@@ -65,11 +66,11 @@ class Lot extends Model
 
     public function setVolumeAttribute($value)
     {
-        return $this->attributes['volume'] = $value * 100;
+        return $this->attributes['volume'] = Utilities::convertMeterCubeToCentimeterCube($value);
     }
 
     public function getUsageAttribute()
     {
-        return ($this->volume - $this->left_volume) / 100 . '/' . $this->volume / 100;
+        return Utilities::convertCentimeterCubeToMeterCube(($this->volume - $this->left_volume)) . '/' . Utilities::convertCentimeterCubeToMeterCube($this->volume);
     }
 }
