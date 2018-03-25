@@ -36,7 +36,7 @@ class ProductValidator extends Validator
             return false;
         }
 
-        $product = \Auth::user()->products()->find($value['id']);
+        $product = \Auth::user()->products->find($value['id']);
 
         return $value['quantity'] <= $product->total_usable_quantity;
     }

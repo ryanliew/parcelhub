@@ -109,8 +109,9 @@ return [
         'lot_purchases' => [
             'required' => 'Please select at least one lot to purchase',
         ],
-        'lot_purchases.*.rental_duration' => [
-            'min' => 'Minimum rental duration must not least than :min days',
+        'rental_duration' => [
+            'required' => 'Rental duration field is required',
+            'min' => 'Minimum rental duration must not least than :min months',
         ],
         'outbound_products' => [
             'required' => 'Create outbound order require at least one product',

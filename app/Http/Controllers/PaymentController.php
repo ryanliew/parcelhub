@@ -77,20 +77,18 @@ class PaymentController extends Controller
 
     public function purchase(Request $request) {
 
-//        $rental = 'required|min:'.(int)Settings::get('rental_duration');
         $this->validate($request, [
             'payment_slip' => 'required|image',
-            'rental_duration' => 'required|integer|min:' . Settings::get('rental_duration')
-        ], ['rental_duration.min' => 'The minimum rental duration is ' . Settings::get('rental_duration') . ' months']);
+            'rental_duration' => 'bail|required|integer|min:' . Settings::get('rental_duration')
+        ]);
 
         try {
             $lot_purchases = json_decode($request['lot_purchases'], true);
 
-            $json_validator = \Validator::make(['lot_purchases' => $lot_purchases], [
-                'lot_purchases.*.rental_duration' => 'required|integer|min:1',
-            ], ['lot_purchases.$key.rental_duration' => 'Rental duration is required']);
+            $json_validator = \Validator::make($lot_purchases, ['lot_purchases' => $lot_purchases]);
 
             if ($json_validator->fails()) {
+
                 return response()->json($json_validator->messages(), 422);
             }
 
