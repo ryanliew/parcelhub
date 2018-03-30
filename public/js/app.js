@@ -48355,7 +48355,7 @@ Vue.filter('formatPaymentStatus', function (value) {
 });
 
 Vue.filter('date', function (value) {
-	if (__WEBPACK_IMPORTED_MODULE_0_moment___default()(value).isValid()) return __WEBPACK_IMPORTED_MODULE_0_moment___default()(value).format('L');
+	if (__WEBPACK_IMPORTED_MODULE_0_moment___default()(value).isValid()) return __WEBPACK_IMPORTED_MODULE_0_moment___default()(value).format('YYYY-MM-DD');
 	return 'N/A';
 });
 
@@ -59973,7 +59973,7 @@ var staticRenderFns = [
       _c("tr", [
         _c("th", [_vm._v("Order Date")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Amount")]),
+        _c("th", [_vm._v("Quantity")]),
         _vm._v(" "),
         _c("th", [_vm._v("Status")])
       ])
@@ -62219,11 +62219,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-	props: ['can_manage'],
+	props: ['can_manage', 'fee', 'number'],
 
 	components: { TableView: __WEBPACK_IMPORTED_MODULE_0__components_TableView_vue___default.a },
 
@@ -62484,7 +62486,9 @@ var render = function() {
             ? _c("outbound", {
                 attrs: {
                   outbound: _vm.selectedoutbound,
-                  canManage: _vm.can_manage
+                  canManage: _vm.can_manage,
+                  fee: _vm.fee,
+                  number: _vm.number
                 },
                 on: {
                   back: function($event) {
@@ -65517,7 +65521,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			return displayFields;
 		},
 		outboundFields: function outboundFields() {
-			var displayFields = [{ name: 'customer', sortField: 'users.name', title: 'Customer' }, { name: 'created_at', sortField: 'created_at', title: 'Order date', callback: 'date' }, { name: 'process_status', callback: 'outboundStatusLabel', title: 'Status', sortField: 'process_status' }, { name: '__component:outbounds-actions', title: 'Actions' }];
+			var displayFields = [{ name: 'customer', sortField: 'users.name', title: 'Customer' }, { name: 'created_at', sortField: 'created_at', title: 'Order date' }, { name: 'process_status', callback: 'outboundStatusLabel', title: 'Status', sortField: 'process_status' }, { name: '__component:outbounds-actions', title: 'Actions' }];
 
 			return displayFields;
 		},
@@ -65994,6 +65998,25 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -66006,7 +66029,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		return {
 			form: new Form({
 				days_before_order: '',
-				rental_duration: ''
+				rental_duration: '',
+				cancelation_fee: '',
+				cancelation_number: ''
 			}),
 			confirmSubmit: false
 		};
@@ -66014,6 +66039,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 	created: function created() {
 		this.form.rental_duration = this.setting.rental_duration;
 		this.form.days_before_order = this.setting.days_before_order;
+		this.form.cancelation_fee = this.setting.cancelation_fee;
+		this.form.cancelation_number = this.setting.cancelation_number;
 	},
 
 
@@ -66032,9 +66059,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			});
 		},
 		onSuccess: function onSuccess(data) {
-			console.log(data);
 			this.form.rental_duration = data.setting.rental_duration;
 			this.form.days_before_order = data.setting.days_before_order;
+			this.form.cancelation_fee = data.setting.cancelation_fee;
+			this.form.cancelation_number = data.setting.cancelation_number;
 		},
 		onFail: function onFail() {}
 	},
@@ -66126,8 +66154,7 @@ var render = function() {
                       name: "rental_duration",
                       type: "number",
                       editable: true,
-                      error: _vm.form.errors.get("rental_duration"),
-                      focus: true
+                      error: _vm.form.errors.get("rental_duration")
                     },
                     model: {
                       value: _vm.form.rental_duration,
@@ -66135,6 +66162,58 @@ var render = function() {
                         _vm.$set(_vm.form, "rental_duration", $$v)
                       },
                       expression: "form.rental_duration"
+                    }
+                  })
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "field" },
+                [
+                  _c("text-input", {
+                    attrs: {
+                      defaultValue: _vm.form.cancelation_fee,
+                      label: "Cancelation fee",
+                      required: true,
+                      name: "cancelation_fee",
+                      type: "number",
+                      editable: true,
+                      error: _vm.form.errors.get("cancelation_fee")
+                    },
+                    model: {
+                      value: _vm.form.cancelation_fee,
+                      callback: function($$v) {
+                        _vm.$set(_vm.form, "cancelation_fee", $$v)
+                      },
+                      expression: "form.cancelation_fee"
+                    }
+                  })
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "field" },
+                [
+                  _c("text-input", {
+                    attrs: {
+                      defaultValue: _vm.form.cancelation_number,
+                      label: "Phone number for order cancelation",
+                      required: true,
+                      name: "cancelation_number",
+                      type: "text",
+                      editable: true,
+                      error: _vm.form.errors.get("cancelation_number")
+                    },
+                    model: {
+                      value: _vm.form.cancelation_number,
+                      callback: function($$v) {
+                        _vm.$set(_vm.form, "cancelation_number", $$v)
+                      },
+                      expression: "form.cancelation_number"
                     }
                   })
                 ],
@@ -66446,9 +66525,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-	props: ['outbound', 'canManage'],
+	props: ['outbound', 'canManage', 'fee', 'number'],
 	data: function data() {
 		return {
 			loading: true,
@@ -66467,9 +66549,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			}, {
 				value: 'processing',
 				label: 'Processing'
-			}, {
-				value: 'delivering',
-				label: 'Delivering'
 			}, {
 				value: 'completed',
 				label: 'Completed'
@@ -66828,7 +66907,8 @@ var render = function() {
                       )
                     ]),
                     _vm._v(" "),
-                    _vm.outbound.process_status == "pending"
+                    _vm.outbound.process_status !== "complete" &&
+                    _vm.outbound.process_status !== "canceled"
                       ? _c(
                           "button",
                           {
@@ -66910,19 +66990,35 @@ var render = function() {
         },
         [
           _c("template", { slot: "header" }, [_vm._v("Cancel order")]),
-          _vm._v(
-            "\n\t\t\t\n\t\t\tAre you sure you want to cancel this outbound order?\n\n\t\t\t"
-          ),
-          _c("template", { slot: "footer" }, [
-            _c(
-              "button",
-              {
-                staticClass: "button is-danger",
-                on: { click: _vm.confirmCancel }
-              },
-              [_vm._v("Cancel")]
-            )
-          ])
+          _vm._v(" "),
+          _vm.outbound.process_status == "processing"
+            ? _c("p", [
+                _vm._v(
+                  "\n\t\t\t\tUnfortunately, we are already processing your order. "
+                ),
+                _c("br"),
+                _vm._v("\n\t\t\t\tPlease call "),
+                _c("b", [_vm._v(_vm._s(_vm.number))]),
+                _vm._v(" for assistance. A cancelation fee of "),
+                _c("b", [_vm._v("RM" + _vm._s(_vm.fee))]),
+                _vm._v(" might be charged.\n\t\t\t")
+              ])
+            : _c("p", [
+                _vm._v("Are you sure you want to cancel this outbound order?")
+              ]),
+          _vm._v(" "),
+          _vm.outbound.process_status !== "processing"
+            ? _c("template", { slot: "footer" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "button is-danger",
+                    on: { click: _vm.confirmCancel }
+                  },
+                  [_vm._v("Cancel")]
+                )
+              ])
+            : _vm._e()
         ],
         2
       ),

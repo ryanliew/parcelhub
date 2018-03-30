@@ -8,7 +8,11 @@
 					@include('components.side-menu')
 				</div>
 				<div class="column">
-					<outbounds-page can_manage="{{ auth()->user()->hasRole('admin') }}"></outbounds-page>
+					<outbounds-page 
+						can_manage="{{ auth()->user()->hasRole('admin') }}" 
+						fee="{{ Settings::get('cancelation_fee') }}" 
+						number="{{ Settings::get('cancelation_number') }}">
+					</outbounds-page>
 				</div>	
 			</div>
 		</section>

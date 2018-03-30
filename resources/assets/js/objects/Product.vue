@@ -112,7 +112,7 @@
 							<thead>
 								<tr>
 									<th>Order Date</th>
-									<th>Amount</th>
+									<th>Quantity</th>
 									<th>Status</th>
 								</tr>
 							</thead>

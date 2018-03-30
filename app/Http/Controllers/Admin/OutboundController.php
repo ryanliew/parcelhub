@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Lot;
 use App\Notifications\OutboundStatusUpdateNotification;
 use App\Outbound;
+use App\User;
 use Entrust;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;

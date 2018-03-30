@@ -33,6 +33,8 @@
 					:canManage="can_manage" 
 					@back="back()" 
 					@canceled="canceloutbound"
+					:fee="fee"
+					:number="number"
 					v-if="isViewing">
 			</outbound>
 		</transition>
@@ -245,7 +247,7 @@
 	import TableView from '../components/TableView.vue';
 
 	export default {
-		props: ['can_manage'],
+		props: ['can_manage', 'fee', 'number'],
 
 		components: { TableView },
 

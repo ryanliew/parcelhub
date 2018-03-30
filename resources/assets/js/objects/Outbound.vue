@@ -140,7 +140,7 @@
 							<p class="title" :class="statusClass">
 								{{ outbound.process_status | unslug | capitalize }}
 							</p>
-							<button class="button is-danger" v-if="outbound.process_status == 'pending'" @click="confirmation = true">Cancel order</button>
+							<button class="button is-danger" v-if="outbound.process_status !== 'complete' && outbound.process_status !== 'canceled' " @click="confirmation = true">Cancel order</button>
 						</div>
 
 					</div>
@@ -183,10 +183,13 @@
 
 		<modal :active="confirmation" @close="confirmation = false">
 			<template slot="header">Cancel order</template>
-			
-			Are you sure you want to cancel this outbound order?
+			<p v-if="outbound.process_status == 'processing'">
+				Unfortunately, we are already processing your order. <br>
+				Please call <b>{{ number }}</b> for assistance. A cancelation fee of <b>RM{{ fee }}</b> might be charged.
+			</p>
+			<p v-else>Are you sure you want to cancel this outbound order?</p>
 
-			<template slot="footer">
+			<template slot="footer" v-if="outbound.process_status !== 'processing'">
 				<button class="button is-danger" @click="confirmCancel">Cancel</button>
           	</template>
         </modal>
@@ -202,7 +205,7 @@
 
 <script>
 	export default {
-		props: ['outbound', 'canManage'],
+		props: ['outbound', 'canManage', 'fee', 'number'],
 		data() {
 			return {
 				loading: true,
@@ -223,10 +226,6 @@
 					{
 						value: 'processing',
 						label: 'Processing'
-					},
-					{
-						value: 'delivering',
-						label: 'Delivering'
 					},
 					{
 						value: 'completed',
