@@ -81,6 +81,14 @@ Vue.filter('formatPaymentStatus', function(value){
 
 Vue.filter('date', function(value){
 	if(moment(value).isValid())
-		return moment(value).format('L');
+		return moment(value).format('YYYY-MM-DD');
 	return 'N/A';
+});
+
+Vue.filter('convertToMeterCube', function(value){
+	return value / 1000000;
+});
+
+Vue.filter('convertToCentimeterCube', function(value){
+	return value * 1000000;
 });

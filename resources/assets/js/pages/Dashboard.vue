@@ -76,7 +76,7 @@
 									<tr v-for="lot in selectedPayment.lots">
 										<td v-text="lot.name"></td>
 										<td v-text="lot.price"></td>
-										<td v-text="lot.volume / 100"></td>
+										<td>{{ lot.volume | convertToMeterCube }}</td>
 									</tr>
 								</tbody>
 							</table>
@@ -249,7 +249,7 @@
 			outboundFields() {
 				let displayFields = [
 					{name: 'customer', sortField: 'users.name', title: 'Customer'},	
-					{name: 'created_at', sortField: 'created_at', title: 'Order date', callback: 'date'},
+					{name: 'created_at', sortField: 'created_at', title: 'Order date'},
 					{name: 'process_status', callback: 'outboundStatusLabel', title: 'Status', sortField: 'process_status'},
 					{name: '__component:outbounds-actions', title: 'Actions'}];
 

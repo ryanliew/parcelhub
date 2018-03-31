@@ -34,8 +34,27 @@
 									name="rental_duration"
 									type="number"
 									:editable="true"
-									:error="form.errors.get('rental_duration')"
-									:focus="true">
+									:error="form.errors.get('rental_duration')">
+						</text-input>
+		          	</div>
+		          	<div class="field">
+						<text-input v-model="form.cancelation_fee" :defaultValue="form.cancelation_fee" 
+									label="Cancelation fee" 
+									:required="true"
+									name="cancelation_fee"
+									type="number"
+									:editable="true"
+									:error="form.errors.get('cancelation_fee')">
+						</text-input>
+		          	</div>
+		          	<div class="field">
+						<text-input v-model="form.cancelation_number" :defaultValue="form.cancelation_number" 
+									label="Phone number for order cancelation" 
+									:required="true"
+									name="cancelation_number"
+									type="text"
+									:editable="true"
+									:error="form.errors.get('cancelation_number')">
 						</text-input>
 		          	</div>
 
@@ -66,6 +85,8 @@
 				form: new Form({
 					days_before_order: '',
 					rental_duration: '',
+					cancelation_fee: '',
+					cancelation_number: '',
 				}),
 				confirmSubmit: false
 			};
@@ -74,6 +95,8 @@
 		created() {
 			this.form.rental_duration = this.setting.rental_duration;
 			this.form.days_before_order = this.setting.days_before_order;
+			this.form.cancelation_fee = this.setting.cancelation_fee;
+			this.form.cancelation_number = this.setting.cancelation_number;
 		},
 
 		methods: {
@@ -89,9 +112,10 @@
 			},
 
 			onSuccess(data) {
-				console.log(data);
 				this.form.rental_duration = data.setting.rental_duration;
 				this.form.days_before_order = data.setting.days_before_order;
+				this.form.cancelation_fee = data.setting.cancelation_fee;
+				this.form.cancelation_number = data.setting.cancelation_number;
 			},
 
 			onFail() {

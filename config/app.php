@@ -171,6 +171,7 @@ return [
         Oriceon\Settings\SettingsServiceProvider::class,
         Zizaco\Entrust\EntrustServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
+        Bader\ClearOrdersBy\clearOrdersByServiceProvider::class,
 
         /*
          * Application Service Providers...

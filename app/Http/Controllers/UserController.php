@@ -30,6 +30,16 @@ class UserController extends Controller
     	return User::all();
     }
 
+    public function selector()
+    {
+        return User::where('verified', true)->withRole('user')->get();
+    }
+
+    public function lotSelector(User $user)
+    {
+        return $user->lots;
+    }
+
     public function show()
     {	
     	return auth()->user();

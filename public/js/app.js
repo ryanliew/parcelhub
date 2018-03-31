@@ -48355,8 +48355,16 @@ Vue.filter('formatPaymentStatus', function (value) {
 });
 
 Vue.filter('date', function (value) {
-	if (__WEBPACK_IMPORTED_MODULE_0_moment___default()(value).isValid()) return __WEBPACK_IMPORTED_MODULE_0_moment___default()(value).format('L');
+	if (__WEBPACK_IMPORTED_MODULE_0_moment___default()(value).isValid()) return __WEBPACK_IMPORTED_MODULE_0_moment___default()(value).format('YYYY-MM-DD');
 	return 'N/A';
+});
+
+Vue.filter('convertToMeterCube', function (value) {
+	return value / 1000000;
+});
+
+Vue.filter('convertToCentimeterCube', function (value) {
+	return value * 1000000;
 });
 
 /***/ }),
@@ -49749,7 +49757,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			return value ? value : "N/A";
 		},
 		convertToM: function convertToM(value) {
-			return value / 100;
+			return this.$options.filters.convertToMeterCube(value);
 		}
 	}
 });
@@ -56917,7 +56925,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			this.selectedCategory = data;
 			this.form.id = data.id;
 			this.form.name = data.name;
-			this.form.volume = data.volume / 100;
+			this.form.volume = this.$options.filters.convertToMeterCube(data.volume);
 			this.form.price = data.price;
 			this.dialogActive = true;
 		},
@@ -57620,7 +57628,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			this.selectedLot = data;
 			this.form.id = data.id;
 			this.form.name = data.name;
-			this.form.volume = data.volume / 100;
+			this.form.volume = this.$options.filters.convertToMeterCube(data.volume);
 			this.form.category = data.category_id;
 			this.form.price = data.price;
 			this.selectedCategory = {
@@ -57645,7 +57653,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			this.selectedCategory = data;
 			this.form.category = data.value;
 			if (!this.override) {
-				this.form.volume = data.volume / 100;
+				this.form.volume = this.$options.filters.convertToMeterCube(data.volume);
 				this.form.price = data.price;
 			}
 			this.form.errors.clear('price');
@@ -58887,6 +58895,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -58913,11 +58936,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 				sku: '',
 				picture: '',
 				is_dangerous: '',
-				is_fragile: ''
+				is_fragile: '',
+				user_id: ''
 			}),
 			deleteForm: new Form({}),
 			confirmSubmit: false,
-			confirmDelete: false
+			confirmDelete: false,
+			userOptions: [],
+			selectedUser: false
 		};
 	},
 	mounted: function mounted() {
@@ -58936,17 +58962,41 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 	methods: {
+		getUsers: function getUsers() {
+			var _this2 = this;
+
+			if (this.can_manage) axios.get('internal/users/selector').then(function (response) {
+				return _this2.setUsers(response);
+			});else axios.get('internal/user').then(function (response) {
+				return _this2.setUsers(response);
+			});
+		},
+		setUsers: function setUsers(data) {
+			if (this.can_manage) {
+				this.userOptions = data.data.map(function (user) {
+					var obj = {};
+					obj['label'] = user.name;
+					obj['value'] = user.id;
+					return obj;
+				});
+			} else {
+				this.form.user_id = data.data.id;
+			}
+		},
+		userUpdate: function userUpdate(data) {
+			this.form.user_id = data.value;
+		},
 		submit: function submit() {
 			this.confirmSubmit = true;
 		},
 		onSubmit: function onSubmit() {
-			var _this2 = this;
+			var _this3 = this;
 
 			this.confirmSubmit = false;
 			this.form.post(this.action).then(function (data) {
-				return _this2.onSuccess();
+				return _this3.onSuccess();
 			}).catch(function (error) {
-				return _this2.onFail(error);
+				return _this3.onFail(error);
 			});
 		},
 		onSuccess: function onSuccess() {
@@ -58964,6 +59014,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			this.form.length = data.length;
 			this.form.is_dangerous = data.is_dangerous;
 			this.form.is_fragile = data.is_fragile;
+			this.form.user_id = 1;
 
 			this.productImage = { name: data.picture, src: data.picture };
 
@@ -58974,13 +59025,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			this.confirmDelete = true;
 		},
 		onDelete: function onDelete() {
-			var _this3 = this;
+			var _this4 = this;
 
 			this.confirmDelete = false;
 			this.deleteForm.delete('/internal/products/' + this.selectedProduct.id).then(function (response) {
-				return _this3.onSuccess();
+				return _this4.onSuccess();
 			}).catch(function (error) {
-				return _this3.onFail(error);
+				return _this4.onFail(error);
 			});
 		},
 		view: function view(data) {
@@ -58998,6 +59049,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		},
 		modalOpen: function modalOpen() {
 			this.form.reset();
+			this.getUsers();
 			this.productImage = { name: 'No file selected' };
 			this.selectedProduct = '';
 			this.dialogActive = true;
@@ -59006,7 +59058,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 	computed: {
 		dialogTitle: function dialogTitle() {
-			return this.selectedProduct ? "Edit " + this.selectedProduct.name : "Create new product";
+			return this.selectedProduct ? "Edit " + this.selectedProduct.product_name : "Create new product";
 		},
 		action: function action() {
 			var action = this.selectedProduct ? "update" : "store";
@@ -59181,18 +59233,205 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-	props: ['product'],
+	props: ['product', 'can_manage'],
 	data: function data() {
-		return {};
+		return {
+			isEditing: false,
+			actualProduct: false,
+			confirmStockUpdate: false,
+			newLots: [],
+			form: new Form({
+				lot_products: [],
+				new_lot_products: []
+			}),
+			action: 'lots/products/update',
+			lotsOptions: ''
+		};
+	},
+	mounted: function mounted() {
+		this.actualProduct = this.product.lots.map(function (lot) {
+			var obj = {};
+			obj['lot_id'] = lot.id;
+			obj['quantity'] = lot.pivot.quantity;
+
+			return obj;
+		});
+
+		this.getLots();
 	},
 
 
 	methods: {
+		getLots: function getLots() {
+			var _this = this;
+
+			axios.get('/internal/user/' + this.product.user_id + '/lots').then(function (data) {
+				return _this.setLots(data);
+			});
+		},
+		setLots: function setLots(data) {
+			this.lotsOptions = data.data.map(function (lot) {
+				var obj = {};
+				obj['value'] = lot.id;
+				obj['label'] = lot.name;
+
+				return obj;
+			});
+		},
 		back: function back() {
 			this.$emit('back');
+		},
+		editQuantity: function editQuantity() {
+			this.isEditing = true;
+		},
+		submit: function submit() {
+			this.confirmStockUpdate = true;
+		},
+		onSubmit: function onSubmit() {
+			var _this2 = this;
+
+			this.newLots = _.filter(this.newLots, function (lot) {
+				return lot.lot;
+			});
+
+			this.form.lot_products = this.actualProduct.map(function (lot) {
+				var obj = {};
+				obj['lot_id'] = lot.lot_id;
+				obj['product_id'] = _this2.product.id;
+				obj['quantity'] = lot.quantity;
+				return obj;
+			});
+
+			var newlots = this.newLots.map(function (lot) {
+				var obj = {};
+				obj['lot_id'] = lot.lot.value;
+				obj['product_id'] = _this2.product.id;
+				obj['quantity'] = lot.quantity;
+
+				return obj;
+			});
+
+			newlots.forEach(function (lot) {
+				_this2.form.lot_products.push(lot);
+			});
+
+			this.confirmStockUpdate = false;
+
+			this.form.post(this.action).then(function (data) {
+				return _this2.onSuccess();
+			}).catch(function (error) {
+				return _this2.onFail(error);
+			});
+		},
+		onSuccess: function onSuccess() {
+			this.isEditing = false;
+			this.back();
+		},
+		onFail: function onFail() {},
+		onCancel: function onCancel() {
+			this.isEditing = false;
+		},
+		updateStock: function updateStock(event, index) {
+			this.actualProduct[index].quantity = event;
+		},
+		addLots: function addLots() {
+			this.newLots.push({ lot: false, quantity: 0 });
 		}
 	},
 
@@ -59217,34 +59456,243 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c("div", { staticClass: "card" }, [
-      _c("div", { staticClass: "card-header" }, [
-        _c("div", { staticClass: "card-header-title level" }, [
-          _c("div", { staticClass: "level-left" }, [
-            _c("div", { staticClass: "level-item" }, [
-              _c("span", {
-                domProps: { textContent: _vm._s(_vm.product.product_name) }
-              })
-            ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "level-right" }, [
-            _c("div", { staticClass: "level-item" }, [
-              _c(
-                "button",
-                {
-                  staticClass: "button is-primary",
-                  on: {
-                    click: function($event) {
-                      _vm.back()
+  return _c(
+    "div",
+    [
+      _c("div", { staticClass: "card" }, [
+        _c("div", { staticClass: "card-header" }, [
+          _c("div", { staticClass: "card-header-title level" }, [
+            _c("div", { staticClass: "level-left" }, [
+              _c("div", { staticClass: "level-item" }, [
+                _c("span", {
+                  domProps: { textContent: _vm._s(_vm.product.product_name) }
+                })
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "level-right" }, [
+              _c("div", { staticClass: "level-item" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "button is-primary",
+                    on: {
+                      click: function($event) {
+                        _vm.back()
+                      }
                     }
-                  }
+                  },
+                  [
+                    _c("i", { staticClass: "fa fa-arrow-circle-left" }),
+                    _vm._v(" "),
+                    _c("span", { staticClass: "pl-5" }, [
+                      _vm._v("Back to list")
+                    ])
+                  ]
+                )
+              ])
+            ])
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "card-content" }, [
+          _c("div", { staticClass: "columns product-display" }, [
+            _c("div", { staticClass: "column is-one-third" }, [
+              _c("figure", { staticClass: "image" }, [
+                _c("img", { attrs: { src: _vm.product.picture } })
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "column" }, [
+              _c("div", { staticClass: "columns" }, [
+                _c(
+                  "div",
+                  { staticClass: "column is-one-third" },
+                  [
+                    _c("text-input", {
+                      attrs: {
+                        defaultValue: _vm.product.sku,
+                        label: "SKU",
+                        editable: false
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("text-input", {
+                      attrs: {
+                        defaultValue: _vm.product.product_name,
+                        label: "Name",
+                        editable: false
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("text-input", {
+                      attrs: {
+                        defaultValue: _vm.product.volume,
+                        label: "Volume(cm³)",
+                        editable: false
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("text-input", {
+                      attrs: {
+                        defaultValue: _vm.product.user_name,
+                        label: "Owner",
+                        editable: false
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("p", { staticClass: "heading" }, [
+                      _vm._v("\n\t\t\t\t\t\t\t\t\tAttributes\n\t\t\t\t\t\t\t\t")
+                    ]),
+                    _vm._v(" "),
+                    _vm.product.is_dangerous
+                      ? _c("span", { staticClass: "tag is-danger" }, [
+                          _vm._v("Dangerous")
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.product.is_fragile
+                      ? _c("span", { staticClass: "tag is-warning" }, [
+                          _vm._v("Fragile")
+                        ])
+                      : _vm._e()
+                  ],
+                  1
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "column is-one-third has-text-centered" },
+                  [
+                    _c("p", { staticClass: "heading" }, [
+                      _vm._v("Stocks available")
+                    ]),
+                    _vm._v(" "),
+                    _c("p", {
+                      staticClass: "title",
+                      domProps: {
+                        textContent: _vm._s(_vm.product.total_quantity)
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("p", { staticClass: "heading" }, [
+                      _vm._v("Incoming stocks")
+                    ]),
+                    _vm._v(" "),
+                    _c("p", {
+                      staticClass: "title",
+                      domProps: {
+                        textContent: _vm._s(_vm.product.total_incoming_quantity)
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("p", { staticClass: "heading" }, [
+                      _vm._v("Outgoing stocks")
+                    ]),
+                    _vm._v(" "),
+                    _c("p", {
+                      staticClass: "title",
+                      domProps: {
+                        textContent: _vm._s(_vm.product.total_outgoing_quantity)
+                      }
+                    })
+                  ]
+                )
+              ])
+            ])
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "columns mt-15" }, [
+        _c("div", { staticClass: "column" }, [
+          _c("div", { staticClass: "card" }, [
+            _vm._m(0),
+            _vm._v(" "),
+            _c("div", { staticClass: "card-content" }, [
+              _c(
+                "table",
+                {
+                  staticClass: "table is-hoverable is-fullwidth is-responsive"
                 },
                 [
-                  _c("i", { staticClass: "fa fa-arrow-circle-left" }),
+                  _vm._m(1),
                   _vm._v(" "),
-                  _c("span", { staticClass: "pl-5" }, [_vm._v("Back to list")])
+                  _c(
+                    "tbody",
+                    _vm._l(_vm.sortedInbound, function(inbound) {
+                      return _c("tr", [
+                        _c("td", [
+                          _vm._v(_vm._s(_vm._f("date")(inbound.arrival_date)))
+                        ]),
+                        _vm._v(" "),
+                        _c("td", {
+                          domProps: {
+                            textContent: _vm._s(inbound.pivot.quantity)
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("td", {
+                          domProps: {
+                            innerHTML: _vm._s(
+                              _vm.$options.filters.formatInboundStatus(
+                                inbound.process_status
+                              )
+                            )
+                          }
+                        })
+                      ])
+                    })
+                  )
+                ]
+              )
+            ])
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "column" }, [
+          _c("div", { staticClass: "card" }, [
+            _vm._m(2),
+            _vm._v(" "),
+            _c("div", { staticClass: "card-content" }, [
+              _c(
+                "table",
+                {
+                  staticClass: "table is-hoverable is-fullwidth is-responsive"
+                },
+                [
+                  _vm._m(3),
+                  _vm._v(" "),
+                  _c(
+                    "tbody",
+                    _vm._l(_vm.sortedOutbound, function(outbound) {
+                      return _c("tr", [
+                        _c("td", {
+                          domProps: {
+                            textContent: _vm._s(
+                              _vm.$options.filters.date(outbound.created_at)
+                            )
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("td", {
+                          domProps: {
+                            textContent: _vm._s(outbound.pivot.quantity)
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("td", {
+                          domProps: {
+                            innerHTML: _vm._s(
+                              _vm.$options.filters.formatOutboundStatus(
+                                outbound.process_status
+                              )
+                            )
+                          }
+                        })
+                      ])
+                    })
+                  )
                 ]
               )
             ])
@@ -59252,206 +59700,223 @@ var render = function() {
         ])
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "card-content" }, [
-        _c("div", { staticClass: "columns product-display" }, [
-          _c("div", { staticClass: "column is-one-third" }, [
-            _c("figure", { staticClass: "image" }, [
-              _c("img", { attrs: { src: _vm.product.picture } })
-            ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "column" }, [
-            _c("div", { staticClass: "columns" }, [
-              _c(
-                "div",
-                { staticClass: "column is-one-third" },
-                [
-                  _c("text-input", {
-                    attrs: {
-                      defaultValue: _vm.product.sku,
-                      label: "SKU",
-                      editable: false
-                    }
-                  }),
-                  _vm._v(" "),
-                  _c("text-input", {
-                    attrs: {
-                      defaultValue: _vm.product.product_name,
-                      label: "Name",
-                      editable: false
-                    }
-                  }),
-                  _vm._v(" "),
-                  _c("text-input", {
-                    attrs: {
-                      defaultValue: _vm.product.volume,
-                      label: "Volume(cm³)",
-                      editable: false
-                    }
-                  }),
-                  _vm._v(" "),
-                  _c("text-input", {
-                    attrs: {
-                      defaultValue: _vm.product.user_name,
-                      label: "Owner",
-                      editable: false
-                    }
-                  }),
-                  _vm._v(" "),
-                  _c("p", { staticClass: "heading" }, [
-                    _vm._v("\n\t\t\t\t\t\t\t\tAttributes\n\t\t\t\t\t\t\t")
-                  ]),
-                  _vm._v(" "),
-                  _vm.product.is_dangerous
-                    ? _c("span", { staticClass: "tag is-danger" }, [
-                        _vm._v("Dangerous")
-                      ])
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _vm.product.is_fragile
-                    ? _c("span", { staticClass: "tag is-warning" }, [
-                        _vm._v("Fragile")
-                      ])
-                    : _vm._e()
-                ],
-                1
-              ),
+      _c("div", { staticClass: "card" }, [
+        _c("div", { staticClass: "card-header" }, [
+          _c("div", { staticClass: "card-header-title level" }, [
+            _vm._m(4),
+            _vm._v(" "),
+            _vm.can_manage
+              ? _c("div", { staticClass: "level-right" }, [
+                  _c("div", { staticClass: "level-item" }, [
+                    !_vm.isEditing
+                      ? _c(
+                          "button",
+                          {
+                            staticClass: "button is-primary",
+                            on: {
+                              click: function($event) {
+                                _vm.editQuantity()
+                              }
+                            }
+                          },
+                          [
+                            _c("i", { staticClass: "fa fa-edit" }),
+                            _vm._v(" "),
+                            _c("span", { staticClass: "pl-5" }, [
+                              _vm._v("Edit stock details")
+                            ])
+                          ]
+                        )
+                      : _c("div", [
+                          _c(
+                            "button",
+                            {
+                              staticClass: "button is-danger",
+                              on: {
+                                click: function($event) {
+                                  _vm.onCancel()
+                                }
+                              }
+                            },
+                            [
+                              _c("i", { staticClass: "fa fa-times" }),
+                              _vm._v(" "),
+                              _c("span", { staticClass: "pl-5" }, [
+                                _vm._v("Cancel")
+                              ])
+                            ]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "button",
+                            {
+                              staticClass: "button is-success",
+                              on: {
+                                click: function($event) {
+                                  _vm.submit()
+                                }
+                              }
+                            },
+                            [
+                              _c("i", { staticClass: "fa fa-check" }),
+                              _vm._v(" "),
+                              _c("span", { staticClass: "pl-5" }, [
+                                _vm._v("Confirm changes")
+                              ])
+                            ]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "button",
+                            {
+                              staticClass: "button is-primary",
+                              on: {
+                                click: function($event) {
+                                  _vm.addLots()
+                                }
+                              }
+                            },
+                            [
+                              _c("i", { staticClass: "fa fa-plus" }),
+                              _vm._v(" "),
+                              _c("span", { staticClass: "pl-5" }, [
+                                _vm._v("Add lots")
+                              ])
+                            ]
+                          )
+                        ])
+                  ])
+                ])
+              : _vm._e()
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "card-content" }, [
+          _c(
+            "table",
+            { staticClass: "table is-responsive is-fullwidth is-hoverable" },
+            [
+              _vm._m(5),
               _vm._v(" "),
               _c(
-                "div",
-                { staticClass: "column is-one-third has-text-centered" },
+                "tbody",
                 [
-                  _c("p", { staticClass: "heading" }, [
-                    _vm._v("Stocks available")
-                  ]),
-                  _vm._v(" "),
-                  _c("p", {
-                    staticClass: "title",
-                    domProps: {
-                      textContent: _vm._s(_vm.product.total_quantity)
-                    }
-                  }),
-                  _vm._v(" "),
-                  _c("p", { staticClass: "heading" }, [_vm._v("Height(cm)")]),
-                  _vm._v(" "),
-                  _c("p", {
-                    staticClass: "title",
-                    domProps: { textContent: _vm._s(_vm.product.height) }
-                  }),
-                  _vm._v(" "),
-                  _c("p", { staticClass: "heading" }, [_vm._v("Width(cm)")]),
-                  _vm._v(" "),
-                  _c("p", {
-                    staticClass: "title",
-                    domProps: { textContent: _vm._s(_vm.product.width) }
-                  }),
-                  _vm._v(" "),
-                  _c("p", { staticClass: "heading" }, [_vm._v("Length(cm)")]),
-                  _vm._v(" "),
-                  _c("p", {
-                    staticClass: "title",
-                    domProps: { textContent: _vm._s(_vm.product.length) }
-                  })
-                ]
-              )
-            ])
-          ])
-        ])
-      ])
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "columns mt-15" }, [
-      _c("div", { staticClass: "column" }, [
-        _c("div", { staticClass: "card" }, [
-          _vm._m(0),
-          _vm._v(" "),
-          _c("div", { staticClass: "card-content" }, [
-            _c(
-              "table",
-              { staticClass: "table is-hoverable is-fullwidth is-responsive" },
-              [
-                _vm._m(1),
-                _vm._v(" "),
-                _c(
-                  "tbody",
-                  _vm._l(_vm.sortedInbound, function(inbound) {
+                  _vm._l(_vm.product.lots, function(lot, index) {
                     return _c("tr", [
-                      _c("td", [
-                        _vm._v(_vm._s(_vm._f("date")(inbound.arrival_date)))
-                      ]),
+                      _c("td", [_vm._v(_vm._s(lot.name))]),
                       _vm._v(" "),
-                      _c("td", {
-                        domProps: {
-                          textContent: _vm._s(inbound.pivot.quantity)
-                        }
-                      }),
+                      _c(
+                        "td",
+                        [
+                          _c("text-input", {
+                            attrs: {
+                              defaultValue:
+                                _vm.product.lots[index].pivot.quantity,
+                              editable: _vm.isEditing,
+                              name:
+                                "lot-quantity-" + _vm.product.lots[index].id,
+                              hideLabel: true,
+                              required: true
+                            },
+                            on: {
+                              input: function($event) {
+                                _vm.updateStock($event, index)
+                              }
+                            }
+                          })
+                        ],
+                        1
+                      ),
                       _vm._v(" "),
-                      _c("td", {
-                        domProps: {
-                          innerHTML: _vm._s(
-                            _vm.$options.filters.formatInboundStatus(
-                              inbound.process_status
-                            )
-                          )
-                        }
-                      })
+                      _c("td", [_vm._v(_vm._s(lot.pivot.incoming_quantity))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(lot.pivot.outgoing_product))])
+                    ])
+                  }),
+                  _vm._v(" "),
+                  _vm._l(_vm.newLots, function(lot, index) {
+                    return _c("tr", [
+                      _c(
+                        "td",
+                        [
+                          _c("selector-input", {
+                            attrs: {
+                              hideLabel: true,
+                              potentialData: _vm.lotsOptions,
+                              editable: true,
+                              placeholder: "Select lot"
+                            },
+                            model: {
+                              value: _vm.newLots[index].lot,
+                              callback: function($$v) {
+                                _vm.$set(_vm.newLots[index], "lot", $$v)
+                              },
+                              expression: "newLots[index].lot"
+                            }
+                          })
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "td",
+                        [
+                          _vm.newLots[index]
+                            ? _c("text-input", {
+                                attrs: {
+                                  editable: true,
+                                  name: "quantity",
+                                  hideLabel: true,
+                                  required: true,
+                                  type: "number"
+                                },
+                                model: {
+                                  value: _vm.newLots[index].quantity,
+                                  callback: function($$v) {
+                                    _vm.$set(
+                                      _vm.newLots[index],
+                                      "quantity",
+                                      $$v
+                                    )
+                                  },
+                                  expression: "newLots[index].quantity"
+                                }
+                              })
+                            : _vm._e()
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c("td", [_vm._v("-")]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v("-")])
                     ])
                   })
-                )
-              ]
-            )
-          ])
+                ],
+                2
+              )
+            ]
+          )
         ])
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "column" }, [
-        _c("div", { staticClass: "card" }, [
-          _vm._m(2),
-          _vm._v(" "),
-          _c("div", { staticClass: "card-content" }, [
-            _c(
-              "table",
-              { staticClass: "table is-hoverable is-fullwidth is-responsive" },
-              [
-                _vm._m(3),
-                _vm._v(" "),
-                _c(
-                  "tbody",
-                  _vm._l(_vm.sortedOutbound, function(outbound) {
-                    return _c("tr", [
-                      _c("td", {
-                        domProps: {
-                          textContent: _vm._s(
-                            _vm.$options.filters.date(outbound.created_at)
-                          )
-                        }
-                      }),
-                      _vm._v(" "),
-                      _c("td", {
-                        domProps: {
-                          textContent: _vm._s(outbound.pivot.quantity)
-                        }
-                      }),
-                      _vm._v(" "),
-                      _c("td", {
-                        domProps: {
-                          innerHTML: _vm._s(
-                            _vm.$options.filters.formatOutboundStatus(
-                              outbound.process_status
-                            )
-                          )
-                        }
-                      })
-                    ])
-                  })
-                )
-              ]
-            )
-          ])
-        ])
-      ])
-    ])
-  ])
+      _c("confirmation", {
+        attrs: {
+          isConfirming: _vm.confirmStockUpdate,
+          title: "Confirmation",
+          message:
+            "Confirm updating stock? Rows without a lot selected will be removed."
+        },
+        on: {
+          close: function($event) {
+            _vm.confirmStockUpdate = false
+          },
+          confirm: _vm.onSubmit
+        }
+      })
+    ],
+    1
+  )
 }
 var staticRenderFns = [
   function() {
@@ -59462,7 +59927,9 @@ var staticRenderFns = [
       _c("div", { staticClass: "card-header-title level" }, [
         _c("div", { staticClass: "level-left" }, [
           _c("div", { staticClass: "level-item" }, [
-            _vm._v("\n\t\t\t\t\t\t\t\tRecent inbound history\n\t\t\t\t\t\t\t")
+            _vm._v(
+              "\n\t\t\t\t\t\t\t\t\tRecent inbound history\n\t\t\t\t\t\t\t\t"
+            )
           ])
         ])
       ])
@@ -59490,7 +59957,9 @@ var staticRenderFns = [
       _c("div", { staticClass: "card-header-title level" }, [
         _c("div", { staticClass: "level-left" }, [
           _c("div", { staticClass: "level-item" }, [
-            _vm._v("\n\t\t\t\t\t\t\t\tRecent outbound history\n\t\t\t\t\t\t\t")
+            _vm._v(
+              "\n\t\t\t\t\t\t\t\t\tRecent outbound history\n\t\t\t\t\t\t\t\t"
+            )
           ])
         ])
       ])
@@ -59504,10 +59973,34 @@ var staticRenderFns = [
       _c("tr", [
         _c("th", [_vm._v("Order Date")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Amount")]),
+        _c("th", [_vm._v("Quantity")]),
         _vm._v(" "),
         _c("th", [_vm._v("Status")])
       ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "level-left" }, [
+      _c("div", { staticClass: "level-item" }, [
+        _c("span", [_vm._v("Stock details")])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("th", [_vm._v("Lot")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Quantity")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Incoming quantity")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Outgoing quantity")])
     ])
   }
 ]
@@ -59545,30 +60038,28 @@ var render = function() {
                       ])
                     ]),
                     _vm._v(" "),
-                    !_vm.can_manage
-                      ? _c("div", { staticClass: "level-right" }, [
-                          _c("div", { staticClass: "level-item" }, [
-                            _c(
-                              "button",
-                              {
-                                staticClass: "button is-primary",
-                                on: {
-                                  click: function($event) {
-                                    _vm.modalOpen()
-                                  }
-                                }
-                              },
-                              [
-                                _c("i", { staticClass: "fa fa-plus-circle" }),
-                                _vm._v(" "),
-                                _c("span", { staticClass: "pl-5" }, [
-                                  _vm._v("Create new product")
-                                ])
-                              ]
-                            )
-                          ])
-                        ])
-                      : _vm._e()
+                    _c("div", { staticClass: "level-right" }, [
+                      _c("div", { staticClass: "level-item" }, [
+                        _c(
+                          "button",
+                          {
+                            staticClass: "button is-primary",
+                            on: {
+                              click: function($event) {
+                                _vm.modalOpen()
+                              }
+                            }
+                          },
+                          [
+                            _c("i", { staticClass: "fa fa-plus-circle" }),
+                            _vm._v(" "),
+                            _c("span", { staticClass: "pl-5" }, [
+                              _vm._v("Create new product")
+                            ])
+                          ]
+                        )
+                      ])
+                    ])
                   ])
                 ]),
                 _vm._v(" "),
@@ -59596,7 +60087,10 @@ var render = function() {
                 )
               ])
             : _c("product", {
-                attrs: { product: _vm.selectedProduct },
+                attrs: {
+                  product: _vm.selectedProduct,
+                  can_manage: _vm.can_manage
+                },
                 on: { back: _vm.back }
               })
         ],
@@ -59855,7 +60349,41 @@ var render = function() {
                   })
                 ],
                 1
-              )
+              ),
+              _vm._v(" "),
+              _vm.can_manage && !_vm.selectedProduct
+                ? _c(
+                    "div",
+                    { staticClass: "field" },
+                    [
+                      _c("selector-input", {
+                        attrs: {
+                          defaultData: _vm.selectedUser,
+                          label: "Product owner",
+                          name: "user_id",
+                          required: true,
+                          potentialData: _vm.userOptions,
+                          editable: true,
+                          placeholder: "Select product owner",
+                          error: _vm.form.errors.get("user_id")
+                        },
+                        on: {
+                          input: function($event) {
+                            _vm.userUpdate($event)
+                          }
+                        },
+                        model: {
+                          value: _vm.selectedUser,
+                          callback: function($$v) {
+                            _vm.selectedUser = $$v
+                          },
+                          expression: "selectedUser"
+                        }
+                      })
+                    ],
+                    1
+                  )
+                : _vm._e()
             ]
           ),
           _vm._v(" "),
@@ -59892,7 +60420,7 @@ var render = function() {
         },
         on: {
           close: function($event) {
-            _vm.confirmSubmit = false
+            _vm.confirmDelete = false
           },
           confirm: _vm.onDelete
         }
@@ -60247,7 +60775,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			return this.form.submitting ? 'is-loading' : '';
 		},
 		fields: function fields() {
-			var displayFields = [{ name: 'id', title: '#' }, { name: 'arrival_date', sortField: 'date', title: 'Arrival date', callback: 'date' }, { name: 'total_carton', sortField: 'carton', title: 'Total carton' }, { name: 'process_status', callback: 'inboundStatusLabel', title: 'Status', sortField: 'process_status' }, { name: '__component:inbounds-actions', title: 'Actions' }];
+			var displayFields = [{ name: 'id', title: '#' }, { name: 'arrival_date', sortField: 'arrival_date', title: 'Arrival date', callback: 'date' }, { name: 'total_carton', sortField: 'total_carton', title: 'Total carton' }, { name: 'process_status', callback: 'inboundStatusLabel', title: 'Status', sortField: 'process_status' }, { name: '__component:inbounds-actions', title: 'Actions' }];
 
 			if (this.can_manage) {
 				displayFields.splice(1, 0, { name: 'customer', sortField: 'users.name', title: 'Customer' });
@@ -61313,10 +61841,11 @@ var render = function() {
                                       _vm._v(
                                         "\n\t\t\t\t\t\t\t\t\t" +
                                           _vm._s(
-                                            _vm.productRows[index].product
-                                              .volume *
-                                              _vm.productRows[index].quantity /
-                                              100
+                                            _vm._f("convertToMeterCube")(
+                                              _vm.productRows[index].product
+                                                .volume *
+                                                _vm.productRows[index].quantity
+                                            )
                                           ) +
                                           "\n\t\t\t\t\t\t\t\t"
                                       )
@@ -61690,11 +62219,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-	props: ['can_manage'],
+	props: ['can_manage', 'fee', 'number'],
 
 	components: { TableView: __WEBPACK_IMPORTED_MODULE_0__components_TableView_vue___default.a },
 
@@ -61955,7 +62486,9 @@ var render = function() {
             ? _c("outbound", {
                 attrs: {
                   outbound: _vm.selectedoutbound,
-                  canManage: _vm.can_manage
+                  canManage: _vm.can_manage,
+                  fee: _vm.fee,
+                  number: _vm.number
                 },
                 on: {
                   back: function($event) {
@@ -63092,7 +63625,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 					return parseInt(category.quantity) * category.price;
 				});
 				this.totalVolume = _.sumBy(this.categories, function (category) {
-					return parseInt(category.quantity) * category.volume / 100;
+					return this.$options.filters.convertToMeterCube(parseInt(category.quantity) * category.volume);
 				});
 				this.totalLots = _.sumBy(this.categories, function (category) {
 					return parseInt(category.quantity);
@@ -63557,7 +64090,13 @@ var render = function() {
                                       ]),
                                       _vm._v(" "),
                                       _c("td", [
-                                        _vm._v(_vm._s(category.volume / 100))
+                                        _vm._v(
+                                          _vm._s(
+                                            _vm._f("convertToMeterCube")(
+                                              category.volume
+                                            )
+                                          )
+                                        )
                                       ]),
                                       _vm._v(" "),
                                       _vm.availableLots(category).length > 0
@@ -63825,11 +64364,15 @@ var render = function() {
                                       }
                                     }),
                                     _vm._v(" "),
-                                    _c("td", {
-                                      domProps: {
-                                        textContent: _vm._s(lot.volume / 100)
-                                      }
-                                    })
+                                    _c("td", [
+                                      _vm._v(
+                                        _vm._s(
+                                          _vm._f("convertToMeterCube")(
+                                            lot.volume
+                                          )
+                                        )
+                                      )
+                                    ])
                                   ])
                                 })
                               )
@@ -64978,7 +65521,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			return displayFields;
 		},
 		outboundFields: function outboundFields() {
-			var displayFields = [{ name: 'customer', sortField: 'users.name', title: 'Customer' }, { name: 'created_at', sortField: 'created_at', title: 'Order date', callback: 'date' }, { name: 'process_status', callback: 'outboundStatusLabel', title: 'Status', sortField: 'process_status' }, { name: '__component:outbounds-actions', title: 'Actions' }];
+			var displayFields = [{ name: 'customer', sortField: 'users.name', title: 'Customer' }, { name: 'created_at', sortField: 'created_at', title: 'Order date' }, { name: 'process_status', callback: 'outboundStatusLabel', title: 'Status', sortField: 'process_status' }, { name: '__component:outbounds-actions', title: 'Actions' }];
 
 			return displayFields;
 		},
@@ -65178,13 +65721,15 @@ var render = function() {
                                             }
                                           }),
                                           _vm._v(" "),
-                                          _c("td", {
-                                            domProps: {
-                                              textContent: _vm._s(
-                                                lot.volume / 100
+                                          _c("td", [
+                                            _vm._v(
+                                              _vm._s(
+                                                _vm._f("convertToMeterCube")(
+                                                  lot.volume
+                                                )
                                               )
-                                            }
-                                          })
+                                            )
+                                          ])
                                         ])
                                       })
                                     )
@@ -65453,6 +65998,25 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -65465,7 +66029,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		return {
 			form: new Form({
 				days_before_order: '',
-				rental_duration: ''
+				rental_duration: '',
+				cancelation_fee: '',
+				cancelation_number: ''
 			}),
 			confirmSubmit: false
 		};
@@ -65473,6 +66039,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 	created: function created() {
 		this.form.rental_duration = this.setting.rental_duration;
 		this.form.days_before_order = this.setting.days_before_order;
+		this.form.cancelation_fee = this.setting.cancelation_fee;
+		this.form.cancelation_number = this.setting.cancelation_number;
 	},
 
 
@@ -65491,9 +66059,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			});
 		},
 		onSuccess: function onSuccess(data) {
-			console.log(data);
 			this.form.rental_duration = data.setting.rental_duration;
 			this.form.days_before_order = data.setting.days_before_order;
+			this.form.cancelation_fee = data.setting.cancelation_fee;
+			this.form.cancelation_number = data.setting.cancelation_number;
 		},
 		onFail: function onFail() {}
 	},
@@ -65585,8 +66154,7 @@ var render = function() {
                       name: "rental_duration",
                       type: "number",
                       editable: true,
-                      error: _vm.form.errors.get("rental_duration"),
-                      focus: true
+                      error: _vm.form.errors.get("rental_duration")
                     },
                     model: {
                       value: _vm.form.rental_duration,
@@ -65594,6 +66162,58 @@ var render = function() {
                         _vm.$set(_vm.form, "rental_duration", $$v)
                       },
                       expression: "form.rental_duration"
+                    }
+                  })
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "field" },
+                [
+                  _c("text-input", {
+                    attrs: {
+                      defaultValue: _vm.form.cancelation_fee,
+                      label: "Cancelation fee",
+                      required: true,
+                      name: "cancelation_fee",
+                      type: "number",
+                      editable: true,
+                      error: _vm.form.errors.get("cancelation_fee")
+                    },
+                    model: {
+                      value: _vm.form.cancelation_fee,
+                      callback: function($$v) {
+                        _vm.$set(_vm.form, "cancelation_fee", $$v)
+                      },
+                      expression: "form.cancelation_fee"
+                    }
+                  })
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "field" },
+                [
+                  _c("text-input", {
+                    attrs: {
+                      defaultValue: _vm.form.cancelation_number,
+                      label: "Phone number for order cancelation",
+                      required: true,
+                      name: "cancelation_number",
+                      type: "text",
+                      editable: true,
+                      error: _vm.form.errors.get("cancelation_number")
+                    },
+                    model: {
+                      value: _vm.form.cancelation_number,
+                      callback: function($$v) {
+                        _vm.$set(_vm.form, "cancelation_number", $$v)
+                      },
+                      expression: "form.cancelation_number"
                     }
                   })
                 ],
@@ -65905,9 +66525,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-	props: ['outbound', 'canManage'],
+	props: ['outbound', 'canManage', 'fee', 'number'],
 	data: function data() {
 		return {
 			loading: true,
@@ -65926,9 +66549,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			}, {
 				value: 'processing',
 				label: 'Processing'
-			}, {
-				value: 'delivering',
-				label: 'Delivering'
 			}, {
 				value: 'completed',
 				label: 'Completed'
@@ -66287,7 +66907,8 @@ var render = function() {
                       )
                     ]),
                     _vm._v(" "),
-                    _vm.outbound.process_status == "pending"
+                    _vm.outbound.process_status !== "complete" &&
+                    _vm.outbound.process_status !== "canceled"
                       ? _c(
                           "button",
                           {
@@ -66369,19 +66990,35 @@ var render = function() {
         },
         [
           _c("template", { slot: "header" }, [_vm._v("Cancel order")]),
-          _vm._v(
-            "\n\t\t\t\n\t\t\tAre you sure you want to cancel this outbound order?\n\n\t\t\t"
-          ),
-          _c("template", { slot: "footer" }, [
-            _c(
-              "button",
-              {
-                staticClass: "button is-danger",
-                on: { click: _vm.confirmCancel }
-              },
-              [_vm._v("Cancel")]
-            )
-          ])
+          _vm._v(" "),
+          _vm.outbound.process_status == "processing"
+            ? _c("p", [
+                _vm._v(
+                  "\n\t\t\t\tUnfortunately, we are already processing your order. "
+                ),
+                _c("br"),
+                _vm._v("\n\t\t\t\tPlease call "),
+                _c("b", [_vm._v(_vm._s(_vm.number))]),
+                _vm._v(" for assistance. A cancelation fee of "),
+                _c("b", [_vm._v("RM" + _vm._s(_vm.fee))]),
+                _vm._v(" might be charged.\n\t\t\t")
+              ])
+            : _c("p", [
+                _vm._v("Are you sure you want to cancel this outbound order?")
+              ]),
+          _vm._v(" "),
+          _vm.outbound.process_status !== "processing"
+            ? _c("template", { slot: "footer" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "button is-danger",
+                    on: { click: _vm.confirmCancel }
+                  },
+                  [_vm._v("Cancel")]
+                )
+              ])
+            : _vm._e()
         ],
         2
       ),

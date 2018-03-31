@@ -3,7 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-
+use App\Utilities;
 /**
  * App\Category
  *
@@ -34,6 +34,6 @@ class Category extends Model
 
     public function setVolumeAttribute($value)
     {
-    	return $this->attributes['volume'] = $value * 100;
+    	return $this->attributes['volume'] = Utilities::convertMeterCubeToCentimeterCube($value);
     }
 }

@@ -43,6 +43,8 @@ Route::get('users', 'UserController@page')->name('users');
 Route::get('profile', 'UserController@page')->name('profile');
 Route::get('dashboard', 'AdminController@page')->name('dashboard');
 
+Route::post('lots/products/update', 'LotController@editStock');
+
 /* Route for Socialite authentication */
 Route::group(['prefix' => 'auth', 'as' => 'auth.social.'], function() {
     Route::get('social/{provider}', ['as' => 'redirect', 'uses'=> 'Auth\SocialController@redirectToProvider']);
@@ -92,8 +94,10 @@ Route::group(['prefix' => 'internal'], function() {
 	Route::get('payments/pending', 'PaymentController@indexPending');
 	Route::get('payment/{lot}', 'PaymentController@show');
 	Route::get('users/list', 'UserController@page');
+	Route::get('users/selector', 'UserController@selector');
 	Route::get('users', 'UserController@index');
 	Route::get('user', 'UserController@show');
+	Route::get('user/{user}/lots', 'UserController@lotSelector');
 	Route::delete('products/{product}', 'ProductController@destroy');
 });
 

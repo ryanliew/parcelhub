@@ -70,12 +70,16 @@ class SettingsController extends Controller
     public function update(Request $request)
     {
         $this->validate($request, [
-            'days_before_order' => 'required',
-            'rental_duration' => 'required'
+            'days_before_order' => 'required|integer',
+            'rental_duration' => 'required|integer',
+            'cancelation_number' => 'required',
+            'cancelation_fee' => 'required|integer'
         ]);
 
         Settings::set('rental_duration', $request->get('rental_duration'));
         Settings::set('days_before_order', $request->get('days_before_order'));
+        Settings::set('cancelation_number', $request->get('cancelation_number'));
+        Settings::set('cancelation_fee', $request->get('cancelation_fee'));
 
         if($request->wantsJson())
         {

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Lot;
 use App\Notifications\OutboundStatusUpdateNotification;
 use App\Outbound;
+use App\User;
 use Entrust;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -102,7 +103,7 @@ class OutboundController extends Controller
             }
         }
 
-        if($request->process_status == 'completed') {
+        if($request->process_status == 'completed' || $request->process_status == 'delivered') {
             // Remove the lot product and its quantity
             foreach($outbound->products as $product)
             {
@@ -111,7 +112,9 @@ class OutboundController extends Controller
                     return response(json_encode(array('process_status' => ['We do not have enough ' . $product->name . ' in the warehouse.'])), 422);
                 }                
             }
-
+        }
+        
+        if($request->process_status == 'completed') {
             foreach($outbound->products as $product) {
                 $lot = Lot::find($product->pivot->lot_id);
                 $lot_product = $lot->products()->where('product_id', $product->id)->first();

@@ -9,7 +9,7 @@
 								Products
 							</div>
 						</div>
-						<div class="level-right" v-if="!can_manage">
+						<div class="level-right">
 							<div class="level-item">
 								<button class="button is-primary" @click="modalOpen()">
 									<i class="fa fa-plus-circle"></i>
@@ -30,7 +30,8 @@
 				</div>
 			</div>
 			<product :product="selectedProduct" v-else
-					@back="back">
+					@back="back"
+					:can_manage="can_manage">
 			</product>
 		</transition>
 
@@ -128,6 +129,20 @@
 			    				:error="form.errors.get('picture')">
 			    	</image-input>
 			    </div>
+
+			    <div class="field" v-if="can_manage && !selectedProduct">
+					<selector-input v-model="selectedUser" :defaultData="selectedUser"
+							label="Product owner"
+							name="user_id"
+							:required="true"
+							:potentialData="userOptions"
+							@input="userUpdate($event)"
+							:editable="true"
+							placeholder="Select product owner"
+							:error="form.errors.get('user_id')">
+
+					</selector-input>
+			    </div>
           	</form>
 
           	<template slot="footer">
@@ -145,7 +160,7 @@
         <confirmation :isConfirming="confirmDelete"
         				title="Confirmation"
         				message="Confirm delete product?"
-        				@close="confirmSubmit = false"
+        				@close="confirmDelete = false"
         				@confirm="onDelete">
         </confirmation>
 	</div>
@@ -178,12 +193,15 @@
 					picture: '',
 					is_dangerous: '',
 					is_fragile: '',
+					user_id: '',
 				}),
 				deleteForm: new Form({
 
 				}),
 				confirmSubmit: false,
-				confirmDelete: false
+				confirmDelete: false,
+				userOptions: [],
+				selectedUser: false
 			};
 		},
 
@@ -194,7 +212,33 @@
 		},
 
 		methods: {
-			
+			getUsers() {
+				if(this.can_manage)
+					axios.get('internal/users/selector')
+						.then(response => this.setUsers(response));
+				else
+					axios.get('internal/user')
+						.then(response => this.setUsers(response));
+			},
+
+			setUsers(data) {
+				if(this.can_manage) {
+					this.userOptions = data.data.map(user => {
+						let obj = {};
+						obj['label'] = user.name;
+						obj['value'] = user.id;
+						return obj;
+					});
+				}
+				else {
+					this.form.user_id = data.data.id;
+				}
+			},
+
+			userUpdate(data) {
+				this.form.user_id = data.value;
+			},
+
 			submit() {
 				this.confirmSubmit = true;
 			},
@@ -225,6 +269,7 @@
 				this.form.length = data.length;
 				this.form.is_dangerous = data.is_dangerous;
 				this.form.is_fragile = data.is_fragile;
+				this.form.user_id = 1;
 
 				this.productImage = {name: data.picture, src: data.picture};
 				
@@ -261,6 +306,7 @@
 
 			modalOpen() {
 				this.form.reset();
+				this.getUsers();
 				this.productImage = {name: 'No file selected'};
 				this.selectedProduct = '';
 				this.dialogActive = true;
@@ -270,7 +316,7 @@
 		computed: {
 			dialogTitle() {
 				return this.selectedProduct
-						? "Edit " + this.selectedProduct.name
+						? "Edit " + this.selectedProduct.product_name
 						: "Create new product";
 			},
 
