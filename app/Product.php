@@ -49,6 +49,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read mixed $total_quantity
  * @property-read mixed $outbound_product_lot
  * @property-read mixed $owner_name
+ * @property-read mixed $total_incoming_quantity
+ * @property-read mixed $total_outgoing_quantity
+ * @property-read mixed $total_usable_quantity
  */
 class Product extends Model
 {

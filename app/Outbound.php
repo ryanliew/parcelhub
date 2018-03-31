@@ -54,6 +54,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Outbound whereRecipientPhone($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Outbound whereRecipientPostcode($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Outbound whereRecipientState($value)
+ * @property string|null $invoice_slip
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Outbound whereInvoiceSlip($value)
  */
 class Outbound extends Model
 {

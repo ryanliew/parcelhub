@@ -129,7 +129,7 @@ class OutboundController extends Controller
     public function report($id)
     {
         $outbound = Outbound::find($id);
-
+        
         $pdf = PDF::loadView('outbound.report', compact('outbound'));
 
         return $pdf->setPaper('A4')->download('outbound-report.pdf');
@@ -153,6 +153,7 @@ class OutboundController extends Controller
             'courier_id' => 'required',
             'amount_insured' => 'required_if:insurance,==,1|numeric|min:0',
             'outbound_products' => 'required',
+            'invoice_slip' => 'nullable|images',
         ]);
 
         if(empty(auth()->user()->address))
@@ -176,6 +177,7 @@ class OutboundController extends Controller
 
             $outbound = new Outbound($request->all());
             $outbound->insurance = request()->has('insurance');
+            $outbound->invoice_slip = $request->hasFile('invoice_slip') ? $request->file('invoice_slip')->store('public') : null;
             $outbound->amount_insured = $outbound->insurance ? request()->amount_insured : 0;
             $outbound->user_id = $user->id;
             $outbound->status = 'true';

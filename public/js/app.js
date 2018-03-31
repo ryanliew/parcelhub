@@ -63626,7 +63626,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 				});
 				this.totalVolume = _.sumBy(this.categories, function (category) {
 					return this.$options.filters.convertToMeterCube(parseInt(category.quantity) * category.volume);
-				});
+				}.bind(this));
 				this.totalLots = _.sumBy(this.categories, function (category) {
 					return parseInt(category.quantity);
 				});
