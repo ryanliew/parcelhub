@@ -39,7 +39,7 @@ $factory->define(App\Category::class, function (Faker\Generator $faker) {
 
     return [
         'name' => $faker->randomElement($categories),
-        'volume' => $faker->numberBetween($min = 10000, $max = 100000),
+        'volume' => $faker->numberBetween($min = 100, $max = 9000),
         'status' => 'true',
     ];
 });
@@ -65,7 +65,7 @@ $factory->define(App\Lot::class, function (Faker\Generator $faker) {
         'volume' => $category->volume,
         'left_volume' => $category->volume,
         'rental_duration' => $faker->numberBetween($min = 90, $max = 200),
-        'expired_at' => 'SKU' . $faker->randomNumber($nbDigits = 4),
+        'expired_at' => null,
         'status' => 'true',
     ];
 });
