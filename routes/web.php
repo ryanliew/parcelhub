@@ -41,6 +41,7 @@ Route::get('outbounds', 'OutboundController@page')->name('outbounds');
 Route::get('purchase', 'PaymentController@page')->name('payment');
 Route::get('users', 'UserController@page')->name('users');
 Route::get('profile', 'UserController@page')->name('profile');
+Route::get('customers', 'CustomerController@page')->name('customers');
 Route::get('dashboard', 'AdminController@page')->name('dashboard');
 
 Route::post('lots/products/update', 'LotController@editStock');
@@ -77,6 +78,11 @@ Route::group(['prefix' => 'product'], function() {
 	Route::post('update', 'ProductController@update');
 });
 
+Route::group(['prefix' => 'customer'], function() {
+	Route::post('store', 'CustomerController@store');
+	Route::post('update', 'CustomerController@update');
+});
+
 Route::group(['prefix' => 'internal'], function() {
 	Route::get('categories', 'CategoryController@index');
 	Route::get('lots', 'LotController@index');
@@ -98,6 +104,7 @@ Route::group(['prefix' => 'internal'], function() {
 	Route::get('users', 'UserController@index');
 	Route::get('user', 'UserController@show');
 	Route::get('user/{user}/lots', 'UserController@lotSelector');
+	Route::get('customers', 'CustomerController@index');
 	Route::delete('products/{product}', 'ProductController@destroy');
 });
 

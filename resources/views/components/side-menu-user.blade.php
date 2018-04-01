@@ -11,6 +11,11 @@
             </a>
         </li>
         <li>
+            <a @if( url()->current() == route('customers') ) class="is-active" @endif href="{{ route('customers') }}">
+                My customers
+            </a>
+        </li>
+        <li>
             <a @if( url()->current() == route('lots') ) class="is-active" @endif href="{{ route('lots') }}">
                 My lots
             </a>
