@@ -177,7 +177,8 @@ class OutboundController extends Controller
 
             //$outbound = new Outbound($request->all());
 
-            $user->customers()->updateOrCreate(['id' => $request->customer_id],
+            $user->customers()->updateOrCreate(
+                ['id' => $request->customer_id],
                 [
                     'customer_name' => $request->recipient_name,
                     'customer_address' => $request->recipient_address,
