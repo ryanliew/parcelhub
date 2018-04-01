@@ -100,7 +100,7 @@ class PaymentController extends Controller
         try {
             $lot_purchases = json_decode($request['lot_purchases'], true);
 
-            $json_validator = \Validator::make($lot_purchases, ['lot_purchases' => 'required']);
+            $json_validator = \Validator::make(['lot_purchases' => $lot_purchases], ['lot_purchases' => 'required']);
 
             if ($json_validator->fails()) {
 

@@ -9,6 +9,7 @@ use App\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use PDF;
+use Storage;
 
 class OutboundController extends Controller
 {
@@ -126,10 +127,26 @@ class OutboundController extends Controller
         //
     }
 
+    public function packingList($id)
+    {
+        $outbound = Outbound::with('products.lots')->find($id);
+
+        $pdf = PDF::loadView('outbound.packing', compact('outbound'));
+
+        return $pdf->setPaper('A4')->download('outbound-packing-list.pdf');
+    }
+
     public function report($id)
     {
         $outbound = Outbound::find($id);
-        
+
+        if($outbound->invoice_slip) {
+            $mime = Storage::mimeType($outbound->invoice_slip);
+            $extension = explode("/", $mime);
+            $path = storage_path('app/' . $outbound->invoice_slip);
+            return response()->download($path, 'outbound-report.' . $extension[1], [ 'Content-Type' => $mime ]);
+        }
+
         $pdf = PDF::loadView('outbound.report', compact('outbound'));
 
         return $pdf->setPaper('A4')->download('outbound-report.pdf');
@@ -175,8 +192,6 @@ class OutboundController extends Controller
 
             $user = \Auth::user();
 
-            //$outbound = new Outbound($request->all());
-
             $user->customers()->updateOrCreate(
                 ['id' => $request->customer_id],
                 [
@@ -188,7 +203,8 @@ class OutboundController extends Controller
                     'customer_state' => $request->recipient_state,
                     'customer_country' => $request->recipient_country,
                 ]);
-            
+
+            $outbound = new Outbound($request->all());
             $outbound->insurance = request()->has('insurance');
             $outbound->invoice_slip = $request->hasFile('invoice_slip') ? $request->file('invoice_slip')->store('public') : null;
             $outbound->amount_insured = $outbound->insurance ? request()->amount_insured : 0;
@@ -211,14 +227,13 @@ class OutboundController extends Controller
                     // Check if the lot have enough products supply to the outbound request
                     $sumOfQuantityAndIncomingQuantity = $lot->pivot->quantity + $lot->pivot->incoming_quantity - $lot->pivot->outgoing_product; //10
                     if($sumOfQuantityAndIncomingQuantity >= $quantity) {
-                        
                         // We do not need to go to next lot anymore
                         $volumeAfterDeductProduct = $lot->left_volume + ($product->volume * $quantity);
 
                         $lot->update(['left_volume' => $volumeAfterDeductProduct]);
 
-                       
                         $newQuantityForOutgoingProduct = $lot->pivot->outgoing_product + $quantity;
+
                         $product->lots()->updateExistingPivot($lot->id, ['outgoing_product' => $newQuantityForOutgoingProduct]);
 
                         $outbound->products()->attach($product->id, ['quantity' => $quantity, 'lot_id' => $lot->id]);

@@ -2,6 +2,7 @@
 
 namespace App;
 
+use DB;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -56,10 +57,11 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Outbound whereRecipientState($value)
  * @property string|null $invoice_slip
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Outbound whereInvoiceSlip($value)
+ * @property-read mixed $product_lot
  */
 class Outbound extends Model
 {
-	protected $guarded = ['id', 'user_id', 'amount_insured', 'outbound_products', 'status'];
+	protected $guarded = ['id', 'user_id', 'amount_insured', 'outbound_products', 'status', 'customer_id'];
 	
     public function user() {
     	return $this->belongsTo('App\User');
@@ -71,6 +73,27 @@ class Outbound extends Model
 
     public function courier() {
     	return $this->belongsTo('App\Courier');
+    }
+
+    public function getTotalProductQuantityAttribute($product_id) {
+        $total = 0;
+
+        $products = $this->products()->where('product_id', $product_id)->get();
+
+        foreach ($products as $product) {
+            $total += $product->pivot->quantity;
+        }
+
+        return $total;
+    }
+
+    public function getProductLocationInfoAttribute($product_id) {
+        return DB::table('outbound_product')
+            ->join('lots', 'outbound_product.lot_id','lots.id')
+            ->where('outbound_id', $this->id)
+            ->where('product_id', $product_id)
+            ->select('lots.name', 'outbound_product.quantity')
+            ->get();
     }
 
     public function scopeProcessing($query) {
