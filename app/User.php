@@ -49,6 +49,7 @@ use Zizaco\Entrust\Traits\EntrustUserTrait;
  * @property int $verified
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User admin()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereVerified($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Customer[] $customers
  */
 class User extends Authenticatable
 {

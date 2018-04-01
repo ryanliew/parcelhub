@@ -130,10 +130,6 @@ class Product extends Model
         return $this->total_quantity + $this->total_incoming_quantity - $this->total_outgoing_quantity;
     }
 
-    public function getOutboundProductLotAttribute() {
-        return Lot::find($this->pivot->lot_id);
-    }
-
     public function getOwnerNameAttribute()
     {
         return $this->user->name;

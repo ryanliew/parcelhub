@@ -127,6 +127,15 @@ class OutboundController extends Controller
         //
     }
 
+    public function packingList($id)
+    {
+        $outbound = Outbound::with('products.lots')->find($id);
+
+        $pdf = PDF::loadView('outbound.packing', compact('outbound'));
+
+        return $pdf->setPaper('A4')->download('outbound-packing-list.pdf');
+    }
+
     public function report($id)
     {
         $outbound = Outbound::find($id);
@@ -135,7 +144,7 @@ class OutboundController extends Controller
             $mime = Storage::mimeType($outbound->invoice_slip);
             $extension = explode("/", $mime);
             $path = storage_path('app/' . $outbound->invoice_slip);
-            return response()->download($path, 'outbound-report' . $extension, [ 'Content-Type' => $mime ]);
+            return response()->download($path, 'outbound-report.' . $extension[1], [ 'Content-Type' => $mime ]);
         }
 
         $pdf = PDF::loadView('outbound.report', compact('outbound'));
