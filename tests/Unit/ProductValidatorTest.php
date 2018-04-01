@@ -13,13 +13,13 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class ProductValidatorTest extends TestCase
 {
+    use DatabaseTransactions;
+
     private $user;
 
     public function setUp()
     {
         parent::setUp();
-
-        $this->artisan('migrate');
 
         //Mock authenticated user
         $this->user = factory(User::class)->create(['name' => 'test_user']);
@@ -50,21 +50,15 @@ class ProductValidatorTest extends TestCase
 
     public function test_ValidateProductExist_whenRequestedProductExist_shouldPass()
     {
-        //Mock authenticated user
-        $this->user = factory(User::class)->create(['name' => 'test_user']);
-
-        $this->actingAs($this->user);
-
-        $products = factory(Product::class, 1)->create(['user_id' => $this->user->id])->each(function ($p) {
-            $lot = factory(Lot::class)->create(['user_id' => $this->user->id]);
-            $lot->products()->attach($p->id, ['quantity' => 1]);
-        });
+        $product = factory(Product::class)->create(['user_id' => $this->user->id]);
+        $lot = factory(Lot::class)->create(['user_id' => $this->user->id]);
+        $lot->products()->attach($product->id, ['quantity' => 1]);
 
         $rule = ['outbound_products.*' => 'product_exist'];
 
         $data = [
             'outbound_products' => [
-                ['id' => 1, 'quantity' => 1],
+                ['id' => $product->id, 'quantity' => 1],
             ]
         ];
 

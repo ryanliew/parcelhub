@@ -22,6 +22,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\InboundProduct whereQuantity($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\InboundProduct whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property int $id
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\InboundProduct whereId($value)
  */
 class InboundProduct extends Model
 {

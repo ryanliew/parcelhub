@@ -46,6 +46,9 @@ use Zizaco\Entrust\Traits\EntrustUserTrait;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User wherePhone($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User wherePostcode($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereState($value)
+ * @property int $verified
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\User admin()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereVerified($value)
  */
 class User extends Authenticatable
 {

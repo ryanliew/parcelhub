@@ -27,6 +27,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Lot[] $lots
  * @property float $price
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Payment wherePrice($value)
+ * @property string|null $invoice_slip
+ * @property-read mixed $total_price
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Payment whereInvoiceSlip($value)
  */
 class Payment extends Model
 {

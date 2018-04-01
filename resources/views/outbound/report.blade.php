@@ -68,71 +68,75 @@
     </style>
 </head>
 <body>
-    <div class="pull-left">
-        <h2>Parcel HUB</h2>
-    </div>
-    <div class="pull-right width-half">
-        <p>Ref No : ___________________</p>
-        <p>Date : <u>{{ $outbound->created_at->toDateString() }}</u></p>
-    </div>
 
-    <div class="clear-both"></div>
-
-    <div class="pull-left width-half">
-        <p>Sender</p>
-        <div class="md-text-box">
-            {{ $outbound->user->name }} <br>
-            {{ $outbound->user->address }}, <br>
-            @if( !empty( $outbound->user->address_2 ) ) 
-                {{ $outbound->user->address_2 }}, <br>
-            @endif
-            {{ $outbound->user->postcode }}, {{ $outbound->user->state }}, {{ $outbound->user->country }} <br>
-            <b>Tel:</b> {{ $outbound->user->phone }}
+    @if(isset($outbound->invoice_slip))
+        <img src="{{ str_replace('\\', '/', $_SERVER["DOCUMENT_ROOT"]) . Storage::url($outbound->invoice_slip) }}">
+    @else
+        <div class="pull-left">
+            <h2>Parcel HUB</h2>
         </div>
-    </div>
-    <div class="pull-right width-half">
-        <p>Receiver</p>
-        <div class="md-text-box">
-            {{ $outbound->recipient_name }} <br>
-            {{ $outbound->recipient_address }}, <br>
-            @if( !empty( $outbound->recipient_address_2) ) 
-                {{ $outbound->recipient_address_2 }}, <br>
-            @endif
-            {{ $outbound->recipient_postcode }}, {{ $outbound->recipient_state }}, {{ $outbound->recipient_country }} <br>
-            <b>Tel:</b> {{ $outbound->recipient_phone }}
+        <div class="pull-right width-half">
+            <p>Ref No : <u>PHO-{{ $outbound->id }}</u></p>
+            <p>Date : <u>{{ $outbound->created_at->toDateString() }}</u></p>
         </div>
-    </div>
 
-    <div class="clear-both"></div>
+        <div class="clear-both"></div>
 
-    <div class="pt-2 pull-left width-half">
-        <div class="s-text-box">
-            Courier Service : <br>{{ $outbound->courier->name }}
+        <div class="pull-left width-half">
+            <p>Sender</p>
+            <div class="md-text-box">
+                {{ $outbound->user->name }} <br>
+                {{ $outbound->user->address }}, <br>
+                @if( !empty( $outbound->user->address_2 ) )
+                    {{ $outbound->user->address_2 }}, <br>
+                @endif
+                {{ $outbound->user->postcode }}, {{ $outbound->user->state }}, {{ $outbound->user->country }} <br>
+                <b>Tel:</b> {{ $outbound->user->phone }}
+            </div>
         </div>
-    </div>
-    <div class="pt-2 pull-right width-half">
-        <div class="s-text-box">
-            <span>Tracking Number : </span>
+        <div class="pull-right width-half">
+            <p>Receiver</p>
+            <div class="md-text-box">
+                {{ $outbound->recipient_name }} <br>
+                {{ $outbound->recipient_address }}, <br>
+                @if( !empty( $outbound->recipient_address_2) )
+                    {{ $outbound->recipient_address_2 }}, <br>
+                @endif
+                {{ $outbound->recipient_postcode }}, {{ $outbound->recipient_state }}, {{ $outbound->recipient_country }} <br>
+                <b>Tel:</b> {{ $outbound->recipient_phone }}
+            </div>
         </div>
-        <div class="d-inline-block width-half pt-1">Actual Weight :</div>
-        <div class="d-inline-block width-half pt-1">Chargeable Weight :</div>
-    </div>
 
-    <div class="clear-both"></div>
+        <div class="clear-both"></div>
 
-    <div class="pull-left" style="padding-left: 20%">
-        <p>Insurance</p>
-    </div>
-    <div class="pull-right width-half">
-        <p>
-            <strong>MYR</strong> : {{ $outbound->amount_insured }}
-        </p>
-    </div>
+        <div class="pt-2 pull-left width-half">
+            <div class="s-text-box">
+                Courier Service : <br>{{ $outbound->courier->name }}
+            </div>
+        </div>
+        <div class="pt-2 pull-right width-half">
+            <div class="s-text-box">
+                <span>Tracking Number : </span>
+            </div>
+            <div class="d-inline-block width-half pt-1">Actual Weight :</div>
+            <div class="d-inline-block width-half pt-1">Chargeable Weight :</div>
+        </div>
 
-    <div class="clear-both"></div>
+        <div class="clear-both"></div>
 
-    <table class="item-table">
-        <thead>
+        <div class="pull-left" style="padding-left: 20%">
+            <p>Insurance</p>
+        </div>
+        <div class="pull-right width-half">
+            <p>
+                <strong>MYR</strong> : {{ $outbound->amount_insured }}
+            </p>
+        </div>
+
+        <div class="clear-both"></div>
+
+        <table class="item-table">
+            <thead>
             <tr>
                 <th>No</th>
                 <th>Item</th>
@@ -140,8 +144,8 @@
                 <th>Value (MYR)</th>
                 <th>Remarks</th>
             </tr>
-        </thead>
-        <tbody>
+            </thead>
+            <tbody>
             @foreach ($outbound->products as $key => $product)
                 <tr>
                     <td>{{ $key + 1 }}</td>
@@ -151,6 +155,7 @@
                     <td></td>
                 </tr>
             @endforeach
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    @endif
 </body>
