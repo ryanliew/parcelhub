@@ -9,6 +9,7 @@ use App\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use PDF;
+use Storage;
 
 class OutboundController extends Controller
 {
@@ -129,7 +130,14 @@ class OutboundController extends Controller
     public function report($id)
     {
         $outbound = Outbound::find($id);
-        
+
+        if($outbound->invoice_slip) {
+            $mime = Storage::mimeType($outbound->invoice_slip);
+            $extension = explode("/", $mime);
+            $path = storage_path('app/' . $outbound->invoice_slip);
+            return response()->download($path, 'outbound-report' . $extension, [ 'Content-Type' => $mime ]);
+        }
+
         $pdf = PDF::loadView('outbound.report', compact('outbound'));
 
         return $pdf->setPaper('A4')->download('outbound-report.pdf');
@@ -153,7 +161,7 @@ class OutboundController extends Controller
             'courier_id' => 'required',
             'amount_insured' => 'required_if:insurance,==,1|numeric|min:0',
             'outbound_products' => 'required',
-            'invoice_slip' => 'nullable|images',
+            'invoice_slip' => 'nullable|images|mimes:pdf',
         ]);
 
         if(empty(auth()->user()->address))
