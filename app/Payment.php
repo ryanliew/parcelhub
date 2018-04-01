@@ -31,6 +31,7 @@ use Illuminate\Database\Eloquent\Model;
 class Payment extends Model
 {
 	protected $guarded = ['id', 'user_id'];
+    protected $appends = ['total_price'];
 
     public function user() {
     	return $this->belongsTo('App\User');

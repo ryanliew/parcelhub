@@ -24,7 +24,9 @@
 					<table-view ref="outbounds" 
 								:fields="fields" 
 								url="/internal/outbound/user"
-								:searchables="searchables">	
+								:searchables="searchables"
+								:dateFilterable="true"
+								dateFilterKey="outbounds.created_at">	
 					</table-view>
 				</div>
 			</div>

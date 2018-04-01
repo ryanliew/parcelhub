@@ -39,8 +39,23 @@ class PaymentController extends Controller
     {
         if(request()->wantsJson()) {
             if(auth()->user()->hasRole('admin'))
-                return Controller::VueTableListResult(Payment::with('user')->with('lots'));
-            return Controller::VueTableListResult(auth()->user()->payments()->with('user')->with('lots'));
+                return Controller::VueTableListResult(Payment::with('lots')
+                                                                ->select('users.name as name',
+                                                                        'picture as picture',
+                                                                        'payments.status as status',
+                                                                        'payments.created_at as created_at',
+                                                                        'payments.price as price',
+                                                                        'payments.id as id')
+                                                                ->leftJoin('users', 'user_id', '=', 'users.id'));
+
+            return Controller::VueTableListResult(auth()->user()->payments()->with('lots')
+                                                                ->select('users.name as name',
+                                                                        'picture as picture',
+                                                                        'payments.status as status',
+                                                                        'payments.created_at as created_at',
+                                                                        'payments.price as price',
+                                                                        'payments.id as id')
+                                                                ->leftJoin('users', 'user_id', '=', 'users.id'));
         }
 
         if(\Entrust::hasRole('admin')) {
@@ -97,6 +112,7 @@ class PaymentController extends Controller
             $payment = new Payment();
             $payment->picture = $request->file('payment_slip')->store('public');
             $payment->price = $request->price;
+            $payment->status = 'pending';
             $payment->user()->associate($user);
             $payment->save();
 
@@ -178,7 +194,7 @@ class PaymentController extends Controller
     public function approve(Request $request)
     {
         $payment = Payment::find($request->id);
-        $payment->update(['status' => 'true']);
+        $payment->update(['status' => 'approved']);
 
         $lotIds = $payment->lots()->pluck('lot_id')->toArray();
 

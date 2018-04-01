@@ -48346,12 +48346,12 @@ Vue.filter('formatPaymentStatus', function (value) {
 	var color = 'is-warning';
 	var text = 'Processing';
 	switch (value) {
-		case 'true':
+		case 'approved':
 			color = 'is-success';
 			text = 'Approved';
 			break;
 	}
-	return '<span class="tag ' + color + '">' + text + '</span>';
+	return '<span class="tag is-capitalized ' + color + '">' + text + '</span>';
 });
 
 Vue.filter('date', function (value) {
@@ -49653,7 +49653,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-	props: ['user', 'fields', 'url', 'searchables', 'detail', 'empty'],
+	props: ['user', 'fields', 'url', 'searchables', 'detail', 'empty', 'dateFilterable', 'dateFilterKey'],
 
 	components: { Vuetable: __WEBPACK_IMPORTED_MODULE_0_vuetable_2_src_components_Vuetable___default.a, VuetablePagination: __WEBPACK_IMPORTED_MODULE_1__VuetablepaginationBulma___default.a, VuetablePaginationInfo: __WEBPACK_IMPORTED_MODULE_2_vuetable_2_src_components_VuetablePaginationInfo___default.a, VuetableFilterBar: __WEBPACK_IMPORTED_MODULE_3__VuetableFilterBar___default.a, Loader: __WEBPACK_IMPORTED_MODULE_5__Loader___default.a },
 
@@ -49694,14 +49694,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		onChangePage: function onChangePage(page) {
 			this.$refs.vuetable.changePage(page);
 		},
-		onFilterSet: function onFilterSet(filterText) {
+		onFilterSet: function onFilterSet(filters) {
 			var _this2 = this;
 
 			this.loading = true;
 			this.params = {
-				'filter': filterText,
+				'filter': filters.text,
 				'searchables': this.searchables
 			};
+
+			if (filters.start && filters.end) {
+				this.params.start = filters.start;
+				this.params.end = filters.end;
+				this.params.dateFilterKey = this.dateFilterKey;
+			}
+
 			Vue.nextTick(function () {
 				return _this2.$refs.vuetable.refresh();
 			});
@@ -53985,21 +53992,43 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+    props: ['dateFilterable'],
+
     data: function data() {
         return {
-            filterText: ''
+            filterText: '',
+            filterDateStart: '',
+            filterDateEnd: ''
         };
     },
 
 
     methods: {
         doFilter: function doFilter() {
-            this.$events.fire('filter-set', this.filterText);
+            this.$events.fire('filter-set', { text: this.filterText, start: this.filterDateStart, end: this.filterDateEnd });
         },
         resetFilter: function resetFilter() {
             this.filterText = '';
+            this.filterDateStart = '';
+            this.filterDateEnd = '';
             this.$events.fire('filter-reset');
         }
     }
@@ -54060,7 +54089,79 @@ var render = function() {
             )
           ])
         ])
-      ])
+      ]),
+      _vm._v(" "),
+      _vm.dateFilterable
+        ? _c("div", { staticClass: "level-item" }, [
+            _c("div", { staticClass: "field" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.filterDateStart,
+                    expression: "filterDateStart"
+                  }
+                ],
+                staticClass: "input",
+                attrs: { type: "date", placeholder: "Start date" },
+                domProps: { value: _vm.filterDateStart },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.filterDateStart = $event.target.value
+                  }
+                }
+              })
+            ])
+          ])
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.dateFilterable
+        ? _c("div", { staticClass: "level-item" }, [
+            _vm._v("\n            -\n        ")
+          ])
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.dateFilterable
+        ? _c("div", { staticClass: "level-item" }, [
+            _c("div", { staticClass: "field" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.filterDateEnd,
+                    expression: "filterDateEnd"
+                  }
+                ],
+                staticClass: "input",
+                attrs: { type: "date", placeholder: "End date" },
+                domProps: { value: _vm.filterDateEnd },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.filterDateEnd = $event.target.value
+                  }
+                }
+              })
+            ])
+          ])
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.dateFilterable
+        ? _c("div", { staticClass: "level-item" }, [
+            _c(
+              "button",
+              { staticClass: "button is-link", on: { click: _vm.doFilter } },
+              [_vm._v("Filter by date")]
+            )
+          ])
+        : _vm._e()
     ])
   ])
 }
@@ -54096,7 +54197,11 @@ var render = function() {
     [
       _vm.loading ? _c("loader") : _vm._e(),
       _vm._v(" "),
-      _vm.searchables ? _c("vuetable-filter-bar") : _vm._e(),
+      _vm.searchables
+        ? _c("vuetable-filter-bar", {
+            attrs: { dateFilterable: _vm.dateFilterable }
+          })
+        : _vm._e(),
       _vm._v(" "),
       _c("vuetable", {
         ref: "vuetable",
@@ -60652,6 +60757,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 
 
@@ -60683,6 +60790,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 	mounted: function mounted() {
 		var _this = this;
 
+		if (this.can_manage) {
+			this.searchables = this.searchables + ",users.name";
+		}
 		this.getProducts();
 		this.$events.on('viewInbound', function (data) {
 			return _this.view(data);
@@ -61545,7 +61655,9 @@ var render = function() {
                       attrs: {
                         fields: _vm.fields,
                         url: "/internal/inbound/user",
-                        searchables: _vm.searchables
+                        searchables: _vm.searchables,
+                        dateFilterable: true,
+                        dateFilterKey: "arrival_date"
                       }
                     })
                   ],
@@ -62221,6 +62333,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
 
 
 
@@ -62473,7 +62587,9 @@ var render = function() {
                       attrs: {
                         fields: _vm.fields,
                         url: "/internal/outbound/user",
-                        searchables: _vm.searchables
+                        searchables: _vm.searchables,
+                        dateFilterable: true,
+                        dateFilterKey: "outbounds.created_at"
                       }
                     })
                   ],
@@ -63445,6 +63561,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
 
 
 
@@ -63477,10 +63596,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 			totalVolume: 0,
 			subPrice: 0,
 			paymentSlip: { name: 'No file selected' }
-		}, _defineProperty(_ref, 'selectedPayment', ''), _defineProperty(_ref, 'isViewing', false), _defineProperty(_ref, 'submitting', false), _defineProperty(_ref, 'confirmSubmit', false), _defineProperty(_ref, 'confirmPayment', false), _ref;
+		}, _defineProperty(_ref, 'selectedPayment', ''), _defineProperty(_ref, 'isViewing', false), _defineProperty(_ref, 'submitting', false), _defineProperty(_ref, 'confirmSubmit', false), _defineProperty(_ref, 'confirmPayment', false), _defineProperty(_ref, 'searchable', 'payments.status'), _ref;
 	},
 	mounted: function mounted() {
 		var _this = this;
+
+		if (this.can_manage) {
+			this.searchable += ',users.name';
+		}
 
 		this.$events.on('viewPayment', function (data) {
 			return _this.view(data);
@@ -63688,7 +63811,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 	}), _defineProperty(_computed, 'mainTitle', function mainTitle() {
 		return this.can_manage ? 'Purchases' : 'Purchase history';
 	}), _defineProperty(_computed, 'fields', function fields() {
-		var displayFields = [{ name: 'user.name', title: 'Made by' }, { name: 'created_at', sortField: 'created_at', title: 'Purchase date', callback: 'date' }, { name: 'price', sortField: 'price', title: 'Amount payable(RM)' }, { name: 'status', sortField: 'status', title: 'Status', callback: 'purchaseStatusLabel' }, { name: '__component:payments-actions', title: 'Actions' }];
+		var displayFields = [{ name: 'name', title: 'Made by' }, { name: 'created_at', sortField: 'payments.created_at', title: 'Purchase date', callback: 'date' }, { name: 'price', sortField: 'price', title: 'Amount payable(RM)' }, { name: 'status', sortField: 'status', title: 'Status', callback: 'purchaseStatusLabel' }, { name: '__component:payments-actions', title: 'Actions' }];
 
 		if (!this.can_manage) {
 			displayFields = _.drop(displayFields);
@@ -63890,7 +64013,13 @@ var render = function() {
                 [
                   _c("table-view", {
                     ref: "payments",
-                    attrs: { fields: _vm.fields, url: "/internal/payments" }
+                    attrs: {
+                      fields: _vm.fields,
+                      url: "/internal/payments",
+                      searchables: _vm.searchable,
+                      dateFilterable: true,
+                      dateFilterKey: "payments.created_at"
+                    }
                   })
                 ],
                 1
@@ -64265,7 +64394,7 @@ var render = function() {
                   [
                     _c("text-input", {
                       attrs: {
-                        defaultValue: _vm.selectedPayment.user.name,
+                        defaultValue: _vm.selectedPayment.name,
                         editable: false,
                         required: false,
                         label: "Paid by",

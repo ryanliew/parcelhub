@@ -46,6 +46,14 @@ class Controller extends BaseController
             
         }
 
+        if(!empty(request()->dateFilterKey))
+        {
+            // handle date filtering
+            $dateKey = request()->dateFilterKey;
+            $result = $result->whereDate( $dateKey, '>=', request()->start )
+                            ->whereDate( $dateKey, '<=', request()->end );
+        }
+
     	return $result->paginate(50);
     }
 }

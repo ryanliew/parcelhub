@@ -14,6 +14,18 @@
             <a @if( url()->current() == route('lots') ) class="is-active" @endif href="{{ route('lots') }}">
                 My lots
             </a>
+            <ul>
+                <li>
+                    <a @if( url()->current() == route('payment') ) class="is-active" @endif href="{{ route('payment') }}">
+                        Purchase history
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('payment') . '?new=true' }}">
+                        Purchase new lots
+                    </a>
+                </li>
+            </ul>
         </li>
     </ul>
     <p class="menu-label">
@@ -29,18 +41,6 @@
             <a @if( url()->current() == route('outbounds') ) class="is-active" @endif href="{{ route('outbounds') }}">
                 Outbounds
             </a>
-        </li>
-        <li>
-            <a @if( url()->current() == route('payment') ) class="is-active" @endif href="{{ route('payment') }}">
-                Purchases
-            </a>
-            <ul>
-                <li>
-                    <a href="{{ route('payment') . '?new=true' }}">
-                        Purchase new lots
-                    </a>
-                </li>
-            </ul>
         </li>
     </ul>
 </aside>

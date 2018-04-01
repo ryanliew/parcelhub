@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<loader v-if="loading"></loader>
-		<vuetable-filter-bar v-if="searchables"></vuetable-filter-bar>
+		<vuetable-filter-bar v-if="searchables" :dateFilterable="dateFilterable"></vuetable-filter-bar>
 		<vuetable ref="vuetable" 
 				:api-url="url"
 	    		:fields="fields"
@@ -40,7 +40,7 @@
 	import Loader from './Loader';
 
 	export default {
-		props: ['user', 'fields', 'url', 'searchables', 'detail', 'empty'],
+		props: ['user', 'fields', 'url', 'searchables', 'detail', 'empty', 'dateFilterable', 'dateFilterKey'],
 
 		components: { Vuetable, VuetablePagination, VuetablePaginationInfo, VuetableFilterBar, Loader },
 
@@ -78,12 +78,20 @@
 				this.$refs.vuetable.changePage(page);
 			},
 
-			onFilterSet(filterText) {
+			onFilterSet(filters) {
 				this.loading = true;
 				this.params = {
-					'filter' : filterText,
+					'filter' : filters.text,
 					'searchables' : this.searchables
 				}
+
+				if(filters.start && filters.end)
+				{
+					this.params.start = filters.start;
+					this.params.end = filters.end;
+					this.params.dateFilterKey = this.dateFilterKey;
+				}
+
 				Vue.nextTick( () => this.$refs.vuetable.refresh())
 			},
 
@@ -160,6 +168,6 @@
 			}
 
 
-		}	
+		}
 	}
 </script>
