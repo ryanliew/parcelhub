@@ -18,6 +18,10 @@
 								<i class="fa fa-download"></i>
 								<span class="pl-5">Download invoice</span>
 							</a>
+							<a class="button is-info ml-5" :href="downloadPackinglist" target="_blank">
+								<i class="fa fa-download"></i>
+								<span class="pl-5">Download packing list</span>
+							</a>
 						</div>
 					</div>
 				</div>
@@ -331,6 +335,10 @@
 
 			download() {
 				return "/download/outbound/report/" + this.outbound.id;
+			},
+
+			downloadPackinglist() {
+				return "/download/outbound/packingList/" + this.outbound.id;
 			},
 		}
 	}

@@ -236,7 +236,7 @@ class OutboundController extends Controller
 
                         $product->lots()->updateExistingPivot($lot->id, ['outgoing_product' => $newQuantityForOutgoingProduct]);
 
-                        $outbound->products()->attach($product->id, ['quantity' => $quantity, 'lot_id' => $lot->id]);
+                        $outbound->products()->attach($product->id, ['quantity' => $quantity, 'lot_id' => $lot->id, 'remark' => $outboundProduct['remarks']]);
 
                         break;
 
@@ -250,7 +250,7 @@ class OutboundController extends Controller
 
                         $product->lots()->updateExistingPivot($lot->id, ['outgoing_product' => $newQuantityForOutgoingProduct]);
 
-                        $outbound->products()->attach($product->id, ['quantity' => $lot->pivot->quantity, 'lot_id' => $lot->id]);
+                        $outbound->products()->attach($product->id, ['quantity' => $lot->pivot->quantity, 'lot_id' => $lot->id, 'remark' => $outboundProduct['remarks']]);
 
                         // Update how many quantity left require to acquire from the other lot
                         $quantity -= $sumOfQuantityAndIncomingQuantity;
