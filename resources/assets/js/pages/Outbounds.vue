@@ -24,7 +24,9 @@
 					<table-view ref="outbounds" 
 								:fields="fields" 
 								url="/internal/outbound/user"
-								:searchables="searchables">	
+								:searchables="searchables"
+								:dateFilterable="true"
+								dateFilterKey="outbounds.created_at">	
 					</table-view>
 				</div>
 			</div>
@@ -64,6 +66,19 @@
 						@input="form.errors.clear($event.target.name)"
 						@keyup.enter="submit">
 						<p class="is-danger header" v-if="form.errors.get('overall')" v-text="form.errors.get('overall')"></p> <br>
+						<div class="field">
+							<selector-input v-model="selectedCustomer" :defaultData="selectedCustomer"
+									label="Customer"
+									name="customer_id"
+									:required="false"
+									:potentialData="customersOptions"
+									@input="customerUpdate($event)"
+									:editable="true"
+									placeholder="Select customer"
+									:error="form.errors.get('customer_id')">
+
+							</selector-input>
+						</div>
 						<div class="columns">
 				         	<div class="column">
 				          		<text-input v-model="form.recipient_name" :defaultValue="form.recipient_name" 
@@ -235,6 +250,16 @@
 			          	
 						<p class="is-danger header" v-text="form.errors.get('outbound_products')"></p>
 
+						<div class="field mt-10">
+					    	<image-input v-model="invoiceSlip" :defaultImage="invoiceSlip"
+					    				@loaded="changeInvoiceSlipImage"
+					    				label="invoice slip"
+					    				name="invoice_slip"
+					    				:required="false"
+					    				:error="form.errors.get('invoice_slip')">
+					    	</image-input>
+					    </div>
+
 				        <button class="button is-primary mt-15" :disabled="form.errors.any()" :class="buttonClass">Submit</button>
 		          	</form>
 				</div>
@@ -272,20 +297,25 @@
 					recipient_state: '',
 					recipient_postcode: '',
 					recipient_country: '',
+					customer_id: '',
 					insurance: '',
 					amount_insured: '0',
 					courier_id: '',
 					outbound_products: [],
+					invoice_slip: ''
 				}),
 				isDeleting: false,
 				errorForProducts: '',
 				productRows: [],
 				selectedCourier: false,
+				selectedCustomer: false,
 				couriersOptions: [],
 				productsOptions: [],
+				customersOptions: [],
 				isViewing: false,
 				isCreating: false,
-				errorForProducts: ''
+				errorForProducts: '',
+				invoiceSlip: {name: 'No file selected'}
 
 			};
 		},
@@ -296,6 +326,7 @@
 		},
 
 		methods: {
+
 			getProducts() {
 				axios.get('internal/products/selector')
 					.then(response => this.setProducts(response));
@@ -304,6 +335,28 @@
 			setProducts(response) {
 				this.productsOptions = response.data.data;
 				this.getCouriers();
+			},
+
+			getCustomers() {
+				axios.get('internal/customers')
+					.then(response => this.setCustomers(response));
+			},
+
+			setCustomers(response) {
+				this.customersOptions = response.data.data.map(customer => {
+					let obj = {};
+					obj['value'] = customer.id;
+					obj['label'] = customer.customer_name;
+					obj['recipient_name'] = customer.customer_name;
+					obj['recipient_phone'] = customer.customer_phone;
+					obj['recipient_address'] = customer.customer_address;
+					obj['recipient_address_2'] = customer.customer_address_2;
+					obj['recipient_state'] = customer.customer_state;
+					obj['recipient_postcode'] = customer.customer_postcode;
+					obj['recipient_country'] = customer.customer_country;
+
+					return obj;
+				});
 			},
 
 			getCouriers() {
@@ -365,7 +418,10 @@
 
 			modalOpen() {
 				this.form.reset();
+				this.selectedCustomer = '';
+				this.selectedCourier = '';
 				this.getProducts();
+				this.getCustomers();
 				this.isCreating = true;
 			},
 
@@ -416,7 +472,27 @@
 
 				this.errorForProducts = '';
 							
-			}
+			},
+
+			customerUpdate(data) {
+				this.form.customer_id = data.value;
+				this.form.errors.clear('customer_id');
+
+				this.form.recipient_name = data.recipient_name;
+				this.form.recipient_phone = data.recipient_phone;
+				this.form.recipient_address = data.recipient_address;
+				this.form.recipient_address_2 = data.recipient_address_2;
+				this.form.recipient_state = data.recipient_state;
+				this.form.recipient_postcode = data.recipient_postcode;
+				this.form.recipient_country = data.recipient_country;
+			},
+
+			changeInvoiceSlipImage(e) {
+				//console.log(e);
+				this.invoiceSlip = { src: e.src, file: e.file };
+				this.form.invoice_slip = e.file;
+				this.form.errors.clear('invoice_slip');
+			},
 		},
 
 		computed: {

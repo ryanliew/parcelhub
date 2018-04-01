@@ -52,7 +52,7 @@ Vue.component('InboundsActions', require('./actions/InboundsActions.vue'));
 Vue.component('OutboundsActions', require('./actions/OutboundsActions.vue'));
 Vue.component('PaymentsActions', require('./actions/PaymentsActions.vue'));
 Vue.component('UsersActions', require('./actions/UsersActions.vue'));
-
+Vue.component('CustomersActions', require('./actions/CustomersActions.vue'));
 
 // Pages components
 Vue.component('categories-page', require('./pages/Categories.vue'));
@@ -65,6 +65,7 @@ Vue.component('payments-page', require('./pages/Payments.vue'));
 Vue.component('users-page', require('./pages/Users.vue'));
 Vue.component('dashboard-page', require('./pages/Dashboard.vue'));
 Vue.component('settings-page', require('./pages/Settings.vue'));
+Vue.component('customers-page', require('./pages/Customers.vue'));
 
 // Single instance view components
 Vue.component('product', require('./objects/Product.vue'));

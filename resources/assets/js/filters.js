@@ -71,12 +71,12 @@ Vue.filter('formatPaymentStatus', function(value){
 	let color = 'is-warning';
 	let text = 'Processing';
 	switch(value){
-		case 'true':
+		case 'approved':
 			color = 'is-success';
 			text = 'Approved';
 			break;
 	}
-	return '<span class="tag ' + color + '">' + text + '</span>';
+	return '<span class="tag is-capitalized ' + color + '">' + text + '</span>';
 });
 
 Vue.filter('date', function(value){
