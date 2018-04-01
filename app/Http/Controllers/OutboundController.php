@@ -161,7 +161,7 @@ class OutboundController extends Controller
             'courier_id' => 'required',
             'amount_insured' => 'required_if:insurance,==,1|numeric|min:0',
             'outbound_products' => 'required',
-            'invoice_slip' => 'nullable|images|mimes:pdf',
+            'invoice_slip' => 'nullable|mimes:jpeg,png,pdf',
         ]);
 
         if(empty(auth()->user()->address))
@@ -182,6 +182,18 @@ class OutboundController extends Controller
             }
 
             $user = \Auth::user();
+
+            $user->customers()->updateOrCreate(
+                ['id' => $request->customer_id],
+                [
+                    'customer_name' => $request->recipient_name,
+                    'customer_address' => $request->recipient_address,
+                    'customer_address_2' => $request->recipient_address_2,
+                    'customer_phone' => $request->recipient_phone,
+                    'customer_postcode' => $request->recipient_postcode,
+                    'customer_state' => $request->recipient_state,
+                    'customer_country' => $request->recipient_country,
+                ]);
 
             $outbound = new Outbound($request->all());
             $outbound->insurance = request()->has('insurance');
@@ -211,19 +223,8 @@ class OutboundController extends Controller
 
                         $lot->update(['left_volume' => $volumeAfterDeductProduct]);
 
-                        // Update remaining product left in the lot
-                        // $numOfProductLeft = $lot->pivot->quantity - $quantity;
-
-                        // Lot with 0 quantity will be detach else update the remaining available quantity
-                        // if($numOfProductLeft === 0) {
-
-                        //     $product->lots()->detach($lot->id);
-
-                        // } else {
-
-                        //     $product->lots()->updateExistingPivot($lot->id, ['quantity' => $numOfProductLeft]);;
-                        // }
                         $newQuantityForOutgoingProduct = $lot->pivot->outgoing_product + $quantity;
+
                         $product->lots()->updateExistingPivot($lot->id, ['outgoing_product' => $newQuantityForOutgoingProduct]);
 
                         $outbound->products()->attach($product->id, ['quantity' => $quantity, 'lot_id' => $lot->id]);
