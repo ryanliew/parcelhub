@@ -70,6 +70,7 @@
 <body>
     <div class="pull-left">
         <h2>Parcel HUB</h2>
+        <h4>Packing List</h4>
     </div>
     <div class="pull-right">
         <p>Ref No : <u>PHO-{{ $outbound->id }}</u></p>
