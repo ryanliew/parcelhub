@@ -54896,6 +54896,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 			reader.readAsDataURL(file);
 
+			console.log(file.type);
 			reader.onload = function (e) {
 				var src = e.target.result;
 
@@ -54930,7 +54931,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", [
     _c("div", { staticClass: "file has-name is-boxed" }, [
-      _vm.defaultImage.src
+      _vm.defaultImage.src && _vm.defaultImage.file.type !== "application/pdf"
         ? _c("figure", { staticClass: "image is-128x128" }, [
             _c("img", { attrs: { src: _vm.defaultImage.src } })
           ])
@@ -54939,7 +54940,7 @@ var render = function() {
       _c("label", { staticClass: "file-label pl-5" }, [
         _c("input", {
           staticClass: "file-input",
-          attrs: { type: "file", name: _vm.name },
+          attrs: { accept: "image/*,.pdf", type: "file", name: _vm.name },
           on: { change: _vm.onChange }
         }),
         _vm._v(" "),
@@ -62335,6 +62336,16 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -62344,7 +62355,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 	components: { TableView: __WEBPACK_IMPORTED_MODULE_0__components_TableView_vue___default.a },
 
 	data: function data() {
-		return _defineProperty({
+		var _ref;
+
+		return _ref = {
 			userField: [{ name: 'id', title: '#' }, { name: 'created_at', sortField: 'created_at', title: 'Order date' }, { name: 'courier', sortField: 'couriers.name', title: 'Courier' }, { name: 'amount_insured', sortField: 'amount_insured', title: 'Insurance' }, { name: 'process_status', callback: 'outboundStatusLabel', title: 'Status', sortField: 'process_status' }, { name: '__component:outbounds-actions', title: 'Actions' }],
 			userSearchables: "process_status",
 			selectedoutbound: '',
@@ -62360,7 +62373,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 				insurance: '',
 				amount_insured: '0',
 				courier_id: '',
-				outbound_products: []
+				outbound_products: [],
+				invoice_slip: ''
 			}),
 			isDeleting: false,
 			errorForProducts: '',
@@ -62370,7 +62384,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 			productsOptions: [],
 			isViewing: false,
 			isCreating: false
-		}, 'errorForProducts', '');
+		}, _defineProperty(_ref, 'errorForProducts', ''), _defineProperty(_ref, 'invoiceSlip', { name: 'No file selected' }), _ref;
 	},
 	mounted: function mounted() {
 		var _this = this;
@@ -62492,6 +62506,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 			this.selectedProducts = data;
 
 			this.errorForProducts = '';
+		},
+		changeInvoiceSlipImage: function changeInvoiceSlipImage(e) {
+			//console.log(e);
+			this.invoiceSlip = { src: e.src, file: e.file };
+			this.form.invoice_slip = e.file;
+			this.form.errors.clear('invoice_slip');
 		}
 	},
 
@@ -63167,6 +63187,31 @@ var render = function() {
                           )
                         }
                       }),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        { staticClass: "field mt-10" },
+                        [
+                          _c("image-input", {
+                            attrs: {
+                              defaultImage: _vm.invoiceSlip,
+                              label: "invoice slip",
+                              name: "invoice_slip",
+                              required: false,
+                              error: _vm.form.errors.get("invoice_slip")
+                            },
+                            on: { loaded: _vm.changeInvoiceSlipImage },
+                            model: {
+                              value: _vm.invoiceSlip,
+                              callback: function($$v) {
+                                _vm.invoiceSlip = $$v
+                              },
+                              expression: "invoiceSlip"
+                            }
+                          })
+                        ],
+                        1
+                      ),
                       _vm._v(" "),
                       _c(
                         "button",
@@ -66829,7 +66874,7 @@ var render = function() {
                     _c("i", { staticClass: "fa fa-download" }),
                     _vm._v(" "),
                     _c("span", { staticClass: "pl-5" }, [
-                      _vm._v("Download PDF")
+                      _vm._v("Download invoice")
                     ])
                   ]
                 )

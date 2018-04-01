@@ -153,7 +153,7 @@ class OutboundController extends Controller
             'courier_id' => 'required',
             'amount_insured' => 'required_if:insurance,==,1|numeric|min:0',
             'outbound_products' => 'required',
-            'invoice_slip' => 'nullable|images',
+            'invoice_slip' => 'nullable|mimes:jpeg,png,pdf',
         ]);
 
         if(empty(auth()->user()->address))

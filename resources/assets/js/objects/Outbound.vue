@@ -16,7 +16,7 @@
 							</button>
 							<a class="button is-info ml-5" :href="download" target="_blank">
 								<i class="fa fa-download"></i>
-								<span class="pl-5">Download PDF</span>
+								<span class="pl-5">Download invoice</span>
 							</a>
 						</div>
 					</div>
