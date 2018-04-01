@@ -24,7 +24,9 @@
 					<table-view ref="outbounds" 
 								:fields="fields" 
 								url="/internal/outbound/user"
-								:searchables="searchables">	
+								:searchables="searchables"
+								:dateFilterable="true"
+								dateFilterKey="outbounds.created_at">	
 					</table-view>
 				</div>
 			</div>
@@ -235,6 +237,16 @@
 			          	
 						<p class="is-danger header" v-text="form.errors.get('outbound_products')"></p>
 
+						<div class="field mt-10">
+					    	<image-input v-model="invoiceSlip" :defaultImage="invoiceSlip"
+					    				@loaded="changeInvoiceSlipImage"
+					    				label="invoice slip"
+					    				name="invoice_slip"
+					    				:required="false"
+					    				:error="form.errors.get('invoice_slip')">
+					    	</image-input>
+					    </div>
+
 				        <button class="button is-primary mt-15" :disabled="form.errors.any()" :class="buttonClass">Submit</button>
 		          	</form>
 				</div>
@@ -276,6 +288,7 @@
 					amount_insured: '0',
 					courier_id: '',
 					outbound_products: [],
+					invoice_slip: ''
 				}),
 				isDeleting: false,
 				errorForProducts: '',
@@ -285,7 +298,8 @@
 				productsOptions: [],
 				isViewing: false,
 				isCreating: false,
-				errorForProducts: ''
+				errorForProducts: '',
+				invoiceSlip: {name: 'No file selected'}
 
 			};
 		},
@@ -416,7 +430,14 @@
 
 				this.errorForProducts = '';
 							
-			}
+			},
+
+			changeInvoiceSlipImage(e) {
+				//console.log(e);
+				this.invoiceSlip = { src: e.src, file: e.file };
+				this.form.invoice_slip = e.file;
+				this.form.errors.clear('invoice_slip');
+			},
 		},
 
 		computed: {

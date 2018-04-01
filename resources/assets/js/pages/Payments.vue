@@ -22,7 +22,10 @@
 				<div class="card-content">
 					<table-view ref="payments" 
 								:fields="fields" 
-								url="/internal/payments">	
+								url="/internal/payments"
+								:searchables="searchable"
+								:dateFilterable="true"
+								dateFilterKey="payments.created_at">	
 					</table-view>
 				</div>
 			</div>
@@ -225,7 +228,7 @@
 					</figure>
 				</div>
 				<div class="column">
-					<text-input :defaultValue="selectedPayment.user.name"
+					<text-input :defaultValue="selectedPayment.name"
 							:editable="false"
 							:required="false"
 							label="Paid by"
@@ -335,10 +338,15 @@
 				submitting: false,
 				confirmSubmit: false,
 				confirmPayment: false,
+				searchable: 'payments.status'
 			};
 		},
 
 		mounted() {
+			if(this.can_manage){
+				this.searchable += ',users.name';
+			}
+
 			this.$events.on('viewPayment', data => this.view(data));
 
 			this.getLotCategories();
@@ -564,8 +572,8 @@
 
 			fields() {
 				let displayFields = [
-					{name: 'user.name', title: 'Made by'},
-					{name: 'created_at', sortField: 'created_at', title: 'Purchase date', callback: 'date'},
+					{name: 'name', title: 'Made by'},
+					{name: 'created_at', sortField: 'payments.created_at', title: 'Purchase date', callback: 'date'},
 					{name: 'price', sortField: 'price', title: 'Amount payable(RM)'},
 					{name: 'status', sortField: 'status', title: 'Status', callback: 'purchaseStatusLabel'},
 					{name: '__component:payments-actions', title: 'Actions'}

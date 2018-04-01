@@ -23,7 +23,9 @@
 					<table-view ref="inbounds" 
 								:fields="fields" 
 								url="/internal/inbound/user"
-								:searchables="searchables">	
+								:searchables="searchables"
+								:dateFilterable="true"
+								dateFilterKey="arrival_date">	
 					</table-view>
 				</div>
 			</div>
@@ -184,6 +186,10 @@
 		},
 
 		mounted() {
+			if(this.can_manage)
+			{
+				this.searchables = this.searchables + ",users.name"
+			}
 			this.getProducts();
 			this.$events.on('viewInbound', data => this.view(data));
 		},
