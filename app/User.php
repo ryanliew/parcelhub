@@ -99,6 +99,11 @@ class User extends Authenticatable
         return $this->hasOne('App\UserToken');
     }
 
+    public function customers()
+    {
+        return $this->hasMany('App\Customer');
+    }
+
     public function scopeAdmin($query) {
         return $query->whereHas('roles', function ($query) {
             $query->where('name', '=', 'admin');

@@ -175,7 +175,19 @@ class OutboundController extends Controller
 
             $user = \Auth::user();
 
-            $outbound = new Outbound($request->all());
+            //$outbound = new Outbound($request->all());
+
+            $user->customers()->updateOrCreate(['id' => $request->customer_id],
+                [
+                    'customer_name' => $request->recipient_name,
+                    'customer_address' => $request->recipient_address,
+                    'customer_address_2' => $request->recipient_address_2,
+                    'customer_phone' => $request->recipient_phone,
+                    'customer_postcode' => $request->recipient_postcode,
+                    'customer_state' => $request->recipient_state,
+                    'customer_country' => $request->recipient_country,
+                ]);
+            
             $outbound->insurance = request()->has('insurance');
             $outbound->invoice_slip = $request->hasFile('invoice_slip') ? $request->file('invoice_slip')->store('public') : null;
             $outbound->amount_insured = $outbound->insurance ? request()->amount_insured : 0;
@@ -198,23 +210,13 @@ class OutboundController extends Controller
                     // Check if the lot have enough products supply to the outbound request
                     $sumOfQuantityAndIncomingQuantity = $lot->pivot->quantity + $lot->pivot->incoming_quantity - $lot->pivot->outgoing_product; //10
                     if($sumOfQuantityAndIncomingQuantity >= $quantity) {
+                        
                         // We do not need to go to next lot anymore
                         $volumeAfterDeductProduct = $lot->left_volume + ($product->volume * $quantity);
 
                         $lot->update(['left_volume' => $volumeAfterDeductProduct]);
 
-                        // Update remaining product left in the lot
-                        // $numOfProductLeft = $lot->pivot->quantity - $quantity;
-
-                        // Lot with 0 quantity will be detach else update the remaining available quantity
-                        // if($numOfProductLeft === 0) {
-
-                        //     $product->lots()->detach($lot->id);
-
-                        // } else {
-
-                        //     $product->lots()->updateExistingPivot($lot->id, ['quantity' => $numOfProductLeft]);;
-                        // }
+                       
                         $newQuantityForOutgoingProduct = $lot->pivot->outgoing_product + $quantity;
                         $product->lots()->updateExistingPivot($lot->id, ['outgoing_product' => $newQuantityForOutgoingProduct]);
 
