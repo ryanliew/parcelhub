@@ -65,6 +65,7 @@ Vue.component('payments-page', require('./pages/Payments.vue'));
 Vue.component('users-page', require('./pages/Users.vue'));
 Vue.component('dashboard-page', require('./pages/Dashboard.vue'));
 Vue.component('settings-page', require('./pages/Settings.vue'));
+Vue.component('customers-page', require('./pages/Customers.vue'));
 
 // Single instance view components
 Vue.component('product', require('./objects/Product.vue'));

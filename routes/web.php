@@ -42,6 +42,7 @@ Route::get('purchase', 'PaymentController@page')->name('payment');
 Route::get('users', 'UserController@page')->name('users');
 Route::get('profile', 'UserController@page')->name('profile');
 Route::get('dashboard', 'AdminController@page')->name('dashboard');
+Route::get('customers', 'CustomerController@page')->name('customers');
 
 Route::post('lots/products/update', 'LotController@editStock');
 
@@ -81,6 +82,7 @@ Route::group(['prefix' => 'internal'], function() {
 	Route::get('categories', 'CategoryController@index');
 	Route::get('lots', 'LotController@index');
 	Route::get('couriers', 'CourierController@index');
+	Route::get('customers', 'CustomerController@index');
 	Route::get('products/selector', 'ProductController@selector');
 	Route::get('products', 'ProductController@index');
 	Route::get('inbound/user', 'InboundController@index');

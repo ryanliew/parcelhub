@@ -6,6 +6,7 @@ use App\Courier;
 use App\Notifications\OutboundCreatedNotification;
 use App\Outbound;
 use App\Product;
+use App\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use PDF;
@@ -201,18 +202,6 @@ class OutboundController extends Controller
 
                         $lot->update(['left_volume' => $volumeAfterDeductProduct]);
 
-                        // Update remaining product left in the lot
-                        // $numOfProductLeft = $lot->pivot->quantity - $quantity;
-
-                        // Lot with 0 quantity will be detach else update the remaining available quantity
-                        // if($numOfProductLeft === 0) {
-
-                        //     $product->lots()->detach($lot->id);
-
-                        // } else {
-
-                        //     $product->lots()->updateExistingPivot($lot->id, ['quantity' => $numOfProductLeft]);;
-                        // }
                         $newQuantityForOutgoingProduct = $lot->pivot->outgoing_product + $quantity;
                         $product->lots()->updateExistingPivot($lot->id, ['outgoing_product' => $newQuantityForOutgoingProduct]);
 
@@ -237,6 +226,17 @@ class OutboundController extends Controller
                     }
                 }
             }
+
+            $customer = new Customer();
+            $customer->user_id = $user->id;
+            $customer->name = $request->recipient_name;
+            $customer->address = $request->recipient_address;
+            $customer->address2 = $request->recipient_address_2;
+            $customer->phone = $request->recipient_phone;
+            $customer->postcode = $request->recipient_postcode;
+            $customer->state = $request->recipient_state;
+            $customer->country = $request->recipient_country;
+            $customer->save();
 
             $user->notify(new OutboundCreatedNotification($outbound));
 

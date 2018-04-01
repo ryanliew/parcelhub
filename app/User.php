@@ -92,6 +92,10 @@ class User extends Authenticatable
         return $this->hasMany('App\Product');
     }
 
+    public function customers(){
+        return $this->hasMany('App\Customer');
+    }
+
     public function tokens() {
         return $this->hasOne('App\UserToken');
     }
