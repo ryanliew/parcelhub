@@ -196,8 +196,9 @@
 							<thead>
 								<th>#</th>
 								<th>Product</th>
-								<th>Remaining stock</th>
-								<th>Outbound quantity</th>
+								<th width="45px">Remaining stock</th>
+								<th width="45px">Outbound quantity</th>
+								<th>Remarks</th>
 								<th>
 									<div class="button is-primary is-small" @click="addRow">
 										<i class="fa fa-plus"></i>
@@ -237,6 +238,18 @@
 					          						:error="form.errors.get('outbound_products.' + index)"
 					          						name="quantity">
 					          			</text-input>
+									</td>
+									<td>
+										<textarea-input v-if="productRows[index]" v-model="productRows[index].remarks" :defaultValue="productRows[index].remarks"
+					          						:label="'Remarks'"
+					          						:required="true"
+					          						type="text"
+					          						:editable="true"
+					          						:hideLabel="true"
+					          						name="remarks"
+					          						rows="1"
+					          						cols="4">
+					          			</textarea-input>
 									</td>
 									<td>
 										<div class="button is-danger is-small" @click="removeRow(index)">
@@ -403,7 +416,7 @@
 						if(product > -1)
 							this.form.outbound_products[product].quantity = parseInt(this.form.outbound_products[product].quantity) + parseInt(element.quantity);
 						else
-							this.form.outbound_products.push({id: element.product.id, quantity: element.quantity});
+							this.form.outbound_products.push({id: element.product.id, quantity: element.quantity, remarks: element.remarks});
 					}
 				}.bind(this));							
 			},
@@ -463,6 +476,7 @@
 					let obj = {};
 					obj["id"] = product.id;
 					obj["quantity"] = 0;
+					obj["remarks"] = '';
 					return obj;
 				});
 

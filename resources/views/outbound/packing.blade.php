@@ -109,7 +109,7 @@
                 <td>{{ $key + 1 }}</td>
                 <td>{{ $product->sku }} - {{ $product->name }}</td>
                 <td class="text-center">{{ $outbound->getTotalProductQuantityAttribute($product->id) }}</td>
-                <td></td>
+                <td>{{ $outbound->products[0]->pivot->remark }}</td>
             </tr>
             <tr>
                 <td></td>

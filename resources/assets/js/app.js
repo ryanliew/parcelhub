@@ -34,6 +34,7 @@ Vue.component('navigation', require('./components/Navigation.vue'));
 Vue.component('modal', require('./components/Modal.vue'));
 Vue.component('table-view', require('./components/TableView.vue'));
 Vue.component('text-input', require('./components/TextInput.vue'));
+Vue.component('textarea-input', require('./components/TextareaInput.vue'));
 Vue.component('checkbox-input', require('./components/CheckboxInput.vue'));
 Vue.component('selector-input', require('./components/SelectorInput.vue'));
 Vue.component('image-input', require('./components/ImageInput.vue'));
