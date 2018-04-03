@@ -180,7 +180,7 @@
                                         </tr>
                                         <tr>
                                             <td width="100%" style="font-size: 18px; color: #191919; text-align: center; font-family: Helvetica, Arial, sans-serif, 'Open Sans'; font-weight: 600;line-height: 24px; vertical-align: top;"> 
-                                                Entertainment               
+                                                Storage and Warehousing               
                                             </td>
                                         </tr>
                                         <tr>
@@ -188,7 +188,7 @@
                                         </tr>
                                         <tr>
                                             <td width="100%" style="font-size: 13px; color: #969696; text-align: center; font-family: Helvetica, Arial, sans-serif, 'Open Sans'; font-weight: 400; line-height: 24px; vertical-align: top;">    
-                                                Integer posuere erat a ante venenatis dapibus posuere velit aliquet sed posuere constet.
+                                                Cost effective, hassle-free storage and management for your stocks.
                                             </td>
                                         </tr>
                                         <tr>
@@ -228,7 +228,7 @@
                                         </tr>
                                         <tr>
                                             <td width="100%" style="font-size: 18px; color: #191919; text-align: center; font-family: Helvetica, Arial, sans-serif, 'Open Sans'; font-weight: 600; line-height: 24px; vertical-align: top;">    
-                                                Experience
+                                                Fulfillment Services
                                             </td>
                                         </tr>
                                         <tr>
@@ -236,7 +236,7 @@
                                         </tr>
                                         <tr>
                                             <td width="100%" style="font-size: 13px; color: #969696; text-align: center; font-family: Helvetica, Arial, sans-serif, 'Open Sans'; font-weight: 400; line-height: 24px; vertical-align: top;">    
-                                                Integer posuere erat a ante venenatis dapibus posuere velit aliquet sed posuere constet.
+                                                Comprehensive inventory management – from picking and packing to receiving and handling – to achieve highest business satisfaction.
                                             </td>
                                         </tr>
                                         <tr>
@@ -276,7 +276,7 @@
                                         </tr>
                                         <tr>
                                             <td width="100%" style="font-size: 18px; color: #191919; text-align: center; font-family: Helvetica, Arial, sans-serif, 'Open Sans'; font-weight: 600; line-height: 24px; vertical-align: top;">    
-                                                Premium Quality                     
+                                                Customised Logistics Solutions                    
                                             </td>
                                         </tr>
                                         <tr>
@@ -284,7 +284,7 @@
                                         </tr>
                                         <tr>
                                             <td width="100%" style="font-size: 13px; color: #969696; text-align: center; font-family: Helvetica, Arial, sans-serif, 'Open Sans'; font-weight: 400; line-height: 24px; vertical-align: top;">    
-                                                Integer posuere erat a ante venenatis dapibus posuere velit aliquet sed posuere constet.
+                                                Flexible logistics solutions for every customer through our affiliation with various courier and shipping partners.
                                             </td>
                                         </tr>
                                         <tr>
@@ -310,143 +310,6 @@
                     </td>
                 </tr>
             </tbody></table><!-- Nav Wrapper -->
-        
-        </td>
-    </tr>
-</table>
-
-<table width="100%" border="0" cellpadding="0" cellspacing="0" align="center" class="full">
-    <tbody><tr>
-        <td width="100%" valign="top" align="center" bgcolor="#ffffff">
-            
-            <table width="100%" border="0" cellpadding="0" cellspacing="0" align="center" class="mobile">
-                <tbody><tr>
-                    <td align="center">
-                        
-                        <table width="600" border="0" cellpadding="0" cellspacing="0" align="center" class="full">
-                            <tbody><tr>
-                                <td width="100%" align="center">
-                    
-                                    <table width="100%" border="0" cellpadding="0" cellspacing="0" align="center" class="full">
-                                        <tbody><tr>
-                                            <td width="100%" height="45"></td>
-                                        </tr>
-                                    </tbody></table>
-                                    
-                                    <!-- Image 1 -->
-                                    <table width="270" border="0" cellpadding="0" cellspacing="0" align="left" style="border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;" class="table50Left">
-                                        <tbody><tr>
-                                            <td width="100%">
-                                                <img src="images/row-3.jpg" alt="" border="0" width="262" height="auto" style="width: 262px; height: auto;">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td width="100%" height="0" class="h25"></td>
-                                        </tr>
-                                    </tbody></table>
-                                    
-                                    <!-- Image 1 Text -->
-                                    <table width="270" border="0" cellpadding="0" cellspacing="0" align="right" style="border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;" class="table50Right">
-                                        <tbody><tr>
-                                            <td width="100%" style="font-size: 18px; color: #191919; text-align: left; font-family: Helvetica, Arial, sans-serif, 'Open Sans'; font-weight: 600; line-height: 24px; vertical-align: top;">  
-                                                Design and Development                      
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td width="100%" height="15"></td>
-                                        </tr>
-                                        <tr>
-                                            <td width="100%" style="font-size: 13px; color: #969696; text-align: left; font-family: Helvetica, Arial, sans-serif, 'Open Sans'; font-weight: 400; line-height: 24px; vertical-align: top;">  
-                                                Maecenas faucibus mollis interdum. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum.
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td width="100%" height="30"></td>
-                                        </tr>
-                                    </tbody></table>
-                                    
-                                </td>
-                            </tr>
-                        </tbody></table>
-                        
-                        <table width="100%" border="0" cellpadding="0" cellspacing="0" align="center" class="full">
-                            <tbody><tr>
-                                <td width="100%" height="50"></td>
-                            </tr>
-                        </tbody></table>
-                    
-                    </td>
-                </tr>
-            </tbody></table>
-        
-        </td>
-    </tr>
-</table>
-
-<table width="100%" border="0" cellpadding="0" cellspacing="0" align="center" class="full">
-    <tbody><tr>
-        <td width="100%" valign="top" bgcolor="#f6f6f6" align="center">
-
-            <table width="100%" border="0" cellpadding="0" cellspacing="0" align="center" class="mobile">
-                <tbody><tr>
-                    <td align="center">
-                        
-                        <table width="600" border="0" cellpadding="0" cellspacing="0" align="center" class="full">
-                            <tbody><tr>
-                                <td width="100%" align="center">
-                    
-                                    <table width="100%" border="0" cellpadding="0" cellspacing="0" align="center" class="full">
-                                        <tbody><tr>
-                                            <td width="100%" height="45"></td>
-                                        </tr>
-                                    </tbody></table>
-                                    
-                                    <!-- Image 2 -->
-                                    <table width="270" border="0" cellpadding="0" cellspacing="0" align="right" style="border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;" class="table50Right">
-                                        <tbody><tr>
-                                            <td width="100%">
-                                                <img src="images/row-4.jpg" alt="" border="0" width="262" height="auto" style="width: 262px; height: auto;">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td width="100%" height="0" class="h25"></td>
-                                        </tr>
-                                    </tbody></table>
-                                    
-                                    <!-- Image 2 Text -->
-                                    <table width="270" border="0" cellpadding="0" cellspacing="0" align="left" style="border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;" class="table50Left">
-                                        <tbody><tr>
-                                            <td width="100%" style="font-size: 18px; color: #191919; text-align: left; font-family: Helvetica, Arial, sans-serif, 'Open Sans'; font-weight: 600; line-height:24px; vertical-align: top;">   
-                                                Simple is Better                        
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td width="100%" height="15"></td>
-                                        </tr>
-                                        <tr>
-                                            <td width="100%" style="font-size: 13px; color: #969696; text-align: left; font-family: Helvetica, Arial, sans-serif, 'Open Sans'; font-weight: 400; line-height: 24px; vertical-align: top;">  
-                                                Maecenas faucibus mollis interdum. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum.
-                                
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td width="100%" height="30"></td>
-                                        </tr>
-                                    </tbody></table>
-                                    
-                                </td>
-                            </tr>
-                        </tbody></table>
-                        
-                        <table width="100%" border="0" cellpadding="0" cellspacing="0" align="center" class="full">
-                            <tbody><tr>
-                                <td width="100%" height="50"></td>
-                            </tr>
-                        </tbody></table>
-                    
-                    </td>
-                </tr>
-            </tbody></table>
         
         </td>
     </tr>
@@ -482,74 +345,14 @@
                                     <!-- Col 1 -->
                                     <table width="185" border="0" cellpadding="0" cellspacing="0" align="left" style="border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt; text-align: center; background-color: #f6f6f6;" bgcolor="#f6f6f6" class="fullCenter">
                                         <tbody><tr>
-                                            <td width="100%" height="30" bgcolor="#191919" style="font-size: 12px; color: #ffffff; text-align: center; font-family: Helvetica, Arial, sans-serif, 'Open Sans'; font-weight: 600; line-height: 24px; text-transform: uppercase; letter-spacing: 1px; padding-left: 20px; padding-right: 20px;">
-                                                Basic
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td width="100%" height="60" bgcolor="#67c890" style="font-size: 27px; color: #ffffff; text-align: center; font-family: Helvetica, Arial, sans-serif, 'Open Sans'; line-height: 24px; letter-spacing: 1px; padding-left: 20px; padding-right: 20px; background-color: #67c890; font-weight: 700;">
-                                                $5.00
+                                            <td width="100%" height="48" bgcolor="#191919" style="font-size: 12px; color: #ffffff; text-align: center; font-family: Helvetica, Arial, sans-serif, 'Open Sans'; font-weight: 600; line-height: 24px; text-transform: uppercase; letter-spacing: 1px; padding-left: 20px; padding-right: 20px;">
+                                                Storage & Warehouse
                                             </td>
                                         </tr>
                                         <tr>
                                             <td width="100%" height="40" style="font-size: 14px; color: #969696; text-align: center; font-family: Helvetica, Arial, sans-serif, 'Open Sans'; font-weight: 400; line-height: 24px; padding-left: 20px; padding-right: 20px;">
-                                                5 Database
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td width="100%" height="1" bgcolor="#f6f6f6" style="line-height: 1px; font-size: 0px;">&nbsp;</td>
-                                        </tr>
-                                        <tr>
-                                            <td width="100%" height="40" style="font-size: 14px; color: #969696; text-align: center; font-family: Helvetica, Arial, sans-serif, 'Open Sans'; font-weight: 400; line-height: 24px; padding-left: 20px; padding-right: 20px;">
-                                                5 Email Accounts
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td width="100%" height="1" bgcolor="#f6f6f6" style="line-height: 1px; font-size: 0px;">&nbsp;</td>
-                                        </tr>
-                                        <tr>
-                                            <td width="100%" height="40" style="font-size: 14px; color: #969696; text-align: center; font-family: Helvetica, Arial, sans-serif, 'Open Sans'; font-weight: 400; line-height: 24px; padding-left: 20px; padding-right: 20px;">
-                                                1 Gb Storage
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td width="100%" height="1" bgcolor="#f6f6f6" style="line-height: 1px; font-size: 0px;">&nbsp;</td>
-                                        </tr>
-                                        <tr>
-                                            <td width="100%" height="40" style="font-size: 14px; color: #969696; text-align: center; font-family: Helvetica, Arial, sans-serif, 'Open Sans'; font-weight: 400; line-height: 24px; padding-left: 20px; padding-right: 20px;">
-                                                1 User
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td width="100%" height="1" bgcolor="#f6f6f6" style="line-height: 1px; font-size: 0px;">&nbsp;</td>
-                                        </tr>
-                                        <tr>
-                                            <td width="100%" height="40" style="font-size: 14px; color: #969696; text-align: center; font-family: Helvetica, Arial, sans-serif, 'Open Sans'; font-weight: 400; line-height: 24px; padding-left: 20px; padding-right: 20px;">
-                                                Backup Service
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td width="100%" height="1" bgcolor="#f6f6f6" style="line-height: 1px; font-size: 0px;">&nbsp;</td>
-                                        </tr>
-                                        <tr>
-                                            <td width="100%" height="25">                                   
-                                            </td>
-                                        </tr>
-                                        <!-- Button Center -->
-                                        <tr>
-                                            <td align="center">
-                                                <table border="0" cellpadding="0" cellspacing="0" align="center"> 
-                                                    <tbody><tr> 
-                                                        <td align="center" height="36" bgcolor="#67c890" style="padding-left: 19px; padding-right: 19px; font-weight: 700; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-transform: uppercase; background-color: #67c890; font-size: 12px;">
-                                                            <a href="#" style="color: #ffffff; font-size:12px; text-decoration: none; line-height:34px; width:100%;">Buy Now!</a>
-                                                        </td> 
-                                                    </tr> 
-                                                </tbody></table> 
-                                            </td>
-                                        </tr>
-                                        <!-- End Button Center -->
-                                        <tr>
-                                            <td width="100%" height="40">
+                                                Price starts from </br>RM 15/m3 chargeable per month*. Customisable plans available according to your business needs. Save cost by paying only for what you use.
+                                                <span style="font-size: 10px">*Terms and conditions apply.</span>
                                             </td>
                                         </tr>
                                     </tbody></table>
@@ -564,74 +367,13 @@
                                     <!-- Col 2 -->
                                     <table width="185" border="0" cellpadding="0" cellspacing="0" align="left" style="border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt; text-align: center; background-color: #f6f6f6;" bgcolor="#f6f6f6" class="fullCenter">
                                         <tbody><tr>
-                                            <td width="100%" height="30" bgcolor="#191919" style="font-size: 12px; color: #ffffff; text-align: center; font-family: Helvetica, Arial, sans-serif, 'Open Sans'; font-weight: 600; line-height: 24px; text-transform: uppercase; letter-spacing: 1px; padding-left: 20px; padding-right: 20px;">
-                                                Large
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td width="100%" height="60" style="font-size: 27px; color: #ffffff; text-align: center; font-family: Helvetica, Arial, sans-serif, 'Open Sans'; line-height: 24px; letter-spacing: 1px; padding-left: 20px; padding-right: 20px; background-color: #67c890; font-weight: 700;">
-                                                $9.00
+                                            <td width="100%" height="48" bgcolor="#191919" style="font-size: 12px; color: #ffffff; text-align: center; font-family: Helvetica, Arial, sans-serif, 'Open Sans'; font-weight: 600; line-height: 24px; text-transform: uppercase; letter-spacing: 1px; padding-left: 20px; padding-right: 20px;">
+                                                Fulfillment
                                             </td>
                                         </tr>
                                         <tr>
                                             <td width="100%" height="40" style="font-size: 14px; color: #969696; text-align: center; font-family: Helvetica, Arial, sans-serif, 'Open Sans'; font-weight: 400; line-height: 24px; padding-left: 20px; padding-right: 20px;">
-                                                25 Database
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td width="100%" height="1" bgcolor="#f6f6f6" style="line-height: 1px; font-size: 0px;">&nbsp;</td>
-                                        </tr>
-                                        <tr>
-                                            <td width="100%" height="40" style="font-size: 14px; color: #969696; text-align: center; font-family: Helvetica, Arial, sans-serif, 'Open Sans'; font-weight: 400; line-height: 24px; padding-left: 20px; padding-right: 20px;">
-                                                25 Email Accounts
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td width="100%" height="1" bgcolor="#f6f6f6" style="line-height: 1px; font-size: 0px;">&nbsp;</td>
-                                        </tr>
-                                        <tr>
-                                            <td width="100%" height="40" style="font-size: 14px; color: #969696; text-align: center; font-family: Helvetica, Arial, sans-serif, 'Open Sans'; font-weight: 400; line-height: 24px; padding-left: 20px; padding-right: 20px;">
-                                                25 Gb Storage
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td width="100%" height="1" bgcolor="#f6f6f6" style="line-height: 1px; font-size: 0px;">&nbsp;</td>
-                                        </tr>
-                                        <tr>
-                                            <td width="100%" height="40" style="font-size: 14px; color: #969696; text-align: center; font-family: Helvetica, Arial, sans-serif, 'Open Sans'; font-weight: 400; line-height: 24px; padding-left: 20px; padding-right: 20px;">
-                                                25 User
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td width="100%" height="1" bgcolor="#f6f6f6" style="line-height: 1px; font-size: 0px;">&nbsp;</td>
-                                        </tr>
-                                        <tr>
-                                            <td width="100%" height="40" style="font-size: 14px; color: #969696; text-align: center; font-family: Helvetica, Arial, sans-serif, 'Open Sans'; font-weight: 400; line-height: 24px; padding-left: 20px; padding-right: 20px;">
-                                                Backup Service
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td width="100%" height="1" bgcolor="#f6f6f6" style="line-height: 1px; font-size: 0px;">&nbsp;</td>
-                                        </tr>
-                                        <tr>
-                                            <td width="100%" height="25">                                   
-                                            </td>
-                                        </tr>
-                                        <!-- Button Center -->
-                                        <tr>
-                                            <td align="center">
-                                                <table border="0" cellpadding="0" cellspacing="0" align="center"> 
-                                                    <tbody><tr> 
-                                                        <td align="center" height="36" bgcolor="#67c890" style="padding-left: 19px; padding-right: 19px; font-weight: 700; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-transform: uppercase; background-color: #67c890; font-size: 12px;">
-                                                            <a href="#" style="color: #ffffff; font-size:12px; text-decoration: none; line-height:34px; width:100%;">Buy Now!</a>
-                                                        </td> 
-                                                    </tr> 
-                                                </tbody></table> 
-                                            </td>
-                                        </tr>
-                                        <!-- End Button Center -->
-                                        <tr>
-                                            <td width="100%" height="40">                                   
+                                                Fulfillment management fee at only RM 500/month. Enjoy an all-inclusive inventory, logistics and administrations services for your business all at one affordable price.
                                             </td>
                                         </tr>
                                     </tbody></table>
@@ -646,74 +388,13 @@
                                     <!-- Col 3 -->
                                     <table width="185" border="0" cellpadding="0" cellspacing="0" align="right" style="border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt; text-align: center; background-color: #f6f6f6;" bgcolor="#f6f6f6" class="fullCenter">
                                         <tbody><tr>
-                                            <td width="100%" height="30" bgcolor="#191919" style="font-size: 12px; color: #ffffff; text-align: center; font-family: Helvetica, Arial, sans-serif, 'Open Sans'; font-weight: 600; line-height: 24px; text-transform: uppercase; letter-spacing: 1px; padding-left: 20px; padding-right: 20px;">
-                                                Premium
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td width="100%" height="60" style="font-size: 27px; color: #ffffff; text-align: center; font-family: Helvetica, Arial, sans-serif, 'Open Sans'; line-height: 24px; letter-spacing: 1px; padding-left: 20px; padding-right: 20px; background-color: #67c890; font-weight: 700;">
-                                                $29.00
+                                            <td width="100%" height=48" bgcolor="#191919" style="font-size: 12px; color: #ffffff; text-align: center; font-family: Helvetica, Arial, sans-serif, 'Open Sans'; font-weight: 600; line-height: 24px; text-transform: uppercase; letter-spacing: 1px; padding-left: 20px; padding-right: 20px;">
+                                                Pack & Ship
                                             </td>
                                         </tr>
                                         <tr>
                                             <td width="100%" height="40" style="font-size: 14px; color: #969696; text-align: center; font-family: Helvetica, Arial, sans-serif, 'Open Sans'; font-weight: 400; line-height: 24px; padding-left: 20px; padding-right: 20px;">
-                                                100 Database
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td width="100%" height="1" bgcolor="#f6f6f6" style="line-height: 1px; font-size: 0px;">&nbsp;</td>
-                                        </tr>
-                                        <tr>
-                                            <td width="100%" height="40" style="font-size: 14px; color: #969696; text-align: center; font-family: Helvetica, Arial, sans-serif, 'Open Sans'; font-weight: 400; line-height: 24px; padding-left: 20px; padding-right: 20px;">
-                                                100 Email Accounts
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td width="100%" height="1" bgcolor="#f6f6f6" style="line-height: 1px; font-size: 0px;">&nbsp;</td>
-                                        </tr>
-                                        <tr>
-                                            <td width="100%" height="40" style="font-size: 14px; color: #969696; text-align: center; font-family: Helvetica, Arial, sans-serif, 'Open Sans'; font-weight: 400; line-height: 24px; padding-left: 20px; padding-right: 20px;">
-                                                100 Gb Storage
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td width="100%" height="1" bgcolor="#f6f6f6" style="line-height: 1px; font-size: 0px;">&nbsp;</td>
-                                        </tr>
-                                        <tr>
-                                            <td width="100%" height="40" style="font-size: 14px; color: #969696; text-align: center; font-family: Helvetica, Arial, sans-serif, 'Open Sans'; font-weight: 400; line-height: 24px; padding-left: 20px; padding-right: 20px;">
-                                                Unlimited Users
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td width="100%" height="1" bgcolor="#f6f6f6" style="line-height: 1px; font-size: 0px;">&nbsp;</td>
-                                        </tr>
-                                        <tr>
-                                            <td width="100%" height="40" style="font-size: 14px; color: #969696; text-align: center; font-family: Helvetica, Arial, sans-serif, 'Open Sans'; font-weight: 400; line-height: 24px; padding-left: 20px; padding-right: 20px;">
-                                                Backup Service
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td width="100%" height="1" bgcolor="#f6f6f6" style="line-height: 1px; font-size: 0px;">&nbsp;</td>
-                                        </tr>
-                                        <tr>
-                                            <td width="100%" height="25">                                   
-                                            </td>
-                                        </tr>
-                                        <!-- Button Center -->
-                                        <tr>
-                                            <td align="center">
-                                                <table border="0" cellpadding="0" cellspacing="0" align="center"> 
-                                                    <tbody><tr> 
-                                                        <td align="center" height="36" bgcolor="#67c890" style="padding-left: 19px; padding-right: 19px; font-weight: 700; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-transform: uppercase; background-color: #67c890; font-size: 12px;">
-                                                            <a href="#" style="color: #ffffff; font-size:12px; text-decoration: none; line-height:34px; width:100%;">Buy Now!</a>
-                                                        </td> 
-                                                    </tr> 
-                                                </tbody></table> 
-                                            </td>
-                                        </tr>
-                                        <!-- End Button Center -->
-                                        <tr>
-                                            <td width="100%" height="40">
+                                                Flexible and affordable logistics fee according to your needs. Pay only as per your requirements via logistics solutions tailored for every unique customer through our affiliation with various courier and shipping partners.
                                             </td>
                                         </tr>
                                     </tbody></table>
@@ -735,6 +416,96 @@
         </td>
     </tr>
 </table>
+
+{{-- <table width="100%" border="0" cellpadding="0" cellspacing="0" align="center" class="full" id="service">
+    <tbody><tr>
+        <td width="100%" valign="top" bgcolor="#f6f6f6">
+            <table width="100%" border="0" cellpadding="0" cellspacing="0" align="center" class="full">
+                <tbody><tr>
+                    <td align="center">
+                        
+                        <table width="600" border="0" cellpadding="0" cellspacing="0" align="center" class="mobile">
+                            <tbody><tr>
+                                <td width="100%" align="center">
+                                    
+                                    <!-- Headline Header -->
+                                    <table width="600" border="0" cellpadding="0" cellspacing="0" align="center" style="border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;" class="full">
+                                        <tbody><tr>
+                                            <td width="100%" height="35"></td>
+                                        </tr>
+                                        <tr>
+                                            <td width="100%" style="font-size: 18px; color: #191919; text-align: center; font-family: Helvetica, Arial, sans-serif, 'Open Sans'; font-weight: 600; line-height: 24px; vertical-align: top; text-transform: uppercase;" class="fullCenter">  
+                                                FAQ                            
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td width="100%" height="40"></td>
+                                        </tr>
+                                    </tbody></table><!-- End Headline Header -->
+                                    
+                                    <table width="270" border="0" cellpadding="0" cellspacing="0" align="right" style="border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;" class="table50Right">
+                                        <tbody><tr>
+                                            <td width="100%" style="font-size: 18px; color: #191919; text-align: left; font-family: Helvetica, Arial, sans-serif, 'Open Sans'; font-weight: 600; line-height:24px; vertical-align: top;">   
+                                                About Us                        
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td width="100%" height="15"></td>
+                                        </tr>
+                                        <tr>
+                                            <td width="100%" style="font-size: 13px; color: #969696; text-align: left; font-family: Helvetica, Arial, sans-serif, 'Open Sans'; font-weight: 400; line-height: 24px; vertical-align: top;">  
+                                                <b>ParcelHub</b> is a team dedicated to deliver the best solutions for end to end services covering from packing and shipping, to warehousing and e-commerce fulfillment </br> — all at the price of our customers’ best interest and satisfaction.
+                                            </td>
+                                        </tr>
+                                    </tbody></table>
+                                    
+                                    <!-- Image 2 Text -->
+                                    <table width="270" border="0" cellpadding="0" cellspacing="0" align="left" style="border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;" class="table50Left">
+                                        <tbody><tr>
+                                            <td width="100%" style="font-size: 18px; color: #191919; text-align: left; font-family: Helvetica, Arial, sans-serif, 'Open Sans'; font-weight: 600; line-height:24px; vertical-align: top;">   
+                                                Why Us?                        
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td width="100%" height="15"></td>
+                                        </tr>
+                                        <tr>
+                                            <td width="100%" style="font-size: 13px; color: #969696; text-align: left; font-family: Helvetica, Arial, sans-serif, 'Open Sans'; font-weight: 400; line-height: 24px; vertical-align: top;">  
+                                                ➢   One-Stop business service centre for all your e-commerce needs.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td width="100%" style="font-size: 13px; color: #969696; text-align: left; font-family: Helvetica, Arial, sans-serif, 'Open Sans'; font-weight: 400; line-height: 24px; vertical-align: top;">  
+                                                ➢   Customisable and Flexible solutions available to cater to each customer’s business plans and needs.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td width="100%" style="font-size: 13px; color: #969696; text-align: left; font-family: Helvetica, Arial, sans-serif, 'Open Sans'; font-weight: 400; line-height: 24px; vertical-align: top;">  
+                                                ➢   Affordable rates for the best services by our team of competent personnel.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td width="100%" height="30"></td>
+                                        </tr>
+                                    </tbody></table>
+                                    
+                                </td>
+                            </tr>
+                        </tbody></table>
+                        
+                        <table width="100%" border="0" cellpadding="0" cellspacing="0" align="center" class="full">
+                            <tbody><tr>
+                                <td width="100%" height="40"></td>
+                            </tr>
+                        </tbody></table>
+                    
+                    </td>
+                </tr>
+            </tbody></table><!-- Nav Wrapper -->
+        
+        </td>
+    </tr>
+</table> --}}
 
 <table width="100%" border="0" cellpadding="0" cellspacing="0" align="center" class="full">
     <tbody><tr>
@@ -767,9 +538,7 @@
                                         </tr>
                                         <tr>
                                             <td width="100%" style="font-size: 12px; color: #969696; text-align: left; font-family: Helvetica, Arial, sans-serif, 'Open Sans'; font-weight: 400; line-height: 20px; vertical-align: top;" class="fullCenter">   
-                                                We are a team fusce dapibus, tellus ac cursus commodo.
-                                                <br><br>
-                                                Nulla vitae elit libero, a pharetra augue. Nullam quis risus eget urna mollis ornare vel eu leo.
+                                                <b>ParcelHub</b> is a team dedicated to deliver the best solutions for end to end services covering from packing and shipping, to warehousing and </br>e-commerce fulfillment </br> — all at the price of our customers’ best interest and satisfaction.
                                             </td>
                                         </tr>
                                     </tbody></table>
@@ -785,7 +554,7 @@
                                     <table width="170" border="0" cellpadding="0" cellspacing="0" align="left" style="border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;" class="fullCenter">
                                         <tbody><tr>
                                             <td width="100%" style="font-size: 14px; color: #191919; text-align: left; font-family: Helvetica, Arial, sans-serif, 'Open Sans'; font-weight: 600; line-height: 24px; vertical-align: top;" class="fullCenter">   
-                                                Social Media                    
+                                                Why Us?                    
                                             </td>
                                         </tr>
                                         <tr>
@@ -794,39 +563,15 @@
                                         </tr>
                                         <tr>
                                             <td width="100%" style="font-size: 12px; color: #969696; text-align: left; font-family: Helvetica, Arial, sans-serif, 'Open Sans'; font-weight: 400; line-height: 20px; vertical-align: top;" class="fullCenter">   
-                                                Donec id elit non mi porta gravida at eget metus.
+                                                ➢   One-Stop business service centre for all your e-commerce needs.</br>
+                                                ➢   Customisable and Flexible solutions available to cater to each customer’s business plans and needs.</br>
+                                                ➢   Affordable rates for the best services by our team of competent personnel.
+
                                                 <br><br>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td width="100%" height="5">                                    
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td width="100%" class="icon24">
-                                                <table width="170" border="0" cellpadding="0" cellspacing="0" align="center" style="border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;">
-                                                    <tbody><tr>
-                                                        <td width="24" height="24" style="text-align: center; line-height: 1px;">
-                                                            <a href="#" style="text-decoration: none;"><img src="images/icon1.jpg" width="24" alt="" border="0"></a>
-                                                        </td>
-                                                        <td width="6"></td>
-                                                        <td width="24" height="24" style="text-align: center; line-height: 1px;">
-                                                            <a href="#" style="text-decoration: none;"><img src="images/icon2.jpg" width="24" alt="" border="0"></a>
-                                                        </td>
-                                                        <td width="6"></td>
-                                                        <td width="24" height="24" style="text-align: center; line-height: 1px;">
-                                                            <a href="#" style="text-decoration: none;"><img src="images/icon3.jpg" width="24" alt="" border="0"></a>
-                                                        </td>
-                                                        <td width="6"></td>
-                                                        <td width="24" height="24" style="text-align: center; line-height: 1px;">
-                                                            <a href="#" style="text-decoration: none;"><img src="images/icon4.jpg" width="24" alt="" border="0"></a>
-                                                        </td>
-                                                        <td width="6"></td>
-                                                        <td width="24" height="24" style="text-align: center; line-height: 1px;">
-                                                            <a href="#" style="text-decoration: none;"><img src="images/icon5.jpg" width="24" alt="" border="0"></a>
-                                                        </td>
-                                                    </tr>
-                                                </tbody></table>
                                             </td>
                                         </tr>
                                     </tbody></table>
@@ -851,11 +596,21 @@
                                         </tr>
                                         <tr>
                                             <td width="100%" style="font-size: 12px; color: #969696; text-align: left; font-family: Helvetica, Arial, sans-serif, 'Open Sans'; font-weight: 400; line-height: 20px; vertical-align: top;" class="fullCenter">   
-                                                <a href="#" style="text-decoration: none; color: #969696;">www.yourwebsite.com</a>
+                                                <b>How can we help you? Talk to us at</b>
                                                 <br>
-                                                1200AA Amsterdam
+                                                <a href="mailto:parcelhub@email.com">parcelhub@email.com</a>
+                                                <br>
+                                                <a href="tel:+13174562564">317-456-2564</a>
                                                 <br><br>
-                                                Nulla vitae elit libero, a pharetra augue. Nullam quis risus eget urna mollis ornare vel eu leo.
+                                                No. 26, Jalan PJU 3/49,
+                                                Sunway Damansara 47810 Petaling Jaya,
+                                                Selangor Darul Ehsan, Malaysia.</br>
+                                                <b>Operating hours:</b>
+                                                <br>
+                                                Mon-Fri
+                                                <br>
+                                                9 AM – 6 PM
+
                                             </td>
                                         </tr>
                                     </tbody></table>
