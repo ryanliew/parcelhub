@@ -87,7 +87,7 @@
         <td align="center" bgcolor="#303030" style="background-image: url('images/home-1.jpg'); background-position: center center; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-attachment: fixed; background-size: cover; background-size: 100% auto;" id="animation" class="headerBG">
         <!--[if gte mso 9]> <v:rect xmlns:v="urn:schemas-microsoft-com:vml" fill="true" stroke="false" style="mso-width-percent:1000;"><v:fill type="tile" src="images/header_bg2.jpg"/><v:textbox style="mso-fit-shape-to-text:true" inset="0,0,0,0"><![endif]--><div>
         
-            <table width="600" border="0" cellpadding="0" cellspacing="0" align="center" class="mobile">
+            <table width="600" border="0" cellpadding="0" cellspacing="0" align="center" class="mobile" id="mobileView">
                 <tbody><tr>
                     <td width="100%" align="center">
                         
@@ -101,7 +101,7 @@
                                     <table width="600" border="0" cellpadding="0" cellspacing="0" align="right" style="text-align: center;" class="fullCenter"> 
                                         <tbody><tr>
                                             <td valign="middle" width="100%" style="text-align: center; font-family: Helvetica, Arial, sans-serif, 'Open Sans'; font-weight: 700; font-size: 33px; color: #ffffff; line-height: 38px;">
-                                                Place Your Goods
+                                                The best logistics solutions for online to offline commerce starts here
                                             </td>
                                         </tr>
                                         <tr>
@@ -109,7 +109,7 @@
                                         </tr>
                                         <tr>
                                             <td valign="middle" width="100%" style="text-align: center; font-family: Helvetica, Arial, sans-serif, 'Open Sans'; font-weight: 400; font-size: 15px; color: #ffffff;">
-                                                Keeping your goods in a tidy place.
+                                                Pack, Ship, and Manage your parcels all in one place at ParcelHub. Whether you are an e-seller just starting out or a SME looking to grow your business, we are here to make the experience pleasant for you.
                                             </td>
                                         </tr>
                                         <!-- End Button Center -->
