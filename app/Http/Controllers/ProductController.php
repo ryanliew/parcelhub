@@ -47,7 +47,7 @@ class ProductController extends Controller
         {
             $user = auth()->user();
             if($user->hasRole('admin'))
-                return Controller::VueTableListResult(Product::with(["inbounds", "lots", "outbounds"])->select('products.picture as picture',
+                return Controller::VueTableListResult(Product::with(["inbounds", "lots", "outbounds", "adjustments"])->select('products.picture as picture',
                                         'products.sku as sku',
                                         'products.id as id',
                                         'products.name as product_name',
@@ -62,7 +62,7 @@ class ProductController extends Controller
                                 ->leftJoin('users', 'products.user_id', '=', 'users.id')
                                 ->where('status', 'true'));
             else
-                return Controller::VueTableListResult(auth()->user()->products()->with(["inbounds", "lots", "outbounds"])
+                return Controller::VueTableListResult(auth()->user()->products()->with(["inbounds", "lots", "outbounds", "adjustments"])
                                                                                 ->select('products.picture as picture',
                                                                                         'products.sku as sku',
                                                                                         'products.id as id',

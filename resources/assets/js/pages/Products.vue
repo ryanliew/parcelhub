@@ -333,8 +333,9 @@
 
 			fields() {
 				let field = [
-					{name: 'picture', callback: 'image', title: 'Image'},
+					
 					{name: 'sku', sortField: 'sku', title: 'SKU'},
+					{name: 'picture', callback: 'image', title: 'Image'},
 					{name: 'product_name', sortField: 'product_name', title: 'Name'},
 					{name: 'volume', title: 'Volume(cm³)'},
 					{name: 'total_quantity', title: 'Stock'},

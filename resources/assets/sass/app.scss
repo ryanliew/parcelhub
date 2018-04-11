@@ -228,81 +228,8 @@
 
 // Responsive table css
 @media screen and (max-width: 800px) {
-	.is-responsive {
-	    width: 100%;
-	    border-collapse: collapse;
-	    border-spacing: 0;
-	    display: block;
-	    position: relative;
-	}
-
-    td:empty:before {
-      	content: '\00a0';
-    }
-
-    th,
-    td {
-      	margin: 0;
-      	vertical-align: top;
-    }
-
-    th {
-      	text-align: left;
-    }
-
-    thead {
-	    border-right: solid 2px $grey-lighter;
-	    display: block;
-	    float: left;
-    }
-
-    thead tr {
-        display: block;
-        padding: 0 10px 0 0;
-    }
-    
-    thead th::before {
-          content: "\00a0";
-    }
-
-    thead td, thead th {
-        border-width: 0 0 1px;
-    }
-
-    tbody {
-      	display: block;
-      	width: auto;
-      	position: relative;
-      	overflow-x: auto;
-      	white-space: nowrap;
-    }
-
-   	tbody tr {
-        display: inline-block;
-        vertical-align: top;
-    }
-
-    th {
-      display: block;
-      text-align: right;
-    }
-
-    td {
-      display: block;
-      min-height: 1.25em;
-      text-align: left;
-    }
-
-    th,
-    td
-      &:last-child {
-        border-bottom-width: 0;
-    }
-
-    tr
-      &:last-child
-        td:not(:last-child){
-          border: $table-cell-border;
-          border-width: $table-cell-border-width;
-    }
+	table.responsive td {
+    border-top: 1px solid #dbdbdb;
+    border-bottom: 1px solid #dbdbdb;
+  }
 }
