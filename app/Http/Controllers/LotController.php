@@ -257,15 +257,36 @@ class LotController extends Controller
     public function editStock(Request $request)
     {
         $lot_products = json_decode($request['lot_products'], true);
+        $adjustments = [];
 
         foreach($lot_products as $lotproduct)
         {
-            $lot = Lot::find($lotproduct['lot_id']);
-            if($lot->products()->where('product_id', $lotproduct['product_id'])->count() > 0)
-                $lot->products()->updateExistingPivot($lotproduct['product_id'], ['quantity' => $lotproduct['quantity']]);
-            else
-                $lot->products()->attach($lotproduct['product_id'], ['quantity' => $lotproduct['quantity']]);
+            if($lotproduct['remark'] !== '')
+            {
+                $lot = Lot::find($lotproduct['lot_id']);
+                $original_quantity = 0;
+                $product = $lot->products()->where('product_id', $lotproduct['product_id'])->first();
+                if($product) {
+                    $original_quantity = $product->pivot->quantity;
+                    $lot->products()->updateExistingPivot($lotproduct['product_id'], 
+                                                            ['quantity' => $lotproduct['quantity']]);
+                }
+                else {
+                    $lot->products()->attach($lotproduct['product_id'], ['quantity' => $lotproduct['quantity']]);
+                }
+
+                array_push($adjustments, [
+                    'lot_id' => $lot->id,
+                    'user_id' => auth()->id(),
+                    'original_quantity' => $original_quantity,
+                    'new_quantity' => $lotproduct['quantity'],
+                    'remark' => $lotproduct['remark']
+                ]);
+                
+            }
         }
+        
+        $product->adjustments()->createMany($adjustments);
 
         return ['message' => 'Stock updated successfully'];
     }

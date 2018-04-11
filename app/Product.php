@@ -79,6 +79,11 @@ class Product extends Model
     	return $this->belongsTo('App\User');
     }
 
+    public function adjustments()
+    {
+        return $this->hasMany('App\Adjustment');
+    }
+
     // Custom accessor
     public function getVolumeAttribute(){
         return $this->height * $this->width * $this->length;

@@ -47,7 +47,7 @@
 		data() {
 			return {
 				css: {
-					tableClass: 'table is-hoverable is-fullwidth is-responsive',
+					tableClass: 'table is-hoverable is-fullwidth responsive',
 					ascendingIcon: 'fa fa-caret-up',
 					descendingIcon: 'fa fa-caret-down',
 				},
@@ -102,6 +102,8 @@
 
 			onLoaded() {
 				this.loading = false;
+				reswitch = true;
+				updateTables();
 			},
 
 			onCellClicked(data, field, event) {
