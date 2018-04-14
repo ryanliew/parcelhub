@@ -166,6 +166,7 @@
 					<thead>
 						<th>Lot</th>
 						<th>Quantity</th>
+						<th v-if="isEditing">Adjustment remark</th>
 						<th>Incoming quantity</th>
 						<th>Outgoing quantity</th>
 					</thead>
@@ -182,6 +183,20 @@
 									@input="updateStock($event, index)"
 								>
 								</text-input>
+							</td>
+							<td v-if="isEditing">
+								<textarea-input
+									v-model="actualProduct[index].remark" 
+									:defaultValue="actualProduct[index].remark"
+									:editable="true"
+									label="Remark"
+									name="remark"
+									type="text"
+									:hideLabel="true"
+									:required="true"
+									rows="0.5"
+									cols="4">
+								</textarea-input>
 							</td>
 							<td>{{ lot.pivot.incoming_quantity }}</td>
 							<td>{{ lot.pivot.outgoing_product }}</td>
@@ -207,6 +222,21 @@
 								>
 								</text-input>
 							</td>
+							<td v-if="isEditing">
+								<textarea-input
+									v-if="newLots[index]"
+									v-model="newLots[index].remark" 
+									:editable="true"
+									label="Remark"
+									name="remark"
+									type="text"
+									:hideLabel="true"
+									:required="true"
+									rows="0.5"
+									cols="4"
+								>
+								</textarea-input>
+							</td>
 							<td>-</td>
 							<td>-</td>
 						</tr>
@@ -215,11 +245,43 @@
 			</div>
 		</div>
 
-
+		<div class="card mt-15">
+			<div class="card-header">
+				<div class="card-header-title level">
+					<div class="level-left">
+						<div class="level-item">
+							<span>Stock adjustments</span>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="card-content">
+				<table class="table is-responsive is-fullwidth is-hoverable">
+					<thead>
+						<th>Lot</th>
+						<th>Made by</th>
+						<th>Original quantity</th>
+						<th>New quantity</th>
+						<th>Adjustment remark</th>
+						<th>Adjustment date</th>
+					</thead>
+					<tbody>
+						<tr v-for="(adjustment, index) in product.adjustments">
+							<td>{{ adjustment.lot.name }}</td>
+							<td>{{ adjustment.user.name }}</td>
+							<td>{{ adjustment.original_quantity }}</td>
+							<td>{{ adjustment.new_quantity }}</td>
+							<td>{{ adjustment.remark }}</td>
+							<td>{{ adjustment.created_at | date }}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
 
         <confirmation :isConfirming="confirmStockUpdate"
         				title="Confirmation"
-        				message="Confirm updating stock? Rows without a lot selected will be removed."
+        				message="Confirm updating stock? Rows without a lot selected or adjustment remark will be ignored."
         				@close="confirmStockUpdate = false"
         				@confirm="onSubmit">
         </confirmation>
@@ -250,7 +312,7 @@
 				let obj = {};
 				obj['lot_id'] = lot.id;
 				obj['quantity'] = lot.pivot.quantity;
-
+				obj['remark'] = '';
 				return obj;
 			});
 
@@ -296,6 +358,7 @@
 					obj['lot_id'] = lot.lot_id;
 					obj['product_id'] = this.product.id;
 					obj['quantity'] = lot.quantity;
+					obj['remark'] = lot.remark;
 					return obj;
 				});
 
@@ -304,6 +367,7 @@
 					obj['lot_id'] = lot.lot.value;
 					obj['product_id'] = this.product.id;
 					obj['quantity'] = lot.quantity;
+					obj['remark'] = lot.remark;
 
 					return obj;
 				});
@@ -331,6 +395,7 @@
 
 			onCancel() {
 				this.isEditing = false;
+				this.newLots = [];
 			},
 
 			updateStock(event, index) {
@@ -338,7 +403,7 @@
 			},
 
 			addLots() {
-				this.newLots.push({lot: false, quantity: 0});
+				this.newLots.push({lot: false, quantity: 0, remark: ''});
 			},
 		},
 
