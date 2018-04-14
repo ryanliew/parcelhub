@@ -75,7 +75,11 @@ class OutboundController extends Controller
      */
     public function update(Request $request)
     {
-        $this->validate($request, ['process_status' => 'required']);
+        $this->validate($request, 
+                        [
+                            'process_status' => 'required', 
+                            'tracking_numbers' => 'required_if:process_status,completed'
+                        ]);
 
         $outbound = outbound::find($request->id);
 
@@ -124,7 +128,12 @@ class OutboundController extends Controller
                 $lot->products()->updateExistingPivot($product->id, ['outgoing_product' => $new_outgoing_quantity, 'quantity' => $new_quantity]);
                 $lot->save();
             }
+            
+
+            $outbound->tracking_numbers()->createMany(array_map(function($value){ return ["number" => $value];}, explode(";", $request->tracking_numbers)));
         }
+
+
 
         $outbound->process_status = $request->process_status;
         $outbound->save();
@@ -160,5 +169,40 @@ class OutboundController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function updateTracking(Request $request)
+    {
+        $outbound = Outbound::find($request->id);
+
+        $outbound->updateTrackingNumber($request->tracking_numbers);
+
+        return ["message" => "Tracking numbers updated successfully."];
+    }
+
+    public function updateTrackings(Request $request)
+    {
+        $outbounds = json_decode($request->outbounds);
+
+        $invalid_outbounds = [];
+        $valid_outbounds = [];
+        foreach($outbounds as $request_outbound)
+        {
+            $id = explode( Outbound::PREFIX(), $request_outbound->id )[1];
+
+            $outbound = Outbound::find($id);
+
+            if(!is_null($outbound)) {
+                $outbound->updateTrackingNumber($request_outbound->tracking_numbers);
+                array_push($valid_outbounds, $id);
+            }
+            else {
+                array_push($invalid_outbounds, $request_outbound);
+            }
+        }
+
+        Outbound::whereIn('id', $valid_outbounds)->update(['process_status' => 'completed']);
+
+        return ["message" => "Tracking numbers updated successfully. The left over outbounds are invalid.", "outbounds" => $invalid_outbounds];
     }
 }

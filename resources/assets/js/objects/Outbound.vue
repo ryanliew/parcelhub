@@ -1,69 +1,68 @@
 <template>
 	<div>
-		<div class="card">
-			<div class="card-header">
-				<div class="card-header-title level">
-					<div class="level-left">
-						<div class="level-item">
-							<span>Outbound #{{ outbound.id }}</span>
-						</div>
-					</div>
-					<div class="level-right">
-						<div class="level-item">
-							<button class="button is-primary" @click="back()">
-								<i class="fa fa-arrow-circle-left"></i>
-								<span class="pl-5">Back to list</span>
-							</button>
-							<a class="button is-info ml-5" :href="download" target="_blank">
-								<i class="fa fa-download"></i>
-								<span class="pl-5">Download invoice</span>
-							</a>
-							<a class="button is-info ml-5" :href="downloadPackinglist" target="_blank">
-								<i class="fa fa-download"></i>
-								<span class="pl-5">Download packing list</span>
-							</a>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="card-content">
-				<div class="level">
-					<div class="level-item has-text-centered">
-						<div>
-							<p class="heading">
-								Order date
-							</p>
-							<p class="title">
-								{{ outbound.created_at | date }}
-							</p>
-						</div>
-					</div>
-					<div class="level-item has-text-centered">
-						<div>
-							<p class="heading">
-								Courier
-							</p>
-							<p class="title">
-								{{ outbound.courier }}
-							</p>
-						</div>
-					</div>
-					<div class="level-item has-text-centered">
-						<div>
-							<p class="heading">
-								Total products
-							</p>
-							<p class="title">
-								{{ totalProducts }}
-							</p>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="columns mt-15">
+		<div class="columns">
 			<div class="column">
+				<!-- Outbound details -->
 				<div class="card">
+					<div class="card-header">
+						<div class="card-header-title level">
+							<div class="level-left">
+								<div class="level-item">
+									<span>Outbound #{{ outbound.id }}</span>
+								</div>
+							</div>
+							<div class="level-right">
+								<div class="level-item">
+									<a class="button is-info ml-5" :href="download" target="_blank">
+										<i class="fa fa-download"></i>
+										<span class="pl-5">Download invoice</span>
+									</a>
+									<a class="button is-info ml-5" :href="downloadPackinglist" target="_blank">
+										<i class="fa fa-download"></i>
+										<span class="pl-5">Download packing list</span>
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="card-content">
+						<div class="level">
+							<div class="level-item has-text-centered">
+								<div>
+									<p class="heading">
+										Order date
+									</p>
+									<p class="title">
+										{{ outbound.created_at | date }}
+									</p>
+								</div>
+							</div>
+							<div class="level-item has-text-centered">
+								<div>
+									<p class="heading">
+										Courier
+									</p>
+									<p class="title">
+										{{ outbound.courier }}
+									</p>
+								</div>
+							</div>
+							<div class="level-item has-text-centered">
+								<div>
+									<p class="heading">
+										Total products
+									</p>
+									<p class="title">
+										{{ totalProducts }}
+									</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<!-- Outbound products -->
+				<div class="card mt-15">
 					<div class="card-header">
 						<div class="card-header-title level">
 							<div class="level-left">
@@ -74,7 +73,7 @@
 						</div>
 					</div>
 					<div class="card-content">
-						<table class="table is-hoverable is-fullwidth is-responsive">
+						<table class="table is-hoverable is-fullwidth responsive">
 							<thead>
 								<tr>
 									<th>Image</th>
@@ -101,6 +100,75 @@
 						</table>
 					</div>
 				</div>
+					
+				<!-- Tracking numbers -->
+				<div class="card mt-15" v-if="outbound.tracking_numbers.length > 0">
+					<div class="card-header">
+						<div class="card-header-title level">
+							<div class="level-left">
+								<div class="level-item">
+									Tracking numbers
+								</div>
+							</div>
+							<div class="level-right">
+								<div class="level-item">
+									<button class="button is-primary" v-if="!isEditTracking" @click="editTracking()">
+										<i class="fa fa-edit"></i>
+										<span class="pl-5">Edit tracking numbers</span>
+									</button>
+									<div v-else>
+										<button class="button is-danger" @click="onCancel()">
+											<i class="fa fa-times"></i>
+											<span class="pl-5">Cancel</span>
+										</button>
+										<button class="button is-success" @click="submitTracking()">
+											<i class="fa fa-check"></i>
+											<span class="pl-5">Confirm changes</span>
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="card-content">
+						<table class="table is-hoverable is-fullwidth responsive" v-if="!isEditTracking">
+							<thead>
+								<tr>
+									<th>#</th>
+									<th>Number</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr v-for="(number, index) in outbound.tracking_numbers">
+									<td>{{ index + 1 }}</td>
+									<td v-text="number.number"></td>
+								</tr>
+							</tbody>
+						</table>
+						<div class="field" v-else>
+							<form @submit.prevent="submitTracking" 
+								@keydown="trackingForm.errors.clear($event.target.name)" 
+								@input="trackingForm.errors.clear($event.target.name)"
+								@keyup.enter="submitTracking">
+
+								<textarea-input
+									v-model="trackingForm.tracking_numbers" 
+									:defaultValue="trackingForm.tracking_numbers"
+									:editable="true"
+									label="Tracking numbers"
+									name="tracking_numbers"
+									type="text"
+									:hideLabel="false"
+									:required="true"
+									:error="trackingForm.errors.get('tracking_numbers')"
+									rows="2"
+									cols="4">
+								</textarea-input>
+								<i class="has-text-grey">Please separate the tracking numbers with the ; character</i>
+							</form>
+						</div>
+					</div>
+				</div>
 			</div>
 			<div class="column is-one-third">
 				<div class="card">
@@ -111,6 +179,14 @@
 									Order status
 								</div>
 							</div>
+							<div class="level-right">
+								<div class="level-item">
+									<button class="button is-primary" @click="back()">
+										<i class="fa fa-arrow-circle-left"></i>
+										<span class="pl-5">Back to list</span>
+									</button>
+								</div>
+							</div>
 						</div>
 					</div>
 					<div class="card-content">
@@ -118,7 +194,7 @@
 							@keydown="form.errors.clear($event.target.name)" 
 							@input="form.errors.clear($event.target.name)"
 							@keyup.enter="submit"
-							v-if="canManage">
+							v-if="canManage && outbound.process_status !== 'completed'">
 							
 							<div class="field">
 								<selector-input v-model="selectedStatus" :defaultData="selectedStatus"
@@ -134,9 +210,25 @@
 								</selector-input>
 							</div>
 
+							<div class="field" v-if="selectedStatus.value == 'completed'">
+								<textarea-input
+									v-model="form.tracking_numbers" 
+									:defaultValue="form.tracking_numbers"
+									:editable="true"
+									label="Tracking numbers"
+									name="tracking_numbers"
+									type="text"
+									:hideLabel="false"
+									:required="true"
+									:error="form.errors.get('tracking_numbers')"
+									rows="2"
+									cols="4">
+								</textarea-input>
+								<i class="has-text-grey">Please separate the tracking numbers with the ; character</i>
+							</div>
+
 							<div class="field">
 								<button type="submit" class="button is-success is-pulled-right">Change status</button>
-
 							</div>
 							<div class="is-clearfix"></div>
           				</form>
@@ -144,7 +236,7 @@
 							<p class="title" :class="statusClass">
 								{{ outbound.process_status | unslug | capitalize }}
 							</p>
-							<button class="button is-danger" v-if="outbound.process_status !== 'complete' && outbound.process_status !== 'canceled' " @click="confirmation = true">Cancel order</button>
+							<button class="button is-danger" v-if="outbound.process_status !== 'completed' && outbound.process_status !== 'canceled' " @click="confirmation = true">Cancel order</button>
 						</div>
 
 					</div>
@@ -204,6 +296,13 @@
         				@close="confirmSubmit = false"
         				@confirm="onSubmit">
         </confirmation>
+
+        <confirmation :isConfirming="confirmSubmitTracking"
+        				title="Confirmation"
+        				message="Confirm editing the tracking numbers?"
+        				@close="confirmSubmitTracking = false"
+        				@confirm="onSubmitTracking">
+        </confirmation>
 	</div>
 </template>
 
@@ -216,6 +315,11 @@
 				products: [],
 				form: new Form({
 					process_status: '',
+					tracking_numbers: '',
+					id: ''
+				}),
+				trackingForm: new Form({
+					tracking_numbers: '',
 					id: ''
 				}),
 				selectedStatus: {
@@ -241,7 +345,10 @@
 					}
 				],
 				confirmation: false,
-				confirmSubmit: false
+				confirmSubmit: false,
+				confirmSubmitTracking: false,
+				isEditTracking: false
+
 			};
 		},
 
@@ -271,6 +378,18 @@
 				this.confirmSubmit = true;
 			},
 
+			editTracking() {
+				this.isEditTracking = true;
+
+				this.trackingForm.tracking_numbers = _.map(this.outbound.tracking_numbers, function(value) {
+					return value.number;
+				}).join(";");
+			},
+
+			submitTracking() {
+				this.confirmSubmitTracking = true;
+			},
+
 			onSubmit() {
 				this.confirmSubmit = false;
 				this.form.post(this.action)
@@ -278,12 +397,33 @@
 						.catch(response => this.onError(response));
 			},
 
-			onSuccess() {
-				this.form.id = this.outbound.id;
+			onSubmitTracking() {
+				this.confirmSubmitTracking = false;
+				this.trackingForm.id = this.outbound.id;
+
+				// Trim out the last semicolon if it exists
+				let numbers = this.trackingForm.tracking_numbers;
+				if(numbers.substring(numbers.length - 1) == ";")
+				{
+					this.trackingForm.tracking_numbers = numbers.substring(0, numbers.length - 1);
+				}
+
+				this.trackingForm.post(this.trackingAction)
+								.then(response => this.onSuccess(response))
+								.catch(response => this.onError(response));
 			},
 
-			onError() {
+			onSuccess(response) {
+				this.form.id = this.outbound.id;
+				this.back();
+			},
 
+			onError(response) {
+				this.form.id = this.outbound.id
+			},
+
+			onCancel() {
+				this.isEditTracking = false;
 			},
 
 			statusUpdate(data) {
@@ -306,6 +446,11 @@
 
 			action() {
 				let action = '/admin/outbound/update';
+				return action;
+			},
+
+			trackingAction() {
+				let action = '/admin/outbound/tracking/update';
 				return action;
 			},
 
