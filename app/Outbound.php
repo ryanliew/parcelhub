@@ -68,7 +68,7 @@ class Outbound extends Model
     }
 
     public function products() {
-        return $this->belongsToMany('App\Product')->withPivot('quantity', 'lot_id', 'remark');
+        return $this->belongsToMany('App\Product')->withPivot('quantity', 'lot_id', 'remark', 'unit_value', 'total_value', 'weight', 'manufacture_country');
     }
 
     public function courier() {

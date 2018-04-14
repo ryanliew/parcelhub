@@ -72,7 +72,7 @@ class Product extends Model
     }
 
     public function outbounds() {
-        return $this->belongsToMany('App\Outbound')->withPivot('quantity');
+        return $this->belongsToMany('App\Outbound')->withPivot('quantity', 'unit_value', 'total_value', 'weight', 'manufacture_country');
     }
 
     public function user() {
