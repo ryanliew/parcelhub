@@ -130,6 +130,7 @@ Route::group(['prefix' => 'admin'], function() {
 	});
 	Route::group(['prefix' => 'outbound'], function() {
 		Route::post('update', 'Admin\OutboundController@update');
+		Route::post('tracking/update', 'Admin\OutboundController@updateTracking');
 	});
 });
 

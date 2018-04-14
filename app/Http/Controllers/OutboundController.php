@@ -42,7 +42,8 @@ class OutboundController extends Controller
         if(request()->wantsJson()) {
             $user = auth()->user();
             if($user->hasRole('admin'))
-                return Controller::VueTableListResult( Outbound::select('outbounds.id as id',
+                return Controller::VueTableListResult( Outbound::with('tracking_numbers')
+                                                                ->select('outbounds.id as id',
                                                                     'amount_insured',
                                                                     'process_status',
                                                                     'couriers.name as courier',
@@ -61,6 +62,7 @@ class OutboundController extends Controller
                                                                 ->orderBy('outbounds.created_at', 'desc') );
             else
                 return Controller::VueTableListResult( $user->outbounds()
+                                                            ->with('tracking_numbers')
                                                             ->select('outbounds.id as id',
                                                                     'amount_insured',
                                                                     'process_status',

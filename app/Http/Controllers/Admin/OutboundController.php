@@ -75,7 +75,11 @@ class OutboundController extends Controller
      */
     public function update(Request $request)
     {
-        $this->validate($request, ['process_status' => 'required']);
+        $this->validate($request, 
+                        [
+                            'process_status' => 'required', 
+                            'tracking_numbers' => 'required_if:process_status,completed'
+                        ]);
 
         $outbound = outbound::find($request->id);
 
@@ -124,7 +128,12 @@ class OutboundController extends Controller
                 $lot->products()->updateExistingPivot($product->id, ['outgoing_product' => $new_outgoing_quantity, 'quantity' => $new_quantity]);
                 $lot->save();
             }
+            
+
+            $outbound->tracking_numbers()->createMany(array_map(function($value){ return ["number" => $value];}, explode(";", $request->tracking_numbers)));
         }
+
+
 
         $outbound->process_status = $request->process_status;
         $outbound->save();
@@ -160,5 +169,26 @@ class OutboundController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function updateTracking(Request $request)
+    {
+        $outbound = Outbound::find($request->id);
+
+        $tracking_numbers = explode(";", $request->tracking_numbers);
+
+        // Clear out number that are no longer needed
+        $outbound->tracking_numbers()->whereNotIn('number', $tracking_numbers)->delete();
+
+        // Find out what numbers we need to add in
+        $difference = collect($tracking_numbers)->diff($outbound->tracking_numbers->pluck('number'));
+
+        $outbound->tracking_numbers()->createMany(array_map(
+                                                    function($value){ 
+                                                        return ["number" => $value];
+                                                    }, 
+                                                    $difference->all()));
+
+        return ["message" => "Tracking numbers updated successfully."];
     }
 }

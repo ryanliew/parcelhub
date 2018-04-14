@@ -75,6 +75,11 @@ class Outbound extends Model
     	return $this->belongsTo('App\Courier');
     }
 
+    public function tracking_numbers()
+    {
+        return $this->hasMany('App\TrackingNumber');
+    }
+
     public function getTotalProductQuantityAttribute($product_id) {
         $total = 0;
 

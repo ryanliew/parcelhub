@@ -68086,6 +68086,105 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	props: ['outbound', 'canManage', 'fee', 'number'],
@@ -68095,6 +68194,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			products: [],
 			form: new Form({
 				process_status: '',
+				tracking_numbers: '',
+				id: ''
+			}),
+			trackingForm: new Form({
+				tracking_numbers: '',
 				id: ''
 			}),
 			selectedStatus: {
@@ -68115,7 +68219,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 				label: 'Canceled'
 			}],
 			confirmation: false,
-			confirmSubmit: false
+			confirmSubmit: false,
+			confirmSubmitTracking: false,
+			isEditTracking: false
+
 		};
 	},
 	mounted: function mounted() {
@@ -68144,6 +68251,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		submit: function submit() {
 			this.confirmSubmit = true;
 		},
+		editTracking: function editTracking() {
+			this.isEditTracking = true;
+
+			this.trackingForm.tracking_numbers = _.map(this.outbound.tracking_numbers, function (value) {
+				return value.number;
+			}).join(";");
+		},
+		submitTracking: function submitTracking() {
+			this.confirmSubmitTracking = true;
+		},
 		onSubmit: function onSubmit() {
 			var _this2 = this;
 
@@ -68154,10 +68271,34 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 				return _this2.onError(response);
 			});
 		},
-		onSuccess: function onSuccess() {
+		onSubmitTracking: function onSubmitTracking() {
+			var _this3 = this;
+
+			this.confirmSubmitTracking = false;
+			this.trackingForm.id = this.outbound.id;
+
+			// Trim out the last semicolon if it exists
+			var numbers = this.trackingForm.tracking_numbers;
+			if (numbers.substring(numbers.length - 1) == ";") {
+				this.trackingForm.tracking_numbers = numbers.substring(0, numbers.length - 1);
+			}
+
+			this.trackingForm.post(this.trackingAction).then(function (response) {
+				return _this3.onSuccess(response);
+			}).catch(function (response) {
+				return _this3.onError(response);
+			});
+		},
+		onSuccess: function onSuccess(response) {
+			this.form.id = this.outbound.id;
+			this.back();
+		},
+		onError: function onError(response) {
 			this.form.id = this.outbound.id;
 		},
-		onError: function onError() {},
+		onCancel: function onCancel() {
+			this.isEditTracking = false;
+		},
 		statusUpdate: function statusUpdate(data) {
 			this.selectedStatus = data;
 			this.form.process_status = data.value;
@@ -68176,6 +68317,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		},
 		action: function action() {
 			var action = '/admin/outbound/update';
+			return action;
+		},
+		trackingAction: function trackingAction() {
+			var action = '/admin/outbound/tracking/update';
 			return action;
 		},
 		statusClass: function statusClass() {
@@ -68221,134 +68366,122 @@ var render = function() {
   return _c(
     "div",
     [
-      _c("div", { staticClass: "card" }, [
-        _c("div", { staticClass: "card-header" }, [
-          _c("div", { staticClass: "card-header-title level" }, [
-            _c("div", { staticClass: "level-left" }, [
-              _c("div", { staticClass: "level-item" }, [
-                _c("span", [_vm._v("Outbound #" + _vm._s(_vm.outbound.id))])
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "level-right" }, [
-              _c("div", { staticClass: "level-item" }, [
-                _c(
-                  "button",
-                  {
-                    staticClass: "button is-primary",
-                    on: {
-                      click: function($event) {
-                        _vm.back()
-                      }
-                    }
-                  },
-                  [
-                    _c("i", { staticClass: "fa fa-arrow-circle-left" }),
-                    _vm._v(" "),
-                    _c("span", { staticClass: "pl-5" }, [
-                      _vm._v("Back to list")
-                    ])
-                  ]
-                ),
-                _vm._v(" "),
-                _c(
-                  "a",
-                  {
-                    staticClass: "button is-info ml-5",
-                    attrs: { href: _vm.download, target: "_blank" }
-                  },
-                  [
-                    _c("i", { staticClass: "fa fa-download" }),
-                    _vm._v(" "),
-                    _c("span", { staticClass: "pl-5" }, [
-                      _vm._v("Download invoice")
-                    ])
-                  ]
-                ),
-                _vm._v(" "),
-                _c(
-                  "a",
-                  {
-                    staticClass: "button is-info ml-5",
-                    attrs: { href: _vm.downloadPackinglist, target: "_blank" }
-                  },
-                  [
-                    _c("i", { staticClass: "fa fa-download" }),
-                    _vm._v(" "),
-                    _c("span", { staticClass: "pl-5" }, [
-                      _vm._v("Download packing list")
-                    ])
-                  ]
-                )
-              ])
-            ])
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "card-content" }, [
-          _c("div", { staticClass: "level" }, [
-            _c("div", { staticClass: "level-item has-text-centered" }, [
-              _c("div", [
-                _c("p", { staticClass: "heading" }, [
-                  _vm._v("\n\t\t\t\t\t\t\t\tOrder date\n\t\t\t\t\t\t\t")
-                ]),
-                _vm._v(" "),
-                _c("p", { staticClass: "title" }, [
-                  _vm._v(
-                    "\n\t\t\t\t\t\t\t\t" +
-                      _vm._s(_vm._f("date")(_vm.outbound.created_at)) +
-                      "\n\t\t\t\t\t\t\t"
-                  )
-                ])
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "level-item has-text-centered" }, [
-              _c("div", [
-                _c("p", { staticClass: "heading" }, [
-                  _vm._v("\n\t\t\t\t\t\t\t\tCourier\n\t\t\t\t\t\t\t")
-                ]),
-                _vm._v(" "),
-                _c("p", { staticClass: "title" }, [
-                  _vm._v(
-                    "\n\t\t\t\t\t\t\t\t" +
-                      _vm._s(_vm.outbound.courier) +
-                      "\n\t\t\t\t\t\t\t"
-                  )
-                ])
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "level-item has-text-centered" }, [
-              _c("div", [
-                _c("p", { staticClass: "heading" }, [
-                  _vm._v("\n\t\t\t\t\t\t\t\tTotal products\n\t\t\t\t\t\t\t")
-                ]),
-                _vm._v(" "),
-                _c("p", { staticClass: "title" }, [
-                  _vm._v(
-                    "\n\t\t\t\t\t\t\t\t" +
-                      _vm._s(_vm.totalProducts) +
-                      "\n\t\t\t\t\t\t\t"
-                  )
-                ])
-              ])
-            ])
-          ])
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "columns mt-15" }, [
+      _c("div", { staticClass: "columns" }, [
         _c("div", { staticClass: "column" }, [
           _c("div", { staticClass: "card" }, [
+            _c("div", { staticClass: "card-header" }, [
+              _c("div", { staticClass: "card-header-title level" }, [
+                _c("div", { staticClass: "level-left" }, [
+                  _c("div", { staticClass: "level-item" }, [
+                    _c("span", [_vm._v("Outbound #" + _vm._s(_vm.outbound.id))])
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "level-right" }, [
+                  _c("div", { staticClass: "level-item" }, [
+                    _c(
+                      "a",
+                      {
+                        staticClass: "button is-info ml-5",
+                        attrs: { href: _vm.download, target: "_blank" }
+                      },
+                      [
+                        _c("i", { staticClass: "fa fa-download" }),
+                        _vm._v(" "),
+                        _c("span", { staticClass: "pl-5" }, [
+                          _vm._v("Download invoice")
+                        ])
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "a",
+                      {
+                        staticClass: "button is-info ml-5",
+                        attrs: {
+                          href: _vm.downloadPackinglist,
+                          target: "_blank"
+                        }
+                      },
+                      [
+                        _c("i", { staticClass: "fa fa-download" }),
+                        _vm._v(" "),
+                        _c("span", { staticClass: "pl-5" }, [
+                          _vm._v("Download packing list")
+                        ])
+                      ]
+                    )
+                  ])
+                ])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "card-content" }, [
+              _c("div", { staticClass: "level" }, [
+                _c("div", { staticClass: "level-item has-text-centered" }, [
+                  _c("div", [
+                    _c("p", { staticClass: "heading" }, [
+                      _vm._v(
+                        "\n\t\t\t\t\t\t\t\t\t\tOrder date\n\t\t\t\t\t\t\t\t\t"
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("p", { staticClass: "title" }, [
+                      _vm._v(
+                        "\n\t\t\t\t\t\t\t\t\t\t" +
+                          _vm._s(_vm._f("date")(_vm.outbound.created_at)) +
+                          "\n\t\t\t\t\t\t\t\t\t"
+                      )
+                    ])
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "level-item has-text-centered" }, [
+                  _c("div", [
+                    _c("p", { staticClass: "heading" }, [
+                      _vm._v(
+                        "\n\t\t\t\t\t\t\t\t\t\tCourier\n\t\t\t\t\t\t\t\t\t"
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("p", { staticClass: "title" }, [
+                      _vm._v(
+                        "\n\t\t\t\t\t\t\t\t\t\t" +
+                          _vm._s(_vm.outbound.courier) +
+                          "\n\t\t\t\t\t\t\t\t\t"
+                      )
+                    ])
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "level-item has-text-centered" }, [
+                  _c("div", [
+                    _c("p", { staticClass: "heading" }, [
+                      _vm._v(
+                        "\n\t\t\t\t\t\t\t\t\t\tTotal products\n\t\t\t\t\t\t\t\t\t"
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("p", { staticClass: "title" }, [
+                      _vm._v(
+                        "\n\t\t\t\t\t\t\t\t\t\t" +
+                          _vm._s(_vm.totalProducts) +
+                          "\n\t\t\t\t\t\t\t\t\t"
+                      )
+                    ])
+                  ])
+                ])
+              ])
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "card mt-15" }, [
             _vm._m(0),
             _vm._v(" "),
             _c("div", { staticClass: "card-content" }, [
               _c(
                 "table",
-                {
-                  staticClass: "table is-hoverable is-fullwidth is-responsive"
-                },
+                { staticClass: "table is-hoverable is-fullwidth responsive" },
                 [
                   _vm._m(1),
                   _vm._v(" "),
@@ -68397,15 +68530,220 @@ var render = function() {
                 ]
               )
             ])
-          ])
+          ]),
+          _vm._v(" "),
+          _vm.outbound.tracking_numbers.length > 0
+            ? _c("div", { staticClass: "card mt-15" }, [
+                _c("div", { staticClass: "card-header" }, [
+                  _c("div", { staticClass: "card-header-title level" }, [
+                    _vm._m(2),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "level-right" }, [
+                      _c("div", { staticClass: "level-item" }, [
+                        !_vm.isEditTracking
+                          ? _c(
+                              "button",
+                              {
+                                staticClass: "button is-primary",
+                                on: {
+                                  click: function($event) {
+                                    _vm.editTracking()
+                                  }
+                                }
+                              },
+                              [
+                                _c("i", { staticClass: "fa fa-edit" }),
+                                _vm._v(" "),
+                                _c("span", { staticClass: "pl-5" }, [
+                                  _vm._v("Edit tracking numbers")
+                                ])
+                              ]
+                            )
+                          : _c("div", [
+                              _c(
+                                "button",
+                                {
+                                  staticClass: "button is-danger",
+                                  on: {
+                                    click: function($event) {
+                                      _vm.onCancel()
+                                    }
+                                  }
+                                },
+                                [
+                                  _c("i", { staticClass: "fa fa-times" }),
+                                  _vm._v(" "),
+                                  _c("span", { staticClass: "pl-5" }, [
+                                    _vm._v("Cancel")
+                                  ])
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "button",
+                                {
+                                  staticClass: "button is-success",
+                                  on: {
+                                    click: function($event) {
+                                      _vm.submitTracking()
+                                    }
+                                  }
+                                },
+                                [
+                                  _c("i", { staticClass: "fa fa-check" }),
+                                  _vm._v(" "),
+                                  _c("span", { staticClass: "pl-5" }, [
+                                    _vm._v("Confirm changes")
+                                  ])
+                                ]
+                              )
+                            ])
+                      ])
+                    ])
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "card-content" }, [
+                  !_vm.isEditTracking
+                    ? _c(
+                        "table",
+                        {
+                          staticClass:
+                            "table is-hoverable is-fullwidth responsive"
+                        },
+                        [
+                          _vm._m(3),
+                          _vm._v(" "),
+                          _c(
+                            "tbody",
+                            _vm._l(_vm.outbound.tracking_numbers, function(
+                              number,
+                              index
+                            ) {
+                              return _c("tr", [
+                                _c("td", [_vm._v(_vm._s(index + 1))]),
+                                _vm._v(" "),
+                                _c("td", {
+                                  domProps: {
+                                    textContent: _vm._s(number.number)
+                                  }
+                                })
+                              ])
+                            })
+                          )
+                        ]
+                      )
+                    : _c("div", { staticClass: "field" }, [
+                        _c(
+                          "form",
+                          {
+                            on: {
+                              submit: function($event) {
+                                $event.preventDefault()
+                                _vm.submitTracking($event)
+                              },
+                              keydown: function($event) {
+                                _vm.trackingForm.errors.clear(
+                                  $event.target.name
+                                )
+                              },
+                              input: function($event) {
+                                _vm.trackingForm.errors.clear(
+                                  $event.target.name
+                                )
+                              },
+                              keyup: function($event) {
+                                if (
+                                  !("button" in $event) &&
+                                  _vm._k(
+                                    $event.keyCode,
+                                    "enter",
+                                    13,
+                                    $event.key
+                                  )
+                                ) {
+                                  return null
+                                }
+                                _vm.submitTracking($event)
+                              }
+                            }
+                          },
+                          [
+                            _c("textarea-input", {
+                              attrs: {
+                                defaultValue: _vm.trackingForm.tracking_numbers,
+                                editable: true,
+                                label: "Tracking numbers",
+                                name: "tracking_numbers",
+                                type: "text",
+                                hideLabel: false,
+                                required: true,
+                                error: _vm.trackingForm.errors.get(
+                                  "tracking_numbers"
+                                ),
+                                rows: "2",
+                                cols: "4"
+                              },
+                              model: {
+                                value: _vm.trackingForm.tracking_numbers,
+                                callback: function($$v) {
+                                  _vm.$set(
+                                    _vm.trackingForm,
+                                    "tracking_numbers",
+                                    $$v
+                                  )
+                                },
+                                expression: "trackingForm.tracking_numbers"
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c("i", { staticClass: "has-text-grey" }, [
+                              _vm._v(
+                                "Please separate the tracking numbers with the ; character"
+                              )
+                            ])
+                          ],
+                          1
+                        )
+                      ])
+                ])
+              ])
+            : _vm._e()
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "column is-one-third" }, [
           _c("div", { staticClass: "card" }, [
-            _vm._m(2),
+            _c("div", { staticClass: "card-header" }, [
+              _c("div", { staticClass: "card-header-title level" }, [
+                _vm._m(4),
+                _vm._v(" "),
+                _c("div", { staticClass: "level-right" }, [
+                  _c("div", { staticClass: "level-item" }, [
+                    _c(
+                      "button",
+                      {
+                        staticClass: "button is-primary",
+                        on: {
+                          click: function($event) {
+                            _vm.back()
+                          }
+                        }
+                      },
+                      [
+                        _c("i", { staticClass: "fa fa-arrow-circle-left" }),
+                        _vm._v(" "),
+                        _c("span", { staticClass: "pl-5" }, [
+                          _vm._v("Back to list")
+                        ])
+                      ]
+                    )
+                  ])
+                ])
+              ])
+            ]),
             _vm._v(" "),
             _c("div", { staticClass: "card-content" }, [
-              _vm.canManage
+              _vm.canManage && _vm.outbound.process_status !== "completed"
                 ? _c(
                     "form",
                     {
@@ -68465,7 +68803,46 @@ var render = function() {
                         1
                       ),
                       _vm._v(" "),
-                      _vm._m(3),
+                      _vm.selectedStatus.value == "completed"
+                        ? _c(
+                            "div",
+                            { staticClass: "field" },
+                            [
+                              _c("textarea-input", {
+                                attrs: {
+                                  defaultValue: _vm.form.tracking_numbers,
+                                  editable: true,
+                                  label: "Tracking numbers",
+                                  name: "tracking_numbers",
+                                  type: "text",
+                                  hideLabel: false,
+                                  required: true,
+                                  error: _vm.form.errors.get(
+                                    "tracking_numbers"
+                                  ),
+                                  rows: "2",
+                                  cols: "4"
+                                },
+                                model: {
+                                  value: _vm.form.tracking_numbers,
+                                  callback: function($$v) {
+                                    _vm.$set(_vm.form, "tracking_numbers", $$v)
+                                  },
+                                  expression: "form.tracking_numbers"
+                                }
+                              }),
+                              _vm._v(" "),
+                              _c("i", { staticClass: "has-text-grey" }, [
+                                _vm._v(
+                                  "Please separate the tracking numbers with the ; character"
+                                )
+                              ])
+                            ],
+                            1
+                          )
+                        : _vm._e(),
+                      _vm._v(" "),
+                      _vm._m(5),
                       _vm._v(" "),
                       _c("div", { staticClass: "is-clearfix" })
                     ]
@@ -68483,7 +68860,7 @@ var render = function() {
                       )
                     ]),
                     _vm._v(" "),
-                    _vm.outbound.process_status !== "complete" &&
+                    _vm.outbound.process_status !== "completed" &&
                     _vm.outbound.process_status !== "canceled"
                       ? _c(
                           "button",
@@ -68503,7 +68880,7 @@ var render = function() {
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "card mt-10" }, [
-            _vm._m(4),
+            _vm._m(6),
             _vm._v(" "),
             _c("div", { staticClass: "card-content" }, [
               _c("p", { staticClass: "heading" }, [
@@ -68611,6 +68988,20 @@ var render = function() {
           },
           confirm: _vm.onSubmit
         }
+      }),
+      _vm._v(" "),
+      _c("confirmation", {
+        attrs: {
+          isConfirming: _vm.confirmSubmitTracking,
+          title: "Confirmation",
+          message: "Confirm editing the tracking numbers?"
+        },
+        on: {
+          close: function($event) {
+            _vm.confirmSubmitTracking = false
+          },
+          confirm: _vm.onSubmitTracking
+        }
       })
     ],
     1
@@ -68653,13 +69044,31 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "card-header" }, [
-      _c("div", { staticClass: "card-header-title level" }, [
-        _c("div", { staticClass: "level-left" }, [
-          _c("div", { staticClass: "level-item" }, [
-            _vm._v("\n\t\t\t\t\t\t\t\t\tOrder status\n\t\t\t\t\t\t\t\t")
-          ])
-        ])
+    return _c("div", { staticClass: "level-left" }, [
+      _c("div", { staticClass: "level-item" }, [
+        _vm._v("\n\t\t\t\t\t\t\t\t\tTracking numbers\n\t\t\t\t\t\t\t\t")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", [_vm._v("#")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Number")])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "level-left" }, [
+      _c("div", { staticClass: "level-item" }, [
+        _vm._v("\n\t\t\t\t\t\t\t\t\tOrder status\n\t\t\t\t\t\t\t\t")
       ])
     ])
   },
