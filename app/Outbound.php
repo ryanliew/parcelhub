@@ -116,4 +116,30 @@ class Outbound extends Model
     public function scopeCanceled($query) {
         return $query->where('process_status', 'canceled');
     }
+
+    // Methods
+
+    public function updateTrackingNumber($tracking_numbers)
+    {
+        $numbers = explode(";", $tracking_numbers);
+
+        // Clear out number that are no longer needed
+        $this->tracking_numbers()->whereNotIn('number', $numbers)->delete();
+
+        // Find out what numbers we need to add in
+        $difference = collect($numbers)->diff($this->tracking_numbers->pluck('number'));
+
+        $this->tracking_numbers()->createMany(array_map(
+                                                    function($value){ 
+                                                        return ["number" => $value];
+                                                    }, 
+                                                    $difference->all()));
+    }
+
+    // Static methods
+    public static function PREFIX()
+    {
+        return 'PDO-';
+    }
+    
 }

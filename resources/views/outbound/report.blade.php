@@ -65,15 +65,41 @@
         .item-table th:nth-child(4) {
             width: 20%;
         }
+        .barcode {
+            padding-top: 25px;
+            margin-left: -40px;
+        }
+        .width-quarter {
+            width: 25%;
+        }
+        .page-break {
+            page-break-after: always;
+        }
     </style>
 </head>
 <body>
-    <div class="pull-left">
+    @if($outbound->invoice_slip)
+        <?php 
+            $mime = Storage::mimeType($outbound->invoice_slip);
+            $extension = explode("/", $mime);
+            $path = str_replace('public/', 'storage/', $outbound->invoice_slip); 
+        ?>
+        @if($mime == "image/png" || $mime == "image/jpeg")
+            <img src="{{ $path }}">
+            <div class="page-break"></div>
+        @endif
+    @endif
+    <div class="pull-left width-half">
         <h2>Parcel HUB</h2>
     </div>
-    <div class="pull-right width-half">
-        <p>Ref No : <u>PHO-{{ $outbound->id }}</u></p>
+    <div class="pull-left width-quarter">
+        
+        <p>Ref No : <u>{{ \App\Outbound::PREFIX() }}{{ $outbound->id }}</u></p>
         <p>Date : <u>{{ $outbound->created_at->toDateString() }}</u></p>
+    </div>
+
+    <div class="pull-left width-quarter barcode">
+        {!! DNS1D::getBarcodeHTML( \App\Outbound::PREFIX() . $outbound->id , "C128",2, 44,"black", true) !!}
     </div>
 
     <div class="clear-both"></div>

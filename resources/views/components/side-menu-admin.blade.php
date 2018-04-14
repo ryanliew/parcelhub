@@ -45,6 +45,13 @@
             <a @if( url()->current() == route('outbounds') ) class="is-active" @endif href="{{ route('outbounds') }}">
                 Outbounds
             </a>
+            <ul>
+                <li>
+                    <a @if( url()->current() == route('outbounds.bulk') ) class="is-active" @endif href="{{ route('outbounds.bulk') }}">
+                        Scan tracking numbers
+                    </a>
+                </li>
+            </ul>
         </li>
         <li>
             <a @if( url()->current() == route('payment') ) class="is-active" @endif href="{{ route('payment') }}">

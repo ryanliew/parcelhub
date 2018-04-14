@@ -175,20 +175,34 @@ class OutboundController extends Controller
     {
         $outbound = Outbound::find($request->id);
 
-        $tracking_numbers = explode(";", $request->tracking_numbers);
-
-        // Clear out number that are no longer needed
-        $outbound->tracking_numbers()->whereNotIn('number', $tracking_numbers)->delete();
-
-        // Find out what numbers we need to add in
-        $difference = collect($tracking_numbers)->diff($outbound->tracking_numbers->pluck('number'));
-
-        $outbound->tracking_numbers()->createMany(array_map(
-                                                    function($value){ 
-                                                        return ["number" => $value];
-                                                    }, 
-                                                    $difference->all()));
+        $outbound->updateTrackingNumber($request->tracking_numbers);
 
         return ["message" => "Tracking numbers updated successfully."];
+    }
+
+    public function updateTrackings(Request $request)
+    {
+        $outbounds = json_decode($request->outbounds);
+
+        $invalid_outbounds = [];
+        $valid_outbounds = [];
+        foreach($outbounds as $request_outbound)
+        {
+            $id = explode( Outbound::PREFIX(), $request_outbound->id )[1];
+
+            $outbound = Outbound::find($id);
+
+            if(!is_null($outbound)) {
+                $outbound->updateTrackingNumber($request_outbound->tracking_numbers);
+                array_push($valid_outbounds, $id);
+            }
+            else {
+                array_push($invalid_outbounds, $request_outbound);
+            }
+        }
+
+        Outbound::whereIn('id', $valid_outbounds)->update(['process_status' => 'completed']);
+
+        return ["message" => "Tracking numbers updated successfully. The left over outbounds are invalid.", "outbounds" => $invalid_outbounds];
     }
 }

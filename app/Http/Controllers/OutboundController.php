@@ -31,6 +31,15 @@ class OutboundController extends Controller
     {
         return view('outbound.page');
     }
+
+    /**
+     * Return the bulk tracking insert page view for outbounds
+     * @return \Illuminate\Http\Response
+     */
+    public function page_bulk()
+    {
+        return view('outbound.page-bulk');
+    }
     
     /**
      * Display a listing of the resource.
@@ -142,16 +151,35 @@ class OutboundController extends Controller
     {
         $outbound = Outbound::find($id);
 
+        $pdf = PDF::loadView('outbound.report', compact('outbound'));
+
+        $mime = "";
+
         if($outbound->invoice_slip) {
+            
             $mime = Storage::mimeType($outbound->invoice_slip);
             $extension = explode("/", $mime);
             $path = storage_path('app/' . $outbound->invoice_slip);
-            return response()->download($path, 'outbound-report.' . $extension[1], [ 'Content-Type' => $mime ]);
+
+            if($mime == "application/pdf")
+            {
+                $pdf->setPaper('A4')->save('/outbound-report.pdf');
+                
+                $pdf = new \LynX39\LaraPdfMerger\PdfManage;
+
+                $pdf->addPDF($path, 'all');
+                $pdf->addPDF('/outbound-report.pdf', 'all');
+                $pdf->merge('download', '/outbound-report.pdf', 'P');
+            }
+            else
+            {
+                return $pdf->setPaper('A4')->download('outbound-report.pdf');
+            }
         }
-
-        $pdf = PDF::loadView('outbound.report', compact('outbound'));
-
-        return $pdf->setPaper('A4')->download('outbound-report.pdf');
+        else
+        {
+            return $pdf->setPaper('A4')->download('outbound-report.pdf');
+        }
     }
 
     /**

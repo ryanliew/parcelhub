@@ -22,6 +22,11 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::get('excel/index', 'ExcelController@index');
 Route::post('excel/store', 'ExcelController@store');
 
+Route::get('testPDF', function(){
+	$outbound = App\Outbound::find(10);
+	return view('outbound.report', ['outbound' => $outbound]);
+});
+
 Auth::routes();
 
 Route::get('phpinfo', function() {
@@ -45,6 +50,7 @@ Route::get('users', 'UserController@page')->name('users');
 Route::get('profile', 'UserController@page')->name('profile');
 Route::get('customers', 'CustomerController@page')->name('customers');
 Route::get('dashboard', 'AdminController@page')->name('dashboard');
+Route::get('outbounds/bulk', 'OutboundController@page_bulk')->name('outbounds.bulk');
 
 Route::post('lots/products/update', 'LotController@editStock');
 
@@ -133,6 +139,7 @@ Route::group(['prefix' => 'admin'], function() {
 	Route::group(['prefix' => 'outbound'], function() {
 		Route::post('update', 'Admin\OutboundController@update');
 		Route::post('tracking/update', 'Admin\OutboundController@updateTracking');
+		Route::post('trackings/update', 'Admin\OutboundController@updateTrackings');
 	});
 });
 
