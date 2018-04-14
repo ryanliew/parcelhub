@@ -19,6 +19,8 @@ Route::get('/', function () {
 });
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('excel/index', 'ExcelController@index');
+Route::post('excel/store', 'ExcelController@store');
 
 Auth::routes();
 
