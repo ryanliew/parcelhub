@@ -19,8 +19,6 @@ Route::get('/', function () {
 });
 
 Route::get('/home', 'HomeController@index')->name('home');
-Route::get('excel/index', 'ExcelController@index');
-Route::post('excel/store', 'ExcelController@store');
 
 Route::get('testPDF', function(){
 	$outbound = App\Outbound::find(10);
@@ -60,6 +58,11 @@ Route::group(['prefix' => 'auth', 'as' => 'auth.social.'], function() {
     Route::get('social/{provider}/callback', ['as' => 'callback', 'uses'=> 'Auth\SocialController@handleProviderCallback']);
 });
 
+
+Route::group(['prefix' => 'excel'], function() {
+	Route::get('index', 'ExcelController@index');
+	Route::post('store', 'ExcelController@store');
+});
 
 Route::group(['prefix' => 'lot'], function() {
 	Route::get('index', 'LotController@index');
@@ -159,6 +162,7 @@ Route::group(['prefix' => 'download'], function () {
     Route::get('inbound/report/{id}', 'InboundController@report')->name('download.inbound.report');
     Route::get('outbound/report/{id}', 'OutboundController@report')->name('download.outbound.report');
     Route::get('outbound/packingList/{id}', 'OutboundController@packingList')->name('download.outbound.packingList');
+    Route::get('outbound/proforma/{id}', 'OutboundController@proformaInvoice');
 });
 
 Route::group(['middleware' => 'auth'], function () {

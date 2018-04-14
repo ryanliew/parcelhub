@@ -138,6 +138,18 @@ class OutboundController extends Controller
         //
     }
 
+    public function proformaInvoice($id)
+    {
+        $outbound = Outbound::with('products')->find($id);
+        $courier = Courier::find($outbound->courier_id);
+        $auth = auth()->user();
+        // return view('outbound.proforma', compact(['outbound', 'courier', 'auth']));
+
+        $pdf = PDF::loadView('outbound.proforma', compact(['outbound', 'courier', 'auth']));
+
+        return $pdf->setPaper('A4')->download('outbound-proforma-invoice.pdf');
+    }
+
     public function packingList($id)
     {
         $outbound = Outbound::with('products.lots')->find($id);

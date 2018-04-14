@@ -37,6 +37,26 @@
                       </div>
 
                       <div>
+                          <label>Recipient Phone: </label>
+                          <input type="text" name="recipient_phone" />
+                      </div>
+
+                      <div>
+                          <label>Recipient State: </label>
+                          <input type="text" name="recipient_state" />
+                      </div>
+
+                      <div>
+                          <label>Recipient Postcode: </label>
+                          <input type="text" name="recipient_postcode" />
+                      </div>
+
+                      <div>
+                          <label>Recipient Country: </label>
+                          <input type="text" name="recipient_country" />
+                      </div>
+
+                      <div>
                           @forelse($products as $product)
                               <label>Product: </label>
                               <select name="products[{{ $product->id }}][id]">
@@ -83,6 +103,46 @@
                               </label>
                           </div>
                       </div>
+
+                      <div>
+                          <label>HARM COMM CODE: </label>
+                          <input type="text" name="harm_comm_code" />
+                      </div>
+
+                      <div>
+                          <label>Payer of GST/VAT: </label>
+                          <input type="text" name="payer_gst_vat" />
+                      </div>
+
+                      <div>
+                          <label>Term of Payment: </label>
+                          <input type="text" name="payment_term" />
+                      </div>
+
+                      <div>
+                          <label>Term of Trade: </label>
+                          <input type="text" name="trade_term" />
+                      </div>
+
+                      <div>
+                          <label>Reason For Export: </label>
+                          <input type="text" name="export_reason" />
+                      </div>
+
+                      <div>
+                          <label>
+                              Business
+                              <input type="radio" id="insuranceYes" name="is_business" value="true">
+                          </label>
+                          <label>
+                              Non-business
+                              <input type="radio" id="insuranceNo" name="is_business" value="false">
+                          </label>
+                      </div>
+                  </div>
+
+                  <div>
+                    <input type='text' name="outbound_products" value="1" />
                   </div>
 
                   <div class="modal-footer">
