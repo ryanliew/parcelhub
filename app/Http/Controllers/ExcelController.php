@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Product;
+use Storage;
 
 class ExcelController extends Controller
 {
@@ -99,5 +100,12 @@ class ExcelController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function download()
+    {
+        $path = storage_path('\app\public\parcelhub.xlsx');
+
+        return response()->download($path);
     }
 }
