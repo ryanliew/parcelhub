@@ -182,7 +182,7 @@ class OutboundController extends Controller
 
                 $pdf->addPDF($path, 'all');
                 $pdf->addPDF($outbound_pdf, 'all');
-                $pdf->merge('download', $outbound_pdf, 'P');
+                $pdf->merge('download', 'outbound-report.pdf', 'P');
             }
             else
             {
