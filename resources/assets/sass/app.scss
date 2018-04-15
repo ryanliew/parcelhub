@@ -1,9 +1,240 @@
-
-// Fonts
-@import url("https://fonts.googleapis.com/css?family=Raleway:300,400,600");
-
 // Variables
 @import "variables";
 
-// Bootstrap
-@import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+// Source sans pro font
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro');
+
+// Lato font
+@import url('https://fonts.googleapis.com/css?family=Lato:700');
+
+// Font awesome
+@import url("https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css");
+
+// Bulma
+@import "~bulma";
+
+// Css for toast notification
+@import '~vuejs-noty/dist/vuejs-noty.css';
+
+// Css for checkboxes
+@import '~cool-checkboxes-for-bulma.io/dist/css/bulma-radio-checkbox.min.css';
+
+// Css for bulma extensions
+@import "~bulma-extensions/dist/bulma-extensions.min.css";
+
+.b-checkbox label::before {
+  top: 3px;
+}
+
+.b-checkbox label::after {
+    top: 5px;
+}
+
+.nav-container {
+	width: 100%;
+	border-bottom: 1px solid #ccc;
+}
+
+.card-header-title, input, th {
+	font-family: 'Lato';
+}
+
+.modal-card-body {
+  overflow-y: scroll;
+  max-height: 450px;
+}
+
+.modal-content {
+  overflow: visible;
+}
+
+.field.product-list {
+  overflow-y: scroll;
+  max-height: 300px;
+}
+
+.row-detail {
+  padding: 0 10px;
+  border-left: 1px solid #eee;
+  border-right: 1px solid #eee;
+}
+
+.unclearable .v-select .dropdown-toggle .clear {
+  display: none;
+}
+
+.products-list .row {
+  border-bottom: 1px solid #ddd;
+  padding-top: calc(1.5rem - 0.75rem);
+}
+
+.products-list .row:last-child {
+  border-bottom: 0px solid transparent;
+}
+
+.products-list .row .columns:not(:last-child) {
+  margin-bottom: 0;
+}
+
+/* Custom helper classes */
+
+.mt-5 {
+	margin-top: 5px;
+}
+
+.mt-10 {
+	margin-top: 10px;
+}
+
+.mt-15 {
+	margin-top: 15px;
+}
+
+.mt-20 {
+  	margin-top: 20px;
+}
+
+.mt-30 {
+  	margin-top: 30px;
+}
+
+.mb-5 {
+  margin-bottom: 5px;
+}
+
+.ml-5 {
+  margin-left: 5px;
+}
+
+.pl-5 {
+	padding-left: 5px;
+}
+
+.is-danger {
+	color: #ff3860;
+}
+
+.is-warning {
+  color: #ffdd57;
+}
+
+.is-info {
+  color: #3273dc;
+}
+
+.is-success {
+  color: #23d160;
+}
+
+.is-flex-center, .is-flex-center .file {
+  justify-content: center;
+  align-items: center;
+}
+
+.accordions .message {
+  margin-bottom: 0;
+}
+
+.accordions .message .message-header .button {
+  background-color: transparent; 
+}
+
+.accordions .message .message-header {
+  cursor: pointer;
+}
+
+.is-divider[data-content]::after, .is-divider-vertical[data-content]::after {
+    background: #fff;
+    color: #b5b5b5;
+    content: attr(data-content);
+    display: inline-block;
+    font-size: .75rem;
+    padding: .5rem .8rem;
+    -webkit-transform: translateY(-1.1rem);
+    -ms-transform: translateY(-1.1rem);
+    transform: translateY(-1.1rem);
+    text-align: center;
+}
+
+.is-divider {
+    border-top: .1rem solid #dbdbdb;
+    height: .1rem;
+    margin: 2rem 0;
+    text-align: center;
+}
+
+.button.is-facebook {
+  background-color: #3b5998;
+  border-color: transparent;
+  color: #fff;
+}
+
+.tooltip.button[disabled] {
+  opacity: 1;
+}
+
+.button.is-primary[disabled] {
+  background-color: rgba(0, 209, 178, 0.5);
+  opacity: 1;
+}
+
+.button.is-google-plus {
+  background-color: #d34836;
+  border-color: transparent;
+  color: #fff;
+}
+
+.is-divider, .is-divider-vertical {
+    display: block;
+    position: relative;
+}
+
+.image img {
+  min-height: 0;
+  width: auto;
+}
+
+.select-label {
+	font-size: 90.25%;
+  font-weight: 700;
+  padding-left: 2px;
+  margin-bottom: 5px;
+	display:block;
+}
+
+.v-select, .v-select .dropdown-toggle {
+	width: 100%;
+  text-transform: capitalize;
+}
+
+.product-display .background{
+  background-position: center;
+  background-size: cover;
+  height:100%;
+  display:block;
+}
+// Animations
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
+
+.slide-fade-enter-active, .slide-fade-leave-active {
+  transition: all .3s ease;
+}
+
+.slide-fade-enter, .slide-fade-leave-to
+/* .slide-fade-leave-active below version 2.1.8 */ {
+  transform: translateX(30px);
+  opacity: 0;
+}
+
+// Responsive table css
+@media screen and (max-width: 800px) {
+	table.responsive td {
+    border-top: 1px solid #dbdbdb;
+    border-bottom: 1px solid #dbdbdb;
+  }
+}

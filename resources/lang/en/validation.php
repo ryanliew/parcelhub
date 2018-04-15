@@ -100,8 +100,25 @@ return [
     */
 
     'custom' => [
-        'attribute-name' => [
-            'rule-name' => 'custom-message',
+        'payment_slip' => [
+            'required' => 'Please upload bank transfer slip',
+        ],
+        'payments' => [
+            'required' => 'Please select at least one of the payment to approve',
+        ],
+        'lot_purchases' => [
+            'required' => 'Please select at least one lot to purchase',
+        ],
+        'rental_duration' => [
+            'required' => 'Rental duration field is required',
+            'min' => 'Minimum rental duration must not least than :min months',
+        ],
+        'outbound_products' => [
+            'required' => 'Create outbound order require at least one product',
+        ],
+        'outbound_products.*' => [
+            'product_exist' => 'One of the selected outbound product doesn\'t exist in your lot',
+            'product_stock' => 'You only have :number :product in your lot',
         ],
     ],
 

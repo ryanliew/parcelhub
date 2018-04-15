@@ -1,0 +1,115 @@
+[style*="Open Sans"] {font-family: 'Open Sans', Arial, sans-serif !important}
+
+div, p, a, li, td { -webkit-text-size-adjust:none; }
+
+*{-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;}
+td{word-break: break-word;}
+a{word-break: break-word; text-decoration: none; color: inherit;}
+img:hover {opacity:0.85;filter:alpha(opacity=85);}
+
+body .ReadMsgBody
+{width: 100%; background-color: #ffffff;}
+body .ExternalClass
+{width: 100%; background-color: #ffffff;}
+body{width: 100%; height: 100%; background-color: #ffffff; margin:0; padding:0; -webkit-font-smoothing: antialiased;}
+html{ background-color:#ffffff; width: 100%;}
+
+body img {user-drag: none; -moz-user-select: none; -webkit-user-drag: none;}
+body .underline:hover {text-decoration: underline!important;}
+body .hover:hover {opacity:0.85;filter:alpha(opacity=85);}
+body .jump:hover {opacity:0.75; filter:alpha(opacity=75); padding-top: 10px!important;}
+
+#animation {animation-name: backgroundanimate; -webkit-animation: backgroundanimate 40s linear infinite; -moz-animation: backgroundanimate 40s linear infinite; background-position: center center;}
+
+body .table50Left img {width: 262px; height: auto;}
+body .table50Right img {width: 262px; height: auto;}
+body .col img {width: 110px; height: 110px; border-radius: 100%!important;}
+body .clients img {width: 102px; height: auto;}
+body .long img {width: 600px; height: auto;}
+body .smallIcon img {width: 70px; height: auto;}
+body .fullImage img {width: 600px; height: auto; text-align: center; }
+body .icon24 img {width: 24px; height: auto;}
+body .logo img {width: 113px; height: auto;}
+
+@media only screen and (max-width: 640px){
+        body body{width:auto!important;}
+        body table[class=full] {width: 100%!important; clear: both; }
+        body table[class=mobile] {width: 100%!important; padding-left: 30px; padding-right: 30px; clear: both; }
+        body table[class=fullCenter] {width: 100%!important; text-align: center!important; clear: both; }
+        body td[class=fullCenter] {width: 100%!important; text-align: center!important; clear: both; }
+        body table[class=fullImage] {width: 100%!important; height: auto!important; text-align: center!important; clear: both; }
+        body .fullImage img {width: 100%!important; height: auto!important; text-align: center!important; clear: both; }
+        body table[class=table50Left] {width: 46%!important; margin-right: 15px;}
+        body table[class=table50Right] {width: 46%!important; margin-left: 15px;}
+        body .table50Left img {width: 100%!important; height: auto!important; text-align: center!important; clear: both; }
+        body .table50Right img {width: 100%!important; height: auto!important; text-align: center!important; clear: both; }
+        body table[class=col] {width: 100%!important; padding-left: 30px; padding-right: 30px; clear: both; }
+        body table[class=clients] {width: 100%!important; text-align: center!important; clear: both; }
+        body table[class=long] {width: 100%!important; clear: both;}
+        body .long img {width: 100%!important; height: auto!important;}
+        body .erase {display: none;}
+        body .buttonScale {float: none!important; text-align: center!important;  display: inline-block!important; clear: both;}
+        body .headerBG {width: 100%!important; height: 100%!important; background-repeat: no-repeat!important; background-size: 1700px!important; background-position: center top!important;}
+        #mobileView{margin-top:150px;}
+}
+
+@media only screen and (max-width: 479px){
+        body body{width:auto!important;}
+        body table[class=full] {width: 100%!important; clear: both; }
+        body table[class=mobile] {width: 100%!important; padding-left: 30px; padding-right: 30px; clear: both;}
+        body table[class=fullCenter] {width: 100%!important; text-align: center!important; clear: both;  font-size: 12px!important;}
+        body td[class=fullCenter] {width: 100%!important; text-align: center!important; clear: both; }
+        body table[class=fullImage] {width: 100%!important; height: auto!important; text-align: center!important; clear: both; }
+        body .fullImage img {width: 100%!important; height: auto!important; text-align: center!important; clear: both; }
+        body img[class=fullImage] { width: 100%!important; height: auto!important; }
+        body span[class=pad50] {padding: 40px!important;}
+        body td[class=w70] {width: 70%!important;}
+        body td[class=h60] {height: 60px!important;}
+        body table[class=table50Left] {width: 100%!important; margin-right: 0px;}
+        body table[class=table50Right] {width: 100%!important; margin-left: 0px;}
+        body .table50Left img {width: 100%!important; height: auto!important; text-align: center!important; clear: both; }
+        body .table50Right img {width: 100%!important; height: auto!important; text-align: center!important; clear: both; }
+        body table[class=coll] {width: 100%!important; padding-left: 30px; padding-right: 30px; clear: both; }
+        body table[class=clients] {width: 100%!important; text-align: center!important; clear: both; }
+        body td[class=h25] {height: 25px!important;}
+        body table[class=long] {width: 100%!important; clear: both;}
+        body .long img {width: 100%!important; height: auto!important;}
+        body .erase {display: none;}
+        body .buttonScale {text-align: center!important; float: none!important;}
+        body .headerBG {width: 100%!important; height: 100%!important; background-repeat: no-repeat!important; background-size: 1800px!important; background-position: center top!important;}
+}
+
+@media only screen and (max-width: 900px)
+{td[class=headerBG] {width: 100%!important; background-repeat: no-repeat!important; background-size: 1800px!important; background-position: center top!important;}}
+
+@keyframes animatedBackground {
+    0% {background-position: -210px center;}
+    25% {background-position: -420px center;}
+    50% {background-position: -210px center;}
+    75% {background-position: 0px center;}
+    100% {background-position: -210px center;}}
+    
+@-webkit-keyframes backgroundanimate {
+    0% {background-position: -210px center;}
+    25% {background-position: -420px center;}
+    50% {background-position: -210px center;}
+    75% {background-position: 0px center;}
+    100% {background-position: -210px center;}}
+        
+@-moz-keyframes backgroundanimate {
+    0% {background-position: -210px center;}
+    25% {background-position: -420px center;}
+    50% {background-position: -210px center;}
+    75% {background-position: 0px center;}
+    100% {background-position: -210px center;}}
+    
+@-o-keyframes backgroundanimate {
+    0% {background-position: -210px center;}
+    25% {background-position: -420px center;}
+    50% {background-position: -210px center;}
+    75% {background-position: 0px center;}
+    100% {background-position: -210px center;}}
+
+.active{
+	color: #8fd7ad!important;
+}

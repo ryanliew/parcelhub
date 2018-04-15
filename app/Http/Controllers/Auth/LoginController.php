@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
@@ -19,13 +20,7 @@ class LoginController extends Controller
     */
 
     use AuthenticatesUsers;
-
-    /**
-     * Where to redirect users after login.
-     *
-     * @var string
-     */
-    protected $redirectTo = '/home';
+    
 
     /**
      * Create a new controller instance.
@@ -35,5 +30,24 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+    }
+
+    public function authenticated()
+    {
+        if(Auth::user()->verified) {
+            if(Auth::user()->hasRole('admin')) {
+                return redirect()->intended('dashboard');
+            }
+        } else {
+            $id = Auth::user()->id;
+            Auth::logout();
+
+            return view('user.verify')->with([
+                'message' => trans('auth.token_not_verify'),
+                'id' => $id
+            ]);
+        }
+
+        return redirect()->intended('lots');
     }
 }
