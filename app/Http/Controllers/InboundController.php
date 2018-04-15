@@ -117,7 +117,7 @@ class InboundController extends Controller
 
         $now = Carbon::today();
         $compare = Carbon::parse($request->arrival_date);
-        $user_lots = $auth->lots()->where('volume','>', 0)->where('status', 'true')->get();
+        $user_lots = $auth->lots()->where('volume','>', 0)->where('status', 'approved')->get();
         $collection_index = 0;
         $product_total_volume = 0;
         $products = [];
