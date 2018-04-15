@@ -44,17 +44,21 @@ class ExcelController extends Controller
     {
         $excelRows = Excel::load($request->file('file'))->toArray();
         foreach($excelRows as $excelRow){
-            $product = new product();
-            $product->sku = $excelRow['sku'];
-            $product->name = $excelRow['name'];
-            $product->height = $excelRow['heightcm'];
-            $product->length = $excelRow['lengthcm'];
-            $product->width = $excelRow['widthcm'];
-            $product->is_dangerous = $excelRow['dangerous'];
-            $product->is_fragile = $excelRow['fragile'];
-            $product->user_id = auth()->id();
-            $product->save();
+            $product = Product::firstOrCreate(
+                 ['sku' => $excelRow['sku']],
+                 ['sku' => $excelRow['sku'],
+                'name' => $excelRow['name'],
+                'height' => $excelRow['heightcm'],
+                'length' => $excelRow['lengthcm'],
+                'width' => $excelRow['widthcm'],
+                'is_dangerous' => $excelRow['dangerous'],
+                'is_fragile' => $excelRow['fragile'],
+                'trash_hole' => $excelRow['minstocklevel'],
+                'user_id' => auth()->id()
+            ]);
         }
+
+        return ["message" => "Products uploaded successfully", "number" => sizeof($excelRows)];
     }
 
     /**
@@ -104,7 +108,12 @@ class ExcelController extends Controller
 
     public function uploadPhotos(Request $request)
     {
-        dd($request->photos);
+        $filename = explode('.', $request->file->getClientOriginalName())[0];
+        $product = Product::where('SKU', $filename)->first();
+        if(!is_null($product)){
+            $product->picture = $request->file->store('public');
+            $product->save();
+        }
     }
 
     public function download()

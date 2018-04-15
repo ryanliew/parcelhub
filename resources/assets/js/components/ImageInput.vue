@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<div class="file has-name is-boxed">
-			<figure class="image is-128x128" v-if="defaultImage.src && defaultImage.file.type !== 'application/pdf'">
+			<figure class="image is-128x128" v-if="defaultImage.src && (defaultImage.src.endsWith('.jpg') || defaultImage.src.endsWith('.png') || defaultImage.file.type.match('/^image.*$/'))">
 				<img :src="defaultImage.src">
 			</figure>
 		  	<label class="file-label pl-5">
@@ -37,8 +37,7 @@
 				let reader = new FileReader();
 
 				reader.readAsDataURL(file);
-				
-				console.log(file.type)
+
 				reader.onload = e => {
 					let src = e.target.result;
 

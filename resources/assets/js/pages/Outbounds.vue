@@ -150,6 +150,7 @@
 												name="recipient_country"
 												type="text"
 												:editable="true"
+												@input="isMalaysia($event)"
 												:error="form.errors.get('recipient_country')">
 								</text-input>
 							</div>
@@ -166,6 +167,18 @@
 													:error="form.errors.get('courier_id')">
 							</selector-input>
 			          	</div>
+
+			          	<!-- <div class="column">
+							<text-input v-model="form.payer_gst_vat" :defaultValue="form.payer_gst_vat" 
+											label="Payer of GST/VAT" 
+											:required="true"
+											name="payer_gst_vat"
+											type="text"
+											seen="false"
+											:editable="true"
+											:error="form.errors.get('payer_gst_vat')">
+							</text-input>
+						</div> -->
 						
 						<div class="columns">
 				          	<div class="column is-narrow">
@@ -340,6 +353,9 @@
 		},
 
 		methods: {
+			isMalaysia(data) {
+				// console.log(data);
+			},
 
 			getProducts() {
 				axios.get('internal/products/selector')

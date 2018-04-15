@@ -55179,7 +55179,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 			reader.readAsDataURL(file);
 
-			console.log(file.type);
 			reader.onload = function (e) {
 				var src = e.target.result;
 
@@ -55214,7 +55213,10 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", [
     _c("div", { staticClass: "file has-name is-boxed" }, [
-      _vm.defaultImage.src && _vm.defaultImage.file.type !== "application/pdf"
+      _vm.defaultImage.src &&
+      (_vm.defaultImage.src.endsWith(".jpg") ||
+        _vm.defaultImage.src.endsWith(".png") ||
+        _vm.defaultImage.file.type.match("/^image.*$/"))
         ? _c("figure", { staticClass: "image is-128x128" }, [
             _c("img", { attrs: { src: _vm.defaultImage.src } })
           ])
@@ -59434,6 +59436,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -59458,6 +59470,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 				width: '',
 				length: '',
 				sku: '',
+				trashole: '',
 				picture: '',
 				is_dangerous: '',
 				is_fragile: '',
@@ -59536,6 +59549,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			this.form.height = data.height;
 			this.form.width = data.width;
 			this.form.length = data.length;
+			this.form.trashole = data.trashole;
 			this.form.is_dangerous = data.is_dangerous;
 			this.form.is_fragile = data.is_fragile;
 			this.form.user_id = 1;
@@ -60904,6 +60918,31 @@ var render = function() {
                         _vm.$set(_vm.form, "name", $$v)
                       },
                       expression: "form.name"
+                    }
+                  })
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "field" },
+                [
+                  _c("text-input", {
+                    attrs: {
+                      defaultValue: _vm.form.trashole,
+                      label: "Minimum Stock level",
+                      name: "trashole",
+                      type: "text",
+                      editable: true,
+                      error: _vm.form.errors.get("trashole")
+                    },
+                    model: {
+                      value: _vm.form.trashole,
+                      callback: function($$v) {
+                        _vm.$set(_vm.form, "trashole", $$v)
+                      },
+                      expression: "form.trashole"
                     }
                   })
                 ],
@@ -62989,6 +63028,19 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -63043,6 +63095,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 
 	methods: {
+		isMalaysia: function isMalaysia(data) {
+			// console.log(data);
+		},
 		getProducts: function getProducts() {
 			var _this2 = this;
 
@@ -63623,6 +63678,11 @@ var render = function() {
                                 type: "text",
                                 editable: true,
                                 error: _vm.form.errors.get("recipient_country")
+                              },
+                              on: {
+                                input: function($event) {
+                                  _vm.isMalaysia($event)
+                                }
                               },
                               model: {
                                 value: _vm.form.recipient_country,
@@ -68484,7 +68544,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 			},
 			confirm: false,
-			number: 0
+			number: 0,
+			action: '/excel/store'
 		};
 	},
 
@@ -68492,7 +68553,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 	methods: {
 		changeExcelTemplate: function changeExcelTemplate(e) {
 			//console.log(e);
-			this.invoiceSlip = { src: e.src, file: e.file };
+			this.excelTemplate = { src: e.src, file: e.file };
 			this.form.file = e.file;
 			this.form.errors.clear('file');
 		},
@@ -72638,7 +72699,7 @@ var render = function() {
           _vm._v(" "),
           _c("div", { staticClass: "step-content has-text-centered" }, [
             _c("h1", { staticClass: "title is-4" }, [
-              _vm._v(_vm._s(_vm.number) + " of products have been created!")
+              _vm._v(_vm._s(_vm.number) + " of products have been processed!")
             ])
           ])
         ]),

@@ -53,7 +53,7 @@
 		  			</vue2Dropzone>
 		  		</div>
 		  		<div class="step-content has-text-centered">
-		  			<h1 class="title is-4">{{ number }} of products have been created!</h1>
+		  			<h1 class="title is-4">{{ number }} of products have been processed!</h1>
 		  		</div>
 		  	</div>
 		  	<div class="steps-actions">
@@ -100,14 +100,15 @@
 
 				},
 				confirm: false,
-				number: 0
+				number: 0,
+				action: '/excel/store'
 			};
 		},
 
 		methods: {
 			changeExcelTemplate(e) {
 				//console.log(e);
-				this.invoiceSlip = { src: e.src, file: e.file };
+				this.excelTemplate = { src: e.src, file: e.file };
 				this.form.file = e.file;
 				this.form.errors.clear('file');
 			},

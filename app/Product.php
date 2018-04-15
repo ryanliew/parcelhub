@@ -91,8 +91,8 @@ class Product extends Model
 
     public function getPictureAttribute($value)
     {
-        $value = $value === null ? 'default.jpg' : $value;
-        return asset('images/' . $value);
+        $value = $value === null ? 'default.jpg' : str_replace('public', 'storage', $value);
+        return $value;
     }
 
     public function getTotalAttribute(){

@@ -66,6 +66,16 @@
 					</text-input>
 	          	</div>
 
+	          	<div class="field">
+	          		<text-input v-model="form.trashole" :defaultValue="form.trashole" 
+								label="Minimum Stock level"
+								name="trashole"
+								type="text"
+								:editable="true"
+								:error="form.errors.get('trashole')">
+					</text-input>
+	          	</div>
+
 	          	<div class="columns">
 	          		<div class="column">
 			          	<div class="field">
@@ -191,6 +201,7 @@
 					width: '',
 					length: '',
 					sku: '',
+					trashole: '',
 					picture: '',
 					is_dangerous: '',
 					is_fragile: '',
@@ -268,6 +279,7 @@
 				this.form.height = data.height;
 				this.form.width = data.width;
 				this.form.length = data.length;
+				this.form.trashole = data.trashole;
 				this.form.is_dangerous = data.is_dangerous;
 				this.form.is_fragile = data.is_fragile;
 				this.form.user_id = 1;
