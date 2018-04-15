@@ -387,7 +387,7 @@
 			},
 
 			addRow() {
-				this.productRows.push({ product: null, quantity: 0});
+				this.productRows.push({ product: null, quantity: 0, remarks: ""});
 				this.clearProductErrors();
 			},
 
