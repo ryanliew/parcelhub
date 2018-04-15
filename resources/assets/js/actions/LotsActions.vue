@@ -9,7 +9,7 @@
                     <span>Edit</span>
                 </button>
             </div>
-            <div class="column" v-if="rowData.lot_status == 'true' || !rowData.user_id">
+            <div class="column" v-if="rowData.lot_status == 'approved' || !rowData.user_id">
                 <button class="button is-info" @click="itemAction('assign', rowData, rowIndex)">
                     <span class="icon">
                         <i class="fa fa-user"></i>
