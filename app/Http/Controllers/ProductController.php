@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
+use Storage;
 
 class ProductController extends Controller
 {
@@ -34,6 +35,15 @@ class ProductController extends Controller
     public function page()
     {
         return view('product.page');
+    }
+
+    /**
+     * Return the view which contains the vue page for product bulk upload wizard
+     * @return \Illuminate\Http\Response
+     */
+    public function page_bulk()
+    {
+        return view('product.excel');
     }
 
     /**
@@ -125,9 +135,7 @@ class ProductController extends Controller
 
         if(Input::hasFile('picture')){
             $file = Input::file('picture');
-            $pictureNames = explode(".", $file->getClientOriginalName());
-            $file->move('images', $auth_id.$pictureNames[0].$product->id.".JPG");
-            $product->picture = $auth_id.$pictureNames[0].$product->id.".JPG";
+            $product->picture = $file->store('public');
             $product->save();
         }
 
@@ -186,9 +194,8 @@ class ProductController extends Controller
         $product->sku = $request->sku;
         if(Input::hasFile('picture')){
             $file = Input::file('picture');
-            $pictureNames = explode(".", $file->getClientOriginalName());
-            $file->move('images', $auth_id.$pictureNames[0].$product->id.".JPG");
-            $product->picture = $auth_id.$pictureNames[0].$product->id.".JPG";
+            $product->picture = $file->store('public');
+            $product->save();
         }
         $product->save();
 

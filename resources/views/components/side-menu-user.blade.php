@@ -9,6 +9,13 @@
             <a @if( url()->current() == route('products') ) class="is-active" @endif href="{{ route('products') }}">
                 My products
             </a>
+            <ul>
+                <li>
+                    <a @if( url()->current() == route('products.bulk') ) class="is-active" @endif href="{{ route('products.bulk') }}">
+                        Bulk upload product
+                    </a>
+                </li>
+            </ul>
         </li>
         <li>
             <a @if( url()->current() == route('customers') ) class="is-active" @endif href="{{ route('customers') }}">

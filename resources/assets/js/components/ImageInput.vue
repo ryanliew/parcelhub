@@ -1,11 +1,11 @@
 <template>
 	<div>
 		<div class="file has-name is-boxed">
-			<figure class="image is-128x128" v-if="defaultImage.src && defaultImage.file.type !== 'application/pdf'">
+			<figure class="image is-128x128" v-if="defaultImage.src && (defaultImage.src.endsWith('.jpg') || defaultImage.src.endsWith('.png') || defaultImage.file.type.match('/^image.*$/'))">
 				<img :src="defaultImage.src">
 			</figure>
 		  	<label class="file-label pl-5">
-			    <input class="file-input" accept="image/*,.pdf" type="file" :name="name" @change="onChange">
+			    <input class="file-input" :accept="accept" type="file" :name="name" @change="onChange">
 			    <span class="file-cta">
 				     <span class="file-icon">
 				        <i class="fa fa-image"></i>
@@ -22,7 +22,7 @@
 
 <script>
 	export default {
-		props: ['label', 'name', 'required', 'defaultImage', 'error'],
+		props: ['label', 'name', 'required', 'defaultImage', 'error', 'accept'],
 		data() {
 			return {
 				
@@ -37,8 +37,7 @@
 				let reader = new FileReader();
 
 				reader.readAsDataURL(file);
-				
-				console.log(file.type)
+
 				reader.onload = e => {
 					let src = e.target.result;
 

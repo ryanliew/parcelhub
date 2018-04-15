@@ -44,17 +44,21 @@ class ExcelController extends Controller
     {
         $excelRows = Excel::load($request->file('file'))->toArray();
         foreach($excelRows as $excelRow){
-            $product = Product::firstOrCreate([
-                'sku' => $excelRow['sku'],
+            $product = Product::firstOrCreate(
+                 ['sku' => $excelRow['sku']],
+                 ['sku' => $excelRow['sku'],
                 'name' => $excelRow['name'],
                 'height' => $excelRow['heightcm'],
-                'length' => $excelRow['length'],
-                'width' => $excelRow['width'],
+                'length' => $excelRow['lengthcm'],
+                'width' => $excelRow['widthcm'],
                 'is_dangerous' => $excelRow['dangerous'],
                 'is_fragile' => $excelRow['fragile'],
-                'user_id' => auth()->id();
+                'trash_hole' => $excelRow['minstocklevel'],
+                'user_id' => auth()->id()
             ]);
         }
+
+        return ["message" => "Products uploaded successfully", "number" => sizeof($excelRows)];
     }
 
     /**
@@ -102,9 +106,19 @@ class ExcelController extends Controller
         //
     }
 
+    public function uploadPhotos(Request $request)
+    {
+        $filename = explode('.', $request->file->getClientOriginalName())[0];
+        $product = Product::where('SKU', $filename)->first();
+        if(!is_null($product)){
+            $product->picture = $request->file->store('public');
+            $product->save();
+        }
+    }
+
     public function download()
     {
-        $path = storage_path('\app\public\parcelhub.xlsx');
+        $path = storage_path('app\public\parcelhub_products_import.xlsx');
 
         return response()->download($path);
     }
