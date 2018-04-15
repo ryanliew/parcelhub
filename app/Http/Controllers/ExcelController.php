@@ -118,7 +118,7 @@ class ExcelController extends Controller
 
     public function download()
     {
-        $path = storage_path('app\public\parcelhub_products_import.xlsx');
+        $path = storage_path('app/public/parcelhub_products_import.xlsx');
 
         return response()->download($path);
     }
