@@ -175,7 +175,7 @@ class OutboundController extends Controller
 
             if($mime == "application/pdf")
             {
-                $outbound_pdf = storage_path('outbound-report.pdf')
+                $outbound_pdf = storage_path('outbound-report.pdf');
                 $pdf->setPaper('A4')->save($outbound_pdf);
                 
                 $pdf = new \LynX39\LaraPdfMerger\PdfManage;
