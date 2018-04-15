@@ -126,6 +126,11 @@
   color: #23d160;
 }
 
+.is-flex-center, .is-flex-center .file {
+  justify-content: center;
+  align-items: center;
+}
+
 .accordions .message {
   margin-bottom: 0;
 }

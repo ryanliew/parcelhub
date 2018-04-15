@@ -27,6 +27,7 @@
   "dependencies": {
     "bulma-extensions": "^1.0.3",
     "npm": "^5.7.1",
-    "vue-animate-number": "^0.4.2"
+    "vue-animate-number": "^0.4.2",
+    "vue2-dropzone": "^3.1.0"
   }
 }

@@ -5,7 +5,7 @@
 				<img :src="defaultImage.src">
 			</figure>
 		  	<label class="file-label pl-5">
-			    <input class="file-input" accept="image/*,.pdf" type="file" :name="name" @change="onChange">
+			    <input class="file-input" :accept="accept" type="file" :name="name" @change="onChange">
 			    <span class="file-cta">
 				     <span class="file-icon">
 				        <i class="fa fa-image"></i>
@@ -22,7 +22,7 @@
 
 <script>
 	export default {
-		props: ['label', 'name', 'required', 'defaultImage', 'error'],
+		props: ['label', 'name', 'required', 'defaultImage', 'error', 'accept'],
 		data() {
 			return {
 				

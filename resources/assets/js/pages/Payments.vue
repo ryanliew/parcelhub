@@ -199,6 +199,7 @@
 							    				label="payment slip"
 							    				name="payment_slip"
 							    				:required="true"
+							    				accept="image/*,.pdf"
 							    				:error="form.errors.get('payment_slip')">
 							    	</image-input>
 							    </div>

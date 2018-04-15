@@ -126,6 +126,7 @@
 			    				@loaded="changeProductImage"
 			    				label="product image"
 			    				name="picture"
+			    				accept="image/*"
 			    				:error="form.errors.get('picture')">
 			    	</image-input>
 			    </div>

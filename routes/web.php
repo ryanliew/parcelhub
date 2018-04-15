@@ -49,7 +49,7 @@ Route::get('profile', 'UserController@page')->name('profile');
 Route::get('customers', 'CustomerController@page')->name('customers');
 Route::get('dashboard', 'AdminController@page')->name('dashboard');
 Route::get('outbounds/bulk', 'OutboundController@page_bulk')->name('outbounds.bulk');
-
+Route::get('products/bulk', 'ProductController@page_bulk')->name('products.bulk');
 Route::post('lots/products/update', 'LotController@editStock');
 
 /* Route for Socialite authentication */
@@ -87,6 +87,7 @@ Route::group(['prefix' => 'product'], function() {
 	Route::get('delete/{id}', 'ProductController@destroy');
 	Route::post('store', 'ProductController@store');
 	Route::post('update', 'ProductController@update');
+	Route::post('store/images', 'ExcelController@uploadPhotos');
 });
 
 Route::group(['prefix' => 'customer'], function() {
