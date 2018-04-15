@@ -60,7 +60,7 @@ class PaymentController extends Controller
 
         if(\Entrust::hasRole('admin')) {
 
-            $payments = Payment::whereStatus('false')->get();
+            $payments = Payment::whereStatus('pending')->get();
 
             return view("payment.admin")->with(compact('payments', 'lots'));
 
@@ -77,7 +77,7 @@ class PaymentController extends Controller
 
     public function indexPending()
     {
-        return Controller::VueTableListResult(Payment::with('user')->with('lots')->where('status', 'false'));
+        return Controller::VueTableListResult(Payment::with('user')->with('lots')->where('status', 'pending'));
     }
 
     /**
