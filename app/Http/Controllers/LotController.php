@@ -94,7 +94,7 @@ class LotController extends Controller
 
         $categories = category::where('status', 'true')->get();
         
-        $lots = lot::where('status', 'true')->get();
+        $lots = lot::where('status', 'approved')->get();
 
         return view('lot.admin')->with(compact('categories', 'lots'));
     }
@@ -226,7 +226,7 @@ class LotController extends Controller
         }
 
         $lot->user_id = $request->user_id;
-        $lot->status = 'true';
+        $lot->status = 'approved';
         $lot->expired_at = null;
         $lot->save();
 
