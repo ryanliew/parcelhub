@@ -59432,6 +59432,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -59456,6 +59466,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 				width: '',
 				length: '',
 				sku: '',
+				trashole: '',
 				picture: '',
 				is_dangerous: '',
 				is_fragile: '',
@@ -59534,6 +59545,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			this.form.height = data.height;
 			this.form.width = data.width;
 			this.form.length = data.length;
+			this.form.trashole = data.trashole;
 			this.form.is_dangerous = data.is_dangerous;
 			this.form.is_fragile = data.is_fragile;
 			this.form.user_id = 1;
@@ -60902,6 +60914,31 @@ var render = function() {
                         _vm.$set(_vm.form, "name", $$v)
                       },
                       expression: "form.name"
+                    }
+                  })
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "field" },
+                [
+                  _c("text-input", {
+                    attrs: {
+                      defaultValue: _vm.form.trashole,
+                      label: "Minimum Stock level",
+                      name: "trashole",
+                      type: "text",
+                      editable: true,
+                      error: _vm.form.errors.get("trashole")
+                    },
+                    model: {
+                      value: _vm.form.trashole,
+                      callback: function($$v) {
+                        _vm.$set(_vm.form, "trashole", $$v)
+                      },
+                      expression: "form.trashole"
                     }
                   })
                 ],
@@ -62985,6 +63022,19 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -63039,6 +63089,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 
 	methods: {
+		isMalaysia: function isMalaysia(data) {
+			// console.log(data);
+		},
 		getProducts: function getProducts() {
 			var _this2 = this;
 
@@ -63619,6 +63672,11 @@ var render = function() {
                                 type: "text",
                                 editable: true,
                                 error: _vm.form.errors.get("recipient_country")
+                              },
+                              on: {
+                                input: function($event) {
+                                  _vm.isMalaysia($event)
+                                }
                               },
                               model: {
                                 value: _vm.form.recipient_country,

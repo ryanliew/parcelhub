@@ -67,6 +67,7 @@ class ProductController extends Controller
                                                                                         'products.sku as sku',
                                                                                         'products.id as id',
                                                                                         'products.name as product_name',
+                                                                                        'products.trash_hole as trashole',
                                                                                         'products.is_dangerous as is_dangerous',
                                                                                         'products.is_fragile as is_fragile',
                                                                                         'products.width as width',
@@ -105,7 +106,6 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, $this->rules);
-
         //$auth_id = auth()->user()->id;
         $auth_id = $request->user_id;
         $product = new product;
@@ -116,7 +116,10 @@ class ProductController extends Controller
         $product->sku = $request->sku;
         $product->is_fragile = $request->has('is_fragile');
         $product->is_dangerous = $request->has('is_dangerous');  
-        $product->user_id = $auth_id;      
+        $product->user_id = $auth_id;
+        if($request->trashole){
+            $product->trash_hole = $request->trashole;
+        }
         $product->status = 'true';
         $product->save();
 
@@ -176,7 +179,10 @@ class ProductController extends Controller
         $product->length = $request->length;
         $product->width = $request->width;
         $product->is_fragile = $request->has('is_fragile');
-        $product->is_dangerous = $request->has('is_dangerous');  
+        $product->is_dangerous = $request->has('is_dangerous');
+        if($request->trashole){
+            $product->trash_hole = $request->trashole;     
+        }
         $product->sku = $request->sku;
         if(Input::hasFile('picture')){
             $file = Input::file('picture');
