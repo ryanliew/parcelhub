@@ -122,7 +122,7 @@ class LotController extends Controller
         $lot = new lot;
         $lot->name = $request->name;
         $lot->volume = $request->volume;
-        $lot->left_volume = $request->volume * 100;
+        $lot->left_volume = $lot->volume;
         $lot->category_id = $request->category;
         $lot->price = $request->price;
         $lot->status = "false";

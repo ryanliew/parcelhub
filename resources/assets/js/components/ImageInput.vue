@@ -1,7 +1,10 @@
 <template>
 	<div>
 		<div class="file has-name is-boxed">
-			<figure class="image is-128x128" v-if="defaultImage.src && (defaultImage.src.endsWith('.jpg') || defaultImage.src.endsWith('.png') || defaultImage.file.type.match('/^image.*$/'))">
+			<figure class="image is-128x128" v-if="defaultImage.src && (defaultImage.src.endsWith('.jpg') || defaultImage.src.endsWith('.png'))">
+				<img :src="defaultImage.src">
+			</figure>
+			<figure class="image is-128x128" v-if="defaultImage.file && defaultImage.file.type.match('^image.*')">
 				<img :src="defaultImage.src">
 			</figure>
 		  	<label class="file-label pl-5">
