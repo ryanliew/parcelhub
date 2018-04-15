@@ -107,7 +107,8 @@ class OutboundController extends Controller
 
     public function indexPending()
     {
-       return Controller::VueTableListResult( Outbound::select('outbounds.id as id',
+       return Controller::VueTableListResult( Outbound::with('tracking_numbers')
+                                                        ->select('outbounds.id as id',
                                                                     'amount_insured',
                                                                     'process_status',
                                                                     'couriers.name as courier',
