@@ -38,17 +38,22 @@
 		  			</a>
 		  		</div>
 		  		<div class="step-content has-text-centered is-flex-center">
-		  			<image-input v-model="excelTemplate" :defaultImage="excelTemplate"
-			    				@loaded="changeExcelTemplate"
-			    				label="excel template"
-			    				name="file"
-			    				:required="false"
-			    				accept=".xlsx,.xls"
-			    				:error="form.errors.get('file')">
-			    	</image-input>
+		  			<img class="is-responsive" src="/images/input.PNG"> 
+		  			<p><i class="is-dark-grey">Example input format</i></p>
+		  			<div class="field mt-5">
+			  			<image-input v-model="excelTemplate" :defaultImage="excelTemplate"
+				    				@loaded="changeExcelTemplate"
+				    				label="excel template"
+				    				name="file"
+				    				:required="false"
+				    				accept=".xlsx,.xls"
+				    				:error="form.errors.get('file')">
+				    	</image-input>
+				    </div>
 			    	<button class="button is-primary mt-5" @click="submit">Submit excel file</button>
 		  		</div>
 		  		<div class="step-content has-text-centered">
+		  			<p>Make sure that the photo name is identical with the product SKU (case sensitive).</p>
 		  			<vue2Dropzone ref="photosUpload" id="dropzone" :options="dropzoneOptions">
 		  			</vue2Dropzone>
 		  		</div>
