@@ -68520,6 +68520,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
 
 
 
@@ -72654,24 +72659,38 @@ var render = function() {
             "div",
             { staticClass: "step-content has-text-centered is-flex-center" },
             [
-              _c("image-input", {
-                attrs: {
-                  defaultImage: _vm.excelTemplate,
-                  label: "excel template",
-                  name: "file",
-                  required: false,
-                  accept: ".xlsx,.xls",
-                  error: _vm.form.errors.get("file")
-                },
-                on: { loaded: _vm.changeExcelTemplate },
-                model: {
-                  value: _vm.excelTemplate,
-                  callback: function($$v) {
-                    _vm.excelTemplate = $$v
-                  },
-                  expression: "excelTemplate"
-                }
+              _c("img", {
+                staticClass: "is-responsive",
+                attrs: { src: "/images/input.PNG" }
               }),
+              _vm._v(" "),
+              _vm._m(5),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "field mt-5" },
+                [
+                  _c("image-input", {
+                    attrs: {
+                      defaultImage: _vm.excelTemplate,
+                      label: "excel template",
+                      name: "file",
+                      required: false,
+                      accept: ".xlsx,.xls",
+                      error: _vm.form.errors.get("file")
+                    },
+                    on: { loaded: _vm.changeExcelTemplate },
+                    model: {
+                      value: _vm.excelTemplate,
+                      callback: function($$v) {
+                        _vm.excelTemplate = $$v
+                      },
+                      expression: "excelTemplate"
+                    }
+                  })
+                ],
+                1
+              ),
               _vm._v(" "),
               _c(
                 "button",
@@ -72681,14 +72700,19 @@ var render = function() {
                 },
                 [_vm._v("Submit excel file")]
               )
-            ],
-            1
+            ]
           ),
           _vm._v(" "),
           _c(
             "div",
             { staticClass: "step-content has-text-centered" },
             [
+              _c("p", [
+                _vm._v(
+                  "Make sure that the photo name is identical with the product SKU (case sensitive)."
+                )
+              ]),
+              _vm._v(" "),
               _c("vue2Dropzone", {
                 ref: "photosUpload",
                 attrs: { id: "dropzone", options: _vm.dropzoneOptions }
@@ -72705,7 +72729,7 @@ var render = function() {
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "steps-actions" }, [
-          _vm._m(5),
+          _vm._m(6),
           _vm._v(" "),
           _c("div", { staticClass: "steps-action" }, [
             _c(
@@ -72819,6 +72843,14 @@ var staticRenderFns = [
         )
       ]
     )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("p", [
+      _c("i", { staticClass: "is-dark-grey" }, [_vm._v("Example input format")])
+    ])
   },
   function() {
     var _vm = this
