@@ -102,9 +102,14 @@ class ExcelController extends Controller
         //
     }
 
+    public function uploadPhotos(Request $request)
+    {
+        dd($request->photos);
+    }
+
     public function download()
     {
-        $path = storage_path('\app\public\parcelhub.xlsx');
+        $path = storage_path('app\public\parcelhub_products_import.xlsx');
 
         return response()->download($path);
     }

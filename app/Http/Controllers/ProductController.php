@@ -37,6 +37,15 @@ class ProductController extends Controller
     }
 
     /**
+     * Return the view which contains the vue page for product bulk upload wizard
+     * @return \Illuminate\Http\Response
+     */
+    public function page_bulk()
+    {
+        return view('product.excel');
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response

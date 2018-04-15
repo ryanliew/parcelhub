@@ -269,6 +269,7 @@
 					    				label="invoice slip"
 					    				name="invoice_slip"
 					    				:required="false"
+					    				accept="image/*,.pdf"
 					    				:error="form.errors.get('invoice_slip')">
 					    	</image-input>
 					    </div>

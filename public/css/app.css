@@ -12267,6 +12267,16 @@ th {
   color: #23d160;
 }
 
+.is-flex-center,
+.is-flex-center .file {
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
 .accordions .message {
   margin-bottom: 0;
 }
