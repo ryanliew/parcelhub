@@ -162,8 +162,8 @@ class OutboundController extends Controller
     public function report($id)
     {
         $outbound = Outbound::find($id);
-
-        $pdf = PDF::loadView('outbound.report', compact('outbound'));
+        $path = storage_path();
+        $pdf = PDF::loadView('outbound.report', compact(['outbound', 'path']));
 
         $mime = "";
 
@@ -259,7 +259,6 @@ class OutboundController extends Controller
                 $product = $user->products()
                     ->where('id', $outboundProduct['id'])
                     ->firstOrFail();
-
                 // Quantity used to mark down how many number of product
                 // going to retrieve from user's lots
                 $quantity = $outboundProduct['quantity']; //20

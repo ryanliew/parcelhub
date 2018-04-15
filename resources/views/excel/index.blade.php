@@ -9,5 +9,7 @@
     <input type="submit" value="Upload Image" name="submit">
 </form>
 
+<a href="/download/product/template">Download Template</a>
+
 </body>
 </html>

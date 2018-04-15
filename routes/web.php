@@ -163,6 +163,7 @@ Route::group(['prefix' => 'download'], function () {
     Route::get('outbound/report/{id}', 'OutboundController@report')->name('download.outbound.report');
     Route::get('outbound/packingList/{id}', 'OutboundController@packingList')->name('download.outbound.packingList');
     Route::get('outbound/proforma/{id}', 'OutboundController@proformaInvoice');
+    Route::get('product/template/', 'ExcelController@download');
 });
 
 Route::group(['middleware' => 'auth'], function () {

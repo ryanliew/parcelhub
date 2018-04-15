@@ -82,10 +82,10 @@
         <?php 
             $mime = Storage::mimeType($outbound->invoice_slip);
             $extension = explode("/", $mime);
-            $path = str_replace('public/', 'storage/', $outbound->invoice_slip); 
+            $path = $path . str_replace('public/', '/app/public/', $outbound->invoice_slip); 
         ?>
         @if($mime == "image/png" || $mime == "image/jpeg")
-            <img src="{{ $path }}">
+            <img src="{{ $path }}" width="500px">
             <div class="page-break"></div>
         @endif
     @endif
