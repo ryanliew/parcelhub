@@ -201,7 +201,7 @@ class PaymentController extends Controller
         foreach($lotIds as $_key => $_value) {
 
             $lot = Lot::find($_value);
-            $lot->update(['status' => 'true', 'expired_at' => Carbon::now()->addMonths($lot->rental_duration)]);
+            $lot->update(['status' => 'approved', 'expired_at' => Carbon::now()->addMonths($lot->rental_duration)]);
 
         }
 
