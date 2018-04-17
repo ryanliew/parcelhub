@@ -54,10 +54,13 @@ class UserController extends Controller
             'postcode' => 'required',
             'state' => 'required',
             'country' => 'required',
-            'id' => 'required'
+            'id' => 'required',
+            'password' => 'required_if:change_password,true|confirmed',
         ]);
 
     	$user = User::findOrFail(request()->id);
+
+        $password = $request->change_password == 'true' ? bcrypt($request->password) : $user->password;
 
     	$user->update([
     		'name' => $request->name,
@@ -66,7 +69,8 @@ class UserController extends Controller
             'postcode' => $request->postcode,
             'state' => $request->state,
             'country' => $request->country,
-            'address_2' => $request->address_2
+            'address_2' => $request->address_2,
+            'password' => $password
     	]);
 
     	return ['message' => 'User profile updated.'];

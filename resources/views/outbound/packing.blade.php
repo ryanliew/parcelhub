@@ -73,7 +73,7 @@
         <h4>Packing List</h4>
     </div>
     <div class="pull-right">
-        <p>Ref No : <u>PHO-{{ $outbound->id }}</u></p>
+        <p>Ref No : <u>{{ $outbound->prefix() }}{{ $outbound->id }}</u></p>
         <p>Date : <u>{{ $outbound->created_at->toDateString() }}</u></p>
     </div>
 

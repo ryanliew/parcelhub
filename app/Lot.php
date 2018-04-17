@@ -2,8 +2,9 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Product;
 use App\Utilities;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * App\Lot
@@ -72,5 +73,48 @@ class Lot extends Model
     public function getUsageAttribute()
     {
         return Utilities::convertCentimeterCubeToMeterCube(($this->volume - $this->left_volume)) . '/' . Utilities::convertCentimeterCubeToMeterCube($this->volume);
+    }
+
+    public function propagate_left_volume()
+    {
+        $used_volume = 0;
+
+        foreach($this->products as $product)
+        {
+            $total_quantity = $product->pivot->quantity + $product->pivot->incoming_quantity - $product->pivot->outoing_product;
+
+            if($total_quantity == 0)
+            {
+                $this->products()->detach($product->id);
+            }
+
+            $used_volume += $total_quantity * $product->volume;
+        }
+
+        $this->update([ 'left_volume' => $this->volume - $used_volume ]);
+    }
+
+    public function deduct_incoming_product(Product $product, $quantity)
+    {
+        $lot_product = $this->products()->where('product_id', $product->id)->first();
+
+        $new_quantity = $lot_product->pivot->incoming_quantity - $quantity;
+
+        $this->products()->updateExistingPivot($product->id, ['incoming_quantity' => $new_quantity]);
+    }
+
+    public function increase_incoming_product(Product $product, $quantity)
+    {
+        $lot_product = $this->products()->where('product_id', $product->id)->first();
+
+        if(is_null($lot_product))
+        {
+            $this->products()->attach($product->id);
+            $lot_product = $this->products()->where('product_id', $product->id)->first();
+        }
+
+        $new_quantity = $lot_product->pivot->incoming_quantity + $quantity;
+
+        $this->products()->updateExistingPivot($product->id, ['incoming_quantity' => $new_quantity]);
     }
 }

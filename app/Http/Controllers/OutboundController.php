@@ -157,7 +157,9 @@ class OutboundController extends Controller
 
         $pdf = PDF::loadView('outbound.packing', compact('outbound'));
 
-        return $pdf->setPaper('A4')->download('outbound-packing-list.pdf');
+        $filename = Outbound::prefix() . $outbound->id . '-packing.pdf';
+
+        return $pdf->setPaper('A4')->download($filename);
     }
 
     public function report($id)
@@ -165,7 +167,7 @@ class OutboundController extends Controller
         $outbound = Outbound::find($id);
         $path = storage_path();
         $pdf = PDF::loadView('outbound.report', compact(['outbound', 'path']));
-
+        $filename = Outbound::prefix() . $outbound->id . '.pdf';
         $mime = "";
 
         if($outbound->invoice_slip) {
@@ -183,16 +185,16 @@ class OutboundController extends Controller
 
                 $pdf->addPDF($path, 'all');
                 $pdf->addPDF($outbound_pdf, 'all');
-                $pdf->merge('download', 'outbound-report.pdf', 'P');
+                $pdf->merge('download', $filename, 'P');
             }
             else
             {
-                return $pdf->setPaper('A4')->download('outbound-report.pdf');
+                return $pdf->setPaper('A4')->download($filename);
             }
         }
         else
         {
-            return $pdf->setPaper('A4')->download('outbound-report.pdf');
+            return $pdf->setPaper('A4')->download($filename);
         }
     }
 
@@ -312,13 +314,20 @@ class OutboundController extends Controller
         return response()->json(['message' => 'Outbound order created successfully']);
     }
 
+    public function show($outbound)
+    {
+        $outbound = Outbound::with(['tracking_numbers', 'courier'])->where('id', $outbound)->first();
+
+        return $outbound;
+    }
+
     /**
-     * Display the specified resource.
+     * Display the products for the outbound.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Outbound $outbound)
+    public function products(Outbound $outbound)
     {
         $products = $outbound->products()
                             ->select('products.name as name',

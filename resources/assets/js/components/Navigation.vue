@@ -25,7 +25,8 @@
 			  				</a>
 				  			<div class="navbar-dropdown">
 					  			<a class="navbar-item" href="/">Home</a>
-					  			<a class="navbar-item" :href="panelLink" v-text="panelTitle"></a>
+					  			<a class="navbar-item" href="/dashboard" v-if="can_manage">Dashboard</a>
+					  			<a class="navbar-item" :href="panelLink">My account</a>
 					  			<a class="navbar-item" @click="logout">Logout</a>
 					  		</div>
 					  	</div>
@@ -75,11 +76,7 @@
 			},
 
 			panelLink() {
-				if(this.can_manage)
-				{
-					return '/dashboard';
-				}
-				return '/lots';
+				return '/profile';
 			}
 		}
 	}

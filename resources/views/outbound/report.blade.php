@@ -94,12 +94,12 @@
     </div>
     <div class="pull-left width-quarter">
         
-        <p>Ref No : <u>{{ \App\Outbound::PREFIX() }}{{ $outbound->id }}</u></p>
+        <p>Ref No : <u>{{ $outbound->PREFIX() }}{{ $outbound->id }}</u></p>
         <p>Date : <u>{{ $outbound->created_at->toDateString() }}</u></p>
     </div>
 
     <div class="pull-left width-quarter barcode">
-        {!! DNS1D::getBarcodeHTML( \App\Outbound::PREFIX() . $outbound->id , "C128",2, 44,"black", true) !!}
+        {!! DNS1D::getBarcodeHTML( $outbound->PREFIX() . $outbound->id , "C128",2, 44,"black", true) !!}
     </div>
 
     <div class="clear-both"></div>

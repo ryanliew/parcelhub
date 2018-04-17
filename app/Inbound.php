@@ -47,7 +47,7 @@ class Inbound extends Model
     }
 
     public function products(){
-    	return $this->belongsToMany('App\Product')->withPivot('quantity')->withTimestamps();
+    	return $this->belongsToMany('App\Product')->withPivot('quantity', 'id', 'expiry_date', 'quantity_received', 'remark')->withTimestamps();
     }
 
     public function products_with_lots(){
@@ -70,4 +70,10 @@ class Inbound extends Model
     	return $query->where('process_status', 'canceled');
     }
 
+
+    // Static methods
+    public static function PREFIX()
+    {
+        return 'PIN-';
+    }
 }

@@ -1,14 +1,14 @@
 <template>
     <div>
-        <div class="columns is-gapless">
-            <div class="column">
+        <div class="field has-addons">
+            <p class="control">
                 <button class="button is-info" @click="itemAction('viewOutbound', rowData, rowIndex)">
                     <span class="icon">
                         <i class="fa fa-search"></i>
                     </span>
                     <span>View</span>
                 </button>
-            </div>
+            </p>
         </div>
     </div>
 </template>

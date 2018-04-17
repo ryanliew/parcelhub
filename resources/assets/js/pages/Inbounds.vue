@@ -86,32 +86,26 @@
 							</div>
 				        </div>
 			          	<div class="products-list">
-				          	<div class="columns">
-				          		<div class="column is-narrow">
-				          			#
-				          		</div>
-								<div class="column">
-									<b>Product</b>
-								</div>
-								<div class="column">
-									<b>Quantity</b>
-								</div>
-								<div class="column">
-									<b>Consuming volume(m³)</b>
-								</div>
-								<div class="column is-2">
-									<div class="button is-primary is-small" @click="addRow">
-										<i class="fa fa-plus"></i>
-										<span class="pl-5">Add product</span>
-									</div>
-								</div>
-				          	</div>
-			          		<div v-for="(row, index) in productRows" class="columns">
-			          			<div class="column is-narrow">
-									{{ index + 1 }}
-			          			</div>
-								<div class="column">
-									<products-selector-input v-model="productRows[index].product" :defaultData="productRows[index].product" 
+			          		<table class="table is-fullwidth responsive">
+			          			<thead>
+			          				<th>#</th>
+			          				<th>Product</th>
+			          				<th>Quantity</th>
+			          				<th>Volume(m³)</th>
+			          				<th>Expiry date</th>
+			          				<th>Remark</th>
+			          				<th>
+			          					<div class="button is-primary is-small" @click="addRow">
+											<i class="fa fa-plus"></i>
+											<span class="pl-5">Add product</span>
+										</div>
+									</th>
+								</thead>
+								<tbody>
+									<tr v-for="(row, index) in productRows">
+										<td>{{ index + 1 }}</td>
+										<td>
+											<products-selector-input v-model="productRows[index].product" :defaultData="productRows[index].product" 
 												label="Products"
 												name="products" 
 												:required="true"
@@ -120,10 +114,10 @@
 												placeholder="Select product"
 												:hideLabel="true"
 												@input="clearProductErrors">
-									</products-selector-input>
-								</div>
-								<div class="column">
-									<text-input v-if="productRows[index]" v-model="productRows[index].quantity" :defaultValue="productRows[index].quantity"
+											</products-selector-input>
+										</td>
+										<td>
+											<text-input v-if="productRows[index]" v-model="productRows[index].quantity" :defaultValue="productRows[index].quantity"
 				          						:label="'Quantity'"
 				          						:required="true"
 				          						type="number"
@@ -131,20 +125,48 @@
 				          						:hideLabel="true"
 				          						@input="clearProductErrors"
 				          						name="quantity">
-				          			</text-input>
-								</div>
-								<div class="column">
-									<span v-if="productRows[index].product">
-										{{ productRows[index].product.volume * productRows[index].quantity | convertToMeterCube }}
-									</span>
-								</div>
-								<div class="column is-2">
-									<div class="button is-danger is-small" @click="removeRow(index)">
-										<i class="fa fa-minus"></i>
-										<span class="pl-5">Remove product</span>
-									</div>
-								</div>
-				          	</div>
+				          					</text-input>
+				          				</td>
+				          				<td>
+				          					<span v-if="productRows[index].product">
+												{{ productRows[index].product.volume * productRows[index].quantity | convertToMeterCube }}
+											</span>
+										</td>
+										<td>
+											<text-input v-if="productRows[index]" v-model="productRows[index].expiry_date" :defaultValue="productRows[index].expiry_date"
+				          						:label="'Date'"
+				          						:required="true"
+				          						type="date"
+				          						:editable="true"
+				          						:hideLabel="true"
+				          						@input="clearProductErrors"
+				          						name="date">
+				          					</text-input>
+				          				</td>
+				          				<td>
+				          					<textarea-input
+												v-if="productRows[index]"
+												v-model="productRows[index].remark"
+												:defaultValue="productRows[index].remark" 
+												:editable="true"
+												label="Remark"
+												name="remark"
+												type="text"
+												:hideLabel="true"
+												:required="false"
+												rows="0.5"
+												cols="4">
+											</textarea-input>
+										</td>
+										<td>
+											<div class="button is-danger is-small" @click="removeRow(index)">
+												<i class="fa fa-minus"></i>
+												<span class="pl-5">Remove product</span>
+											</div>
+										</td>
+				          			</tr>
+				          		</tbody>
+				          	</table>
 			          		<p class="is-danger header" v-text="errorForProducts"></p>
 				        </div>
 			    
@@ -205,7 +227,7 @@
 			},
 
 			addRow() {
-				this.productRows.push({ product: null, quantity: 0});
+				this.productRows.push({ product: null, quantity: 0, expiry_date: '', remark: ''});
 				this.clearProductErrors();
 			},
 
@@ -274,7 +296,7 @@
 						if(product > -1)
 							this.form.products[product].quantity = parseInt(this.form.products[product].quantity) + parseInt(element.quantity);
 						else
-							this.form.products.push({id: element.product.id, quantity: element.quantity});
+							this.form.products.push({id: element.product.id, quantity: element.quantity, expiry_date: element.expiry_date, remark: element.remark });
 					}
 				}.bind(this));							
 			}

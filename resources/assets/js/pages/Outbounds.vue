@@ -307,13 +307,14 @@
 			return {
 				userField: [
 					{name: 'id', title: '#'},
+					{name: 'recipient_name', sortField: 'outbounds.recipient_name', title: 'Recipient'},
 					{name: 'created_at', sortField: 'created_at', title: 'Order date'},
 					{name: 'courier', sortField: 'couriers.name', title: 'Courier'},
 					{name: 'amount_insured', sortField: 'amount_insured', title: 'Insurance'},
 					{name: 'process_status', callback: 'outboundStatusLabel', title: 'Status', sortField: 'process_status'},
 					{name: '__component:outbounds-actions', title: 'Actions'}	
 				],
-				userSearchables: "process_status",
+				userSearchables: "process_status,outbounds.recipient_name",
 				selectedoutbound: '',
 				dialogActive: false,
 				form: new Form({
@@ -506,16 +507,19 @@
 			},
 
 			customerUpdate(data) {
-				this.form.customer_id = data.value;
-				this.form.errors.clear('customer_id');
+				this.form.customer_id = '';
+				if(data){
+					this.form.customer_id = data.value;
+					this.form.errors.clear('customer_id');
 
-				this.form.recipient_name = data.recipient_name;
-				this.form.recipient_phone = data.recipient_phone;
-				this.form.recipient_address = data.recipient_address;
-				this.form.recipient_address_2 = data.recipient_address_2;
-				this.form.recipient_state = data.recipient_state;
-				this.form.recipient_postcode = data.recipient_postcode;
-				this.form.recipient_country = data.recipient_country;
+					this.form.recipient_name = data.recipient_name;
+					this.form.recipient_phone = data.recipient_phone;
+					this.form.recipient_address = data.recipient_address;
+					this.form.recipient_address_2 = data.recipient_address_2;
+					this.form.recipient_state = data.recipient_state;
+					this.form.recipient_postcode = data.recipient_postcode;
+					this.form.recipient_country = data.recipient_country;
+				}
 			},
 
 			changeInvoiceSlipImage(e) {
