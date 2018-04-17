@@ -96,7 +96,8 @@ class InboundController extends Controller
 
         $pdf = PDF::loadView('inbound.report', compact('inbound'));
 
-        return $pdf->setPaper('A4')->download('inbound-report.pdf');
+        $filename = Inbound::prefix() . $inbound->id . '.pdf';
+        return $pdf->setPaper('A4')->download($filename);
     }
 
     /**
@@ -128,6 +129,8 @@ class InboundController extends Controller
             $products[$product->id] = [];
             $products[$product->id]["quantity"] = $product->quantity;
             $products[$product->id]["volume"] = $product_volume_from_db->volume * $product->quantity;
+            $products[$product->id]["remark"] = $product->remark;
+            $products[$product->id]["expiry_date"] = $product->expiry_date;
             $products[$product->id]["singleVolume"] = $product_volume_from_db->volume;
         }
         // Check for quantity
@@ -162,7 +165,10 @@ class InboundController extends Controller
         $inbound->save();
         // Insert products into many to many table
         foreach($products as $key => $product){
-            $inbound->products()->attach($key, ['quantity' => $product["quantity"]]);
+            $inbound->products()->attach($key, ['quantity' => $product["quantity"], 
+                                                'expiry_date' => $product["expiry_date"] ? $product["expiry_date"] : null, 
+                                                'remark' => $product["remark"]
+                                                ]);
         }
         // Prioritize every lot that already has the same product
         foreach($products as $key => $product)
@@ -171,13 +177,15 @@ class InboundController extends Controller
             $lots = $theproduct->lots()->where('left_volume', '>=', $product["singleVolume"])->get();
             foreach($lots as $lot)
             {
-                if($product["volume"] > 0) {
+                if($product["quantity"] > 0) {
                     $quantityIntoLot = $this->calculateQuantity($lot->left_volume, $product["singleVolume"], $product["quantity"]);
+
                     if($quantityIntoLot > 0){
                         $lot_products[$key]['incoming_quantity'] = $quantityIntoLot;
                         $lot->left_volume = $lot->left_volume - ($quantityIntoLot * $product["singleVolume"]);
                         $products[$key]["volume"] = $product["volume"] - ( $product["singleVolume"] * $quantityIntoLot );
                         $products[$key]["quantity"] = $product["quantity"] - $quantityIntoLot;
+                        $product["quantity"] = $products[$key]["quantity"];
                         $this->attachLot($inbound->id, $key, $lot);
                     }
                 }
@@ -190,7 +198,7 @@ class InboundController extends Controller
         foreach($user_lots as $lot){
             $lot_products = [];
             foreach($products as $key => $product){
-                if($product["volume"] > 0) {
+                if($product["quantity"] > 0) {
                     // If there are still volume needed to be assigned
                     $quantityIntoLot = $this->calculateQuantity($lot->left_volume, $product["singleVolume"], $product["quantity"]);
                     if($quantityIntoLot > 0){
@@ -229,6 +237,8 @@ class InboundController extends Controller
      */
     public function show($id)
     {
+        return inbound::with(['products', 'products_with_lots.lots'])->where('id', $id)->first();
+
         $inbound = inbound::where('id', $id)->first();
         
         return view('inbound.show')->with('inbound', $inbound);
@@ -252,7 +262,56 @@ class InboundController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $products = json_decode($request->products);
+        
+        foreach($products as $product)
+        {
+            $inbound = InboundProduct::find($product->product_lot_id);
+            
+            $original_lot = Lot::find($product->original_lot);
+
+          
+            if($product->original_lot !== $product->lot->value)
+            {                
+                $new_lot = $inbound->lots()
+                                ->where('lot_id', $product->original_lot)
+                                ->first();
+
+                $inbound->lots()->detach($product->original_lot);
+
+                $inbound->lots()->attach($product->lot->value);
+
+                $new_lot = Lot::find($product->lot->value);
+
+                $quantity_for_original_lot = $inbound->quantity_received !== $product->quantity_received
+                                            ? $inbound->quantity_received
+                                            : $product->quantity_received;
+
+                $original_lot->deduct_incoming_product($inbound->product, $quantity_for_original_lot);
+                
+                $new_lot->increase_incoming_product($inbound->product, $product->quantity_received); 
+
+                $new_lot->propagate_left_volume();
+            }
+            else
+            {
+                $quantity_difference = $inbound->quantity_received !== $product->quantity_received
+                                        ? $inbound->quantity_received - $product->quantity_received
+                                        : $inbound->quantity - $product->quantity_received;
+
+                $original_lot->deduct_incoming_product($inbound->product, $quantity_difference);
+            }
+
+            $original_lot->propagate_left_volume();
+
+            $inbound->update([
+                    'quantity_received' => $product->quantity_received,
+                    'expiry_date' => $product->expiry_date,
+                    'remark' => $product->remark
+                ]);
+
+            return ['message' => 'Inbound details updated successfully'];
+        }
     }
     /**
      * Remove the specified resource from storage.

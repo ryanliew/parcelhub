@@ -64,7 +64,7 @@ class Product extends Model
     }
 
     public function inbounds(){
-    	return $this->belongsToMany('App\Inbound')->withPivot('quantity');
+    	return $this->belongsToMany('App\Inbound')->withPivot('quantity', 'id', 'expiry_date', 'quantity_received', 'remark')->withTimestamps();
     }
 
     public function inbounds_with_lots(){

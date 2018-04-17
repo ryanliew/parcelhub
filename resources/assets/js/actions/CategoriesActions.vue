@@ -1,14 +1,14 @@
 <template>
     <div>
-        <div class="columns is-gapless">
-            <div class="column">
+        <div class="field has-addons">
+            <p class="control">
                 <button class="button is-warning" @click="itemAction('edit', rowData, rowIndex)">
                     <span class="icon">
                         <i class="fa fa-edit"></i>
                     </span>
                     <span>Edit</span>
                 </button>
-            </div>
+            </p>
         </div>
     </div>
 </template>

@@ -62,7 +62,9 @@ use Illuminate\Database\Eloquent\Model;
 class Outbound extends Model
 {
 	protected $guarded = ['id', 'user_id', 'amount_insured', 'outbound_products', 'status', 'customer_id'];
-	
+    
+    protected $with = ['tracking_numbers'];
+    
     public function user() {
     	return $this->belongsTo('App\User');
     }
@@ -139,7 +141,7 @@ class Outbound extends Model
     // Static methods
     public static function PREFIX()
     {
-        return 'PDO-';
+        return 'POUT-';
     }
     
 }

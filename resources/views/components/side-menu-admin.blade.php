@@ -5,6 +5,12 @@
                 Dashboard
             </a>
         </li>
+
+        <li>
+            <a @if( url()->current() == route('profile') ) class="is-active" @endif href="{{ route('profile') }}">
+                My profile
+            </a>
+        </li>
         <li>
             <a @if( url()->current() == route('lots.categories') ) class="is-active" @endif href="{{ route('lots.categories') }}">
                 Lot categories

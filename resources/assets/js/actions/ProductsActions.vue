@@ -1,26 +1,30 @@
 <template>
     <div>
-        <div class="columns is-gapless">
-            <div class="column">
-                <button class="button is-info" @click="itemAction('view', rowData, rowIndex)">
+        <div class="field has-addons">
+            <p class="control">
+                <button class="button is-small is-info" @click="itemAction('view', rowData, rowIndex)">
                     <span class="icon">
                         <i class="fa fa-search"></i>
                     </span>
                     <span>View</span>
                 </button>
-                <button class="button is-warning" @click="itemAction('edit', rowData, rowIndex)">
+            </p>
+            <p class="control">
+                <button class="button is-small is-warning" @click="itemAction('edit', rowData, rowIndex)">
                     <span class="icon">
                         <i class="fa fa-edit"></i>
                     </span>
                     <span>Edit</span>
                 </button>
-                <button class="button is-danger" @click="itemAction('delete', rowData, rowIndex)">
+            </p>
+            <p class="control">
+                <button class="button is-small is-danger" @click="itemAction('delete', rowData, rowIndex)">
                     <span class="icon">
                         <i class="fa fa-times"></i>
                     </span>
                     <span>Delete</span>
                 </button>
-            </div>
+            </p>
         </div>
     </div>
 </template>

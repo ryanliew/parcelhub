@@ -5,9 +5,10 @@ namespace App\Http\Controllers;
 use App\Category;
 use App\Lot;
 use App\Payment;
-use Settings;
+use App\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Settings;
 
 class LotController extends Controller
 {
@@ -259,6 +260,8 @@ class LotController extends Controller
         $lot_products = json_decode($request['lot_products'], true);
         $adjustments = [];
 
+        $the_product = Product::find(collect($lot_products)->first()['product_id']);
+
         foreach($lot_products as $lotproduct)
         {
             if($lotproduct['remark'] !== '')
@@ -282,11 +285,13 @@ class LotController extends Controller
                     'new_quantity' => $lotproduct['quantity'],
                     'remark' => $lotproduct['remark']
                 ]);
+
+                $lot->propagate_left_volume();
                 
             }
         }
         
-        $product->adjustments()->createMany($adjustments);
+        $the_product->adjustments()->createMany($adjustments);
 
         return ['message' => 'Stock updated successfully'];
     }

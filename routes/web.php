@@ -105,8 +105,10 @@ Route::group(['prefix' => 'internal'], function() {
 	Route::get('inbounds/today', 'InboundController@indexToday');
 	Route::get('outbound/user', 'OutboundController@index');
 	Route::get('inbound/admin', 'Admin\InboundController@index');
+	Route::get('inbound/{inbound}', 'InboundController@show');
 	Route::get('outbounds/pending', 'OutboundController@indexPending');
 	Route::get('outbound/admin', 'Admin\OutboundController@index');
+	Route::get('outbound/products/{outbound}', 'OutboundController@products');
 	Route::get('outbound/{outbound}', 'OutboundController@show');
 	Route::get('payments', 'PaymentController@index');
 	Route::get('payments/pending', 'PaymentController@indexPending');
@@ -132,7 +134,7 @@ Route::group(['prefix' => 'inbound'], function() {
 	Route::get('show/{id}', 'InboundController@show');
 	Route::get('delete/{id}', 'InboundController@destroy');
 	Route::post('store', 'InboundController@store');
-	Route::post('update', 'InboundController@update');
+	Route::post('/update/{id}', 'InboundController@update');
 });
 
 Route::group(['prefix' => 'admin'], function() {

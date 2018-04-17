@@ -81,7 +81,7 @@
         <h2>Parcel HUB</h2>
     </div>
     <div class="pull-right width-half">
-        <p>Ref No : ___________________</p>
+        <p>Ref No : <u>{{ $inbound->prefix() }}{{ $inbound->id }}</u></p>
         <p>Date : <u>{{ $inbound->created_at->toDateString() }}</u></p>
         <p>Arrival date : <u>{{ $inbound->arrival_date->toDateString() }}</u></p>
     </div>
