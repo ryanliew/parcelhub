@@ -54414,7 +54414,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		};
 	},
 	mounted: function mounted() {
-		if (this.focus) {
+		if (this.focus && this.$refs.input) {
 			this.$refs.input.focus();
 		}
 	},
@@ -54454,7 +54454,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 				return this.localValue;
 			}
 
-			return !this.editable && this.type == 'date' ? __WEBPACK_IMPORTED_MODULE_0_moment___default()(this.defaultValue).fromNow() : this.defaultValue;
+			return !this.editable && this.type == 'date' && __WEBPACK_IMPORTED_MODULE_0_moment___default()(this.defaultValue).isValid() ? __WEBPACK_IMPORTED_MODULE_0_moment___default()(this.defaultValue).fromNow() : this.defaultValue;
 		}
 	},
 
@@ -61610,6 +61610,28 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -61663,7 +61685,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			this.productsOptions = response.data.data;
 		},
 		addRow: function addRow() {
-			this.productRows.push({ product: null, quantity: 0 });
+			this.productRows.push({ product: null, quantity: 0, expiry_date: '', remark: '' });
 			this.clearProductErrors();
 		},
 		removeRow: function removeRow(index) {
@@ -61721,7 +61743,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 						return p.id == element.product.id;
 					}.bind(element));
 
-					if (product > -1) this.form.products[product].quantity = parseInt(this.form.products[product].quantity) + parseInt(element.quantity);else this.form.products.push({ id: element.product.id, quantity: element.quantity });
+					if (product > -1) this.form.products[product].quantity = parseInt(this.form.products[product].quantity) + parseInt(element.quantity);else this.form.products.push({ id: element.product.id, quantity: element.quantity, expiry_date: element.expiry_date, remark: element.remark });
 				}
 			}.bind(this));
 		}
@@ -61930,6 +61952,92 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	props: ['inbound', 'canManage'],
@@ -61939,6 +62047,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 				process_status: this.inbound.process_status,
 				id: this.inbound.id
 			}),
+			inboundForm: new Form({
+				products: [],
+				id: this.inbound.id
+			}),
+			lotsOptions: [],
 			selectedStatus: {
 				value: this.inbound.process_status,
 				label: this.$options.filters.capitalize(this.$options.filters.unslug(this.inbound.process_status))
@@ -61957,12 +62070,50 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 				label: 'Canceled'
 			}],
 			confirmation: false,
-			confirmSubmit: false
+			confirmSubmit: false,
+			confirmSubmitEdit: false,
+			isEditing: false,
+			editLoading: true
 		};
+	},
+	mounted: function mounted() {
+		this.getLots();
 	},
 
 
 	methods: {
+		getLots: function getLots() {
+			var _this = this;
+
+			axios.get('/internal/user/' + this.inbound.products[0].user_id + '/lots').then(function (data) {
+				return _this.setLots(data);
+			});
+		},
+		setLots: function setLots(data) {
+			this.lotsOptions = data.data.map(function (lot) {
+				var obj = {};
+				obj['value'] = lot.id;
+				obj['label'] = lot.name;
+
+				return obj;
+			});
+
+			this.setFormData();
+		},
+		setFormData: function setFormData() {
+			this.editLoading = false;
+			this.inboundForm.products = this.inbound.products_with_lots.map(function (product) {
+				var obj = {};
+				obj['product_lot_id'] = product.id;
+				obj['original_lot'] = product.lots[0].id;
+				obj['lot'] = { value: product.lots[0].id, label: product.lots[0].name };
+				obj['quantity_received'] = product.quantity_received && product.quantity !== product.quantity_received ? product.quantity_received : product.quantity;
+				obj['expiry_date'] = product.expiry_date;
+				obj['remark'] = product.remark;
+
+				return obj;
+			});
+		},
 		back: function back() {
 			this.$emit('back');
 		},
@@ -61970,17 +62121,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			this.confirmSubmit = true;
 		},
 		onSubmit: function onSubmit() {
-			var _this = this;
+			var _this2 = this;
 
 			this.confirmSubmit = false;
 			this.form.post(this.action).then(function (response) {
-				return _this.onSuccess(response);
+				return _this2.onSuccess(response);
 			}).catch(function (response) {
-				return _this.onError(response);
+				return _this2.onError(response);
 			});
 		},
 		onSuccess: function onSuccess() {
 			this.form.id = this.inbound.id;
+			this.back();
 		},
 		onError: function onError() {},
 		statusUpdate: function statusUpdate(data) {
@@ -61992,6 +62144,28 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			this.onSubmit();
 			this.confirmation = false;
 			this.$emit('canceled');
+		},
+		edit: function edit() {
+			this.isEditing = true;
+		},
+		onCancel: function onCancel() {
+			this.isEditing = false;
+			this.setFormData();
+		},
+		submitEdit: function submitEdit() {
+			this.confirmSubmitEdit = true;
+		},
+		onSubmitEdit: function onSubmitEdit() {
+			var _this3 = this;
+
+			this.isEditing = false;
+			this.confirmSubmitEdit = false;
+
+			this.inboundForm.post('/inbound/update/' + this.inbound.id).then(function (response) {
+				return _this3.onSuccess(response);
+			}).catch(function (response) {
+				return _this3.onError(response);
+			});
 		}
 	},
 
@@ -62025,6 +62199,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		},
 		download: function download() {
 			return "/download/inbound/report/" + this.inbound.id;
+		},
+		loadingClass: function loadingClass() {
+			return this.editLoading ? 'is-loading' : '';
 		}
 	}
 });
@@ -62040,193 +62217,146 @@ var render = function() {
   return _c(
     "div",
     [
-      _c("div", { staticClass: "card" }, [
-        _c("div", { staticClass: "card-header" }, [
-          _c("div", { staticClass: "card-header-title level" }, [
-            _c("div", { staticClass: "level-left" }, [
-              _c("div", { staticClass: "level-item" }, [
-                _c("span", [_vm._v("Inbound #" + _vm._s(_vm.inbound.id))])
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "level-right" }, [
-              _c("div", { staticClass: "level-item" }, [
-                _c(
-                  "button",
-                  {
-                    staticClass: "button is-primary",
-                    on: {
-                      click: function($event) {
-                        _vm.back()
-                      }
-                    }
-                  },
-                  [
-                    _c("i", { staticClass: "fa fa-arrow-circle-left" }),
-                    _vm._v(" "),
-                    _c("span", { staticClass: "pl-5" }, [
-                      _vm._v("Back to list")
-                    ])
-                  ]
-                ),
-                _vm._v(" "),
-                _c(
-                  "a",
-                  {
-                    staticClass: "button is-primary ml-5",
-                    attrs: { href: _vm.download, target: "_blank" }
-                  },
-                  [
-                    _c("i", { staticClass: "fa fa-download" }),
-                    _vm._v(" "),
-                    _c("span", { staticClass: "pl-5" }, [
-                      _vm._v("Download PDF")
-                    ])
-                  ]
-                )
-              ])
-            ])
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "card-content" }, [
-          _c("div", { staticClass: "level" }, [
-            _c("div", { staticClass: "level-item has-text-centered" }, [
-              _c("div", [
-                _c("p", { staticClass: "heading" }, [
-                  _vm._v("\n\t\t\t\t\t\t\t\tOrder date\n\t\t\t\t\t\t\t")
-                ]),
-                _vm._v(" "),
-                _c("p", { staticClass: "title" }, [
-                  _vm._v(
-                    "\n\t\t\t\t\t\t\t\t" +
-                      _vm._s(_vm._f("date")(_vm.inbound.created_at)) +
-                      "\n\t\t\t\t\t\t\t"
-                  )
-                ])
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "level-item has-text-centered" }, [
-              _c("div", [
-                _c("p", { staticClass: "heading" }, [
-                  _vm._v("\n\t\t\t\t\t\t\t\tArrival date\n\t\t\t\t\t\t\t")
-                ]),
-                _vm._v(" "),
-                _c("p", { staticClass: "title" }, [
-                  _vm._v(
-                    "\n\t\t\t\t\t\t\t\t" +
-                      _vm._s(_vm._f("date")(_vm.inbound.arrival_date)) +
-                      "\n\t\t\t\t\t\t\t"
-                  )
-                ])
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "level-item has-text-centered" }, [
-              _c("div", [
-                _c("p", { staticClass: "heading" }, [
-                  _vm._v("\n\t\t\t\t\t\t\t\tTotal carton\n\t\t\t\t\t\t\t")
-                ]),
-                _vm._v(" "),
-                _c("p", { staticClass: "title" }, [
-                  _vm._v(
-                    "\n\t\t\t\t\t\t\t\t" +
-                      _vm._s(_vm.inbound.total_carton) +
-                      "\n\t\t\t\t\t\t\t"
-                  )
-                ])
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "level-item has-text-centered" }, [
-              _c("div", [
-                _c("p", { staticClass: "heading" }, [
-                  _vm._v("\n\t\t\t\t\t\t\t\tTotal products\n\t\t\t\t\t\t\t")
-                ]),
-                _vm._v(" "),
-                _c("p", { staticClass: "title" }, [
-                  _vm._v(
-                    "\n\t\t\t\t\t\t\t\t" +
-                      _vm._s(_vm.totalProducts) +
-                      "\n\t\t\t\t\t\t\t"
-                  )
-                ])
-              ])
-            ])
-          ])
-        ])
-      ]),
-      _vm._v(" "),
       _c("div", { staticClass: "columns mt-15" }, [
         _c("div", { staticClass: "column" }, [
           _c("div", { staticClass: "card" }, [
-            _vm._m(0),
+            _c("div", { staticClass: "card-header" }, [
+              _c("div", { staticClass: "card-header-title level" }, [
+                _c("div", { staticClass: "level-left" }, [
+                  _c("div", { staticClass: "level-item" }, [
+                    _c("span", [_vm._v("Inbound #" + _vm._s(_vm.inbound.id))])
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "level-right" }, [
+                  _c("div", { staticClass: "level-item" }, [
+                    _c(
+                      "a",
+                      {
+                        staticClass: "button is-primary ml-5",
+                        attrs: { href: _vm.download, target: "_blank" }
+                      },
+                      [
+                        _c("i", { staticClass: "fa fa-download" }),
+                        _vm._v(" "),
+                        _c("span", { staticClass: "pl-5" }, [
+                          _vm._v("Download PDF")
+                        ])
+                      ]
+                    )
+                  ])
+                ])
+              ])
+            ]),
             _vm._v(" "),
             _c("div", { staticClass: "card-content" }, [
-              _c(
-                "table",
-                {
-                  staticClass: "table is-hoverable is-fullwidth is-responsive"
-                },
-                [
-                  _vm._m(1),
-                  _vm._v(" "),
-                  _c(
-                    "tbody",
-                    _vm._l(_vm.inbound.products, function(product, index) {
-                      return _c("tr", [
-                        _c("td", [
-                          _c("figure", { staticClass: "image is-48x48" }, [
-                            _c("img", { attrs: { src: product.picture } })
-                          ])
-                        ]),
-                        _vm._v(" "),
-                        _c("td", {
-                          domProps: { textContent: _vm._s(product.name) }
-                        }),
-                        _vm._v(" "),
-                        _c("td", {
-                          domProps: {
-                            textContent: _vm._s(product.pivot.quantity)
-                          }
-                        }),
-                        _vm._v(" "),
-                        _c("td", [
-                          _c("div", { staticClass: "tags" }, [
-                            product.is_dangerous
-                              ? _c("span", { staticClass: "tag is-danger" }, [
-                                  _vm._v("Dangerous")
-                                ])
-                              : _vm._e(),
-                            _vm._v(" "),
-                            product.is_fragile
-                              ? _c("span", { staticClass: "tag is-warning" }, [
-                                  _vm._v("Fragile")
-                                ])
-                              : _vm._e()
-                          ])
-                        ]),
-                        _vm._v(" "),
-                        _c("td", {
-                          domProps: {
-                            textContent: _vm._s(
-                              _vm.inbound.products_with_lots[index].lots_name
-                            )
-                          }
-                        })
-                      ])
-                    })
-                  )
-                ]
-              )
+              _c("div", { staticClass: "level" }, [
+                _c("div", { staticClass: "level-item has-text-centered" }, [
+                  _c("div", [
+                    _c("p", { staticClass: "heading" }, [
+                      _vm._v(
+                        "\n\t\t\t\t\t\t\t\t\t\tOrder date\n\t\t\t\t\t\t\t\t\t"
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("p", { staticClass: "title" }, [
+                      _vm._v(
+                        "\n\t\t\t\t\t\t\t\t\t\t" +
+                          _vm._s(_vm._f("date")(_vm.inbound.created_at)) +
+                          "\n\t\t\t\t\t\t\t\t\t"
+                      )
+                    ])
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "level-item has-text-centered" }, [
+                  _c("div", [
+                    _c("p", { staticClass: "heading" }, [
+                      _vm._v(
+                        "\n\t\t\t\t\t\t\t\t\t\tArrival date\n\t\t\t\t\t\t\t\t\t"
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("p", { staticClass: "title" }, [
+                      _vm._v(
+                        "\n\t\t\t\t\t\t\t\t\t\t" +
+                          _vm._s(_vm._f("date")(_vm.inbound.arrival_date)) +
+                          "\n\t\t\t\t\t\t\t\t\t"
+                      )
+                    ])
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "level-item has-text-centered" }, [
+                  _c("div", [
+                    _c("p", { staticClass: "heading" }, [
+                      _vm._v(
+                        "\n\t\t\t\t\t\t\t\t\t\tTotal carton\n\t\t\t\t\t\t\t\t\t"
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("p", { staticClass: "title" }, [
+                      _vm._v(
+                        "\n\t\t\t\t\t\t\t\t\t\t" +
+                          _vm._s(_vm.inbound.total_carton) +
+                          "\n\t\t\t\t\t\t\t\t\t"
+                      )
+                    ])
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "level-item has-text-centered" }, [
+                  _c("div", [
+                    _c("p", { staticClass: "heading" }, [
+                      _vm._v(
+                        "\n\t\t\t\t\t\t\t\t\t\tTotal products\n\t\t\t\t\t\t\t\t\t"
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("p", { staticClass: "title" }, [
+                      _vm._v(
+                        "\n\t\t\t\t\t\t\t\t\t\t" +
+                          _vm._s(_vm.totalProducts) +
+                          "\n\t\t\t\t\t\t\t\t\t"
+                      )
+                    ])
+                  ])
+                ])
+              ])
             ])
           ])
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "column is-one-third" }, [
           _c("div", { staticClass: "card" }, [
-            _vm._m(2),
+            _c("div", { staticClass: "card-header" }, [
+              _c("div", { staticClass: "card-header-title level" }, [
+                _vm._m(0),
+                _vm._v(" "),
+                _c("div", { staticClass: "level-right" }, [
+                  _c("div", { staticClass: "level-item" }, [
+                    _c(
+                      "button",
+                      {
+                        staticClass: "button is-primary",
+                        on: {
+                          click: function($event) {
+                            _vm.back()
+                          }
+                        }
+                      },
+                      [
+                        _c("i", { staticClass: "fa fa-arrow-circle-left" }),
+                        _vm._v(" "),
+                        _c("span", { staticClass: "pl-5" }, [
+                          _vm._v("Back to list")
+                        ])
+                      ]
+                    )
+                  ])
+                ])
+              ])
+            ]),
             _vm._v(" "),
             _c("div", { staticClass: "card-content" }, [
               _vm.canManage
@@ -62289,7 +62419,7 @@ var render = function() {
                         1
                       ),
                       _vm._v(" "),
-                      _vm._m(3),
+                      _vm._m(1),
                       _vm._v(" "),
                       _c("div", { staticClass: "is-clearfix" })
                     ]
@@ -62327,6 +62457,267 @@ var render = function() {
         ])
       ]),
       _vm._v(" "),
+      _c("div", { staticClass: "card" }, [
+        _c("div", { staticClass: "card-header" }, [
+          _c("div", { staticClass: "card-header-title level" }, [
+            _vm._m(2),
+            _vm._v(" "),
+            _vm.canManage
+              ? _c("div", { staticClass: "level-right" }, [
+                  !_vm.isEditing
+                    ? _c(
+                        "button",
+                        {
+                          staticClass: "button is-primary",
+                          class: _vm.loadingClass,
+                          on: {
+                            click: function($event) {
+                              _vm.edit()
+                            }
+                          }
+                        },
+                        [
+                          _c("i", { staticClass: "fa fa-edit" }),
+                          _vm._v(" "),
+                          _c("span", { staticClass: "pl-5" }, [
+                            _vm._v("Edit inbound details")
+                          ])
+                        ]
+                      )
+                    : _c("div", [
+                        _c(
+                          "button",
+                          {
+                            staticClass: "button is-danger",
+                            on: {
+                              click: function($event) {
+                                _vm.onCancel()
+                              }
+                            }
+                          },
+                          [
+                            _c("i", { staticClass: "fa fa-times" }),
+                            _vm._v(" "),
+                            _c("span", { staticClass: "pl-5" }, [
+                              _vm._v("Cancel")
+                            ])
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "button",
+                          {
+                            staticClass: "button is-success",
+                            on: {
+                              click: function($event) {
+                                _vm.submitEdit()
+                              }
+                            }
+                          },
+                          [
+                            _c("i", { staticClass: "fa fa-check" }),
+                            _vm._v(" "),
+                            _c("span", { staticClass: "pl-5" }, [
+                              _vm._v("Confirm changes")
+                            ])
+                          ]
+                        )
+                      ])
+                ])
+              : _vm._e()
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "card-content" }, [
+          _c(
+            "table",
+            { staticClass: "table is-hoverable is-fullwidth is-responsive" },
+            [
+              _vm._m(3),
+              _vm._v(" "),
+              _c(
+                "tbody",
+                _vm._l(_vm.inbound.products, function(product, index) {
+                  return _c("tr", [
+                    _c("td", [
+                      _c("figure", { staticClass: "image is-48x48" }, [
+                        _c("img", { attrs: { src: product.picture } })
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("td", {
+                      domProps: { textContent: _vm._s(product.name) }
+                    }),
+                    _vm._v(" "),
+                    _c("td", {
+                      domProps: { textContent: _vm._s(product.pivot.quantity) }
+                    }),
+                    _vm._v(" "),
+                    _c("td", [
+                      _c("div", { staticClass: "tags" }, [
+                        product.is_dangerous
+                          ? _c("span", { staticClass: "tag is-danger" }, [
+                              _vm._v("Dangerous")
+                            ])
+                          : _vm._e(),
+                        _vm._v(" "),
+                        product.is_fragile
+                          ? _c("span", { staticClass: "tag is-warning" }, [
+                              _vm._v("Fragile")
+                            ])
+                          : _vm._e()
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    !_vm.isEditing
+                      ? _c("td", {
+                          domProps: {
+                            textContent: _vm._s(
+                              _vm.inbound.products_with_lots[index].lots_name
+                            )
+                          }
+                        })
+                      : _c(
+                          "td",
+                          [
+                            _vm.inboundForm.products[index]
+                              ? _c("selector-input", {
+                                  attrs: {
+                                    defaultData:
+                                      _vm.inboundForm.products[index].lot,
+                                    hideLabel: true,
+                                    potentialData: _vm.lotsOptions,
+                                    placeholder: "Select lot",
+                                    unclearable: true
+                                  },
+                                  model: {
+                                    value: _vm.inboundForm.products[index].lot,
+                                    callback: function($$v) {
+                                      _vm.$set(
+                                        _vm.inboundForm.products[index],
+                                        "lot",
+                                        $$v
+                                      )
+                                    },
+                                    expression:
+                                      "inboundForm.products[index].lot"
+                                  }
+                                })
+                              : _vm._e()
+                          ],
+                          1
+                        ),
+                    _vm._v(" "),
+                    _c(
+                      "td",
+                      [
+                        _vm.inboundForm.products[index]
+                          ? _c("text-input", {
+                              attrs: {
+                                defaultValue:
+                                  _vm.inboundForm.products[index].expiry_date,
+                                editable: _vm.isEditing,
+                                name: "lot-expiry-date-" + product.id,
+                                hideLabel: true,
+                                required: false,
+                                focus: true,
+                                type: "date"
+                              },
+                              model: {
+                                value:
+                                  _vm.inboundForm.products[index].expiry_date,
+                                callback: function($$v) {
+                                  _vm.$set(
+                                    _vm.inboundForm.products[index],
+                                    "expiry_date",
+                                    $$v
+                                  )
+                                },
+                                expression:
+                                  "inboundForm.products[index].expiry_date"
+                              }
+                            })
+                          : _vm._e()
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "td",
+                      [
+                        _vm.inboundForm.products[index]
+                          ? _c("text-input", {
+                              attrs: {
+                                defaultValue:
+                                  _vm.inboundForm.products[index]
+                                    .quantity_received,
+                                editable: _vm.isEditing && _vm.canManage,
+                                name: "lot-quantity-" + product.id,
+                                hideLabel: true,
+                                required: true,
+                                type: "number"
+                              },
+                              model: {
+                                value:
+                                  _vm.inboundForm.products[index]
+                                    .quantity_received,
+                                callback: function($$v) {
+                                  _vm.$set(
+                                    _vm.inboundForm.products[index],
+                                    "quantity_received",
+                                    $$v
+                                  )
+                                },
+                                expression:
+                                  "inboundForm.products[index].quantity_received"
+                              }
+                            })
+                          : _vm._e()
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "td",
+                      [
+                        _vm.inboundForm.products[index]
+                          ? _c("textarea-input", {
+                              attrs: {
+                                defaultValue:
+                                  _vm.inboundForm.products[index].remark,
+                                editable: _vm.isEditing,
+                                label: "Remark",
+                                name: "remark",
+                                type: "text",
+                                hideLabel: true,
+                                required: false,
+                                rows: "0.5",
+                                cols: "4"
+                              },
+                              model: {
+                                value: _vm.inboundForm.products[index].remark,
+                                callback: function($$v) {
+                                  _vm.$set(
+                                    _vm.inboundForm.products[index],
+                                    "remark",
+                                    $$v
+                                  )
+                                },
+                                expression: "inboundForm.products[index].remark"
+                              }
+                            })
+                          : _vm._e()
+                      ],
+                      1
+                    )
+                  ])
+                })
+              )
+            ]
+          )
+        ])
+      ]),
+      _vm._v(" "),
       _c(
         "modal",
         {
@@ -62360,13 +62751,28 @@ var render = function() {
         attrs: {
           isConfirming: _vm.confirmSubmit,
           title: "Confirmation",
-          message: "Confirm changing the status of the inbound order?"
+          message:
+            "Confirm changing the status of the inbound order? Editing is no longer allowed after changing the order to completed."
         },
         on: {
           close: function($event) {
             _vm.confirmSubmit = false
           },
           confirm: _vm.onSubmit
+        }
+      }),
+      _vm._v(" "),
+      _c("confirmation", {
+        attrs: {
+          isConfirming: _vm.confirmSubmitEdit,
+          title: "Confirmation",
+          message: "Confirm editing the inbound order details?"
+        },
+        on: {
+          close: function($event) {
+            _vm.confirmSubmitEdit = false
+          },
+          confirm: _vm.onSubmitEdit
         }
       })
     ],
@@ -62378,13 +62784,34 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "card-header" }, [
-      _c("div", { staticClass: "card-header-title level" }, [
-        _c("div", { staticClass: "level-left" }, [
-          _c("div", { staticClass: "level-item" }, [
-            _vm._v("\n\t\t\t\t\t\t\t\t\tInbound products\n\t\t\t\t\t\t\t\t")
-          ])
-        ])
+    return _c("div", { staticClass: "level-left" }, [
+      _c("div", { staticClass: "level-item" }, [
+        _vm._v("\n\t\t\t\t\t\t\t\t\tOrder status\n\t\t\t\t\t\t\t\t")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "field" }, [
+      _c(
+        "button",
+        {
+          staticClass: "button is-success is-pulled-right",
+          attrs: { type: "submit" }
+        },
+        [_vm._v("Change status")]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "level-left" }, [
+      _c("div", { staticClass: "level-item" }, [
+        _vm._v("\n\t\t\t\t\t\t\tInbound products\n\t\t\t\t\t\t")
       ])
     ])
   },
@@ -62402,37 +62829,14 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("Attributes")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Lots")])
+        _c("th", [_vm._v("Lots")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Expiry date")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Receiving quantity")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Remark")])
       ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "card-header" }, [
-      _c("div", { staticClass: "card-header-title level" }, [
-        _c("div", { staticClass: "level-left" }, [
-          _c("div", { staticClass: "level-item" }, [
-            _vm._v("\n\t\t\t\t\t\t\t\t\tOrder status\n\t\t\t\t\t\t\t\t")
-          ])
-        ])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "field" }, [
-      _c(
-        "button",
-        {
-          staticClass: "button is-success is-pulled-right",
-          attrs: { type: "submit" }
-        },
-        [_vm._v("Change status")]
-      )
     ])
   }
 ]
@@ -62678,176 +63082,246 @@ var render = function() {
                         )
                       ]),
                       _vm._v(" "),
-                      _c(
-                        "div",
-                        { staticClass: "products-list" },
-                        [
-                          _c("div", { staticClass: "columns" }, [
-                            _c("div", { staticClass: "column is-narrow" }, [
-                              _vm._v(
-                                "\n\t\t\t          \t\t\t#\n\t\t\t          \t\t"
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c("div", { staticClass: "column" }, [
-                              _c("b", [_vm._v("Product")])
-                            ]),
-                            _vm._v(" "),
-                            _c("div", { staticClass: "column" }, [
-                              _c("b", [_vm._v("Quantity")])
-                            ]),
-                            _vm._v(" "),
-                            _c("div", { staticClass: "column" }, [
-                              _c("b", [_vm._v("Consuming volume(m³)")])
-                            ]),
-                            _vm._v(" "),
-                            _c("div", { staticClass: "column is-2" }, [
-                              _c(
-                                "div",
-                                {
-                                  staticClass: "button is-primary is-small",
-                                  on: { click: _vm.addRow }
-                                },
-                                [
-                                  _c("i", { staticClass: "fa fa-plus" }),
-                                  _vm._v(" "),
-                                  _c("span", { staticClass: "pl-5" }, [
-                                    _vm._v("Add product")
-                                  ])
-                                ]
-                              )
-                            ])
-                          ]),
-                          _vm._v(" "),
-                          _vm._l(_vm.productRows, function(row, index) {
-                            return _c("div", { staticClass: "columns" }, [
-                              _c("div", { staticClass: "column is-narrow" }, [
-                                _vm._v(
-                                  "\n\t\t\t\t\t\t\t\t" +
-                                    _vm._s(index + 1) +
-                                    "\n\t\t          \t\t\t"
-                                )
-                              ]),
+                      _c("div", { staticClass: "products-list" }, [
+                        _c(
+                          "table",
+                          { staticClass: "table is-fullwidth responsive" },
+                          [
+                            _c("thead", [
+                              _c("th", [_vm._v("#")]),
                               _vm._v(" "),
-                              _c(
-                                "div",
-                                { staticClass: "column" },
-                                [
-                                  _c("products-selector-input", {
-                                    attrs: {
-                                      defaultData:
-                                        _vm.productRows[index].product,
-                                      label: "Products",
-                                      name: "products",
-                                      required: true,
-                                      potentialData: _vm.productsOptions,
-                                      editable: true,
-                                      placeholder: "Select product",
-                                      hideLabel: true
-                                    },
-                                    on: { input: _vm.clearProductErrors },
-                                    model: {
-                                      value: _vm.productRows[index].product,
-                                      callback: function($$v) {
-                                        _vm.$set(
-                                          _vm.productRows[index],
-                                          "product",
-                                          $$v
-                                        )
-                                      },
-                                      expression: "productRows[index].product"
-                                    }
-                                  })
-                                ],
-                                1
-                              ),
+                              _c("th", [_vm._v("Product")]),
                               _vm._v(" "),
-                              _c(
-                                "div",
-                                { staticClass: "column" },
-                                [
-                                  _vm.productRows[index]
-                                    ? _c("text-input", {
-                                        attrs: {
-                                          defaultValue:
-                                            _vm.productRows[index].quantity,
-                                          label: "Quantity",
-                                          required: true,
-                                          type: "number",
-                                          editable: true,
-                                          hideLabel: true,
-                                          name: "quantity"
-                                        },
-                                        on: { input: _vm.clearProductErrors },
-                                        model: {
-                                          value:
-                                            _vm.productRows[index].quantity,
-                                          callback: function($$v) {
-                                            _vm.$set(
-                                              _vm.productRows[index],
-                                              "quantity",
-                                              $$v
-                                            )
-                                          },
-                                          expression:
-                                            "productRows[index].quantity"
-                                        }
-                                      })
-                                    : _vm._e()
-                                ],
-                                1
-                              ),
+                              _c("th", [_vm._v("Quantity")]),
                               _vm._v(" "),
-                              _c("div", { staticClass: "column" }, [
-                                _vm.productRows[index].product
-                                  ? _c("span", [
-                                      _vm._v(
-                                        "\n\t\t\t\t\t\t\t\t\t" +
-                                          _vm._s(
-                                            _vm._f("convertToMeterCube")(
-                                              _vm.productRows[index].product
-                                                .volume *
-                                                _vm.productRows[index].quantity
-                                            )
-                                          ) +
-                                          "\n\t\t\t\t\t\t\t\t"
-                                      )
-                                    ])
-                                  : _vm._e()
-                              ]),
+                              _c("th", [_vm._v("Volume(m³)")]),
                               _vm._v(" "),
-                              _c("div", { staticClass: "column is-2" }, [
+                              _c("th", [_vm._v("Expiry date")]),
+                              _vm._v(" "),
+                              _c("th", [_vm._v("Remark")]),
+                              _vm._v(" "),
+                              _c("th", [
                                 _c(
                                   "div",
                                   {
-                                    staticClass: "button is-danger is-small",
-                                    on: {
-                                      click: function($event) {
-                                        _vm.removeRow(index)
-                                      }
-                                    }
+                                    staticClass: "button is-primary is-small",
+                                    on: { click: _vm.addRow }
                                   },
                                   [
-                                    _c("i", { staticClass: "fa fa-minus" }),
+                                    _c("i", { staticClass: "fa fa-plus" }),
                                     _vm._v(" "),
                                     _c("span", { staticClass: "pl-5" }, [
-                                      _vm._v("Remove product")
+                                      _vm._v("Add product")
                                     ])
                                   ]
                                 )
                               ])
-                            ])
-                          }),
-                          _vm._v(" "),
-                          _c("p", {
-                            staticClass: "is-danger header",
-                            domProps: {
-                              textContent: _vm._s(_vm.errorForProducts)
-                            }
-                          })
-                        ],
-                        2
-                      ),
+                            ]),
+                            _vm._v(" "),
+                            _c(
+                              "tbody",
+                              _vm._l(_vm.productRows, function(row, index) {
+                                return _c("tr", [
+                                  _c("td", [_vm._v(_vm._s(index + 1))]),
+                                  _vm._v(" "),
+                                  _c(
+                                    "td",
+                                    [
+                                      _c("products-selector-input", {
+                                        attrs: {
+                                          defaultData:
+                                            _vm.productRows[index].product,
+                                          label: "Products",
+                                          name: "products",
+                                          required: true,
+                                          potentialData: _vm.productsOptions,
+                                          editable: true,
+                                          placeholder: "Select product",
+                                          hideLabel: true
+                                        },
+                                        on: { input: _vm.clearProductErrors },
+                                        model: {
+                                          value: _vm.productRows[index].product,
+                                          callback: function($$v) {
+                                            _vm.$set(
+                                              _vm.productRows[index],
+                                              "product",
+                                              $$v
+                                            )
+                                          },
+                                          expression:
+                                            "productRows[index].product"
+                                        }
+                                      })
+                                    ],
+                                    1
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "td",
+                                    [
+                                      _vm.productRows[index]
+                                        ? _c("text-input", {
+                                            attrs: {
+                                              defaultValue:
+                                                _vm.productRows[index].quantity,
+                                              label: "Quantity",
+                                              required: true,
+                                              type: "number",
+                                              editable: true,
+                                              hideLabel: true,
+                                              name: "quantity"
+                                            },
+                                            on: {
+                                              input: _vm.clearProductErrors
+                                            },
+                                            model: {
+                                              value:
+                                                _vm.productRows[index].quantity,
+                                              callback: function($$v) {
+                                                _vm.$set(
+                                                  _vm.productRows[index],
+                                                  "quantity",
+                                                  $$v
+                                                )
+                                              },
+                                              expression:
+                                                "productRows[index].quantity"
+                                            }
+                                          })
+                                        : _vm._e()
+                                    ],
+                                    1
+                                  ),
+                                  _vm._v(" "),
+                                  _c("td", [
+                                    _vm.productRows[index].product
+                                      ? _c("span", [
+                                          _vm._v(
+                                            "\n\t\t\t\t\t\t\t\t\t\t\t" +
+                                              _vm._s(
+                                                _vm._f("convertToMeterCube")(
+                                                  _vm.productRows[index].product
+                                                    .volume *
+                                                    _vm.productRows[index]
+                                                      .quantity
+                                                )
+                                              ) +
+                                              "\n\t\t\t\t\t\t\t\t\t\t"
+                                          )
+                                        ])
+                                      : _vm._e()
+                                  ]),
+                                  _vm._v(" "),
+                                  _c(
+                                    "td",
+                                    [
+                                      _vm.productRows[index]
+                                        ? _c("text-input", {
+                                            attrs: {
+                                              defaultValue:
+                                                _vm.productRows[index]
+                                                  .expiry_date,
+                                              label: "Date",
+                                              required: true,
+                                              type: "date",
+                                              editable: true,
+                                              hideLabel: true,
+                                              name: "date"
+                                            },
+                                            on: {
+                                              input: _vm.clearProductErrors
+                                            },
+                                            model: {
+                                              value:
+                                                _vm.productRows[index]
+                                                  .expiry_date,
+                                              callback: function($$v) {
+                                                _vm.$set(
+                                                  _vm.productRows[index],
+                                                  "expiry_date",
+                                                  $$v
+                                                )
+                                              },
+                                              expression:
+                                                "productRows[index].expiry_date"
+                                            }
+                                          })
+                                        : _vm._e()
+                                    ],
+                                    1
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "td",
+                                    [
+                                      _vm.productRows[index]
+                                        ? _c("textarea-input", {
+                                            attrs: {
+                                              defaultValue:
+                                                _vm.productRows[index].remark,
+                                              editable: true,
+                                              label: "Remark",
+                                              name: "remark",
+                                              type: "text",
+                                              hideLabel: true,
+                                              required: false,
+                                              rows: "0.5",
+                                              cols: "4"
+                                            },
+                                            model: {
+                                              value:
+                                                _vm.productRows[index].remark,
+                                              callback: function($$v) {
+                                                _vm.$set(
+                                                  _vm.productRows[index],
+                                                  "remark",
+                                                  $$v
+                                                )
+                                              },
+                                              expression:
+                                                "productRows[index].remark"
+                                            }
+                                          })
+                                        : _vm._e()
+                                    ],
+                                    1
+                                  ),
+                                  _vm._v(" "),
+                                  _c("td", [
+                                    _c(
+                                      "div",
+                                      {
+                                        staticClass:
+                                          "button is-danger is-small",
+                                        on: {
+                                          click: function($event) {
+                                            _vm.removeRow(index)
+                                          }
+                                        }
+                                      },
+                                      [
+                                        _c("i", { staticClass: "fa fa-minus" }),
+                                        _vm._v(" "),
+                                        _c("span", { staticClass: "pl-5" }, [
+                                          _vm._v("Remove product")
+                                        ])
+                                      ]
+                                    )
+                                  ])
+                                ])
+                              })
+                            )
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c("p", {
+                          staticClass: "is-danger header",
+                          domProps: {
+                            textContent: _vm._s(_vm.errorForProducts)
+                          }
+                        })
+                      ]),
                       _vm._v(" "),
                       _c(
                         "button",

@@ -134,7 +134,7 @@ Route::group(['prefix' => 'inbound'], function() {
 	Route::get('show/{id}', 'InboundController@show');
 	Route::get('delete/{id}', 'InboundController@destroy');
 	Route::post('store', 'InboundController@store');
-	Route::post('update', 'InboundController@update');
+	Route::post('/update/{id}', 'InboundController@update');
 });
 
 Route::group(['prefix' => 'admin'], function() {

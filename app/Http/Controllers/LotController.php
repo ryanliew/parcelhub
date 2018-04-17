@@ -285,6 +285,8 @@ class LotController extends Controller
                     'new_quantity' => $lotproduct['quantity'],
                     'remark' => $lotproduct['remark']
                 ]);
+
+                $lot->propagate_left_volume();
                 
             }
         }

@@ -47,7 +47,7 @@ class Inbound extends Model
     }
 
     public function products(){
-    	return $this->belongsToMany('App\Product')->withPivot('quantity')->withTimestamps();
+    	return $this->belongsToMany('App\Product')->withPivot('quantity', 'id', 'expiry_date', 'quantity_received', 'remark')->withTimestamps();
     }
 
     public function products_with_lots(){
