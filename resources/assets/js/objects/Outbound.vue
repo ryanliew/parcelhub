@@ -43,7 +43,7 @@
 										Courier
 									</p>
 									<p class="title">
-										{{ outbound.courier }}
+										{{ outbound.courier.name || outbound.courier }}
 									</p>
 								</div>
 							</div>
@@ -111,7 +111,7 @@
 								</div>
 							</div>
 							<div class="level-right">
-								<div class="level-item">
+								<div class="level-item" v-if="can_manage">
 									<button class="button is-primary" v-if="!isEditTracking" @click="editTracking()">
 										<i class="fa fa-edit"></i>
 										<span class="pl-5">Edit tracking numbers</span>
@@ -219,7 +219,7 @@
 									name="tracking_numbers"
 									type="text"
 									:hideLabel="false"
-									:required="true"
+									:required="false"
 									:error="form.errors.get('tracking_numbers')"
 									rows="2"
 									cols="4">
@@ -358,7 +358,7 @@
 
 		methods: {
 			getOutbound() {
-				axios.get('/internal/outbound/' + this.outbound.id)
+				axios.get('/internal/outbound/products/' + this.outbound.id)
 					.then(response => this.setOutbound(response));
 			},
 

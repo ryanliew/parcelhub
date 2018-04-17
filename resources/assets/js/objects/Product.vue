@@ -1,290 +1,324 @@
 <template>
 	<div>
-		<div class="card">
-			<div class="card-header">
-				<div class="card-header-title level">
-					<div class="level-left">
-						<div class="level-item">
-							<span v-text="product.product_name"></span>
+		<transition name="slide-fade" mode="out-in">
+			<div v-if="!isViewingOutbound && !isViewingInbound">
+				<div class="card">
+					<div class="card-header">
+						<div class="card-header-title level">
+							<div class="level-left">
+								<div class="level-item">
+									<span v-text="product.product_name"></span>
+								</div>
+							</div>
+							<div class="level-right">
+								<div class="level-item">
+									<button class="button is-primary" @click="back()">
+										<i class="fa fa-arrow-circle-left"></i>
+										<span class="pl-5">Back to list</span>
+									</button>
+								</div>
+							</div>
 						</div>
 					</div>
-					<div class="level-right">
-						<div class="level-item">
-							<button class="button is-primary" @click="back()">
-								<i class="fa fa-arrow-circle-left"></i>
-								<span class="pl-5">Back to list</span>
-							</button>
+					<div class="card-content">
+						<div class="columns product-display">
+							<div class="column is-one-third">
+								<figure class="image">
+									<img :src="product.picture">
+								</figure>
+							</div>
+							<div class="column">
+								<div class="columns">
+									<div class="column is-one-third">
+										<text-input :defaultValue="product.sku"
+													label="SKU"
+													:editable="false">	
+										</text-input>
+										<text-input :defaultValue="product.product_name"
+													label="Name"
+													:editable="false">
+										</text-input>
+										<text-input :defaultValue="product.volume"
+													label="Volume(cm³)"
+													:editable="false">
+										</text-input>
+										<text-input :defaultValue="product.user_name"
+													label="Owner"
+													:editable="false">
+										</text-input>
+										<p class="heading">
+											Attributes
+										</p>
+										<span class="tag is-danger" v-if="product.is_dangerous">Dangerous</span>
+										<span class="tag is-warning" v-if="product.is_fragile">Fragile</span>
+									</div>
+									<div class="column is-one-third has-text-centered">
+										<p class="heading">Stocks available</p>
+										<p class="title" v-text="product.total_quantity"></p>
+										<p class="heading">Incoming stocks</p>
+										<p class="title" v-text="product.total_incoming_quantity"></p>
+										<p class="heading">Outgoing stocks</p>
+										<p class="title" v-text="product.total_outgoing_quantity"></p>
+									</div>
+								</div>
+							
+							</div>
 						</div>
 					</div>
 				</div>
-			</div>
-			<div class="card-content">
-				<div class="columns product-display">
-					<div class="column is-one-third">
-						<figure class="image">
-							<img :src="product.picture">
-						</figure>
+				<div class="columns mt-15">
+					<div class="column">
+						<div class="card">
+							<div class="card-header">
+								<div class="card-header-title level">
+									<div class="level-left">
+										<div class="level-item">
+											Recent inbound history
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="card-content">
+								<table class="table is-hoverable is-fullwidth is-responsive">
+									<thead>
+										<tr>
+											<th>Arrival Date</th>
+											<th>Amount</th>
+											<th>Status</th>
+											<th>Action</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr v-for="inbound in sortedInbound">
+											<td>{{ inbound.arrival_date | date }}</td>
+											<td v-text="inbound.pivot.quantity"></td>
+											<td v-html="$options.filters.formatInboundStatus(inbound.process_status)"></td>
+											<td>
+												<a class="button is-info" @click="viewInbound(inbound.id)">
+													<span class="icon">
+		                        						<i class="fa fa-search"></i>
+		                    						</span>
+		                    						<span>View</span>
+		                    					</a>
+		                    				</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
 					</div>
 					<div class="column">
-						<div class="columns">
-							<div class="column is-one-third">
-								<text-input :defaultValue="product.sku"
-											label="SKU"
-											:editable="false">	
-								</text-input>
-								<text-input :defaultValue="product.product_name"
-											label="Name"
-											:editable="false">
-								</text-input>
-								<text-input :defaultValue="product.volume"
-											label="Volume(cm³)"
-											:editable="false">
-								</text-input>
-								<text-input :defaultValue="product.user_name"
-											label="Owner"
-											:editable="false">
-								</text-input>
-								<p class="heading">
-									Attributes
-								</p>
-								<span class="tag is-danger" v-if="product.is_dangerous">Dangerous</span>
-								<span class="tag is-warning" v-if="product.is_fragile">Fragile</span>
+						<div class="card">
+							<div class="card-header">
+								<div class="card-header-title level">
+									<div class="level-left">
+										<div class="level-item">
+											Recent outbound history
+										</div>
+									</div>
+								</div>
 							</div>
-							<div class="column is-one-third has-text-centered">
-								<p class="heading">Stocks available</p>
-								<p class="title" v-text="product.total_quantity"></p>
-								<p class="heading">Incoming stocks</p>
-								<p class="title" v-text="product.total_incoming_quantity"></p>
-								<p class="heading">Outgoing stocks</p>
-								<p class="title" v-text="product.total_outgoing_quantity"></p>
+							<div class="card-content">
+								<table class="table is-hoverable is-fullwidth is-responsive">
+									<thead>
+										<tr>
+											<th>Order Date</th>
+											<th>Quantity</th>
+											<th>Status</th>
+											<th>Action</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr v-for="outbound in sortedOutbound">
+											<td v-text="$options.filters.date(outbound.created_at)"></td>
+											<td v-text="outbound.pivot.quantity"></td>
+											<td v-html="$options.filters.formatOutboundStatus(outbound.process_status)"></td>
+											<td>
+												<a class="button is-info" @click="viewOutbound(outbound.id)">
+													<span class="icon">
+		                        						<i class="fa fa-search"></i>
+		                    						</span>
+		                    						<span>View</span>
+		                    					</a>
+		                    				</td>
+										</tr>
+									</tbody>
+								</table>
 							</div>
 						</div>
-					
 					</div>
 				</div>
-			</div>
-		</div>
-		<div class="columns mt-15">
-			<div class="column">
+
 				<div class="card">
 					<div class="card-header">
 						<div class="card-header-title level">
 							<div class="level-left">
 								<div class="level-item">
-									Recent inbound history
+									<span>Stock details</span>
+								</div>
+							</div>
+							<div class="level-right" v-if="can_manage">
+								<div class="level-item">
+									<button class="button is-primary" v-if="!isEditing" @click="editQuantity()">
+										<i class="fa fa-edit"></i>
+										<span class="pl-5">Edit stock details</span>
+									</button>
+									<div v-else>
+										<button class="button is-danger" @click="onCancel()">
+											<i class="fa fa-times"></i>
+											<span class="pl-5">Cancel</span>
+										</button>
+										<button class="button is-success" @click="submit()">
+											<i class="fa fa-check"></i>
+											<span class="pl-5">Confirm changes</span>
+										</button>
+										<button class="button is-primary" @click="addLots()">
+											<i class="fa fa-plus"></i>
+											<span class="pl-5">Add lots</span>
+										</button>
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
 					<div class="card-content">
-						<table class="table is-hoverable is-fullwidth is-responsive">
+						<table class="table is-responsive is-fullwidth is-hoverable">
 							<thead>
-								<tr>
-									<th>Arrival Date</th>
-									<th>Amount</th>
-									<th>Status</th>
-								</tr>
+								<th>Lot</th>
+								<th>Quantity</th>
+								<th v-if="isEditing">Adjustment remark</th>
+								<th>Incoming quantity</th>
+								<th>Outgoing quantity</th>
 							</thead>
 							<tbody>
-								<tr v-for="inbound in sortedInbound">
-									<td>{{ inbound.arrival_date | date }}</td>
-									<td v-text="inbound.pivot.quantity"></td>
-									<td v-html="$options.filters.formatInboundStatus(inbound.process_status)"></td>
+								<tr v-for="(lot, index) in product.lots">
+									<td>{{ lot.name }}</td>
+									<td>
+										<text-input
+											:defaultValue="product.lots[index].pivot.quantity" 
+											:editable="isEditing"
+											:name="'lot-quantity-' + product.lots[index].id"
+											:hideLabel="true"
+											:required="true"
+											@input="updateStock($event, index)"
+										>
+										</text-input>
+									</td>
+									<td v-if="isEditing">
+										<textarea-input
+											v-model="actualProduct[index].remark" 
+											:defaultValue="actualProduct[index].remark"
+											:editable="true"
+											label="Remark"
+											name="remark"
+											type="text"
+											:hideLabel="true"
+											:required="true"
+											rows="0.5"
+											cols="4">
+										</textarea-input>
+									</td>
+									<td>{{ lot.pivot.incoming_quantity }}</td>
+									<td>{{ lot.pivot.outgoing_product }}</td>
+								</tr>
+								<tr v-for="(lot, index) in newLots">
+									<td>
+										<selector-input v-model="newLots[index].lot"
+											:hideLabel="true"
+											:potentialData="lotsOptions"
+											:editable="true"
+											placeholder="Select lot">
+										</selector-input>
+									</td>
+									<td>
+										<text-input
+											v-if="newLots[index]"
+											v-model="newLots[index].quantity" 
+											:editable="true"
+											name="quantity"
+											:hideLabel="true"
+											:required="true"
+											type="number"
+										>
+										</text-input>
+									</td>
+									<td v-if="isEditing">
+										<textarea-input
+											v-if="newLots[index]"
+											v-model="newLots[index].remark" 
+											:editable="true"
+											label="Remark"
+											name="remark"
+											type="text"
+											:hideLabel="true"
+											:required="true"
+											rows="0.5"
+											cols="4"
+										>
+										</textarea-input>
+									</td>
+									<td>-</td>
+									<td>-</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+
+				<div class="card mt-15">
+					<div class="card-header">
+						<div class="card-header-title level">
+							<div class="level-left">
+								<div class="level-item">
+									<span>Stock adjustments</span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="card-content">
+						<table class="table is-responsive is-fullwidth is-hoverable">
+							<thead>
+								<th>Lot</th>
+								<th>Made by</th>
+								<th>Original quantity</th>
+								<th>New quantity</th>
+								<th>Adjustment remark</th>
+								<th>Adjustment date</th>
+							</thead>
+							<tbody>
+								<tr v-for="(adjustment, index) in product.adjustments">
+									<td>{{ adjustment.lot.name }}</td>
+									<td>{{ adjustment.user.name }}</td>
+									<td>{{ adjustment.original_quantity }}</td>
+									<td>{{ adjustment.new_quantity }}</td>
+									<td>{{ adjustment.remark }}</td>
+									<td>{{ adjustment.created_at | date }}</td>
 								</tr>
 							</tbody>
 						</table>
 					</div>
 				</div>
 			</div>
-			<div class="column">
-				<div class="card">
-					<div class="card-header">
-						<div class="card-header-title level">
-							<div class="level-left">
-								<div class="level-item">
-									Recent outbound history
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="card-content">
-						<table class="table is-hoverable is-fullwidth is-responsive">
-							<thead>
-								<tr>
-									<th>Order Date</th>
-									<th>Quantity</th>
-									<th>Status</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr v-for="outbound in sortedOutbound">
-									<td v-text="$options.filters.date(outbound.created_at)"></td>
-									<td v-text="outbound.pivot.quantity"></td>
-									<td v-html="$options.filters.formatOutboundStatus(outbound.process_status)"></td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-				</div>
-			</div>
-		</div>
 
-		<div class="card">
-			<div class="card-header">
-				<div class="card-header-title level">
-					<div class="level-left">
-						<div class="level-item">
-							<span>Stock details</span>
-						</div>
-					</div>
-					<div class="level-right" v-if="can_manage">
-						<div class="level-item">
-							<button class="button is-primary" v-if="!isEditing" @click="editQuantity()">
-								<i class="fa fa-edit"></i>
-								<span class="pl-5">Edit stock details</span>
-							</button>
-							<div v-else>
-								<button class="button is-danger" @click="onCancel()">
-									<i class="fa fa-times"></i>
-									<span class="pl-5">Cancel</span>
-								</button>
-								<button class="button is-success" @click="submit()">
-									<i class="fa fa-check"></i>
-									<span class="pl-5">Confirm changes</span>
-								</button>
-								<button class="button is-primary" @click="addLots()">
-									<i class="fa fa-plus"></i>
-									<span class="pl-5">Add lots</span>
-								</button>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="card-content">
-				<table class="table is-responsive is-fullwidth is-hoverable">
-					<thead>
-						<th>Lot</th>
-						<th>Quantity</th>
-						<th v-if="isEditing">Adjustment remark</th>
-						<th>Incoming quantity</th>
-						<th>Outgoing quantity</th>
-					</thead>
-					<tbody>
-						<tr v-for="(lot, index) in product.lots">
-							<td>{{ lot.name }}</td>
-							<td>
-								<text-input
-									:defaultValue="product.lots[index].pivot.quantity" 
-									:editable="isEditing"
-									:name="'lot-quantity-' + product.lots[index].id"
-									:hideLabel="true"
-									:required="true"
-									@input="updateStock($event, index)"
-								>
-								</text-input>
-							</td>
-							<td v-if="isEditing">
-								<textarea-input
-									v-model="actualProduct[index].remark" 
-									:defaultValue="actualProduct[index].remark"
-									:editable="true"
-									label="Remark"
-									name="remark"
-									type="text"
-									:hideLabel="true"
-									:required="true"
-									rows="0.5"
-									cols="4">
-								</textarea-input>
-							</td>
-							<td>{{ lot.pivot.incoming_quantity }}</td>
-							<td>{{ lot.pivot.outgoing_product }}</td>
-						</tr>
-						<tr v-for="(lot, index) in newLots">
-							<td>
-								<selector-input v-model="newLots[index].lot"
-									:hideLabel="true"
-									:potentialData="lotsOptions"
-									:editable="true"
-									placeholder="Select lot">
-								</selector-input>
-							</td>
-							<td>
-								<text-input
-									v-if="newLots[index]"
-									v-model="newLots[index].quantity" 
-									:editable="true"
-									name="quantity"
-									:hideLabel="true"
-									:required="true"
-									type="number"
-								>
-								</text-input>
-							</td>
-							<td v-if="isEditing">
-								<textarea-input
-									v-if="newLots[index]"
-									v-model="newLots[index].remark" 
-									:editable="true"
-									label="Remark"
-									name="remark"
-									type="text"
-									:hideLabel="true"
-									:required="true"
-									rows="0.5"
-									cols="4"
-								>
-								</textarea-input>
-							</td>
-							<td>-</td>
-							<td>-</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-		</div>
-
-		<div class="card mt-15">
-			<div class="card-header">
-				<div class="card-header-title level">
-					<div class="level-left">
-						<div class="level-item">
-							<span>Stock adjustments</span>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="card-content">
-				<table class="table is-responsive is-fullwidth is-hoverable">
-					<thead>
-						<th>Lot</th>
-						<th>Made by</th>
-						<th>Original quantity</th>
-						<th>New quantity</th>
-						<th>Adjustment remark</th>
-						<th>Adjustment date</th>
-					</thead>
-					<tbody>
-						<tr v-for="(adjustment, index) in product.adjustments">
-							<td>{{ adjustment.lot.name }}</td>
-							<td>{{ adjustment.user.name }}</td>
-							<td>{{ adjustment.original_quantity }}</td>
-							<td>{{ adjustment.new_quantity }}</td>
-							<td>{{ adjustment.remark }}</td>
-							<td>{{ adjustment.created_at | date }}</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-		</div>
-
+			<inbound :inbound="selectedInbound"
+						:canManage="can_manage" 
+						@back="orderBack"
+						v-if="isViewingInbound">
+			</inbound>
+			<outbound :outbound="selectedOutbound"
+						:canManage="can_manage" 
+						@back="orderBack" 
+						v-if="isViewingOutbound">
+			</outbound>
+		</transition>
         <confirmation :isConfirming="confirmStockUpdate"
         				title="Confirmation"
         				message="Confirm updating stock? Rows without a lot selected or adjustment remark will be ignored."
         				@close="confirmStockUpdate = false"
         				@confirm="onSubmit">
         </confirmation>
+
+        
 	</div>
 </template>
 
@@ -303,7 +337,11 @@
 					new_lot_products: []
 				}),
 				action: 'lots/products/update',
-				lotsOptions: ''
+				lotsOptions: '',
+				selectedOutbound: '',
+				selectedInbound: '',
+				isViewingInbound: false,
+				isViewingOutbound: false
 			};
 		},
 
@@ -336,6 +374,11 @@
 				});
 			},
 
+			orderBack() {
+				this.isViewingInbound = false;
+				this.isViewingOutbound = false;
+			},
+
 			back() {
 				this.$emit('back');
 			},
@@ -350,7 +393,6 @@
 
 			onSubmit() {
 				
-
 				this.newLots = _.filter(this.newLots, function(lot){ return lot.lot; });
 
 				this.form.lot_products = this.actualProduct.map(lot => {
@@ -405,6 +447,28 @@
 			addLots() {
 				this.newLots.push({lot: false, quantity: 0, remark: ''});
 			},
+
+			viewInbound(inbound){
+				this.selectedInbound = '';
+				axios.get('/internal/inbound/' + inbound)
+					.then(response => this.setInbound(response));
+			},
+
+			viewOutbound(outbound) {
+				this.selectedOutbound = '';
+				axios.get('/internal/outbound/' + outbound)
+					.then(response => this.setOutbound(response));
+			},
+
+			setInbound(response){
+				this.selectedInbound = response.data;
+				this.isViewingInbound = true;
+			},
+
+			setOutbound(response){
+				this.selectedOutbound = response.data;
+				this.isViewingOutbound = true;
+			}
 		},
 
 		computed: {

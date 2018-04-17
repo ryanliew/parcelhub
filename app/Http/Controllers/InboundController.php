@@ -96,7 +96,8 @@ class InboundController extends Controller
 
         $pdf = PDF::loadView('inbound.report', compact('inbound'));
 
-        return $pdf->setPaper('A4')->download('inbound-report.pdf');
+        $filename = Inbound::prefix() . $inbound->id . '.pdf';
+        return $pdf->setPaper('A4')->download($filename);
     }
 
     /**
@@ -229,6 +230,8 @@ class InboundController extends Controller
      */
     public function show($id)
     {
+        return inbound::with(['products', 'products_with_lots.lots'])->where('id', $id)->first();
+
         $inbound = inbound::where('id', $id)->first();
         
         return view('inbound.show')->with('inbound', $inbound);

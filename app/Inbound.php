@@ -70,4 +70,10 @@ class Inbound extends Model
     	return $query->where('process_status', 'canceled');
     }
 
+
+    // Static methods
+    public static function PREFIX()
+    {
+        return 'PIN-';
+    }
 }

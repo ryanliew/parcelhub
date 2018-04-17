@@ -53,7 +53,8 @@
                                             </td>
                                             @if(auth()->check())
                                                 <td valign="middle" width="10%" style="font-family: Helvetica, Arial, sans-serif, 'Open Sans'; font-weight: 600;">
-                                                    <a href="{{ url('/lots') }}" style="text-decoration: none; color: #191919;">
+                                                    <a href="@role('admin'){{ url('/dashboard') }}@endrole 
+                                                        @role('user'){{ url('/lots') }}@endrole" style="text-decoration: none; color: #191919;">
                                                         @role('admin')
                                                             ADMIN PANEL
                                                         @endrole

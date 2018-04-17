@@ -101,6 +101,37 @@
 						</div>
 					</div>
 
+					<div class="is-divider" data-content="PASSWORD"></div>
+
+					<div class="level">
+						<div class="level-left">
+							<div class="level-item">
+								<a class="button is-info" @click="changePassword" v-if="!form.change_password">Change password</a>
+								<a class="button is-danger" @click="unchangePassword" v-else>Cancel</a>
+							</div>
+							<div class="level-item" v-if="form.change_password">
+								<text-input v-model="form.password" :defaultValue="form.password" 
+												label="New Password" 
+												:required="true"
+												name="password"
+												type="password"
+												:editable="true"
+												:error="form.errors.get('password')">
+								</text-input>
+							</div>
+							<div class="level-item" v-if="form.change_password">
+								<text-input v-model="form.password_confirmation" :defaultValue="form.password_confirmation" 
+												label="Retype new password" 
+												:required="true"
+												name="password_confirmation"
+												type="password"
+												:editable="true"
+												:error="form.errors.get('password_confirmation')">
+								</text-input>
+							</div>
+						</div>
+					</div>
+
 			        <button class="button is-primary mt-15" :disabled="this.form.errors.any()" :class="buttonClass">Update</button>
 	          	</form>
 			</div>
@@ -128,7 +159,10 @@
 					state: '',
 					postcode: '',
 					country: '',
-					id: ''
+					id: '',
+					password: '',
+					password_confirmation: '',
+					change_password: false
 				}),
 				profile: '',
 				confirmSubmit: false
@@ -199,6 +233,16 @@
 			onError() {
 				this.form.submitting = false;
 			},
+
+			changePassword() {
+				this.form.change_password = true;
+			},
+
+			unchangePassword() {
+				this.form.password = '';
+				this.form.password_confirmation = '';
+				this.form.change_password = false;
+			}
 		},
 
 		computed: {

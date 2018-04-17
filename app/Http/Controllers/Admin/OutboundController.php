@@ -77,8 +77,7 @@ class OutboundController extends Controller
     {
         $this->validate($request, 
                         [
-                            'process_status' => 'required', 
-                            'tracking_numbers' => 'required_if:process_status,completed'
+                            'process_status' => 'required'
                         ]);
 
         $outbound = outbound::find($request->id);
