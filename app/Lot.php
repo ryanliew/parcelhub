@@ -81,7 +81,7 @@ class Lot extends Model
 
         foreach($this->products as $product)
         {
-            $total_quantity = $product->pivot->quantity + $product->pivot->incoming_quantity - $product->pivot->outoing_product;
+            $total_quantity = $product->pivot->quantity + $product->pivot->incoming_quantity - $product->pivot->outgoing_product;
 
             if($total_quantity == 0)
             {
@@ -90,7 +90,7 @@ class Lot extends Model
 
             $used_volume += $total_quantity * $product->volume;
         }
-
+        
         $this->update([ 'left_volume' => $this->volume - $used_volume ]);
     }
 

@@ -5,6 +5,7 @@ use App\InboundProduct;
 use App\Lot;
 use App\Notifications\InboundCreatedNotification;
 use App\Product;
+use App\Utilities;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -145,7 +146,7 @@ class InboundController extends Controller
         // Check for total left over volume
         if($product_total_volume > $left_volume){
             if(request()->wantsJson()) {
-                return response(json_encode(array('products' => ['You only have ' . $left_volume / 100 . 'm³ of space left but you are trying to fit in ' . $product_total_volume / 100 . 'm³. Please purchase more lots.'])), 422);
+                return response(json_encode(array('products' => ['You only have ' . Utilities::convertCentimeterCubeToMeterCube($left_volume) . 'm³ of space left but you are trying to fit in ' . Utilities::convertCentimeterCubeToMeterCube($product_total_volume) . 'm³. Please purchase more lots.'])), 422);
             }
             return redirect()->back()->withErrors("You have exceeded your lot limit.");
         }
@@ -182,11 +183,10 @@ class InboundController extends Controller
 
                     if($quantityIntoLot > 0){
                         $lot_products[$key]['incoming_quantity'] = $quantityIntoLot;
-                        $lot->left_volume = $lot->left_volume - ($quantityIntoLot * $product["singleVolume"]);
                         $products[$key]["volume"] = $product["volume"] - ( $product["singleVolume"] * $quantityIntoLot );
                         $products[$key]["quantity"] = $product["quantity"] - $quantityIntoLot;
                         $product["quantity"] = $products[$key]["quantity"];
-                        $this->attachLot($inbound->id, $key, $lot);
+                        $this->attachLot($inbound->id, $key, $lot, $product["expiry_date"]);
                     }
                 }
                 $lot->save();
@@ -201,17 +201,19 @@ class InboundController extends Controller
                 if($product["quantity"] > 0) {
                     // If there are still volume needed to be assigned
                     $quantityIntoLot = $this->calculateQuantity($lot->left_volume, $product["singleVolume"], $product["quantity"]);
+                    //dd($quantityIntoLot);
                     if($quantityIntoLot > 0){
                         $lot_products[$key]['incoming_quantity'] = $quantityIntoLot;
-                        $lot->left_volume = $lot->left_volume - ($quantityIntoLot * $product["singleVolume"]);
-                        $products[$key]["volume"] = $product["volume"] - $product["singleVolume"] * $quantityIntoLot;
+                        $products[$key]["volume"] = $product["volume"] - ($product["singleVolume"] * $quantityIntoLot);
                         $products[$key]["quantity"] = $product["quantity"] - $quantityIntoLot;
-                        $this->attachLot($inbound->id, $key, $lot);
+                        $inboundproduct = $this->attachLot($inbound->id, $key, $lot, $product["expiry_date"]);
+                        
                     }
                 }
             }
             $lot->save();
             $lot->products()->attach($lot_products);
+            $lot->propagate_left_volume();
         }
 
         Auth::user()->notify(new InboundCreatedNotification($inbound));
@@ -220,14 +222,16 @@ class InboundController extends Controller
     }
 
     public function calculateQuantity($volume, $singleVolume, $quantity){
-        $quantityIntoLot = round($volume / $singleVolume, 0, PHP_ROUND_HALF_DOWN);
+        $quantityIntoLot = floor($volume / $singleVolume);
         return min($quantityIntoLot, $quantity);
     }
 
-    public function attachLot($inbound, $product, $lot) {
+    public function attachLot($inbound, $product, $lot, $expiry_date) {
         // Attach lot to inbound product
         $inbound_product = InboundProduct::where('inbound_id', $inbound)->where('product_id', $product)->first();
-        $inbound_product->lots()->attach($lot);
+        $inbound_product->lots()->attach($lot, ['expiry_date' => $expiry_date ? $expiry_date : null]);
+
+        return $inbound_product;
     }
     /**
      * Display the specified resource.
@@ -264,54 +268,66 @@ class InboundController extends Controller
     {
         $products = json_decode($request->products);
         
+        // We need to validate all the lots volume first
         foreach($products as $product)
         {
-            $inbound = InboundProduct::find($product->product_lot_id);
-            
-            $original_lot = Lot::find($product->original_lot);
+            $the_product = Product::find($product->product_id);
 
-          
-            if($product->original_lot !== $product->lot->value)
-            {                
-                $new_lot = $inbound->lots()
-                                ->where('lot_id', $product->original_lot)
-                                ->first();
+            $unique = collect($product->lots)->pluck('lot.value')->unique();
 
-                $inbound->lots()->detach($product->original_lot);
+            if($unique->count() !== collect($product->lots)->count())
+            {
+                return response(json_encode(array('products' => ['You have repeating lots defined in ' . $the_product->name . '.'])), 422);
+            }
 
-                $inbound->lots()->attach($product->lot->value);
+            foreach($product->lots as $lot)
+            {
+                if($lot->original_lot !== $lot->lot->value)
+                {                
+                    $new_lot = Lot::find($lot->lot->value);
 
-                $new_lot = Lot::find($product->lot->value);
+                    $volume_required = $lot->quantity_received * $the_product->volume;
 
-                $quantity_for_original_lot = $inbound->quantity_received !== $product->quantity_received
-                                            ? $inbound->quantity_received
-                                            : $product->quantity_received;
+                    if($new_lot->left_volume < $volume_required)
+                    {
+                        return response(json_encode(array('products' => ['You only have ' . Utilities::convertCentimeterCubeToMeterCube($new_lot->left_volume) . 'm³ of space left in ' . $new_lot->name . ' but you are trying to fit in ' . Utilities::convertCentimeterCubeToMeterCube($volume_required) . 'm³.'])), 422);
+                    }
+                }
+            }
+        }
 
-                $original_lot->deduct_incoming_product($inbound->product, $quantity_for_original_lot);
-                
-                $new_lot->increase_incoming_product($inbound->product, $product->quantity_received); 
+        // Validate complete
+
+        foreach($products as $product)
+        {
+
+            $inbound_product = InboundProduct::find($product->inbound_product_id);
+
+            $inbound_product->lots()->sync(collect($product->lots)->pluck('lot.value'));
+
+            foreach($product->lots as $lot)
+            {
+                $original_lot = Lot::find($lot->original_lot);
+
+                $original_lot->deduct_incoming_product($inbound_product->product, $lot->original_quantity);
+
+                $original_lot->propagate_left_volume();
+
+                $new_lot = Lot::find($lot->lot->value);
+
+                $new_lot->increase_incoming_product($inbound_product->product, $lot->quantity_received); 
 
                 $new_lot->propagate_left_volume();
+
+                $inbound_product->lots()->updateExistingPivot($lot->lot->value, [
+                        'quantity_received' => $lot->quantity_received,
+                        'expiry_date' => $lot->expiry_date,
+                        'remark' => $lot->remark
+                    ]);
             }
-            else
-            {
-                $quantity_difference = $inbound->quantity_received !== $product->quantity_received
-                                        ? $inbound->quantity_received - $product->quantity_received
-                                        : $inbound->quantity - $product->quantity_received;
-
-                $original_lot->deduct_incoming_product($inbound->product, $quantity_difference);
-            }
-
-            $original_lot->propagate_left_volume();
-
-            $inbound->update([
-                    'quantity_received' => $product->quantity_received,
-                    'expiry_date' => $product->expiry_date,
-                    'remark' => $product->remark
-                ]);
-
-            return ['message' => 'Inbound details updated successfully'];
         }
+
+        return ['message' => 'Inbound details updated successfully'];
     }
     /**
      * Remove the specified resource from storage.

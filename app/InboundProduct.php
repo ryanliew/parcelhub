@@ -34,7 +34,7 @@ class InboundProduct extends Model
     protected $appends = ["lots_name"];
 	
     public function lots(){
-    	return $this->belongsToMany('App\Lot');
+    	return $this->belongsToMany('App\Lot')->withPivot('expiry_date', 'remark', 'quantity_received')->withTimestamps();
     }
 
     public function inbound(){
