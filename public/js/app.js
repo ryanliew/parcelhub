@@ -62462,7 +62462,9 @@ var render = function() {
           _c("div", { staticClass: "card-header-title level" }, [
             _vm._m(2),
             _vm._v(" "),
-            _vm.canManage
+            _vm.canManage &&
+            _vm.inbound.process_status !== "completed" &&
+            _vm.inbound.process_status !== "canceled"
               ? _c("div", { staticClass: "level-right" }, [
                   !_vm.isEditing
                     ? _c(

@@ -131,7 +131,7 @@
 							Inbound products
 						</div>
 					</div>
-					<div class="level-right" v-if="canManage">
+					<div class="level-right" v-if="canManage && inbound.process_status !== 'completed' && inbound.process_status !== 'canceled'">
 						<button class="button is-primary" :class="loadingClass" v-if="!isEditing" @click="edit()">
 							<i class="fa fa-edit"></i>
 							<span class="pl-5">Edit inbound details</span>
