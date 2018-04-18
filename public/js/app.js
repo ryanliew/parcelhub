@@ -49421,7 +49421,7 @@ var render = function() {
                         staticClass: "navbar-item",
                         attrs: { href: _vm.panelLink }
                       },
-                      [_vm._v("My account")]
+                      [_vm._v("My profile")]
                     ),
                     _vm._v(" "),
                     _c(

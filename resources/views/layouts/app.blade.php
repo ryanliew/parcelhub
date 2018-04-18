@@ -48,10 +48,6 @@
 
     </footer>
     @endif
-
-    <div class="version has-text-grey-light">
-        Version 1.1.0.0
-    </div>
     <script src="{{ asset('js/form.js?v=1.0.5') }}"></script>
     <script src="{{ asset('js/app.js?v=1.1.0.0') }}"></script>
     <script src="{{ asset('js/jquery-1.7.1.min.js') }}"></script>

@@ -26,7 +26,7 @@
 				  			<div class="navbar-dropdown">
 					  			<a class="navbar-item" href="/">Home</a>
 					  			<a class="navbar-item" href="/dashboard" v-if="can_manage">Dashboard</a>
-					  			<a class="navbar-item" :href="panelLink">My account</a>
+					  			<a class="navbar-item" :href="panelLink">My profile</a>
 					  			<a class="navbar-item" @click="logout">Logout</a>
 					  		</div>
 					  	</div>
