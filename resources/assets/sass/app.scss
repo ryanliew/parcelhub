@@ -212,11 +212,19 @@
   text-transform: capitalize;
 }
 
+.v-select input[type="search"], .v-select input[type="search"]:focus {
+  width: 7em;
+}
+
 .product-display .background{
   background-position: center;
   background-size: cover;
   height:100%;
   display:block;
+}
+
+tr.subrow {
+  background: #eee;
 }
 // Animations
 .fade-enter-active, .fade-leave-active {

@@ -131,8 +131,8 @@
 							Inbound products
 						</div>
 					</div>
-					<div class="level-right" v-if="canManage && inbound.process_status !== 'completed' && inbound.process_status !== 'canceled'">
-						<button class="button is-primary" :class="loadingClass" v-if="!isEditing" @click="edit()">
+					<div class="level-right" v-if="canManage">
+						<button class="button is-primary" :class="loadingClass" v-if="!isEditing && inbound.process_status !== 'completed' && inbound.process_status !== 'canceled'" @click="edit()">
 							<i class="fa fa-edit"></i>
 							<span class="pl-5">Edit inbound details</span>
 						</button>
@@ -150,88 +150,101 @@
 				</div>
 			</div>
 			<div class="card-content">
-				<table class="table is-hoverable is-fullwidth is-responsive">
+				<table class="table is-hoverable is-fullwidth responsive">
 					<thead>
 						<tr>
 							<th>Image</th>
 							<th>Name</th>
 							<th>Quantity</th>
 							<th>Attributes</th>
-							<th>Lots</th>
-							<th>Expiry date</th>
-							<th>Receiving quantity</th>
-							<th>Remark</th>
+							<th>User remark</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr v-for="(product, index) in inbound.products">
-							<td><figure class="image is-48x48"><img :src="product.picture"></figure></td>
-							<td v-text="product.name"></td>
-							<td v-text="product.pivot.quantity"></td>
-							<td>
-								<div class="tags">
-									<span class="tag is-danger" v-if="product.is_dangerous">Dangerous</span>
-									<span class="tag is-warning" v-if="product.is_fragile">Fragile</span>
-								</div>
-							</td>
-							<td v-text="inbound.products_with_lots[index].lots_name" v-if="!isEditing">
+						<template v-for="(product_with_lots, index) in inbound.products_with_lots">
+							<tr>
+								<td><figure class="image is-48x48"><img :src="inbound.products[index].picture"></figure></td>
+								<td v-text="inbound.products[index].name"></td>
+								<td v-text="product_with_lots.quantity"></td>
+								<td>
+									<div class="tags">
+										<span class="tag is-danger" v-if="inbound.products[index].is_dangerous">Dangerous</span>
+										<span class="tag is-warning" v-if="inbound.products[index].is_fragile">Fragile</span>
+									</div>
+								</td>
 								
-							</td>
-							<td v-else>
-								<selector-input v-model="inboundForm.products[index].lot"
-									:defaultData="inboundForm.products[index].lot"
-									:hideLabel="true"
-									:potentialData="lotsOptions"
-									placeholder="Select lot"
-									:unclearable="true"
-									v-if="inboundForm.products[index]">
-								</selector-input>
-							</td>
-							<td>
-								<text-input
-									v-model="inboundForm.products[index].expiry_date"
-									:defaultValue="inboundForm.products[index].expiry_date" 
-									:editable="isEditing"
-									:name="'lot-expiry-date-' + product.id"
-									:hideLabel="true"
-									:required="false"
-									:focus="true"
-									type="date"
-									v-if="inboundForm.products[index]"
-								>
-								</text-input>
-							</td>
-							<td>
-								<text-input
-									v-model="inboundForm.products[index].quantity_received"
-									:defaultValue="inboundForm.products[index].quantity_received" 
-									:editable="isEditing && canManage"
-									:name="'lot-quantity-' + product.id"
-									:hideLabel="true"
-									:required="true"
-									type="number"
-									v-if="inboundForm.products[index]"
-								>
-								</text-input>
-							</td>
-							<td>
-								<textarea-input
-									v-if="inboundForm.products[index]"
-									v-model="inboundForm.products[index].remark"
-									:defaultValue="inboundForm.products[index].remark" 
-									:editable="isEditing"
-									label="Remark"
-									name="remark"
-									type="text"
-									:hideLabel="true"
-									:required="false"
-									rows="0.5"
-									cols="4">
-								</textarea-input>
-							</td>
-						</tr>
+								<td>
+									{{ product_with_lots.remark }}
+								</td>
+							</tr>
+								
+							<tr class="subrow">
+								<th colspan="2">Lots</th>
+								<th>Received quantity</th>
+								<th>Expiry date</th>
+								<th>Admin remark</th>
+							</tr>
+							<tr class="subrow" v-for="(lot, lotindex) in product_with_lots.lots">
+								<td colspan="2" v-text="lot.name" v-if="!isEditing">
+							
+								</td>
+								<td colspan="2" v-else>
+									<selector-input v-model="inboundForm.products[index].lots[lotindex].lot"
+										:defaultData="inboundForm.products[index].lots[lotindex].lot"
+										:hideLabel="true"
+										:potentialData="lotsOptions"
+										placeholder="Select lot"
+										name="products"
+										:unclearable="true"
+										v-if="inboundForm.products[index] && inboundForm.products[index].lots[lotindex]">
+									</selector-input>
+								</td>
+								<td>
+									<text-input
+										v-model="inboundForm.products[index].lots[lotindex].quantity_received"
+										:defaultValue="inboundForm.products[index].lots[lotindex].quantity_received" 
+										:editable="isEditing && canManage"
+										name="products"
+										:hideLabel="true"
+										:required="true"
+										type="number"
+										v-if="inboundForm.products[index] && inboundForm.products[index].lots[lotindex]"
+									>
+									</text-input>
+								</td>
+								<td>
+									<text-input
+										v-model="inboundForm.products[index].lots[lotindex].expiry_date"
+										:defaultValue="inboundForm.products[index].lots[lotindex].expiry_date" 
+										:editable="isEditing"
+										:hideLabel="true"
+										:required="false"
+										:focus="true"
+										type="date"
+										v-if="inboundForm.products[index] && inboundForm.products[index].lots[lotindex]"
+									>
+									</text-input>
+								</td>
+								<td>
+									<textarea-input
+										v-if="inboundForm.products[index] && inboundForm.products[index].lots[lotindex]"
+										v-model="inboundForm.products[index].lots[lotindex].remark"
+										:defaultValue="inboundForm.products[index].lots[lotindex].remark" 
+										:editable="isEditing"
+										label="Remark"
+										name="remark"
+										type="text"
+										:hideLabel="true"
+										:required="false"
+										rows="0.5"
+										cols="4">
+									</textarea-input>
+								</td>
+							</tr>
+						</template>
 					</tbody>
 				</table>
+				<p class="has-text-danger" v-text="inboundForm.errors.get('products')"></p>
 			</div>
 		</div>
 
@@ -330,19 +343,39 @@
 
 			setFormData() {
 				this.editLoading = false;
-				this.inboundForm.products = this.inbound.products_with_lots.map(product => {
+
+				this.inboundForm.products = this.inbound.products_with_lots.map(product_with_lots => {
 					let obj = {};
-					obj['product_lot_id'] = product.id;
-					obj['original_lot'] = product.lots[0].id;
-					obj['lot'] = { value: product.lots[0].id, label: product.lots[0].name };
-					obj['quantity_received'] = product.quantity_received && product.quantity !== product.quantity_received  	
-												? product.quantity_received
-												: product.quantity  ;
-					obj['expiry_date'] = product.expiry_date;
-					obj['remark'] = product.remark;
+
+					obj['inbound_product_id'] = product_with_lots.id;
+					obj['product_id'] = product_with_lots.product_id;
+					obj['lots'] = product_with_lots.lots.map(lot => {
+						let lotobj = {};
+						lotobj['original_lot'] = lot.id;
+						lotobj['lot'] = { value: lot.id, label: lot.name };
+						lotobj['original_quantity'] = lot.pivot.quantity_received;
+						lotobj['quantity_received'] = lot.pivot.quantity_received;
+						lotobj['expiry_date'] = lot.pivot.expiry_date;
+						lotobj['remark'] = lot.pivot.remark;
+
+						return lotobj;
+					});
 
 					return obj;
-				});
+				})
+				// this.inboundForm.products = this.inbound.products_with_lots.map(product => {
+				// 	let obj = {};
+				// 	obj['product_lot_id'] = product.id;
+				// 	obj['original_lot'] = product.lots[0].id;
+				// 	obj['lot'] = { value: product.lots[0].id, label: product.lots[0].name };
+				// 	obj['quantity_received'] = product.quantity_received && product.quantity !== product.quantity_received  	
+				// 								? product.quantity_received
+				// 								: product.quantity  ;
+				// 	obj['expiry_date'] = product.expiry_date;
+				// 	obj['remark'] = product.remark;
+
+				// 	return obj;
+				// });
 			},
 
 			back() {
@@ -353,7 +386,7 @@
 				this.confirmSubmit = true;
 			},
 
-			onSubmit() {
+			onSubmit() {	
 				this.confirmSubmit = false;
 				this.form.post(this.action)
 						.then(response => this.onSuccess(response))
@@ -361,6 +394,8 @@
 			},
 
 			onSuccess() {
+				this.confirmSubmit = false;
+				this.isEditing = false;
 				this.form.id = this.inbound.id;
 				this.back();
 			},
@@ -395,7 +430,6 @@
 			},
 
 			onSubmitEdit() {
-				this.isEditing = false;
 				this.confirmSubmitEdit = false;
 
 				this.inboundForm.post('/inbound/update/' + this.inbound.id)

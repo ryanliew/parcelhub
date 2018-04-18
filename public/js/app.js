@@ -62038,6 +62038,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	props: ['inbound', 'canManage'],
@@ -62102,17 +62115,39 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		},
 		setFormData: function setFormData() {
 			this.editLoading = false;
-			this.inboundForm.products = this.inbound.products_with_lots.map(function (product) {
+
+			this.inboundForm.products = this.inbound.products_with_lots.map(function (product_with_lots) {
 				var obj = {};
-				obj['product_lot_id'] = product.id;
-				obj['original_lot'] = product.lots[0].id;
-				obj['lot'] = { value: product.lots[0].id, label: product.lots[0].name };
-				obj['quantity_received'] = product.quantity_received && product.quantity !== product.quantity_received ? product.quantity_received : product.quantity;
-				obj['expiry_date'] = product.expiry_date;
-				obj['remark'] = product.remark;
+
+				obj['inbound_product_id'] = product_with_lots.id;
+				obj['product_id'] = product_with_lots.product_id;
+				obj['lots'] = product_with_lots.lots.map(function (lot) {
+					var lotobj = {};
+					lotobj['original_lot'] = lot.id;
+					lotobj['lot'] = { value: lot.id, label: lot.name };
+					lotobj['original_quantity'] = lot.pivot.quantity_received;
+					lotobj['quantity_received'] = lot.pivot.quantity_received;
+					lotobj['expiry_date'] = lot.pivot.expiry_date;
+					lotobj['remark'] = lot.pivot.remark;
+
+					return lotobj;
+				});
 
 				return obj;
 			});
+			// this.inboundForm.products = this.inbound.products_with_lots.map(product => {
+			// 	let obj = {};
+			// 	obj['product_lot_id'] = product.id;
+			// 	obj['original_lot'] = product.lots[0].id;
+			// 	obj['lot'] = { value: product.lots[0].id, label: product.lots[0].name };
+			// 	obj['quantity_received'] = product.quantity_received && product.quantity !== product.quantity_received  	
+			// 								? product.quantity_received
+			// 								: product.quantity  ;
+			// 	obj['expiry_date'] = product.expiry_date;
+			// 	obj['remark'] = product.remark;
+
+			// 	return obj;
+			// });
 		},
 		back: function back() {
 			this.$emit('back');
@@ -62131,6 +62166,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			});
 		},
 		onSuccess: function onSuccess() {
+			this.confirmSubmit = false;
+			this.isEditing = false;
 			this.form.id = this.inbound.id;
 			this.back();
 		},
@@ -62158,7 +62195,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		onSubmitEdit: function onSubmitEdit() {
 			var _this3 = this;
 
-			this.isEditing = false;
 			this.confirmSubmitEdit = false;
 
 			this.inboundForm.post('/inbound/update/' + this.inbound.id).then(function (response) {
@@ -62462,11 +62498,11 @@ var render = function() {
           _c("div", { staticClass: "card-header-title level" }, [
             _vm._m(2),
             _vm._v(" "),
-            _vm.canManage &&
-            _vm.inbound.process_status !== "completed" &&
-            _vm.inbound.process_status !== "canceled"
+            _vm.canManage
               ? _c("div", { staticClass: "level-right" }, [
-                  !_vm.isEditing
+                  !_vm.isEditing &&
+                  _vm.inbound.process_status !== "completed" &&
+                  _vm.inbound.process_status !== "canceled"
                     ? _c(
                         "button",
                         {
@@ -62533,190 +62569,261 @@ var render = function() {
         _c("div", { staticClass: "card-content" }, [
           _c(
             "table",
-            { staticClass: "table is-hoverable is-fullwidth is-responsive" },
+            { staticClass: "table is-hoverable is-fullwidth responsive" },
             [
               _vm._m(3),
               _vm._v(" "),
               _c(
                 "tbody",
-                _vm._l(_vm.inbound.products, function(product, index) {
-                  return _c("tr", [
-                    _c("td", [
-                      _c("figure", { staticClass: "image is-48x48" }, [
-                        _c("img", { attrs: { src: product.picture } })
-                      ])
-                    ]),
-                    _vm._v(" "),
-                    _c("td", {
-                      domProps: { textContent: _vm._s(product.name) }
-                    }),
-                    _vm._v(" "),
-                    _c("td", {
-                      domProps: { textContent: _vm._s(product.pivot.quantity) }
-                    }),
-                    _vm._v(" "),
-                    _c("td", [
-                      _c("div", { staticClass: "tags" }, [
-                        product.is_dangerous
-                          ? _c("span", { staticClass: "tag is-danger" }, [
-                              _vm._v("Dangerous")
-                            ])
-                          : _vm._e(),
+                [
+                  _vm._l(_vm.inbound.products_with_lots, function(
+                    product_with_lots,
+                    index
+                  ) {
+                    return [
+                      _c("tr", [
+                        _c("td", [
+                          _c("figure", { staticClass: "image is-48x48" }, [
+                            _c("img", {
+                              attrs: {
+                                src: _vm.inbound.products[index].picture
+                              }
+                            })
+                          ])
+                        ]),
                         _vm._v(" "),
-                        product.is_fragile
-                          ? _c("span", { staticClass: "tag is-warning" }, [
-                              _vm._v("Fragile")
-                            ])
-                          : _vm._e()
-                      ])
-                    ]),
-                    _vm._v(" "),
-                    !_vm.isEditing
-                      ? _c("td", {
+                        _c("td", {
                           domProps: {
                             textContent: _vm._s(
-                              _vm.inbound.products_with_lots[index].lots_name
+                              _vm.inbound.products[index].name
                             )
                           }
-                        })
-                      : _c(
-                          "td",
-                          [
-                            _vm.inboundForm.products[index]
-                              ? _c("selector-input", {
-                                  attrs: {
-                                    defaultData:
-                                      _vm.inboundForm.products[index].lot,
-                                    hideLabel: true,
-                                    potentialData: _vm.lotsOptions,
-                                    placeholder: "Select lot",
-                                    unclearable: true
-                                  },
-                                  model: {
-                                    value: _vm.inboundForm.products[index].lot,
-                                    callback: function($$v) {
-                                      _vm.$set(
-                                        _vm.inboundForm.products[index],
-                                        "lot",
-                                        $$v
-                                      )
-                                    },
-                                    expression:
-                                      "inboundForm.products[index].lot"
-                                  }
-                                })
+                        }),
+                        _vm._v(" "),
+                        _c("td", {
+                          domProps: {
+                            textContent: _vm._s(product_with_lots.quantity)
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("td", [
+                          _c("div", { staticClass: "tags" }, [
+                            _vm.inbound.products[index].is_dangerous
+                              ? _c("span", { staticClass: "tag is-danger" }, [
+                                  _vm._v("Dangerous")
+                                ])
+                              : _vm._e(),
+                            _vm._v(" "),
+                            _vm.inbound.products[index].is_fragile
+                              ? _c("span", { staticClass: "tag is-warning" }, [
+                                  _vm._v("Fragile")
+                                ])
                               : _vm._e()
-                          ],
-                          1
-                        ),
-                    _vm._v(" "),
-                    _c(
-                      "td",
-                      [
-                        _vm.inboundForm.products[index]
-                          ? _c("text-input", {
-                              attrs: {
-                                defaultValue:
-                                  _vm.inboundForm.products[index].expiry_date,
-                                editable: _vm.isEditing,
-                                name: "lot-expiry-date-" + product.id,
-                                hideLabel: true,
-                                required: false,
-                                focus: true,
-                                type: "date"
-                              },
-                              model: {
-                                value:
-                                  _vm.inboundForm.products[index].expiry_date,
-                                callback: function($$v) {
-                                  _vm.$set(
-                                    _vm.inboundForm.products[index],
-                                    "expiry_date",
-                                    $$v
-                                  )
-                                },
-                                expression:
-                                  "inboundForm.products[index].expiry_date"
-                              }
-                            })
-                          : _vm._e()
-                      ],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "td",
-                      [
-                        _vm.inboundForm.products[index]
-                          ? _c("text-input", {
-                              attrs: {
-                                defaultValue:
-                                  _vm.inboundForm.products[index]
-                                    .quantity_received,
-                                editable: _vm.isEditing && _vm.canManage,
-                                name: "lot-quantity-" + product.id,
-                                hideLabel: true,
-                                required: true,
-                                type: "number"
-                              },
-                              model: {
-                                value:
-                                  _vm.inboundForm.products[index]
-                                    .quantity_received,
-                                callback: function($$v) {
-                                  _vm.$set(
-                                    _vm.inboundForm.products[index],
-                                    "quantity_received",
-                                    $$v
-                                  )
-                                },
-                                expression:
-                                  "inboundForm.products[index].quantity_received"
-                              }
-                            })
-                          : _vm._e()
-                      ],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "td",
-                      [
-                        _vm.inboundForm.products[index]
-                          ? _c("textarea-input", {
-                              attrs: {
-                                defaultValue:
-                                  _vm.inboundForm.products[index].remark,
-                                editable: _vm.isEditing,
-                                label: "Remark",
-                                name: "remark",
-                                type: "text",
-                                hideLabel: true,
-                                required: false,
-                                rows: "0.5",
-                                cols: "4"
-                              },
-                              model: {
-                                value: _vm.inboundForm.products[index].remark,
-                                callback: function($$v) {
-                                  _vm.$set(
-                                    _vm.inboundForm.products[index],
-                                    "remark",
-                                    $$v
-                                  )
-                                },
-                                expression: "inboundForm.products[index].remark"
-                              }
-                            })
-                          : _vm._e()
-                      ],
-                      1
-                    )
-                  ])
-                })
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c("td", [
+                          _vm._v(
+                            "\n\t\t\t\t\t\t\t\t\t" +
+                              _vm._s(product_with_lots.remark) +
+                              "\n\t\t\t\t\t\t\t\t"
+                          )
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c("tr", { staticClass: "subrow" }, [
+                        _c("th", { attrs: { colspan: "2" } }, [_vm._v("Lots")]),
+                        _vm._v(" "),
+                        _c("th", [_vm._v("Received quantity")]),
+                        _vm._v(" "),
+                        _c("th", [_vm._v("Expiry date")]),
+                        _vm._v(" "),
+                        _c("th", [_vm._v("Admin remark")])
+                      ]),
+                      _vm._v(" "),
+                      _vm._l(product_with_lots.lots, function(lot, lotindex) {
+                        return _c("tr", { staticClass: "subrow" }, [
+                          !_vm.isEditing
+                            ? _c("td", {
+                                attrs: { colspan: "2" },
+                                domProps: { textContent: _vm._s(lot.name) }
+                              })
+                            : _c(
+                                "td",
+                                { attrs: { colspan: "2" } },
+                                [
+                                  _vm.inboundForm.products[index] &&
+                                  _vm.inboundForm.products[index].lots[lotindex]
+                                    ? _c("selector-input", {
+                                        attrs: {
+                                          defaultData:
+                                            _vm.inboundForm.products[index]
+                                              .lots[lotindex].lot,
+                                          hideLabel: true,
+                                          potentialData: _vm.lotsOptions,
+                                          placeholder: "Select lot",
+                                          name: "products",
+                                          unclearable: true
+                                        },
+                                        model: {
+                                          value:
+                                            _vm.inboundForm.products[index]
+                                              .lots[lotindex].lot,
+                                          callback: function($$v) {
+                                            _vm.$set(
+                                              _vm.inboundForm.products[index]
+                                                .lots[lotindex],
+                                              "lot",
+                                              $$v
+                                            )
+                                          },
+                                          expression:
+                                            "inboundForm.products[index].lots[lotindex].lot"
+                                        }
+                                      })
+                                    : _vm._e()
+                                ],
+                                1
+                              ),
+                          _vm._v(" "),
+                          _c(
+                            "td",
+                            [
+                              _vm.inboundForm.products[index] &&
+                              _vm.inboundForm.products[index].lots[lotindex]
+                                ? _c("text-input", {
+                                    attrs: {
+                                      defaultValue:
+                                        _vm.inboundForm.products[index].lots[
+                                          lotindex
+                                        ].quantity_received,
+                                      editable: _vm.isEditing && _vm.canManage,
+                                      name: "products",
+                                      hideLabel: true,
+                                      required: true,
+                                      type: "number"
+                                    },
+                                    model: {
+                                      value:
+                                        _vm.inboundForm.products[index].lots[
+                                          lotindex
+                                        ].quantity_received,
+                                      callback: function($$v) {
+                                        _vm.$set(
+                                          _vm.inboundForm.products[index].lots[
+                                            lotindex
+                                          ],
+                                          "quantity_received",
+                                          $$v
+                                        )
+                                      },
+                                      expression:
+                                        "inboundForm.products[index].lots[lotindex].quantity_received"
+                                    }
+                                  })
+                                : _vm._e()
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "td",
+                            [
+                              _vm.inboundForm.products[index] &&
+                              _vm.inboundForm.products[index].lots[lotindex]
+                                ? _c("text-input", {
+                                    attrs: {
+                                      defaultValue:
+                                        _vm.inboundForm.products[index].lots[
+                                          lotindex
+                                        ].expiry_date,
+                                      editable: _vm.isEditing,
+                                      hideLabel: true,
+                                      required: false,
+                                      focus: true,
+                                      type: "date"
+                                    },
+                                    model: {
+                                      value:
+                                        _vm.inboundForm.products[index].lots[
+                                          lotindex
+                                        ].expiry_date,
+                                      callback: function($$v) {
+                                        _vm.$set(
+                                          _vm.inboundForm.products[index].lots[
+                                            lotindex
+                                          ],
+                                          "expiry_date",
+                                          $$v
+                                        )
+                                      },
+                                      expression:
+                                        "inboundForm.products[index].lots[lotindex].expiry_date"
+                                    }
+                                  })
+                                : _vm._e()
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "td",
+                            [
+                              _vm.inboundForm.products[index] &&
+                              _vm.inboundForm.products[index].lots[lotindex]
+                                ? _c("textarea-input", {
+                                    attrs: {
+                                      defaultValue:
+                                        _vm.inboundForm.products[index].lots[
+                                          lotindex
+                                        ].remark,
+                                      editable: _vm.isEditing,
+                                      label: "Remark",
+                                      name: "remark",
+                                      type: "text",
+                                      hideLabel: true,
+                                      required: false,
+                                      rows: "0.5",
+                                      cols: "4"
+                                    },
+                                    model: {
+                                      value:
+                                        _vm.inboundForm.products[index].lots[
+                                          lotindex
+                                        ].remark,
+                                      callback: function($$v) {
+                                        _vm.$set(
+                                          _vm.inboundForm.products[index].lots[
+                                            lotindex
+                                          ],
+                                          "remark",
+                                          $$v
+                                        )
+                                      },
+                                      expression:
+                                        "inboundForm.products[index].lots[lotindex].remark"
+                                    }
+                                  })
+                                : _vm._e()
+                            ],
+                            1
+                          )
+                        ])
+                      })
+                    ]
+                  })
+                ],
+                2
               )
             ]
-          )
+          ),
+          _vm._v(" "),
+          _c("p", {
+            staticClass: "has-text-danger",
+            domProps: {
+              textContent: _vm._s(_vm.inboundForm.errors.get("products"))
+            }
+          })
         ])
       ]),
       _vm._v(" "),
@@ -62831,13 +62938,7 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("Attributes")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Lots")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Expiry date")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Receiving quantity")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Remark")])
+        _c("th", [_vm._v("User remark")])
       ])
     ])
   }
