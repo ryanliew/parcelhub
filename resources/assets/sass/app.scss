@@ -76,6 +76,11 @@
   margin-bottom: 0;
 }
 
+.version {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
 /* Custom helper classes */
 
 .mt-5 {
@@ -207,11 +212,19 @@
   text-transform: capitalize;
 }
 
+.v-select input[type="search"], .v-select input[type="search"]:focus {
+  width: 7em;
+}
+
 .product-display .background{
   background-position: center;
   background-size: cover;
   height:100%;
   display:block;
+}
+
+tr.subrow {
+  background: #eee;
 }
 // Animations
 .fade-enter-active, .fade-leave-active {

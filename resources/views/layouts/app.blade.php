@@ -39,7 +39,7 @@
         <div class="container">
             <div class="content has-text-centered">
                 <p>
-                    <strong>{{ config('app.name', 'Laravel') }}</strong> by <a href="https://jgthms.com">Ryan Liew</a>. The source code is licensed
+                    <strong>{{ config('app.name', 'Laravel') }}</strong> by <a>Ryan Liew</a>. The source code is licensed
                     <a href="http://opensource.org/licenses/mit-license.php">MIT</a>. The website content
                     is licensed <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY NC SA 4.0</a>.
                 </p>
@@ -49,11 +49,10 @@
     </footer>
     @endif
     <script src="{{ asset('js/form.js?v=1.0.5') }}"></script>
-    <script src="{{ asset('js/app.js?v=1.0.0.0') }}"></script>
+    <script src="{{ asset('js/app.js?v=1.1.0.0') }}"></script>
     <script src="{{ asset('js/jquery-1.7.1.min.js') }}"></script>
     <script src="{{ asset('js/responsive-tables.js') }}"></script>
     @yield('js')
-
 
 </body>
 </html>
