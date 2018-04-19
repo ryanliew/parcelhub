@@ -84,7 +84,7 @@
 					return this.localValue;
 				}
 
-				return !this.editable && this.type == 'date' && moment(this.defaultValue).isValid() ? moment(this.defaultValue).fromNow() : this.defaultValue;
+				return !this.editable && this.type == 'date' ? this.$options.filters.date(this.defaultValue) : this.defaultValue;
 			}
 		},
 

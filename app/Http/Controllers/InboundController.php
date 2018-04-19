@@ -186,12 +186,14 @@ class InboundController extends Controller
                         $products[$key]["volume"] = $product["volume"] - ( $product["singleVolume"] * $quantityIntoLot );
                         $products[$key]["quantity"] = $product["quantity"] - $quantityIntoLot;
                         $product["quantity"] = $products[$key]["quantity"];
-                        $this->attachLot($inbound->id, $key, $lot, $product["expiry_date"]);
+                        $this->attachLot($inbound->id, $key, $lot, $product["expiry_date"], $quantityIntoLot);
                     }
                 }
                 $lot->save();
                 $new_quantity = $lot->pivot->incoming_quantity + $quantityIntoLot;
                 $lot->products()->updateExistingPivot($key, ["incoming_quantity" => $new_quantity]);
+
+            $lot->propagate_left_volume();
             }
         }
         // Assign products to user lots
@@ -206,7 +208,7 @@ class InboundController extends Controller
                         $lot_products[$key]['incoming_quantity'] = $quantityIntoLot;
                         $products[$key]["volume"] = $product["volume"] - ($product["singleVolume"] * $quantityIntoLot);
                         $products[$key]["quantity"] = $product["quantity"] - $quantityIntoLot;
-                        $inboundproduct = $this->attachLot($inbound->id, $key, $lot, $product["expiry_date"]);
+                        $inboundproduct = $this->attachLot($inbound->id, $key, $lot, $product["expiry_date"], $quantityIntoLot);
                         
                     }
                 }
@@ -226,10 +228,10 @@ class InboundController extends Controller
         return min($quantityIntoLot, $quantity);
     }
 
-    public function attachLot($inbound, $product, $lot, $expiry_date) {
+    public function attachLot($inbound, $product, $lot, $expiry_date, $quantity) {
         // Attach lot to inbound product
         $inbound_product = InboundProduct::where('inbound_id', $inbound)->where('product_id', $product)->first();
-        $inbound_product->lots()->attach($lot, ['expiry_date' => $expiry_date ? $expiry_date : null]);
+        $inbound_product->lots()->attach($lot, ['quantity_original' => $quantity, 'expiry_date' => $expiry_date ? $expiry_date : null]);
 
         return $inbound_product;
     }
@@ -320,6 +322,7 @@ class InboundController extends Controller
                 $new_lot->propagate_left_volume();
 
                 $inbound_product->lots()->updateExistingPivot($lot->lot->value, [
+                        'quantity_original' => $lot->quantity_original,
                         'quantity_received' => $lot->quantity_received,
                         'expiry_date' => $lot->expiry_date,
                         'remark' => $lot->remark

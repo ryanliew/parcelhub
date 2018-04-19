@@ -132,7 +132,7 @@ class Product extends Model
     }
 
     public function getTotalUsableQuantityAttribute() {
-        return $this->total_quantity + $this->total_incoming_quantity - $this->total_outgoing_quantity;
+        return $this->total_quantity - $this->total_outgoing_quantity;
     }
 
     public function getOwnerNameAttribute()
