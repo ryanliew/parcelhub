@@ -6,6 +6,7 @@ use App\Category;
 use App\Lot;
 use App\Payment;
 use App\Product;
+use App\Utilities;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Settings;
@@ -175,7 +176,7 @@ class LotController extends Controller
         $lot->name = $request->name;
         $lot->category_id = $request->category;
         $lot->volume = $request->volume;
-        $lot->left_volume = $request->volume * 100;
+        $lot->left_volume = Utilities::convertMeterCubeToCentimeterCube($request->volume);
         $lot->price = $request->price;
         $lot->save();
 

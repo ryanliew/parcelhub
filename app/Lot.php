@@ -100,7 +100,16 @@ class Lot extends Model
 
         $new_quantity = $lot_product->pivot->incoming_quantity - $quantity;
 
-        $this->products()->updateExistingPivot($product->id, ['incoming_quantity' => $new_quantity]);
+        if($new_quantity <= 0 
+            && $lot_product->pivot->quantity <= 0 
+            && $lot_product->pivot->outgoing_product <= 0)
+        {
+            $this->products()->detach($lot_product);
+        }
+        else
+        {
+            $this->products()->updateExistingPivot($product->id, ['incoming_quantity' => $new_quantity]);
+        }
     }
 
     public function increase_incoming_product(Product $product, $quantity)
