@@ -179,16 +179,17 @@
 							</tr>
 								
 							<tr class="subrow">
-								<th colspan="2">Lots</th>
-								<th>Received quantity</th>
+								<th>Lots</th>
+								<th>Quantity</th>
+								<th>Received</th>
 								<th>Expiry date</th>
 								<th>Admin remark</th>
 							</tr>
 							<tr class="subrow" v-for="(lot, lotindex) in product_with_lots.lots">
-								<td colspan="2" v-text="lot.name" v-if="!isEditing">
+								<td v-text="lot.name" v-if="!isEditing">
 							
 								</td>
-								<td colspan="2" v-else>
+								<td v-else>
 									<selector-input v-model="inboundForm.products[index].lots[lotindex].lot"
 										:defaultData="inboundForm.products[index].lots[lotindex].lot"
 										:hideLabel="true"
@@ -198,6 +199,9 @@
 										:unclearable="true"
 										v-if="inboundForm.products[index] && inboundForm.products[index].lots[lotindex]">
 									</selector-input>
+								</td>
+								<td>
+									{{ lot.pivot.quantity_original }}
 								</td>
 								<td>
 									<text-input
@@ -353,7 +357,8 @@
 						let lotobj = {};
 						lotobj['original_lot'] = lot.id;
 						lotobj['lot'] = { value: lot.id, label: lot.name };
-						lotobj['original_quantity'] = lot.pivot.quantity_received;
+						lotobj['quantity_original'] = lot.pivot.quantity_original;
+						lotobj['original_quantity'] = lot.pivot.quantity_original == lot.pivot.quantity_received ? lot.pivot.quantity_original : lot.pivot.quantity_received;
 						lotobj['quantity_received'] = lot.pivot.quantity_received;
 						lotobj['expiry_date'] = lot.pivot.expiry_date;
 						lotobj['remark'] = lot.pivot.remark;

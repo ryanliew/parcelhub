@@ -54454,7 +54454,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 				return this.localValue;
 			}
 
-			return !this.editable && this.type == 'date' && __WEBPACK_IMPORTED_MODULE_0_moment___default()(this.defaultValue).isValid() ? __WEBPACK_IMPORTED_MODULE_0_moment___default()(this.defaultValue).fromNow() : this.defaultValue;
+			return !this.editable && this.type == 'date' ? this.$options.filters.date(this.defaultValue) : this.defaultValue;
 		}
 	},
 
@@ -62051,6 +62051,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	props: ['inbound', 'canManage'],
@@ -62125,7 +62129,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 					var lotobj = {};
 					lotobj['original_lot'] = lot.id;
 					lotobj['lot'] = { value: lot.id, label: lot.name };
-					lotobj['original_quantity'] = lot.pivot.quantity_received;
+					lotobj['quantity_original'] = lot.pivot.quantity_original;
+					lotobj['original_quantity'] = lot.pivot.quantity_original == lot.pivot.quantity_received ? lot.pivot.quantity_original : lot.pivot.quantity_received;
 					lotobj['quantity_received'] = lot.pivot.quantity_received;
 					lotobj['expiry_date'] = lot.pivot.expiry_date;
 					lotobj['remark'] = lot.pivot.remark;
@@ -62632,9 +62637,11 @@ var render = function() {
                       ]),
                       _vm._v(" "),
                       _c("tr", { staticClass: "subrow" }, [
-                        _c("th", { attrs: { colspan: "2" } }, [_vm._v("Lots")]),
+                        _c("th", [_vm._v("Lots")]),
                         _vm._v(" "),
-                        _c("th", [_vm._v("Received quantity")]),
+                        _c("th", [_vm._v("Quantity")]),
+                        _vm._v(" "),
+                        _c("th", [_vm._v("Received")]),
                         _vm._v(" "),
                         _c("th", [_vm._v("Expiry date")]),
                         _vm._v(" "),
@@ -62645,12 +62652,10 @@ var render = function() {
                         return _c("tr", { staticClass: "subrow" }, [
                           !_vm.isEditing
                             ? _c("td", {
-                                attrs: { colspan: "2" },
                                 domProps: { textContent: _vm._s(lot.name) }
                               })
                             : _c(
                                 "td",
-                                { attrs: { colspan: "2" } },
                                 [
                                   _vm.inboundForm.products[index] &&
                                   _vm.inboundForm.products[index].lots[lotindex]
@@ -62685,6 +62690,14 @@ var render = function() {
                                 ],
                                 1
                               ),
+                          _vm._v(" "),
+                          _c("td", [
+                            _vm._v(
+                              "\n\t\t\t\t\t\t\t\t\t" +
+                                _vm._s(lot.pivot.quantity_original) +
+                                "\n\t\t\t\t\t\t\t\t"
+                            )
+                          ]),
                           _vm._v(" "),
                           _c(
                             "td",
