@@ -10,6 +10,7 @@ use Entrust;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class InboundController extends Controller
 {
@@ -89,13 +90,7 @@ class InboundController extends Controller
             {
                 foreach($inboundproduct->lots as $lot)
                 {
-                    $lot->deduct_incoming_product($inboundproduct->product, $lot->quantity_original);
-                    
-                    if($lot_product->pivot->quantity <= 0 && $lot_product->pivot->incoming_quantity <= 0){
-                        $lot->products()->detach($lot_product->id);
-                    }
-                    
-                    $lot->save();
+                    $lot->deduct_incoming_product($inboundproduct->product, $lot->pivot->quantity_original);
                     $lot->propagate_left_volume();
                 }
             }

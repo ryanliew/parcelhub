@@ -197,7 +197,8 @@ class InboundController extends Controller
             }
         }
         // Assign products to user lots
-        foreach($user_lots as $lot){
+        $user_lots_with_enough_volume = $auth->lots()->where('left_volume', '>=', $product["singleVolume"])->get();
+        foreach($user_lots_with_enough_volume as $lot){
             $lot_products = [];
             foreach($products as $key => $product){
                 if($product["quantity"] > 0) {
