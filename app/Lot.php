@@ -97,7 +97,6 @@ class Lot extends Model
     public function deduct_incoming_product(Product $product, $quantity)
     {
         $lot_product = $this->products()->where('product_id', $product->id)->first();
-
         $new_quantity = $lot_product->pivot->incoming_quantity - $quantity;
 
         if($new_quantity <= 0 
