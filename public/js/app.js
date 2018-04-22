@@ -63826,6 +63826,115 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -63855,7 +63964,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 				amount_insured: '0',
 				courier_id: '',
 				outbound_products: [],
-				invoice_slip: ''
+				invoice_slip: '',
+				payer_gst_vat: '',
+				harm_comm_code: '',
+				payment_term: '',
+				trade_term: '',
+				export_reason: '',
+				business: ''
 			}),
 			isDeleting: false,
 			errorForProducts: '',
@@ -63866,7 +63981,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 			productsOptions: [],
 			customersOptions: [],
 			isViewing: false,
-			isCreating: false
+			isCreating: false,
+			isMalaysiaData: true
 		}, _defineProperty(_ref, 'errorForProducts', ''), _defineProperty(_ref, 'invoiceSlip', { name: 'No file selected' }), _ref;
 	},
 	mounted: function mounted() {
@@ -63881,7 +63997,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 	methods: {
 		isMalaysia: function isMalaysia(data) {
-			// console.log(data);
+			this.isMalaysiaData = data.toLowerCase() == "malaysia" || data == '';
 		},
 		getProducts: function getProducts() {
 			var _this2 = this;
@@ -63932,8 +64048,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 				return obj;
 			});
 		},
+		updateTotalValue: function updateTotalValue(index) {
+			this.clearProductErrors(index);
+			var product = this.productRows[index];
+			this.productRows[index].total_value = product.unit_value * product.quantity;
+		},
 		addRow: function addRow() {
-			this.productRows.push({ product: null, quantity: 0, remarks: "" });
+			this.productRows.push({ product: null, quantity: '', remarks: "", unit_value: "", total_value: "", weight: "", manufacture_country: "" });
 			this.clearProductErrors();
 		},
 		removeRow: function removeRow(index) {
@@ -63955,7 +64076,21 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 						return p.id == element.product.id;
 					}.bind(element));
 
-					if (product > -1) this.form.outbound_products[product].quantity = parseInt(this.form.outbound_products[product].quantity) + parseInt(element.quantity);else this.form.outbound_products.push({ id: element.product.id, quantity: element.quantity, remarks: element.remarks });
+					if (product > -1) {
+						this.form.outbound_products[product].quantity = this.form.outbound_products[product].quantity + parseInt(element.quantity);
+						this.form.outbound_products[product].unit_value = parseInt(element.unit_value);
+						this.form.outbound_products[product].total_value = this.form.outbound_products[product].quantity * parseInt(element.unit_value);
+						this.form.outbound_products[product].weight = this.form.outbound_products[product].weight + parseInt(element.weight);
+						this.form.outbound_products[product].manufacture_country = element.manufacture_country;
+					} else {
+						this.form.outbound_products.push({ id: element.product.id,
+							quantity: parseInt(element.quantity),
+							remarks: element.remarks,
+							unit_value: parseInt(element.unit_value),
+							total_value: parseInt(element.total_value),
+							weight: parseInt(element.weight),
+							manufacture_country: element.manufacture_country });
+					}
 				}
 			}.bind(this));
 		},
@@ -64033,6 +64168,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 				this.form.recipient_state = data.recipient_state;
 				this.form.recipient_postcode = data.recipient_postcode;
 				this.form.recipient_country = data.recipient_country;
+				this.form.recipient_country.toLowerCase() == "malaysia" ? this.isMalaysiaData = true : this.isMalaysiaData = false;
 			}
 		},
 		changeInvoiceSlipImage: function changeInvoiceSlipImage(e) {
@@ -64585,27 +64721,197 @@ var render = function() {
                         1
                       ),
                       _vm._v(" "),
+                      !_vm.isMalaysiaData
+                        ? _c("div", [
+                            _c(
+                              "div",
+                              { staticClass: "field" },
+                              [
+                                _c("text-input", {
+                                  attrs: {
+                                    defaultValue: _vm.form.payer_gst_vat,
+                                    label: "Payer of GST/VAT",
+                                    required: true,
+                                    name: "payer_gst_vat",
+                                    type: "text",
+                                    seen: "false",
+                                    editable: true,
+                                    error: _vm.form.errors.get("payer_gst_vat")
+                                  },
+                                  model: {
+                                    value: _vm.form.payer_gst_vat,
+                                    callback: function($$v) {
+                                      _vm.$set(_vm.form, "payer_gst_vat", $$v)
+                                    },
+                                    expression: "form.payer_gst_vat"
+                                  }
+                                })
+                              ],
+                              1
+                            ),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "columns" }, [
+                              _c(
+                                "div",
+                                { staticClass: "column" },
+                                [
+                                  _c("text-input", {
+                                    attrs: {
+                                      defaultValue: _vm.form.harm_comm_code,
+                                      label: "HARM Comm Code",
+                                      required: true,
+                                      name: "harm_comm_code",
+                                      type: "text",
+                                      seen: "false",
+                                      editable: true,
+                                      error: _vm.form.errors.get(
+                                        "harm_comm_code"
+                                      )
+                                    },
+                                    model: {
+                                      value: _vm.form.harm_comm_code,
+                                      callback: function($$v) {
+                                        _vm.$set(
+                                          _vm.form,
+                                          "harm_comm_code",
+                                          $$v
+                                        )
+                                      },
+                                      expression: "form.harm_comm_code"
+                                    }
+                                  })
+                                ],
+                                1
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "div",
+                                { staticClass: "column" },
+                                [
+                                  _c("text-input", {
+                                    attrs: {
+                                      defaultValue: _vm.form.trade_term,
+                                      label: "Term of Trade",
+                                      required: true,
+                                      name: "trade_term",
+                                      type: "text",
+                                      seen: "false",
+                                      editable: true,
+                                      error: _vm.form.errors.get("trade_term")
+                                    },
+                                    model: {
+                                      value: _vm.form.trade_term,
+                                      callback: function($$v) {
+                                        _vm.$set(_vm.form, "trade_term", $$v)
+                                      },
+                                      expression: "form.trade_term"
+                                    }
+                                  })
+                                ],
+                                1
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c(
+                              "div",
+                              { staticClass: "field" },
+                              [
+                                _c("text-input", {
+                                  attrs: {
+                                    defaultValue: _vm.form.payment_term,
+                                    label: "Term of Payment",
+                                    required: true,
+                                    name: "payment_term",
+                                    type: "text",
+                                    seen: "false",
+                                    editable: true,
+                                    error: _vm.form.errors.get("payment_term")
+                                  },
+                                  model: {
+                                    value: _vm.form.payment_term,
+                                    callback: function($$v) {
+                                      _vm.$set(_vm.form, "payment_term", $$v)
+                                    },
+                                    expression: "form.payment_term"
+                                  }
+                                })
+                              ],
+                              1
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "div",
+                              { staticClass: "field" },
+                              [
+                                _c("textarea-input", {
+                                  attrs: {
+                                    defaultValue: _vm.form.export_reason,
+                                    label: "Reason For Export",
+                                    required: true,
+                                    name: "export_reason",
+                                    type: "text",
+                                    seen: "false",
+                                    editable: true,
+                                    error: _vm.form.errors.get("export_reason"),
+                                    rows: "2",
+                                    cols: "4"
+                                  },
+                                  model: {
+                                    value: _vm.form.export_reason,
+                                    callback: function($$v) {
+                                      _vm.$set(_vm.form, "export_reason", $$v)
+                                    },
+                                    expression: "form.export_reason"
+                                  }
+                                })
+                              ],
+                              1
+                            ),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "columns" }, [
+                              _c(
+                                "div",
+                                { staticClass: "column is-narrow" },
+                                [
+                                  _c("checkbox-input", {
+                                    staticClass: "mt-10",
+                                    attrs: {
+                                      defaultChecked: _vm.form.business,
+                                      label: "Business?",
+                                      required: false,
+                                      name: "business",
+                                      editable: true
+                                    },
+                                    model: {
+                                      value: _vm.form.business,
+                                      callback: function($$v) {
+                                        _vm.$set(_vm.form, "business", $$v)
+                                      },
+                                      expression: "form.business"
+                                    }
+                                  })
+                                ],
+                                1
+                              )
+                            ])
+                          ])
+                        : _vm._e(),
+                      _vm._v(" "),
                       _c(
                         "table",
                         {
                           staticClass:
-                            "table is-hoverable is-fullwidth is-responsive"
+                            "table is-hoverable is-fullwidth is-responsive is-multirow"
                         },
                         [
                           _c("thead", [
-                            _c("th", [_vm._v("#")]),
+                            _c("th"),
                             _vm._v(" "),
-                            _c("th", [_vm._v("Product")]),
+                            _c("th"),
                             _vm._v(" "),
-                            _c("th", { attrs: { width: "45px" } }, [
-                              _vm._v("Remaining stock")
-                            ]),
+                            _c("th"),
                             _vm._v(" "),
-                            _c("th", { attrs: { width: "45px" } }, [
-                              _vm._v("Outbound quantity")
-                            ]),
-                            _vm._v(" "),
-                            _c("th", [_vm._v("Remarks")]),
+                            _c("th"),
                             _vm._v(" "),
                             _c("th", [
                               _c(
@@ -64627,161 +64933,342 @@ var render = function() {
                           _vm._v(" "),
                           _c(
                             "tbody",
-                            _vm._l(_vm.productRows, function(row, index) {
-                              return _c("tr", [
-                                _c("td", [
-                                  _vm._v(
-                                    "\n\t\t\t\t\t\t\t\t\t" +
-                                      _vm._s(index + 1) +
-                                      "\n\t\t\t          \t\t\t"
-                                  )
-                                ]),
-                                _vm._v(" "),
-                                _c(
-                                  "td",
-                                  [
-                                    _c("products-selector-input", {
-                                      attrs: {
-                                        defaultData:
-                                          _vm.productRows[index].product,
-                                        label: "Products",
-                                        name: "products",
-                                        required: true,
-                                        potentialData: _vm.productsOptions,
-                                        editable: true,
-                                        placeholder: "Select product",
-                                        hideLabel: true
-                                      },
-                                      on: { input: _vm.clearProductErrors },
-                                      model: {
-                                        value: _vm.productRows[index].product,
-                                        callback: function($$v) {
-                                          _vm.$set(
-                                            _vm.productRows[index],
-                                            "product",
-                                            $$v
-                                          )
-                                        },
-                                        expression: "productRows[index].product"
-                                      }
-                                    })
-                                  ],
-                                  1
-                                ),
-                                _vm._v(" "),
-                                _c("td", [
-                                  _vm.productRows[index].product
-                                    ? _c("p", [
-                                        _vm._v(
-                                          _vm._s(
-                                            _vm.productRows[index].product
-                                              .total_usable_quantity
-                                          )
-                                        )
-                                      ])
-                                    : _c("p", [_vm._v("0")])
-                                ]),
-                                _vm._v(" "),
-                                _c(
-                                  "td",
-                                  [
-                                    _vm.productRows[index]
-                                      ? _c("text-input", {
+                            [
+                              _vm._l(_vm.productRows, function(row, index) {
+                                return [
+                                  _c("tr", [
+                                    _c(
+                                      "td",
+                                      [
+                                        _c("products-selector-input", {
                                           attrs: {
-                                            defaultValue:
-                                              _vm.productRows[index].quantity,
-                                            label: "Quantity",
+                                            defaultData:
+                                              _vm.productRows[index].product,
+                                            label: "Products",
+                                            name: "products",
                                             required: true,
-                                            type: "number",
+                                            potentialData: _vm.productsOptions,
                                             editable: true,
-                                            hideLabel: true,
-                                            error: _vm.form.errors.get(
-                                              "outbound_products." + index
-                                            ),
-                                            name: "quantity"
+                                            placeholder: "Select product",
+                                            hideLabel: false
                                           },
-                                          on: {
-                                            input: function($event) {
-                                              _vm.clearProductErrors(index)
+                                          on: { input: _vm.clearProductErrors },
+                                          model: {
+                                            value:
+                                              _vm.productRows[index].product,
+                                            callback: function($$v) {
+                                              _vm.$set(
+                                                _vm.productRows[index],
+                                                "product",
+                                                $$v
+                                              )
+                                            },
+                                            expression:
+                                              "productRows[index].product"
+                                          }
+                                        })
+                                      ],
+                                      1
+                                    ),
+                                    _vm._v(" "),
+                                    _c(
+                                      "td",
+                                      [
+                                        _vm.productRows[index].product
+                                          ? _c("text-input", {
+                                              attrs: {
+                                                defaultValue:
+                                                  _vm.productRows[index].product
+                                                    .total_usable_quantity,
+                                                label: "Available quantity",
+                                                required: true,
+                                                type: "number",
+                                                editable: false,
+                                                hideLabel: false,
+                                                name: "quantity"
+                                              }
+                                            })
+                                          : _vm._e()
+                                      ],
+                                      1
+                                    ),
+                                    _vm._v(" "),
+                                    _c(
+                                      "td",
+                                      [
+                                        _vm.productRows[index]
+                                          ? _c("text-input", {
+                                              attrs: {
+                                                defaultValue:
+                                                  _vm.productRows[index]
+                                                    .quantity,
+                                                label: "Outbound quantity",
+                                                required: true,
+                                                type: "number",
+                                                editable: true,
+                                                hideLabel: false,
+                                                error: _vm.form.errors.get(
+                                                  "outbound_products." + index
+                                                ),
+                                                name: "quantity"
+                                              },
+                                              on: {
+                                                input: function($event) {
+                                                  _vm.updateTotalValue(index)
+                                                }
+                                              },
+                                              model: {
+                                                value:
+                                                  _vm.productRows[index]
+                                                    .quantity,
+                                                callback: function($$v) {
+                                                  _vm.$set(
+                                                    _vm.productRows[index],
+                                                    "quantity",
+                                                    $$v
+                                                  )
+                                                },
+                                                expression:
+                                                  "productRows[index].quantity"
+                                              }
+                                            })
+                                          : _vm._e()
+                                      ],
+                                      1
+                                    ),
+                                    _vm._v(" "),
+                                    _c(
+                                      "td",
+                                      [
+                                        _vm.productRows[index]
+                                          ? _c("textarea-input", {
+                                              attrs: {
+                                                defaultValue:
+                                                  _vm.productRows[index]
+                                                    .remarks,
+                                                label: "Remarks",
+                                                required: true,
+                                                type: "text",
+                                                editable: true,
+                                                hideLabel: false,
+                                                name: "remarks",
+                                                rows: "1",
+                                                cols: "4"
+                                              },
+                                              model: {
+                                                value:
+                                                  _vm.productRows[index]
+                                                    .remarks,
+                                                callback: function($$v) {
+                                                  _vm.$set(
+                                                    _vm.productRows[index],
+                                                    "remarks",
+                                                    $$v
+                                                  )
+                                                },
+                                                expression:
+                                                  "productRows[index].remarks"
+                                              }
+                                            })
+                                          : _vm._e()
+                                      ],
+                                      1
+                                    ),
+                                    _vm._v(" "),
+                                    _c(
+                                      "td",
+                                      {
+                                        attrs: {
+                                          rowspan: !_vm.isMalaysiaData ? 2 : 1
+                                        }
+                                      },
+                                      [
+                                        _c(
+                                          "div",
+                                          {
+                                            staticClass:
+                                              "button is-danger is-small",
+                                            on: {
+                                              click: function($event) {
+                                                _vm.removeRow(index)
+                                              }
                                             }
                                           },
-                                          model: {
-                                            value:
-                                              _vm.productRows[index].quantity,
-                                            callback: function($$v) {
-                                              _vm.$set(
-                                                _vm.productRows[index],
-                                                "quantity",
-                                                $$v
-                                              )
-                                            },
-                                            expression:
-                                              "productRows[index].quantity"
-                                          }
-                                        })
-                                      : _vm._e()
-                                  ],
-                                  1
-                                ),
-                                _vm._v(" "),
-                                _c(
-                                  "td",
-                                  [
-                                    _vm.productRows[index]
-                                      ? _c("textarea-input", {
-                                          attrs: {
-                                            defaultValue:
-                                              _vm.productRows[index].remarks,
-                                            label: "Remarks",
-                                            required: true,
-                                            type: "text",
-                                            editable: true,
-                                            hideLabel: true,
-                                            name: "remarks",
-                                            rows: "1",
-                                            cols: "4"
-                                          },
-                                          model: {
-                                            value:
-                                              _vm.productRows[index].remarks,
-                                            callback: function($$v) {
-                                              _vm.$set(
-                                                _vm.productRows[index],
-                                                "remarks",
-                                                $$v
-                                              )
-                                            },
-                                            expression:
-                                              "productRows[index].remarks"
-                                          }
-                                        })
-                                      : _vm._e()
-                                  ],
-                                  1
-                                ),
-                                _vm._v(" "),
-                                _c("td", [
-                                  _c(
-                                    "div",
-                                    {
-                                      staticClass: "button is-danger is-small",
-                                      on: {
-                                        click: function($event) {
-                                          _vm.removeRow(index)
-                                        }
-                                      }
-                                    },
-                                    [
-                                      _c("i", { staticClass: "fa fa-minus" }),
-                                      _vm._v(" "),
-                                      _c("span", { staticClass: "pl-5" }, [
-                                        _vm._v("Remove product")
+                                          [
+                                            _c("i", {
+                                              staticClass: "fa fa-minus"
+                                            }),
+                                            _vm._v(" "),
+                                            _c(
+                                              "span",
+                                              { staticClass: "pl-5" },
+                                              [_vm._v("Remove product")]
+                                            )
+                                          ]
+                                        )
+                                      ]
+                                    )
+                                  ]),
+                                  _vm._v(" "),
+                                  !_vm.isMalaysiaData
+                                    ? _c("tr", [
+                                        _c(
+                                          "td",
+                                          [
+                                            _vm.productRows[index]
+                                              ? _c("text-input", {
+                                                  attrs: {
+                                                    defaultValue:
+                                                      _vm.productRows[index]
+                                                        .unit_value,
+                                                    label: "Unit Value (RM)",
+                                                    required: true,
+                                                    type: "number",
+                                                    editable: true,
+                                                    hideLabel: false,
+                                                    name: "unit_value"
+                                                  },
+                                                  on: {
+                                                    input: function($event) {
+                                                      _vm.updateTotalValue(
+                                                        index
+                                                      )
+                                                    }
+                                                  },
+                                                  model: {
+                                                    value:
+                                                      _vm.productRows[index]
+                                                        .unit_value,
+                                                    callback: function($$v) {
+                                                      _vm.$set(
+                                                        _vm.productRows[index],
+                                                        "unit_value",
+                                                        $$v
+                                                      )
+                                                    },
+                                                    expression:
+                                                      "productRows[index].unit_value"
+                                                  }
+                                                })
+                                              : _vm._e()
+                                          ],
+                                          1
+                                        ),
+                                        _vm._v(" "),
+                                        _c(
+                                          "td",
+                                          [
+                                            _vm.productRows[index]
+                                              ? _c("text-input", {
+                                                  attrs: {
+                                                    defaultValue:
+                                                      _vm.productRows[index]
+                                                        .total_value,
+                                                    label: "Total Value (RM)",
+                                                    required: true,
+                                                    type: "text",
+                                                    editable: false,
+                                                    hideLabel: false,
+                                                    name: "total_value"
+                                                  },
+                                                  model: {
+                                                    value:
+                                                      _vm.productRows[index]
+                                                        .total_value,
+                                                    callback: function($$v) {
+                                                      _vm.$set(
+                                                        _vm.productRows[index],
+                                                        "total_value",
+                                                        $$v
+                                                      )
+                                                    },
+                                                    expression:
+                                                      "productRows[index].total_value"
+                                                  }
+                                                })
+                                              : _vm._e()
+                                          ],
+                                          1
+                                        ),
+                                        _vm._v(" "),
+                                        _c(
+                                          "td",
+                                          [
+                                            _vm.productRows[index]
+                                              ? _c("text-input", {
+                                                  attrs: {
+                                                    defaultValue:
+                                                      _vm.productRows[index]
+                                                        .weight,
+                                                    label: "Weight (kg)",
+                                                    required: true,
+                                                    type: "text",
+                                                    editable: true,
+                                                    hideLabel: false,
+                                                    name: "weight"
+                                                  },
+                                                  model: {
+                                                    value:
+                                                      _vm.productRows[index]
+                                                        .weight,
+                                                    callback: function($$v) {
+                                                      _vm.$set(
+                                                        _vm.productRows[index],
+                                                        "weight",
+                                                        $$v
+                                                      )
+                                                    },
+                                                    expression:
+                                                      "productRows[index].weight"
+                                                  }
+                                                })
+                                              : _vm._e()
+                                          ],
+                                          1
+                                        ),
+                                        _vm._v(" "),
+                                        _c(
+                                          "td",
+                                          [
+                                            _vm.productRows[index]
+                                              ? _c("text-input", {
+                                                  attrs: {
+                                                    defaultValue:
+                                                      _vm.productRows[index]
+                                                        .manufacture_country,
+                                                    label:
+                                                      "Manufacture Country",
+                                                    required: true,
+                                                    type: "text",
+                                                    editable: true,
+                                                    hideLabel: false,
+                                                    name: "manufacture_country"
+                                                  },
+                                                  model: {
+                                                    value:
+                                                      _vm.productRows[index]
+                                                        .manufacture_country,
+                                                    callback: function($$v) {
+                                                      _vm.$set(
+                                                        _vm.productRows[index],
+                                                        "manufacture_country",
+                                                        $$v
+                                                      )
+                                                    },
+                                                    expression:
+                                                      "productRows[index].manufacture_country"
+                                                  }
+                                                })
+                                              : _vm._e()
+                                          ],
+                                          1
+                                        )
                                       ])
-                                    ]
-                                  )
-                                ])
-                              ])
-                            })
+                                    : _vm._e()
+                                ]
+                              })
+                            ],
+                            2
                           )
                         ]
                       ),

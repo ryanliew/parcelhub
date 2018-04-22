@@ -4,6 +4,7 @@ namespace App;
 
 use DB;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 /**
  * App\Outbound
@@ -136,6 +137,22 @@ class Outbound extends Model
                                                         return ["number" => $value];
                                                     }, 
                                                     $difference->all()));
+    }
+
+    public function totalQuantity(){
+        $totalQuantity = 0;
+        foreach($this->products as $outboundProduct){
+            $totalQuantity += $outboundProduct->pivot->quantity;
+        }
+        return $totalQuantity;
+    }
+
+    public function totalValue(){
+        $totalPrice = 0;
+        foreach($this->products as $outboundProduct){
+            $totalPrice += $outboundProduct->pivot->total_value;
+        }
+        return $totalPrice;
     }
 
     // Static methods
