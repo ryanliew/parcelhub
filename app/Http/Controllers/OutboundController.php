@@ -140,19 +140,6 @@ class OutboundController extends Controller
         //
     }
 
-    public function proformaInvoice($id)
-    {
-        $outbound = Outbound::with('products')->find($id);
-        $courier = Courier::find($outbound->courier_id);
-        $auth = auth()->user();
-        $totalQuantity = $outbound->totalQuantity();
-        $totalPrice = $outbound->totalValue();
-
-        $pdf = PDF::loadView('outbound.proforma', compact(['outbound', 'courier', 'auth', 'totalQuantity', 'totalPrice']));
-
-        return $pdf->setPaper('A4')->download('outbound-proforma-invoice.pdf');
-    }
-
     public function packingList($id)
     {
         $outbound = Outbound::with('products.lots')->find($id);
@@ -166,11 +153,22 @@ class OutboundController extends Controller
 
     public function report($id)
     {
-        $outbound = Outbound::find($id);
+        $outbound = Outbound::with('products')->find($id);
         $path = storage_path();
         $pdf = PDF::loadView('outbound.report', compact(['outbound', 'path']));
         $filename = Outbound::prefix() . $outbound->id . '.pdf';
         $mime = "";
+
+        if($outbound->payer_gst_vat != null){
+            $courier = Courier::find($outbound->courier_id);
+            $auth = auth()->user();
+            $totalQuantity = $outbound->totalQuantity();
+            $totalPrice = $outbound->totalValue();
+
+            $pdf = PDF::loadView('outbound.proforma', compact(['outbound', 'courier', 'auth', 'totalQuantity', 'totalPrice']));
+
+            return $pdf->setPaper('A4')->download('outbound-proforma-invoice-'.$id.'.pdf');
+        }
 
         if($outbound->invoice_slip) {
             

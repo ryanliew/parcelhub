@@ -137,9 +137,30 @@
             height:5px;
             border: 1px solid #000;
         }
+        .pull-left {
+            float: left;
+        }
+        .barcode {
+            padding-top: 25px;
+            padding-left: 120px;
+        }
+        .width-quarter {
+            width: 25%;
+        }
     </style>
 </head>
 <body>
+    <table class="term-table">
+        <tr>
+            <td>
+            </td>
+            <td>
+                <div class="barcode">
+                    {!! DNS1D::getBarcodeHTML( $outbound->PREFIX() . $outbound->id , "C128",2, 44,"black", true) !!}
+                </div>
+            </td>
+        </tr>
+    </table>
     <table class="item-table pt-2">
         <thead>
         <tr>
