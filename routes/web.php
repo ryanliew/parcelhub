@@ -42,6 +42,7 @@ Route::get('lots/categories', 'CategoryController@page')->name('lots.categories'
 Route::get('lots', 'LotController@page')->name('lots');
 Route::get('products', 'ProductController@page')->name('products');
 Route::get('inbounds', 'InboundController@page')->name('inbounds');
+Route::get('returns', 'ReturnOrderController@page')->name('returns');
 Route::get('outbounds', 'OutboundController@page')->name('outbounds');
 Route::get('purchase', 'PaymentController@page')->name('payment');
 Route::get('users', 'UserController@page')->name('users');
@@ -159,6 +160,11 @@ Route::group(['middleware' => ['auth', 'role:admin']], function () {
 Route::group(['prefix' => 'outbound'], function() {
     Route::get('index', 'OutboundController@index')->name('outbound.index');
     Route::post('store', 'OutboundController@store')->name('outbound.store');
+});
+
+Route::group(['prefix' => 'return'], function() {
+    Route::get('index', 'ReturnOrderController@index')->name('return.index');
+    Route::post('store', 'ReturnOrderController@store')->name('return.store');
 });
 
 Route::group(['prefix' => 'download'], function () {

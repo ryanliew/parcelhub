@@ -54,5 +54,10 @@
                 Outbounds
             </a>
         </li>
+        <li>
+            <a @if( url()->current() == route('returns') ) class="is-active" @endif href="{{ route('returns') }}">
+                Return Order
+            </a>
+        </li>
     </ul>
 </aside>
