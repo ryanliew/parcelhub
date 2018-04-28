@@ -60,6 +60,16 @@
             </ul>
         </li>
         <li>
+            <a @if( url()->current() == route('returns') ) class="is-active" @endif href="{{ route('returns') }}">
+                Return Order
+            </a>
+        </li>
+        <li>
+            <a @if( url()->current() == route('recalls') ) class="is-active" @endif href="{{ route('recalls') }}">
+                Recall Order
+            </a>
+        </li>
+        <li>
             <a @if( url()->current() == route('payment') ) class="is-active" @endif href="{{ route('payment') }}">
                 Purchases
             </a>
