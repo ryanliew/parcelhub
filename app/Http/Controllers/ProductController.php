@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Product;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Storage;
@@ -105,6 +106,11 @@ class ProductController extends Controller
     public function selector()
     {
         return Controller::VueTableListResult(auth()->user()->products()->with(["inbounds", "lots", "outbounds"])->where('status', 'true'));
+    }
+
+    public function adminProduct($id)
+    {
+        return Controller::VueTableListResult(User::find($id)->products()->with(["inbounds", "lots", "outbounds"])->where('status', 'true'));
     }
 
     /**

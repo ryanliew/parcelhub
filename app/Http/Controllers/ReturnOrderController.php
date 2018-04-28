@@ -10,6 +10,7 @@ use App\Notifications\InboundCreatedNotification;
 use App\Product;
 use App\Utilities;
 use Carbon\Carbon;
+use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use PDF;
@@ -24,61 +25,27 @@ class ReturnOrderController extends Controller
      */
     public function index()
     {
-        if(request()->wantsJson()) {
+        if(request()->wantsJson())
+        {
             $user = auth()->user();
             if($user->hasRole('admin'))
-                return Controller::VueTableListResult( Outbound::with('tracking_numbers')
-                                                                ->select('outbounds.id as id',
-                                                                    'amount_insured',
-                                                                    'process_status',
-                                                                    'couriers.name as courier',
-                                                                    'outbounds.created_at',
-                                                                    'outbounds.recipient_name',
-                                                                    'outbounds.recipient_address',
-                                                                    'outbounds.recipient_address_2',
-                                                                    'outbounds.recipient_phone',
-                                                                    'outbounds.recipient_state',
-                                                                    'outbounds.recipient_country',
-                                                                    'outbounds.recipient_postcode',
-                                                                    'users.name as customer'
-                                                                    )
-                                                                ->leftJoin('couriers', 'courier_id', '=', 'couriers.id')
+                 return Controller::VueTableListResult(Inbound::with('products', 'products_with_lots.lots')
+                                                                ->select('arrival_date',
+                                                                        'total_carton',
+                                                                        'process_status',
+                                                                        'inbounds.id as id',
+                                                                        'users.name as customer',
+                                                                        'inbounds.created_at as created_at'
+                                                                        )
+                                                                ->where('type', 'return')
                                                                 ->leftJoin('users', 'user_id', '=', 'users.id')
-                                                                ->orderBy('outbounds.created_at', 'desc') );
+                                                                ->orderBy('arrival_date', 'desc'));
             else
-                return Controller::VueTableListResult( $user->outbounds()
-                                                            ->with('tracking_numbers')
-                                                            ->select('outbounds.id as id',
-                                                                    'amount_insured',
-                                                                    'process_status',
-                                                                    'couriers.name as courier',
-                                                                    'outbounds.created_at',
-                                                                    'outbounds.recipient_name',
-                                                                    'outbounds.recipient_address',
-                                                                    'outbounds.recipient_address_2',
-                                                                    'outbounds.recipient_phone',
-                                                                    'outbounds.recipient_state',
-                                                                    'outbounds.recipient_country',
-                                                                    'outbounds.recipient_postcode'
-                                                                    )
-                                                            ->leftJoin('couriers', 'courier_id', '=', 'couriers.id')
-                                                            ->orderBy('outbounds.created_at', 'desc') );
-
+                return Controller::VueTableListResult(auth()->user()->inbounds()->with('products', 'products_with_lots.lots')->orderBy('arrival_date', 'desc'));
         }
-
-        if(\Entrust::hasRole('admin')) {
-
-            $outbounds = Outbound::processing()->get();
-            return view('outbound.admin')->with('outbounds', $outbounds);
-
-        } else {
-
-            $products = Product::with('lots')->where('user_id', auth()->id())->get();
-
-            $couriers = Courier::all();
-
-            return view('outbound.user')->with(compact('products', 'couriers'));
-        }
+        $inbounds = inbound::where('status', 'true')->get();
+        $products = product::where('user_id', auth()->user()->id)->where('status', 'true')->get();
+        return view('inbound.index')->with('inbounds', $inbounds)->with('products', $products);
     }
 
     public function page()
@@ -105,7 +72,10 @@ class ReturnOrderController extends Controller
     public function store(Request $request)
     {
         $auth = auth()->user();
-
+        if($request->user_id){
+            $auth = User::find($request->user_id);
+        }
+        
         if(empty(auth()->user()->address))
         {
             return response(json_encode(array('overall' => ['You must update your contact details in the My Profile page before proceeding'])), 422);
@@ -117,7 +87,7 @@ class ReturnOrderController extends Controller
         $collection_index = 0;
         $product_total_volume = 0;
         $products = [];
-        $rproducts = json_decode(request()->outbound_products);
+        $rproducts = json_decode(request()->return_products);
         foreach($rproducts as $product){
             $product_volume_from_db = product::where('id', $product->id)->first();
             $product_total_volume = $product_total_volume + ($product_volume_from_db->volume * $product->quantity);

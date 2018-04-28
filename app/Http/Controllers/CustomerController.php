@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Customer;
+use App\User;
 
 class CustomerController extends Controller
 {
@@ -29,6 +30,12 @@ class CustomerController extends Controller
     public function index()
     {
         return Controller::VueTableListResult(auth()->user()->customers());
+    }
+
+    public function adminCustomer($id)
+    {
+        $user = User::find($id);
+        return Controller::VueTableListResult($user->customers());
     }
 
     /**

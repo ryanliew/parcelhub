@@ -7,38 +7,38 @@
 					<div class="card-header-title level">
 						<div class="level-left">
 							<div class="level-item">
-								Return Orders
+								Recall orders
 							</div>
 						</div>
 						<div class="level-right">
 							<div class="level-item">
 								<button class="button is-primary" @click="modalOpen()">
 									<i class="fa fa-plus-circle"></i>
-									<span class="pl-5">Create new return order</span>
+									<span class="pl-5">Create new recall order</span>
 								</button>
 							</div>
 						</div>
 					</div>
 				</div>
 				<div class="card-content">
-					<table-view ref="returns" 
+					<table-view ref="outbounds" 
 								:fields="fields" 
-								url="/internal/return/user"
+								url="/internal/outbound/user"
 								:searchables="searchables"
 								:dateFilterable="true"
-								dateFilterKey="arrival_date">	
+								dateFilterKey="outbounds.created_at">	
 					</table-view>
 				</div>
 			</div>
 			
-			<return :return="selectedreturn"
+			<outbound :outbound="selectedoutbound"
 					:canManage="can_manage" 
 					@back="back()" 
-					@canceled="cancelreturn"
+					@canceled="canceloutbound"
 					:fee="fee"
 					:number="number"
 					v-if="isViewing">
-			</return>
+			</outbound>
 		</transition>
 		<transition name="slide-fade">
 			<div v-if="isCreating" class="card" :active="dialogActive" @close="dialogActive = false">
@@ -66,24 +66,12 @@
 						@input="form.errors.clear($event.target.name)"
 						@keyup.enter="submit">
 						<p class="is-danger header" v-if="form.errors.get('overall')" v-text="form.errors.get('overall')"></p> <br>
-						<div class="field" v-if="can_manage && !selectedProduct">
-							<selector-input v-model="selectedUser" :defaultData="selectedUser"
-									label="Return order owner"
-									name="user_id"
-									:required="true"
-									:potentialData="userOptions"
-									@input="userUpdate($event)"
-									:editable="true"
-									placeholder="Select return order owner"
-									:error="form.errors.get('user_id')">
-							</selector-input>
-					    </div>
 						<div class="field">
-							<selector-input v-model="selectedCustomer" :defaultData="selectedCustomer"
-									label="Customer"
-									name="customer_id"
+							<selector-input v-if="can_manage" v-model="selectedCustomer" :defaultData="selectedCustomer"
+									label="User"
+									name="user_id"
 									:required="false"
-									:potentialData="customersOptions"
+									:potentialData="userOptions"
 									@input="customerUpdate($event)"
 									:editable="true"
 									placeholder="Select customer"
@@ -167,30 +155,7 @@
 									</text-input>
 								</div>
 							</div>
-						</div>	
-						<div class="columns">
-				         	<div class="column">
-				          		<text-input v-model="form.arrival_date" :defaultValue="form.arrival_date" 
-											label="Return date" 
-											:required="true"
-											name="arrival_date"
-											type="date"
-											:editable="true"
-											:error="form.errors.get('arrival_date')"
-											:focus="true">
-								</text-input>
-							</div>
-							<div class="column">
-								<text-input v-model="form.total_carton" :defaultValue="form.total_carton" 
-											label="Total carton" 
-											:required="true"
-											name="total_carton"
-											type="text"
-											:editable="true"
-											:error="form.errors.get('total_carton')">
-								</text-input>
-							</div>
-				        </div>
+						</div>
 						
 						<table class="table is-hoverable is-fullwidth is-responsive is-multirow">
 							<thead>
@@ -221,14 +186,24 @@
 											</products-selector-input>
 										</td>
 										<td>
+											<text-input v-if="productRows[index].product" :defaultValue="productRows[index].product.total_usable_quantity"
+						          						label="Available quantity"
+						          						:required="true"
+						          						type="number"
+						          						:editable="false"
+						          						:hideLabel="false"
+						          						name="quantity">
+						          			</text-input>
+										</td>
+										<td>
 											<text-input v-if="productRows[index]" v-model="productRows[index].quantity" :defaultValue="productRows[index].quantity"
-						          						label="Return quantity"
+						          						label="Outbound quantity"
 						          						:required="true"
 						          						type="number"
 						          						:editable="true"
 						          						:hideLabel="false"
 						          						@input="updateTotalValue(index)"
-						          						:error="form.errors.get('return_products.' + index)"
+						          						:error="form.errors.get('outbound_products.' + index)"
 						          						name="quantity">
 						          			</text-input>
 										</td>
@@ -239,10 +214,12 @@
 						          						type="text"
 						          						:editable="true"
 						          						:hideLabel="false"
-						          						name="remarks">
+						          						name="remarks"
+						          						rows="1"
+						          						cols="4">
 						          			</textarea-input>
 										</td>
-										<td></td>
+										
 										<td>
 											<div class="button is-danger is-small" @click="removeRow(index)">
 												<i class="fa fa-minus"></i>
@@ -254,12 +231,12 @@
 							</tbody>
 						</table>
 			          	
-						<p class="is-danger header" v-text="form.errors.get('return_products')"></p>
+						<p class="is-danger header" v-text="form.errors.get('outbound_products')"></p>
 
 						<div class="field mt-10">
 					    	<image-input v-model="invoiceSlip" :defaultImage="invoiceSlip"
 					    				@loaded="changeInvoiceSlipImage"
-					    				label="delivery note"
+					    				label="invoice slip"
 					    				name="invoice_slip"
 					    				:required="false"
 					    				accept="image/*,.pdf"
@@ -287,17 +264,16 @@
 			return {
 				userField: [
 					{name: 'id', title: '#'},
-					{name: 'recipient_name', sortField: 'returns.recipient_name', title: 'Recipient'},
+					{name: 'recipient_name', sortField: 'outbounds.recipient_name', title: 'Recipient'},
 					{name: 'created_at', sortField: 'created_at', title: 'Order date'},
 					{name: 'courier', sortField: 'couriers.name', title: 'Courier'},
 					{name: 'amount_insured', sortField: 'amount_insured', title: 'Insurance'},
-					{name: 'process_status', callback: 'returnStatusLabel', title: 'Status', sortField: 'process_status'},
-					{name: '__component:returns-actions', title: 'Actions'}	
+					{name: 'process_status', callback: 'outboundStatusLabel', title: 'Status', sortField: 'process_status'},
+					{name: '__component:outbounds-actions', title: 'Actions'}	
 				],
-				userSearchables: "process_status,returns.recipient_name",
-				selectedreturn: '',
+				userSearchables: "process_status,outbounds.recipient_name",
+				selectedoutbound: '',
 				dialogActive: false,
-				selectedProduct: '',
 				form: new Form({
 					recipient_name: '',
 					recipient_phone: '',
@@ -307,14 +283,11 @@
 					recipient_postcode: '',
 					recipient_country: '',
 					customer_id: '',
-					total_carton: '',
-					arrival_date: '',
 					insurance: '',
 					amount_insured: '0',
 					courier_id: '',
-					return_products: [],
-					invoice_slip: '',
-					user_id: ''
+					outbound_products: [],
+					invoice_slip: ''
 				}),
 				isDeleting: false,
 				errorForProducts: '',
@@ -326,11 +299,8 @@
 				customersOptions: [],
 				isViewing: false,
 				isCreating: false,
-				isMalaysiaData: true,
 				showCustomer: false,
 				errorForProducts: '',
-				selectedUser: false,
-				getForAdmin: false,
 				invoiceSlip: {name: 'No file selected'}
 
 			};
@@ -339,7 +309,7 @@
 		mounted() {
 			this.getProducts();
 			this.getUsers();
-			this.$events.on('viewReturn', data => this.view(data));
+			this.$events.on('viewOutbound', data => this.view(data));
 		},
 
 		methods: {
@@ -358,36 +328,19 @@
 						let obj = {};
 						obj['label'] = user.name;
 						obj['value'] = user.id;
+						obj['recipient_name'] = user.name;
+						obj['recipient_phone'] = user.phone;
+						obj['recipient_address'] = user.address;
+						obj['recipient_address_2'] = user.address_2;
+						obj['recipient_state'] = user.state;
+						obj['recipient_postcode'] = user.postcode;
+						obj['recipient_country'] = user.country;
 						return obj;
 					});
 				}
 				else {
 					this.form.user_id = data.data.id;
 				}
-			},
-
-			userUpdate(data) {
-				if(this.form.user_id){
-					this.selectedCustomer = null;
-					this.form.customer_id = '';
-					this.form.recipient_name = '';
-					this.form.recipient_phone = '';
-					this.form.recipient_address = '';
-					this.form.recipient_address_2 = '';
-					this.form.recipient_state = '';
-					this.form.recipient_postcode = '';
-					this.form.recipient_country = '';
-					this.showCustomer = false;
-				}
-				this.form.user_id = data.value;
-				if(this.getForAdmin){
-					this.getCustomerForAdmin(data.value);
-					this.getProductForAdmin(data.value);
-				}	
-				this.getForAdmin = true;			
-			},
-			isMalaysia(data) {
-				this.isMalaysiaData = data.toLowerCase() == "malaysia" || data == '';
 			},
 
 			getProductForAdmin(id){
@@ -402,49 +355,6 @@
 
 			setProducts(response) {
 				this.productsOptions = response.data.data;
-				this.getCouriers();
-			},
-
-			getCustomerForAdmin(id){
-				axios.get('internal/admin/customers/' + id)
-					.then(response => this.setCustomers(response));
-			},
-
-			getCustomers() {
-					axios.get('internal/customers')
-					.then(response => this.setCustomers(response));	
-			},
-
-			setCustomers(response) {
-				console.log('setCustomers');
-				this.customersOptions = response.data.data.map(customer => {
-					let obj = {};
-					obj['value'] = customer.id;
-					obj['label'] = customer.customer_name;
-					obj['recipient_name'] = customer.customer_name;
-					obj['recipient_phone'] = customer.customer_phone;
-					obj['recipient_address'] = customer.customer_address;
-					obj['recipient_address_2'] = customer.customer_address_2;
-					obj['recipient_state'] = customer.customer_state;
-					obj['recipient_postcode'] = customer.customer_postcode;
-					obj['recipient_country'] = customer.customer_country;
-
-					return obj;
-				});
-			},
-
-			getCouriers() {
-				axios.get('internal/couriers')
-					.then(response => this.setCouriers(response));
-			},
-
-			setCouriers(response) {
-				this.couriersOptions = response.data.data.map(courier =>{
-					let obj = {};
-					obj['label'] = courier.name;
-					obj['value'] = courier.id;
-					return obj;
-				});
 			},
 
 			updateTotalValue(index) {
@@ -454,7 +364,7 @@
 			},
 
 			addRow() {
-				this.productRows.push({ product: null, quantity: '', remarks: ""});
+				this.productRows.push({ product: null, quantity: '', remarks: "", unit_value: "", total_value: "", weight: "", manufacture_country: ""});
 				this.clearProductErrors();
 			},
 
@@ -464,29 +374,29 @@
 			},
 
 			clearProductErrors(index) {
-				this.form.errors.clear("return_products");
-				this.form.errors.clear("return_products." + index);
+				this.form.errors.clear("outbound_products");
+				this.form.errors.clear("outbound_products." + index);
 				this.errorForProducts = '';
 			},
 
 			processProduct() {
 				if(this.productRows.length > 0)
-					this.form.return_products = [];
-				else if(this.form.return_products)
-					delete this.form.return_products;
+					this.form.outbound_products = [];
+				else if(this.form.outbound_products)
+					delete this.form.outbound_products;
 
 				this.productRows.forEach(function(element) {
 					if(element.product && element.quantity > 0) {
 						
-						let product = _.findIndex(this.form.return_products, function(p){ return p.id == element.product.id}.bind(element));
+						let product = _.findIndex(this.form.outbound_products, function(p){ return p.id == element.product.id}.bind(element));
 
 						if(product > -1) {
-							this.form.return_products[product].quantity = this.form.return_products[product].quantity + parseInt(element.quantity);
+							this.form.outbound_products[product].quantity = this.form.outbound_products[product].quantity + parseInt(element.quantity);
 						}
 						else {
-							this.form.return_products.push({id: element.product.id, 
+							this.form.outbound_products.push({id: element.product.id, 
 															quantity: parseInt(element.quantity), 
-															remarks: element.remarks});
+															});
 						}
 					}
 				}.bind(this));							
@@ -505,36 +415,35 @@
 				this.selectedCustomer = '';
 				this.selectedCourier = '';
 				this.getProducts();
-				this.getCustomers();
 				this.isCreating = true;
 			},
 
 			onError(error) {
 				this.step = 1;
-				this.errorForProducts = this.form.errors.get('return_products');
+				this.errorForProducts = this.form.errors.get('outbound_products');
 			},
 
 			onSuccess(data) {
 				this.productRows = [];
 				this.dialogActive = false;
 				this.back();
-				this.$refs.returns.refreshTable();
+				this.$refs.outbounds.refreshTable();
 				this.getProducts();
 			},
 
 			view(data) {
-				this.selectedreturn = data;
+				this.selectedoutbound = data;
 				this.isViewing = true;
 			},
 
 			back() {
 				this.isViewing = false;
 				this.isCreating = false;
-				this.selectedreturn = '';
+				this.selectedoutbound = '';
 			},
 
-			cancelreturn() {
-				this.selectedreturn.process_status = "canceled";
+			canceloutbound() {
+				this.selectedoutbound.process_status = "canceled";
 			},
 
 			couriersUpdate(data) {
@@ -551,7 +460,7 @@
 					return obj;
 				});
 
-				this.form.errors.clear('return_products');
+				this.form.errors.clear('outbound_products');
 				
 				this.selectedProducts = data;
 
@@ -564,6 +473,7 @@
 				if(data){
 					this.form.customer_id = data.value;
 					this.form.errors.clear('customer_id');
+
 					this.form.recipient_name = data.recipient_name;
 					this.form.recipient_phone = data.recipient_phone;
 					this.form.recipient_address = data.recipient_address;
@@ -572,6 +482,7 @@
 					this.form.recipient_postcode = data.recipient_postcode;
 					this.form.recipient_country = data.recipient_country;
 					this.showCustomer = true;
+					this.getProductForAdmin(data.value);
 				}
 			},
 
@@ -585,14 +496,14 @@
 
 		computed: {
 			dialogTitle() {
-				return this.selectedreturn
-						? "Edit order #" + this.selectedreturn.id
-						: "Create new return order";
+				return this.selectedoutbound
+						? "Edit order #" + this.selectedoutbound.id
+						: "Create new recall order";
 			},
 
 			action() {
-				let action = this.selectedreturn ? "update" : "store";
-				return "/return/" + action;
+				let action = this.selectedoutbound ? "update" : "store";
+				return "/recall/" + action;
 			},
 
 			buttonClass() {
@@ -600,22 +511,17 @@
 			},
 
 			fields() {
-				let displayFields = [{name: 'id', title: '#'},
-					{name: 'arrival_date', sortField: 'arrival_date', title: 'Return date', callback: 'date'},
-					{name: 'total_carton', sortField: 'total_carton', title: 'Total carton'},
-					{name: 'process_status', callback: 'inboundStatusLabel', title: 'Status', sortField: 'process_status'},
-					{name: '__component:inbounds-actions', title: 'Actions'}];
-
+				let field = this.userField;
 				if(this.can_manage)
 				{
-					displayFields.splice(1, 0, {name: 'customer', sortField: 'users.name', title: 'Customer'});
+					field.splice(1, 0, {name: 'customer', sortField: 'users.name', title: 'Customer'});
 				}
 
-				return displayFields;
+				return field;
 			},
 
 			searchables() {
-				let searchables = "process_status";
+				let searchables = this.userSearchables;
 
 				if(this.can_manage)
 				{

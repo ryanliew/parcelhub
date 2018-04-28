@@ -59,5 +59,10 @@
                 Return Order
             </a>
         </li>
+        <li>
+            <a @if( url()->current() == route('recalls') ) class="is-active" @endif href="{{ route('recalls') }}">
+                Recall Order
+            </a>
+        </li>
     </ul>
 </aside>

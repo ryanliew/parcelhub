@@ -57,10 +57,11 @@ class InboundController extends Controller
                                                                         'users.name as customer',
                                                                         'inbounds.created_at as created_at'
                                                                         )
+                                                                ->where('inbounds.type', 'inbound')
                                                                 ->leftJoin('users', 'user_id', '=', 'users.id')
                                                                 ->orderBy('arrival_date', 'desc'));
             else
-                return Controller::VueTableListResult(auth()->user()->inbounds()->with('products', 'products_with_lots.lots')->orderBy('arrival_date', 'desc'));
+                return Controller::VueTableListResult(auth()->user()->inbounds()->with('products', 'products_with_lots.lots')->where('inbounds.type', 'inbound')->orderBy('arrival_date', 'desc'));
         }
         $inbounds = inbound::where('status', 'true')->get();
         $products = product::where('user_id', auth()->user()->id)->where('status', 'true')->get();
@@ -77,6 +78,7 @@ class InboundController extends Controller
                                                                         'users.name as customer',
                                                                         'inbounds.created_at as created_at'
                                                                         )
+                                                                ->where('inbounds.type', 'inbound')
                                                                 ->leftJoin('users', 'user_id', '=', 'users.id')
                                                                 ->whereDate('arrival_date', DB::raw('CURDATE()'))
                                                                 ->orderBy('arrival_date', 'desc'));

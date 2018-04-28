@@ -43,6 +43,7 @@ Route::get('lots', 'LotController@page')->name('lots');
 Route::get('products', 'ProductController@page')->name('products');
 Route::get('inbounds', 'InboundController@page')->name('inbounds');
 Route::get('returns', 'ReturnOrderController@page')->name('returns');
+Route::get('recalls', 'RecallOrderController@page')->name('recalls');
 Route::get('outbounds', 'OutboundController@page')->name('outbounds');
 Route::get('purchase', 'PaymentController@page')->name('payment');
 Route::get('users', 'UserController@page')->name('users');
@@ -100,6 +101,7 @@ Route::group(['prefix' => 'internal'], function() {
 	Route::get('categories', 'CategoryController@index');
 	Route::get('lots', 'LotController@index');
 	Route::get('couriers', 'CourierController@index');
+	Route::get('products/admin/selector/{id}', 'ProductController@adminProduct');
 	Route::get('products/selector', 'ProductController@selector');
 	Route::get('products', 'ProductController@index');
 	Route::get('inbound/user', 'InboundController@index');
@@ -120,6 +122,8 @@ Route::group(['prefix' => 'internal'], function() {
 	Route::get('user', 'UserController@show');
 	Route::get('user/{user}/lots', 'UserController@lotSelector');
 	Route::get('customers', 'CustomerController@index');
+	Route::get('admin/customers/{id}', 'CustomerController@adminCustomer');
+	Route::get('return/user', 'ReturnOrderController@index');
 	Route::delete('products/{product}', 'ProductController@destroy');
 });
 
@@ -165,6 +169,11 @@ Route::group(['prefix' => 'outbound'], function() {
 Route::group(['prefix' => 'return'], function() {
     Route::get('index', 'ReturnOrderController@index')->name('return.index');
     Route::post('store', 'ReturnOrderController@store')->name('return.store');
+});
+
+Route::group(['prefix' => 'recall'], function() {
+    Route::get('index', 'RecallOrderController@index')->name('recall.index');
+    Route::post('store', 'RecallOrderController@store')->name('recall.store');
 });
 
 Route::group(['prefix' => 'download'], function () {
