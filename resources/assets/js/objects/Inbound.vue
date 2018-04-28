@@ -131,8 +131,8 @@
 							Inbound products
 						</div>
 					</div>
-					<div class="level-right" v-if="canManage">
-						<button class="button is-primary" :class="loadingClass" v-if="!isEditing && inbound.process_status !== 'completed' && inbound.process_status !== 'canceled'" @click="edit()">
+					<div class="level-right" v-if="canManage && inbound.process_status !== 'completed' && inbound.process_status !== 'canceled'">
+						<button class="button is-primary" :class="loadingClass" v-if="!isEditing" @click="edit()">
 							<i class="fa fa-edit"></i>
 							<span class="pl-5">Edit inbound details</span>
 						</button>
@@ -358,7 +358,7 @@
 						lotobj['original_lot'] = lot.id;
 						lotobj['lot'] = { value: lot.id, label: lot.name };
 						lotobj['quantity_original'] = lot.pivot.quantity_original;
-						lotobj['original_quantity'] = lot.pivot.quantity_original == lot.pivot.quantity_received ? lot.pivot.quantity_original : lot.pivot.quantity_received;
+						lotobj['original_quantity'] = lot.pivot.quantity_original == lot.pivot.quantity_received || lot.pivot.quantity_received == 0 ? lot.pivot.quantity_original : lot.pivot.quantity_received;
 						lotobj['quantity_received'] = lot.pivot.quantity_received;
 						lotobj['expiry_date'] = lot.pivot.expiry_date;
 						lotobj['remark'] = lot.pivot.remark;
@@ -368,19 +368,6 @@
 
 					return obj;
 				})
-				// this.inboundForm.products = this.inbound.products_with_lots.map(product => {
-				// 	let obj = {};
-				// 	obj['product_lot_id'] = product.id;
-				// 	obj['original_lot'] = product.lots[0].id;
-				// 	obj['lot'] = { value: product.lots[0].id, label: product.lots[0].name };
-				// 	obj['quantity_received'] = product.quantity_received && product.quantity !== product.quantity_received  	
-				// 								? product.quantity_received
-				// 								: product.quantity  ;
-				// 	obj['expiry_date'] = product.expiry_date;
-				// 	obj['remark'] = product.remark;
-
-				// 	return obj;
-				// });
 			},
 
 			back() {

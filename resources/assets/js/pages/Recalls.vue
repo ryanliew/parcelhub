@@ -31,7 +31,7 @@
 				</div>
 			</div>
 			
-			<outbound :outbound="selectedoutbound"
+			<outbound :recall="selectedoutbound"
 					:canManage="can_manage" 
 					@back="back()" 
 					@canceled="canceloutbound"
@@ -197,7 +197,7 @@
 										</td>
 										<td>
 											<text-input v-if="productRows[index]" v-model="productRows[index].quantity" :defaultValue="productRows[index].quantity"
-						          						label="Outbound quantity"
+						          						label="Recall quantity"
 						          						:required="true"
 						          						type="number"
 						          						:editable="true"
@@ -439,6 +439,7 @@
 			back() {
 				this.isViewing = false;
 				this.isCreating = false;
+				this.showCustomer = false;
 				this.selectedoutbound = '';
 			},
 

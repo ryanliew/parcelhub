@@ -325,7 +325,6 @@ class InboundController extends Controller
                 $new_lot->propagate_left_volume();
 
                 $inbound_product->lots()->updateExistingPivot($lot->lot->value, [
-                        'quantity_original' => $lot->quantity_original,
                         'quantity_received' => $lot->quantity_received,
                         'expiry_date' => $lot->expiry_date,
                         'remark' => $lot->remark
