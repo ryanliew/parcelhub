@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Courier;
 use App\Notifications\OutboundCreatedNotification;
 use App\Outbound;
+use App\User;
 use App\Product;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
@@ -25,7 +26,63 @@ class RecallOrderController extends Controller
      */
     public function index()
     {
-        //
+        if(request()->wantsJson()) {
+            $user = auth()->user();
+            if($user->hasRole('admin'))
+                return Controller::VueTableListResult( Outbound::with('tracking_numbers')
+                                                                ->select('outbounds.id as id',
+                                                                    'amount_insured',
+                                                                    'process_status',
+                                                                    'couriers.name as courier',
+                                                                    'outbounds.created_at',
+                                                                    'outbounds.recipient_name',
+                                                                    'outbounds.recipient_address',
+                                                                    'outbounds.recipient_address_2',
+                                                                    'outbounds.recipient_phone',
+                                                                    'outbounds.recipient_state',
+                                                                    'outbounds.recipient_country',
+                                                                    'outbounds.recipient_postcode',
+                                                                    'users.name as customer'
+                                                                    )
+                                                                ->where('outbounds.type', 'recall')
+                                                                ->leftJoin('couriers', 'courier_id', '=', 'couriers.id')
+                                                                ->leftJoin('users', 'user_id', '=', 'users.id')
+                                                                ->orderBy('outbounds.created_at', 'desc') );
+            else
+                return Controller::VueTableListResult( $user->outbounds()
+                                                            ->with('tracking_numbers')
+                                                            ->select('outbounds.id as id',
+                                                                    'amount_insured',
+                                                                    'process_status',
+                                                                    'couriers.name as courier',
+                                                                    'outbounds.created_at',
+                                                                    'outbounds.recipient_name',
+                                                                    'outbounds.recipient_address',
+                                                                    'outbounds.recipient_address_2',
+                                                                    'outbounds.recipient_phone',
+                                                                    'outbounds.recipient_state',
+                                                                    'outbounds.recipient_country',
+                                                                    'outbounds.recipient_postcode'
+                                                                    )
+                                                            ->where('outbounds.type', 'recall')
+                                                            ->leftJoin('couriers', 'courier_id', '=', 'couriers.id')
+                                                            ->orderBy('outbounds.created_at', 'desc') );
+
+        }
+
+        if(\Entrust::hasRole('admin')) {
+
+            $outbounds = Outbound::processing()->get();
+            return view('outbound.admin')->with('outbounds', $outbounds);
+
+        } else {
+
+            $products = Product::with('lots')->where('user_id', auth()->id())->get();
+
+            $couriers = Courier::all();
+
+            return view('outbound.user')->with(compact('products', 'couriers'));
+        }
     }
 
     /**
@@ -46,16 +103,22 @@ class RecallOrderController extends Controller
      */
     public function store(Request $request)
      {
-        $this->validate($request, [
-            'recipient_name' => 'required',
-            'recipient_address' => 'required',
-            'recipient_phone' => 'required',
-            'recipient_postcode' => 'required',
-            'recipient_state' => 'required',
-            'recipient_country' => 'required',
+        if($request->user_id){
+             $this->validate($request, [
+                'recipient_name' => 'required',
+                'recipient_address' => 'required',
+                'recipient_phone' => 'required',
+                'recipient_postcode' => 'required',
+                'recipient_state' => 'required',
+                'recipient_country' => 'required',
+                'outbound_products' => 'required'
+            ]);
+        } else {
+             $this->validate($request, [
             'outbound_products' => 'required'
         ]);
-
+    }
+       
         if(empty(auth()->user()->address))
         {
             return response(json_encode(array('overall' => ['You must update your contact details in the My Profile page before proceeding'])), 422);
@@ -75,27 +138,36 @@ class RecallOrderController extends Controller
 
             $user = \Auth::user();
 
-            $user->customers()->updateOrCreate(
-                ['id' => $request->customer_id],
-                [
-                    'customer_name' => $request->recipient_name,
-                    'customer_address' => $request->recipient_address,
-                    'customer_address_2' => $request->recipient_address_2,
-                    'customer_phone' => $request->recipient_phone,
-                    'customer_postcode' => $request->recipient_postcode,
-                    'customer_state' => $request->recipient_state,
-                    'customer_country' => $request->recipient_country,
-                ]);
-
-            $outbound = new Outbound($request->except(['business']));
-            $outbound->insurance = request()->has('insurance');
-            $outbound->invoice_slip = $request->hasFile('invoice_slip') ? $request->file('invoice_slip')->store('public') : null;
-            $outbound->amount_insured = $outbound->insurance ? request()->amount_insured : 0;
-            $outbound->user_id = $user->id;
-            $outbound->is_business = $request->business == "true" ? true : false;
-            $outbound->status = 'true';
-            $outbound->process_status = 'pending';
-            $outbound->save();
+            if($request->user_id){
+                $user = User::find($request->user_id);
+                $outbound = new Outbound($request->except(['business']));
+                $outbound->insurance = request()->has('insurance');
+                $outbound->invoice_slip = $request->hasFile('invoice_slip') ? $request->file('invoice_slip')->store('public') : null;
+                $outbound->amount_insured = $outbound->insurance ? request()->amount_insured : 0;
+                $outbound->user_id = $user->id;
+                $outbound->is_business = $request->business == "true" ? true : false;
+                $outbound->status = 'true';
+                $outbound->type = 'recall';
+                $outbound->process_status = 'pending';
+                $outbound->save();
+            } else {
+                $outbound = new Outbound();
+                $outbound->recipient_name = $user->name;
+                $outbound->recipient_address = $user->address;
+                $outbound->recipient_address_2 = $user->address_2;
+                $outbound->recipient_phone = $user->phone;
+                $outbound->recipient_state = $user->state;
+                $outbound->recipient_postcode = $user->postcode;
+                $outbound->recipient_country = $user->country;
+                $outbound->type = 'recall';
+                $outbound->insurance = request()->has('insurance');
+                $outbound->amount_insured = $outbound->insurance ? request()->amount_insured : 0;
+                $outbound->invoice_slip = $request->hasFile('invoice_slip') ? $request->file('invoice_slip')->store('public') : null;
+                $outbound->user_id = $user->id;
+                $outbound->status = 'true';
+                $outbound->process_status = 'pending';
+                $outbound->save();
+            }
 
             foreach ($outboundProducts as $outboundProduct) {
                 $product = $user->products()
@@ -119,7 +191,7 @@ class RecallOrderController extends Controller
 
                         $product->lots()->updateExistingPivot($lot->id, ['outgoing_product' => $newQuantityForOutgoingProduct]);
 
-                        $outbound->products()->attach($product->id, ['quantity' => $quantity, 'lot_id' => $lot->id, 'remark' => $outboundProduct['remarks'], 'unit_value' => $outboundProduct['unit_value'], 'total_value' => $outboundProduct['total_value'], 'weight' => $outboundProduct['weight'], 'manufacture_country' => $outboundProduct['manufacture_country']]);
+                        $outbound->products()->attach($product->id, ['quantity' => $quantity, 'lot_id' => $lot->id, 'remark' => $outboundProduct['remarks']]);
 
                         break;
 
@@ -133,7 +205,7 @@ class RecallOrderController extends Controller
 
                         $product->lots()->updateExistingPivot($lot->id, ['outgoing_product' => $newQuantityForOutgoingProduct]);
 
-                        $outbound->products()->attach($product->id, ['quantity' => $lot->pivot->quantity, 'lot_id' => $lot->id, 'remark' => $outboundProduct['remarks'], 'unit_value' => $outboundProduct['unit_value'], 'total_value' => $outboundProduct['total_value'], 'weight' => $outboundProduct['weight'], 'manufacture_country' => $outboundProduct['manufacture_country']]);
+                        $outbound->products()->attach($product->id, ['quantity' => $lot->pivot->quantity, 'lot_id' => $lot->id, 'remark' => $outboundProduct['remarks']]);
 
                         // Update how many quantity left require to acquire from the other lot
                         $quantity -= $sumOfQuantityAndIncomingQuantity;

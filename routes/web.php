@@ -124,6 +124,7 @@ Route::group(['prefix' => 'internal'], function() {
 	Route::get('customers', 'CustomerController@index');
 	Route::get('admin/customers/{id}', 'CustomerController@adminCustomer');
 	Route::get('return/user', 'ReturnOrderController@index');
+	Route::get('recall/user', 'RecallOrderController@index');
 	Route::delete('products/{product}', 'ProductController@destroy');
 });
 

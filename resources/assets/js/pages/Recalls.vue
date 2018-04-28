@@ -23,7 +23,7 @@
 				<div class="card-content">
 					<table-view ref="outbounds" 
 								:fields="fields" 
-								url="/internal/outbound/user"
+								url="/internal/recall/user"
 								:searchables="searchables"
 								:dateFilterable="true"
 								dateFilterKey="outbounds.created_at">	
@@ -75,7 +75,7 @@
 									@input="customerUpdate($event)"
 									:editable="true"
 									placeholder="Select customer"
-									:error="form.errors.get('customer_id')">
+									:error="form.errors.get('user_id')">
 
 							</selector-input>
 						</div>
@@ -266,8 +266,6 @@
 					{name: 'id', title: '#'},
 					{name: 'recipient_name', sortField: 'outbounds.recipient_name', title: 'Recipient'},
 					{name: 'created_at', sortField: 'created_at', title: 'Order date'},
-					{name: 'courier', sortField: 'couriers.name', title: 'Courier'},
-					{name: 'amount_insured', sortField: 'amount_insured', title: 'Insurance'},
 					{name: 'process_status', callback: 'outboundStatusLabel', title: 'Status', sortField: 'process_status'},
 					{name: '__component:outbounds-actions', title: 'Actions'}	
 				],
@@ -282,7 +280,7 @@
 					recipient_state: '',
 					recipient_postcode: '',
 					recipient_country: '',
-					customer_id: '',
+					user_id: '',
 					insurance: '',
 					amount_insured: '0',
 					courier_id: '',
@@ -364,7 +362,7 @@
 			},
 
 			addRow() {
-				this.productRows.push({ product: null, quantity: '', remarks: "", unit_value: "", total_value: "", weight: "", manufacture_country: ""});
+				this.productRows.push({ product: null, quantity: '', remarks: ""});
 				this.clearProductErrors();
 			},
 
@@ -396,6 +394,7 @@
 						else {
 							this.form.outbound_products.push({id: element.product.id, 
 															quantity: parseInt(element.quantity), 
+															remarks: element.remarks, 
 															});
 						}
 					}
@@ -426,6 +425,7 @@
 			onSuccess(data) {
 				this.productRows = [];
 				this.dialogActive = false;
+				this.user_id = '';
 				this.back();
 				this.$refs.outbounds.refreshTable();
 				this.getProducts();
@@ -469,10 +469,10 @@
 			},
 
 			customerUpdate(data) {
-				this.form.customer_id = '';
+				this.form.user_id = '';
 				if(data){
-					this.form.customer_id = data.value;
-					this.form.errors.clear('customer_id');
+					this.form.user_id = data.value;
+					this.form.errors.clear('user_id');
 
 					this.form.recipient_name = data.recipient_name;
 					this.form.recipient_phone = data.recipient_phone;
