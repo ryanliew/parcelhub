@@ -54,6 +54,11 @@ Vue.component('OutboundsActions', require('./actions/OutboundsActions.vue'));
 Vue.component('PaymentsActions', require('./actions/PaymentsActions.vue'));
 Vue.component('UsersActions', require('./actions/UsersActions.vue'));
 Vue.component('CustomersActions', require('./actions/CustomersActions.vue'));
+Vue.component('ReturnsActions', require('./actions/ReturnsActions.vue'));
+Vue.component('RecallsActions', require('./actions/RecallsActions.vue'));
+
+// Fields components
+Vue.component('ProductStock', require('./actions/ProductStock.vue'));
 
 // Pages components
 Vue.component('categories-page', require('./pages/Categories.vue'));

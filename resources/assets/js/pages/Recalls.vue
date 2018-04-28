@@ -31,14 +31,14 @@
 				</div>
 			</div>
 			
-			<outbound :outbound="selectedoutbound"
+			<recall :recall="selectedoutbound"
 					:canManage="can_manage" 
 					@back="back()" 
 					@canceled="canceloutbound"
 					:fee="fee"
 					:number="number"
 					v-if="isViewing">
-			</outbound>
+			</recall>
 		</transition>
 		<transition name="slide-fade">
 			<div v-if="isCreating" class="card" :active="dialogActive" @close="dialogActive = false">
@@ -197,7 +197,7 @@
 										</td>
 										<td>
 											<text-input v-if="productRows[index]" v-model="productRows[index].quantity" :defaultValue="productRows[index].quantity"
-						          						label="Outbound quantity"
+						          						label="Recall quantity"
 						          						:required="true"
 						          						type="number"
 						          						:editable="true"
@@ -236,7 +236,7 @@
 						<div class="field mt-10">
 					    	<image-input v-model="invoiceSlip" :defaultImage="invoiceSlip"
 					    				@loaded="changeInvoiceSlipImage"
-					    				label="invoice slip"
+					    				label="delivery slip"
 					    				name="invoice_slip"
 					    				:required="false"
 					    				accept="image/*,.pdf"
@@ -439,6 +439,7 @@
 			back() {
 				this.isViewing = false;
 				this.isCreating = false;
+				this.showCustomer = false;
 				this.selectedoutbound = '';
 			},
 

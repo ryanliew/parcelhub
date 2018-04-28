@@ -68,7 +68,8 @@ class ProductController extends Controller
                                         'products.height as height',
                                         'products.length as length',
                                         'users.name as user_name',
-                                        'users.id as user_id'
+                                        'users.id as user_id',
+                                        'products.trash_hole as threshold'
                                     )
                                 ->leftJoin('users', 'products.user_id', '=', 'users.id')
                                 ->where('status', 'true'));
@@ -85,7 +86,8 @@ class ProductController extends Controller
                                                                                         'products.height as height',
                                                                                         'products.length as length',
                                                                                         'users.name as user_name',
-                                                                                        'users.id as user_id'
+                                                                                        'users.id as user_id',
+                                                                                        'products.trash_hole as threshold'
                                                                                     )
                                                                                 ->leftJoin('users', 'products.user_id', '=', 'users.id')
                                                                                 ->where('status', 'true')
@@ -194,8 +196,8 @@ class ProductController extends Controller
         $product->width = $request->width;
         $product->is_fragile = $request->has('is_fragile');
         $product->is_dangerous = $request->has('is_dangerous');
-        if($request->trashole){
-            $product->trash_hole = $request->trashole;     
+        if($request->threshold){
+            $product->trash_hole = $request->threshold;     
         }
         $product->sku = $request->sku;
         if(Input::hasFile('picture')){
