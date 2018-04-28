@@ -12315,6 +12315,19 @@ th {
   text-align: center;
 }
 
+.is-multirow td {
+  vertical-align: middle;
+}
+
+.table.is-multirow td {
+  border-bottom: 1px solid #dbdbdb;
+}
+
+.table.is-multirow tbody tr:last-child td,
+.table.is-multirow tbody tr:last-child th {
+  border-bottom-width: 1px;
+}
+
 .button.is-facebook {
   background-color: #3b5998;
   border-color: transparent;

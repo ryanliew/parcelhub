@@ -167,18 +167,6 @@
 													:error="form.errors.get('courier_id')">
 							</selector-input>
 			          	</div>
-
-			          	<!-- <div class="column">
-							<text-input v-model="form.payer_gst_vat" :defaultValue="form.payer_gst_vat" 
-											label="Payer of GST/VAT" 
-											:required="true"
-											name="payer_gst_vat"
-											type="text"
-											seen="false"
-											:editable="true"
-											:error="form.errors.get('payer_gst_vat')">
-							</text-input>
-						</div> -->
 						
 						<div class="columns">
 				          	<div class="column is-narrow">
@@ -204,14 +192,86 @@
 								</div>
 							</transition>
 						</div>
+
+						<div v-if="!isMalaysiaData">
+				          	<div class="field">
+								<text-input  v-model="form.payer_gst_vat" :defaultValue="form.payer_gst_vat" 
+												label="Payer of GST/VAT" 
+												:required="true"
+												name="payer_gst_vat"
+												type="text"
+												seen="false"
+												:editable="true"
+												:error="form.errors.get('payer_gst_vat')">
+								</text-input>
+							</div>
+							<div class="columns">
+								<div class="column">
+									<text-input  v-model="form.harm_comm_code" :defaultValue="form.harm_comm_code" 
+													label="HARM Comm Code" 
+													:required="true"
+													name="harm_comm_code"
+													type="text"
+													seen="false"
+													:editable="true"
+													:error="form.errors.get('harm_comm_code')">
+									</text-input>
+								</div>
+								<div class="column">
+									<text-input  v-model="form.trade_term" :defaultValue="form.trade_term" 
+													label="Term of Trade" 
+													:required="true"
+													name="trade_term"
+													type="text"
+													seen="false"
+													:editable="true"
+													:error="form.errors.get('trade_term')">
+									</text-input>
+								</div>
+							</div>
+							<div class="field">
+									<text-input  v-model="form.payment_term" :defaultValue="form.payment_term" 
+													label="Term of Payment" 
+													:required="true"
+													name="payment_term"
+													type="text"
+													seen="false"
+													:editable="true"
+													:error="form.errors.get('payment_term')">
+									</text-input>
+								</div>
+							<div class="field">
+								<textarea-input  v-model="form.export_reason" :defaultValue="form.export_reason" 
+												label="Reason For Export" 
+												:required="true"
+												name="export_reason"
+												type="text"
+												seen="false"
+												:editable="true"
+												:error="form.errors.get('export_reason')"
+												rows="2"
+												cols="4">
+								</textarea-input>
+							</div>	
+							<div class="columns">
+								<div class="column is-narrow">
+									<checkbox-input v-model="form.business" :defaultChecked="form.business"
+												label="Business?" 
+												:required="false"
+												name="business"
+												:editable="true"
+												class="mt-10">
+									</checkbox-input>
+								</div>
+							</div>	
+						</div>
 						
-						<table class="table is-hoverable is-fullwidth is-responsive">
+						<table class="table is-hoverable is-fullwidth is-responsive is-multirow">
 							<thead>
-								<th>#</th>
-								<th>Product</th>
-								<th width="45px">Remaining stock</th>
-								<th width="45px">Outbound quantity</th>
-								<th>Remarks</th>
+								<th></th>
+								<th></th>
+								<th></th>
+								<th></th>
 								<th>
 									<div class="button is-primary is-small" @click="addRow">
 										<i class="fa fa-plus"></i>
@@ -220,57 +280,106 @@
 								</th>
 							</thead>
 							<tbody>
-								<tr v-for="(row, index) in productRows">
-				          			<td>
-										{{ index + 1 }}
-				          			</td>
-									<td>
-										<products-selector-input v-model="productRows[index].product" :defaultData="productRows[index].product" 
-													label="Products"
-													name="products" 
-													:required="true"
-													:potentialData="productsOptions"
-													:editable="true"
-													placeholder="Select product"
-													:hideLabel="true"
-													@input="clearProductErrors">
-										</products-selector-input>
-									</td>
-									<td>
-										<p v-if="productRows[index].product">{{ productRows[index].product.total_usable_quantity }}</p>
-										<p v-else>0</p>
-									</td>
-									<td>
-										<text-input v-if="productRows[index]" v-model="productRows[index].quantity" :defaultValue="productRows[index].quantity"
-					          						:label="'Quantity'"
-					          						:required="true"
-					          						type="number"
-					          						:editable="true"
-					          						:hideLabel="true"
-					          						@input="clearProductErrors(index)"
-					          						:error="form.errors.get('outbound_products.' + index)"
-					          						name="quantity">
-					          			</text-input>
-									</td>
-									<td>
-										<textarea-input v-if="productRows[index]" v-model="productRows[index].remarks" :defaultValue="productRows[index].remarks"
-					          						:label="'Remarks'"
-					          						:required="true"
-					          						type="text"
-					          						:editable="true"
-					          						:hideLabel="true"
-					          						name="remarks"
-					          						rows="1"
-					          						cols="4">
-					          			</textarea-input>
-									</td>
-									<td>
-										<div class="button is-danger is-small" @click="removeRow(index)">
-											<i class="fa fa-minus"></i>
-											<span class="pl-5">Remove product</span>
-										</div>
-									</td>
-								</tr>
+								<template v-for="(row, index) in productRows">
+									<tr>
+										<td>
+											<products-selector-input v-model="productRows[index].product" :defaultData="productRows[index].product" 
+														label="Products"
+														name="products" 
+														:required="true"
+														:potentialData="productsOptions"
+														:editable="true"
+														placeholder="Select product"
+														:hideLabel="false"
+														@input="clearProductErrors">
+											</products-selector-input>
+										</td>
+										<td>
+											<text-input v-if="productRows[index].product" :defaultValue="productRows[index].product.total_usable_quantity"
+						          						label="Available quantity"
+						          						:required="true"
+						          						type="number"
+						          						:editable="false"
+						          						:hideLabel="false"
+						          						name="quantity">
+						          			</text-input>
+										</td>
+										<td>
+											<text-input v-if="productRows[index]" v-model="productRows[index].quantity" :defaultValue="productRows[index].quantity"
+						          						label="Outbound quantity"
+						          						:required="true"
+						          						type="number"
+						          						:editable="true"
+						          						:hideLabel="false"
+						          						@input="updateTotalValue(index)"
+						          						:error="form.errors.get('outbound_products.' + index)"
+						          						name="quantity">
+						          			</text-input>
+										</td>
+										<td>
+											<textarea-input v-if="productRows[index]" v-model="productRows[index].remarks" :defaultValue="productRows[index].remarks"
+						          						:label="'Remarks'"
+						          						:required="true"
+						          						type="text"
+						          						:editable="true"
+						          						:hideLabel="false"
+						          						name="remarks"
+						          						rows="1"
+						          						cols="4">
+						          			</textarea-input>
+										</td>
+										
+										<td :rowspan="!isMalaysiaData ? 2 : 1">
+											<div class="button is-danger is-small" @click="removeRow(index)">
+												<i class="fa fa-minus"></i>
+												<span class="pl-5">Remove product</span>
+											</div>
+										</td>
+									</tr>
+									<tr v-if="!isMalaysiaData">
+										<td>
+											<text-input v-if="productRows[index]" v-model="productRows[index].unit_value" :defaultValue="productRows[index].unit_value"
+						          						label="Unit Value (RM)"
+						          						:required="true"
+						          						type="number"
+						          						:editable="true"
+						          						:hideLabel="false"
+						          						name="unit_value"
+						          						@input="updateTotalValue(index)">
+						          			</text-input>
+										</td>
+										<td>
+											<text-input v-if="productRows[index]" v-model="productRows[index].total_value" :defaultValue="productRows[index].total_value"
+						          						label="Total Value (RM)"
+						          						:required="true"
+						          						type="text"
+						          						:editable="false"
+						          						:hideLabel="false"
+						          						name="total_value">
+						          			</text-input>
+										</td>
+										<td>
+											<text-input v-if="productRows[index]" v-model="productRows[index].weight" :defaultValue="productRows[index].weight"
+						          						label="Weight (kg)"
+						          						:required="true"
+						          						type="text"
+						          						:editable="true"
+						          						:hideLabel="false"
+						          						name="weight">
+						          			</text-input>
+										</td>
+										<td>
+											<text-input v-if="productRows[index]" v-model="productRows[index].manufacture_country" :defaultValue="productRows[index].manufacture_country"
+						          						label="Manufacture Country"
+						          						:required="true"
+						          						type="text"
+						          						:editable="true"
+						          						:hideLabel="false"
+						          						name="manufacture_country">
+						          			</text-input>
+										</td>
+									</tr>
+								</template>
 							</tbody>
 						</table>
 			          	
@@ -330,7 +439,13 @@
 					amount_insured: '0',
 					courier_id: '',
 					outbound_products: [],
-					invoice_slip: ''
+					invoice_slip: '',
+					payer_gst_vat: '',
+					harm_comm_code: '',
+					payment_term: '',
+					trade_term: '',
+					export_reason: '',
+					business: ''
 				}),
 				isDeleting: false,
 				errorForProducts: '',
@@ -342,6 +457,7 @@
 				customersOptions: [],
 				isViewing: false,
 				isCreating: false,
+				isMalaysiaData: true,
 				errorForProducts: '',
 				invoiceSlip: {name: 'No file selected'}
 
@@ -355,7 +471,7 @@
 
 		methods: {
 			isMalaysia(data) {
-				// console.log(data);
+				this.isMalaysiaData = data.toLowerCase() == "malaysia" || data == '';
 			},
 
 			getProducts() {
@@ -404,8 +520,14 @@
 				});
 			},
 
+			updateTotalValue(index) {
+				this.clearProductErrors(index);
+				let product = this.productRows[index];
+				this.productRows[index].total_value = product.unit_value * product.quantity;
+			},
+
 			addRow() {
-				this.productRows.push({ product: null, quantity: 0, remarks: ""});
+				this.productRows.push({ product: null, quantity: '', remarks: "", unit_value: "", total_value: "", weight: "", manufacture_country: ""});
 				this.clearProductErrors();
 			},
 
@@ -431,10 +553,22 @@
 						
 						let product = _.findIndex(this.form.outbound_products, function(p){ return p.id == element.product.id}.bind(element));
 
-						if(product > -1)
-							this.form.outbound_products[product].quantity = parseInt(this.form.outbound_products[product].quantity) + parseInt(element.quantity);
-						else
-							this.form.outbound_products.push({id: element.product.id, quantity: element.quantity, remarks: element.remarks});
+						if(product > -1) {
+							this.form.outbound_products[product].quantity = this.form.outbound_products[product].quantity + parseInt(element.quantity);
+							this.form.outbound_products[product].unit_value = parseInt(element.unit_value);
+							this.form.outbound_products[product].total_value = this.form.outbound_products[product].quantity * parseInt(element.unit_value);
+							this.form.outbound_products[product].weight = this.form.outbound_products[product].weight + parseInt(element.weight);
+							this.form.outbound_products[product].manufacture_country = element.manufacture_country;
+						}
+						else {
+							this.form.outbound_products.push({id: element.product.id, 
+															quantity: parseInt(element.quantity), 
+															remarks: element.remarks, 
+															unit_value: parseInt(element.unit_value), 
+															total_value: parseInt(element.total_value), 
+															weight: parseInt(element.weight), 
+															manufacture_country: element.manufacture_country});
+						}
 					}
 				}.bind(this));							
 			},
@@ -519,6 +653,8 @@
 					this.form.recipient_state = data.recipient_state;
 					this.form.recipient_postcode = data.recipient_postcode;
 					this.form.recipient_country = data.recipient_country;
+					this.form.recipient_country.toLowerCase() == "malaysia"?
+					this.isMalaysiaData = true : this.isMalaysiaData = false;
 				}
 			},
 
