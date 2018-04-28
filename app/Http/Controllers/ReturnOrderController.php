@@ -182,6 +182,8 @@ class ReturnOrderController extends Controller
             $lot->products()->attach($lot_products);
             $lot->propagate_left_volume();
         }
+
+        return ['message' => "Return order created"];
     }
 
     public function calculateQuantity($volume, $singleVolume, $quantity){

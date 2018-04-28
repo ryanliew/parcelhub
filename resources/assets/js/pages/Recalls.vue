@@ -31,14 +31,14 @@
 				</div>
 			</div>
 			
-			<outbound :recall="selectedoutbound"
+			<recall :recall="selectedoutbound"
 					:canManage="can_manage" 
 					@back="back()" 
 					@canceled="canceloutbound"
 					:fee="fee"
 					:number="number"
 					v-if="isViewing">
-			</outbound>
+			</recall>
 		</transition>
 		<transition name="slide-fade">
 			<div v-if="isCreating" class="card" :active="dialogActive" @close="dialogActive = false">
@@ -236,7 +236,7 @@
 						<div class="field mt-10">
 					    	<image-input v-model="invoiceSlip" :defaultImage="invoiceSlip"
 					    				@loaded="changeInvoiceSlipImage"
-					    				label="invoice slip"
+					    				label="delivery slip"
 					    				name="invoice_slip"
 					    				:required="false"
 					    				accept="image/*,.pdf"

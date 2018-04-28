@@ -344,7 +344,7 @@
 
 		methods: {
 			getRecall() {
-				axios.get('/internal/recall/products/' + this.recall.id)
+				axios.get('/internal/outbound/products/' + this.recall.id)
 					.then(response => this.setRecall(response));
 			},
 
@@ -431,12 +431,12 @@
 			},
 
 			action() {
-				let action = '/admin/recall/update';
+				let action = '/admin/outbound/update';
 				return action;
 			},
 
 			trackingAction() {
-				let action = '/admin/recall/tracking/update';
+				let action = '/admin/outbound/tracking/update';
 				return action;
 			},
 
@@ -465,11 +465,11 @@
 			},
 
 			download() {
-				return "/download/recall/report/" + this.recall.id;
+				return "/download/outbound/report/" + this.recall.id;
 			},
 
 			downloadPackinglist() {
-				return "/download/recall/packingList/" + this.recall.id;
+				return "/download/outbound/packingList/" + this.recall.id;
 			},
 		}
 	}

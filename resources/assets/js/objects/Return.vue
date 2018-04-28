@@ -1,25 +1,20 @@
 <template>
 	<div>
-		<div class="columns">
+		<div class="columns mt-15">
 			<div class="column">
-				<!-- Outbound details -->
 				<div class="card">
 					<div class="card-header">
 						<div class="card-header-title level">
 							<div class="level-left">
 								<div class="level-item">
-									<span>Outbound #{{ outbound.id }}</span>
+									<span>Return #{{ returnobj.id }}</span>
 								</div>
 							</div>
 							<div class="level-right">
 								<div class="level-item">
-									<a class="button is-info ml-5" :href="download" target="_blank">
+									<a class="button is-primary ml-5" :href="download" target="_blank">
 										<i class="fa fa-download"></i>
-										<span class="pl-5">Download invoice</span>
-									</a>
-									<a class="button is-info ml-5" :href="downloadPackinglist" target="_blank">
-										<i class="fa fa-download"></i>
-										<span class="pl-5">Download packing list</span>
+										<span class="pl-5">Download PDF</span>
 									</a>
 								</div>
 							</div>
@@ -30,20 +25,20 @@
 							<div class="level-item has-text-centered">
 								<div>
 									<p class="heading">
-										Order date
+										Return date
 									</p>
 									<p class="title">
-										{{ outbound.created_at | date }}
+										{{ returnobj.arrival_date | date }}
 									</p>
 								</div>
 							</div>
 							<div class="level-item has-text-centered">
 								<div>
 									<p class="heading">
-										Courier
+										Total carton
 									</p>
 									<p class="title">
-										{{ outbound.courier.name || outbound.courier }}
+										{{ returnobj.total_carton }}
 									</p>
 								</div>
 							</div>
@@ -57,115 +52,6 @@
 									</p>
 								</div>
 							</div>
-						</div>
-					</div>
-				</div>
-				
-				<!-- Outbound products -->
-				<div class="card mt-15">
-					<div class="card-header">
-						<div class="card-header-title level">
-							<div class="level-left">
-								<div class="level-item">
-									Outbound products
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="card-content">
-						<table class="table is-hoverable is-fullwidth responsive">
-							<thead>
-								<tr>
-									<th>Image</th>
-									<th>Name</th>
-									<th>Quantity</th>
-									<th>Attributes</th>
-									<th>Lot</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr v-for="(product, index) in products">
-									<td><figure class="image is-48x48"><img :src="product.picture"></figure></td>
-									<td v-text="product.name"></td>
-									<td v-text="product.pivot.quantity"></td>
-									<td>
-										<div class="tags">
-											<span class="tag is-danger" v-if="product.is_dangerous">Dangerous</span>
-											<span class="tag is-warning" v-if="product.is_fragile">Fragile</span>
-										</div>
-									</td>
-									<td v-text="product.lot_name"></td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-				</div>
-					
-				<!-- Tracking numbers -->
-				<div class="card mt-15" v-if="outbound.tracking_numbers.length > 0">
-					<div class="card-header">
-						<div class="card-header-title level">
-							<div class="level-left">
-								<div class="level-item">
-									Tracking numbers
-								</div>
-							</div>
-							<div class="level-right">
-								<div class="level-item" v-if="can_manage">
-									<button class="button is-primary" v-if="!isEditTracking" @click="editTracking()">
-										<i class="fa fa-edit"></i>
-										<span class="pl-5">Edit tracking numbers</span>
-									</button>
-									<div v-else>
-										<button class="button is-danger" @click="onCancel()">
-											<i class="fa fa-times"></i>
-											<span class="pl-5">Cancel</span>
-										</button>
-										<button class="button is-success" @click="submitTracking()">
-											<i class="fa fa-check"></i>
-											<span class="pl-5">Confirm changes</span>
-										</button>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="card-content">
-						<table class="table is-hoverable is-fullwidth responsive" v-if="!isEditTracking">
-							<thead>
-								<tr>
-									<th>#</th>
-									<th>Number</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr v-for="(number, index) in outbound.tracking_numbers">
-									<td>{{ index + 1 }}</td>
-									<td v-text="number.number"></td>
-								</tr>
-							</tbody>
-						</table>
-						<div class="field" v-else>
-							<form @submit.prevent="submitTracking" 
-								@keydown="trackingForm.errors.clear($event.target.name)" 
-								@input="trackingForm.errors.clear($event.target.name)"
-								@keyup.enter="submitTracking">
-
-								<textarea-input
-									v-model="trackingForm.tracking_numbers" 
-									:defaultValue="trackingForm.tracking_numbers"
-									:editable="true"
-									label="Tracking numbers"
-									name="tracking_numbers"
-									type="text"
-									:hideLabel="false"
-									:required="true"
-									:error="trackingForm.errors.get('tracking_numbers')"
-									rows="2"
-									cols="4">
-								</textarea-input>
-								<i class="has-text-grey">Please separate the tracking numbers with the ; character</i>
-							</form>
 						</div>
 					</div>
 				</div>
@@ -194,39 +80,21 @@
 							@keydown="form.errors.clear($event.target.name)" 
 							@input="form.errors.clear($event.target.name)"
 							@keyup.enter="submit"
-							v-if="canManage && outbound.process_status !== 'completed'">
+							v-if="canManage">
 							
 							<div class="field">
 								<selector-input v-model="selectedStatus" :defaultData="selectedStatus"
-												label="Status"
-												:required="true"
-												name="process_status"
-												:potentialData="processStatusOptions"
-												@input="statusUpdate($event)"
-												:editable="true"
-												placeholder="Select a status"
-												:unclearable="true"
-												:error="form.errors.get('process_status')">
+													label="Status"
+													:required="true"
+													name="process_status"
+													:potentialData="processStatusOptions"
+													@input="statusUpdate($event)"
+													:editable="true"
+													placeholder="Select a status"
+													:unclearable="true"
+													:error="form.errors.get('process_status')">
 								</selector-input>
 							</div>
-
-							<div class="field" v-if="selectedStatus.value == 'completed'">
-								<textarea-input
-									v-model="form.tracking_numbers" 
-									:defaultValue="form.tracking_numbers"
-									:editable="true"
-									label="Tracking numbers"
-									name="tracking_numbers"
-									type="text"
-									:hideLabel="false"
-									:required="false"
-									:error="form.errors.get('tracking_numbers')"
-									rows="2"
-									cols="4">
-								</textarea-input>
-								<i class="has-text-grey">Please separate the tracking numbers with the ; character</i>
-							</div>
-
 							<div class="field">
 								<button type="submit" class="button is-success is-pulled-right">Change status</button>
 							</div>
@@ -234,102 +102,101 @@
           				</form>
 						<div class="has-text-centered" v-else>
 							<p class="title" :class="statusClass">
-								{{ outbound.process_status | unslug | capitalize }}
+								{{ returnobj.process_status | unslug | capitalize }}
 							</p>
-							<button class="button is-danger" v-if="outbound.process_status !== 'completed' && outbound.process_status !== 'canceled' " @click="confirmation = true">Cancel order</button>
+							<button v-if="returnobj.process_status == 'awaiting_arrival'" @click="confirmation = true" class="button is-danger">Cancel order</button>
 						</div>
-
-					</div>
-				</div>
-				<div class="card mt-10">
-					<div class="card-header">
-						<div class="card-header-title level">
-							<div class="level-left">
-								<div class="level-item">
-									Recipient details
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="card-content">
-						<p class="heading">
-							Name
-						</p>
-						{{ outbound.recipient_name }}
-						
-						<hr>
-						<p class="heading">
-							Address
-						</p>
-						{{ outbound.recipient_address }}, <br>
-						<div v-if="outbound.recipient_address_2">{{ outbound.recipient_address_2 }}, <br></div> 
-						{{ outbound.recipient_postcode }} {{ outbound.recipient_state }}, {{ outbound.recipient_country }}
-						<hr>
-						<p class="heading">
-							Phone
-						</p>
-						{{ outbound.recipient_phone }}
-							
-
 
 					</div>
 				</div>
 			</div>
 		</div>
 
+		<div class="card">
+			<div class="card-header">
+				<div class="card-header-title level">
+					<div class="level-left">
+						<div class="level-item">
+							Return products
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="card-content">
+				<table class="table is-hoverable is-fullwidth responsive">
+					<thead>
+						<tr>
+							<th>Image</th>
+							<th>Name</th>
+							<th>Quantity</th>
+							<th>Attributes</th>
+							<th>Remark</th>
+						</tr>
+					</thead>
+					<tbody>
+						<template v-for="(product_with_lots, index) in returnobj.products_with_lots">
+							<tr>
+								<td><figure class="image is-48x48"><img :src="returnobj.products[index].picture"></figure></td>
+								<td v-text="returnobj.products[index].name"></td>
+								<td v-text="product_with_lots.quantity"></td>
+								<td>
+									<div class="tags">
+										<span class="tag is-danger" v-if="returnobj.products[index].is_dangerous">Dangerous</span>
+										<span class="tag is-warning" v-if="returnobj.products[index].is_fragile">Fragile</span>
+									</div>
+								</td>
+								
+								<td>
+									{{ product_with_lots.remark }}
+								</td>
+							</tr>
+						</template>
+					</tbody>
+				</table>
+			</div>
+		</div>
+
 		<modal :active="confirmation" @close="confirmation = false">
 			<template slot="header">Cancel order</template>
-			<p v-if="outbound.process_status == 'processing'">
-				Unfortunately, we are already processing your order. <br>
-				Please call <b>{{ number }}</b> for assistance. A cancelation fee of <b>RM{{ fee }}</b> might be charged.
-			</p>
-			<p v-else>Are you sure you want to cancel this outbound order?</p>
+			
+			Are you sure you want to cancel this return order?
 
-			<template slot="footer" v-if="outbound.process_status !== 'processing'">
+			<template slot="footer">
 				<button class="button is-danger" @click="confirmCancel">Cancel</button>
           	</template>
         </modal>
 
         <confirmation :isConfirming="confirmSubmit"
         				title="Confirmation"
-        				message="Confirm changing the status of the outbound order?"
+        				message="Confirm changing the status of the return order? Editing is no longer allowed after changing the order to completed."
         				@close="confirmSubmit = false"
         				@confirm="onSubmit">
-        </confirmation>
-
-        <confirmation :isConfirming="confirmSubmitTracking"
-        				title="Confirmation"
-        				message="Confirm editing the tracking numbers?"
-        				@close="confirmSubmitTracking = false"
-        				@confirm="onSubmitTracking">
         </confirmation>
 	</div>
 </template>
 
 <script>
 	export default {
-		props: ['outbound', 'canManage', 'fee', 'number'],
+		props: ['returnobj', 'canManage'],
 		data() {
 			return {
-				loading: true,
-				products: [],
 				form: new Form({
-					process_status: '',
-					tracking_numbers: '',
-					id: ''
+					process_status: this.returnobj.process_status,
+					id: this.returnobj.id
 				}),
-				trackingForm: new Form({
-					tracking_numbers: '',
-					id: ''
+				returnobjForm: new Form({
+					products: [],
+					id: this.returnobj.id
 				}),
+				lotsOptions: [],
 				selectedStatus: {
-					value: this.outbound.process_status,
-					label: this.$options.filters.capitalize(this.$options.filters.unslug(this.outbound.process_status))
+					value: this.returnobj.process_status,
+					label: this.$options.filters.capitalize(this.$options.filters.unslug(this.returnobj.process_status))
 				},
 				processStatusOptions: [
 					{
-						value: 'pending',
-						label: 'Pending'
+						value: 'awaiting_arrival',
+						label: 'Awaiting arrival'
 					},
 					{
 						value: 'processing',
@@ -346,28 +213,58 @@
 				],
 				confirmation: false,
 				confirmSubmit: false,
-				confirmSubmitTracking: false,
-				isEditTracking: false
-
+				confirmSubmitEdit: false,
+				isEditing: false,
+				editLoading: true
 			};
 		},
 
 		mounted() {
-			this.getOutbound();
+			this.getLots();
 		},
 
 		methods: {
-			getOutbound() {
-				axios.get('/internal/outbound/products/' + this.outbound.id)
-					.then(response => this.setOutbound(response));
+			getLots() {
+				axios.get('/internal/user/' + this.returnobj.products[0].user_id + '/lots')
+					.then(data => this.setLots(data));
+
 			},
 
-			setOutbound(response) {
-				this.products = response.data;
+			setLots(data) {
+				this.lotsOptions = data.data.map(lot => {
+					let obj = {};
+					obj['value'] = lot.id;
+					obj['label'] = lot.name;
 
-				this.form.id = this.outbound.id;
+					return obj;
+				});
 
-				this.form.process_status = this.outbound.process_status;
+				this.setFormData();
+			},
+
+			setFormData() {
+				this.editLoading = false;
+
+				this.returnobjForm.products = this.returnobj.products_with_lots.map(product_with_lots => {
+					let obj = {};
+
+					obj['returnobj_product_id'] = product_with_lots.id;
+					obj['product_id'] = product_with_lots.product_id;
+					obj['lots'] = product_with_lots.lots.map(lot => {
+						let lotobj = {};
+						lotobj['original_lot'] = lot.id;
+						lotobj['lot'] = { value: lot.id, label: lot.name };
+						lotobj['quantity_original'] = lot.pivot.quantity_original;
+						lotobj['original_quantity'] = lot.pivot.quantity_original == lot.pivot.quantity_received || lot.pivot.quantity_received == 0 ? lot.pivot.quantity_original : lot.pivot.quantity_received;
+						lotobj['quantity_received'] = lot.pivot.quantity_received;
+						lotobj['expiry_date'] = lot.pivot.expiry_date;
+						lotobj['remark'] = lot.pivot.remark;
+
+						return lotobj;
+					});
+
+					return obj;
+				})
 			},
 
 			back() {
@@ -378,52 +275,22 @@
 				this.confirmSubmit = true;
 			},
 
-			editTracking() {
-				this.isEditTracking = true;
-
-				this.trackingForm.tracking_numbers = _.map(this.outbound.tracking_numbers, function(value) {
-					return value.number;
-				}).join(";");
-			},
-
-			submitTracking() {
-				this.confirmSubmitTracking = true;
-			},
-
-			onSubmit() {
+			onSubmit() {	
 				this.confirmSubmit = false;
 				this.form.post(this.action)
 						.then(response => this.onSuccess(response))
 						.catch(response => this.onError(response));
 			},
 
-			onSubmitTracking() {
-				this.confirmSubmitTracking = false;
-				this.trackingForm.id = this.outbound.id;
-
-				// Trim out the last semicolon if it exists
-				let numbers = this.trackingForm.tracking_numbers;
-				if(numbers.substring(numbers.length - 1) == ";")
-				{
-					this.trackingForm.tracking_numbers = numbers.substring(0, numbers.length - 1);
-				}
-
-				this.trackingForm.post(this.trackingAction)
-								.then(response => this.onSuccess(response))
-								.catch(response => this.onError(response));
-			},
-
-			onSuccess(response) {
-				this.form.id = this.outbound.id;
+			onSuccess() {
+				this.confirmSubmit = false;
+				this.isEditing = false;
+				this.form.id = this.returnobj.id;
 				this.back();
 			},
 
-			onError(response) {
-				this.form.id = this.outbound.id
-			},
+			onError() {
 
-			onCancel() {
-				this.isEditTracking = false;
 			},
 
 			statusUpdate(data) {
@@ -436,36 +303,49 @@
 				this.onSubmit();
 				this.confirmation = false;
 				this.$emit('canceled');
+			},
+
+			edit() {
+				this.isEditing = true;
+			},
+
+			onCancel() {
+				this.isEditing = false;
+				this.setFormData();
+			},
+
+			submitEdit() {
+				this.confirmSubmitEdit = true;
+			},
+
+			onSubmitEdit() {
+				this.confirmSubmitEdit = false;
+
+				this.returnobjForm.post('/inbound/update/' + this.returnobj.id)
+					.then(response => this.onSuccess(response))
+					.catch(response => this.onError(response));
 			}
 		},
 
 		computed: {
 			totalProducts() {
-				return this.products ? this.products.length : 0;
+				return this.returnobj.products ? this.returnobj.products.length : 0;
 			},
 
 			action() {
-				let action = '/admin/outbound/update';
-				return action;
-			},
-
-			trackingAction() {
-				let action = '/admin/outbound/tracking/update';
+				let action = '/admin/inbound/update';
 				return action;
 			},
 
 			statusClass() {
 				let color = 'is-success';
-				let value = this.outbound.process_status;
+				let value = this.returnobj.process_status;
 				switch(value) {
-					case 'pending':
+					case 'awaiting_arrival':
 						color = 'is-warning';
 						break;
-					case 'processing':
-						color = 'is-info';
-						break;
 					case 'delivering':
-						color = 'is-primary';
+						color = 'is-info';
 						break;
 					case 'completed':
 						color = 'is-success';
@@ -479,12 +359,12 @@
 			},
 
 			download() {
-				return "/download/outbound/report/" + this.outbound.id;
+				return "/download/inbound/report/" + this.returnobj.id;
 			},
 
-			downloadPackinglist() {
-				return "/download/outbound/packingList/" + this.outbound.id;
-			},
+			loadingClass() {
+				return this.editLoading ? 'is-loading' : '';
+			}
 		}
 	}
 </script>

@@ -67,12 +67,12 @@
 	          	</div>
 
 	          	<div class="field">
-	          		<text-input v-model="form.trashole" :defaultValue="form.trashole" 
+	          		<text-input v-model="form.threshold" :defaultValue="form.threshold" 
 								label="Minimum Stock level"
-								name="trashole"
+								name="threshold"
 								type="text"
 								:editable="true"
-								:error="form.errors.get('trashole')">
+								:error="form.errors.get('threshold')">
 					</text-input>
 	          	</div>
 
@@ -279,7 +279,7 @@
 				this.form.height = data.height;
 				this.form.width = data.width;
 				this.form.length = data.length;
-				this.form.trashole = data.trashole;
+				this.form.threshold = data.threshold;
 				this.form.is_dangerous = data.is_dangerous;
 				this.form.is_fragile = data.is_fragile;
 				this.form.user_id = 1;
@@ -351,7 +351,7 @@
 					{name: 'picture', callback: 'image', title: 'Image'},
 					{name: 'product_name', sortField: 'product_name', title: 'Name'},
 					{name: 'volume', title: 'Volume(cm³)'},
-					{name: 'total_quantity', title: 'Stock'},
+					{name: '__component:product-stock', title: 'Stock'},
 					{name: 'is_dangerous', title: 'Dangerous', sortField: 'is_dangerous', callback: 'dangerousTag'},
 					{name: 'is_fragile', title: 'Fragile', sortField: 'is_fragile', callback: 'fragileTag'}	
 				];

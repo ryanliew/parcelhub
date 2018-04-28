@@ -31,7 +31,7 @@
 				</div>
 			</div>
 			
-			<return :return="selectedreturn"
+			<return :returnobj="selectedreturn"
 					:canManage="can_manage" 
 					@back="back()" 
 					@canceled="cancelreturn"
@@ -254,7 +254,7 @@
 							</tbody>
 						</table>
 			          	
-						<p class="is-danger header" v-text="form.errors.get('return_products')"></p>
+						<p class="is-danger header" v-text="form.errors.get('products')"></p>
 
 						<div class="field mt-10">
 					    	<image-input v-model="invoiceSlip" :defaultImage="invoiceSlip"
@@ -285,16 +285,6 @@
 
 		data() {
 			return {
-				userField: [
-					{name: 'id', title: '#'},
-					{name: 'recipient_name', sortField: 'returns.recipient_name', title: 'Recipient'},
-					{name: 'created_at', sortField: 'created_at', title: 'Order date'},
-					{name: 'courier', sortField: 'couriers.name', title: 'Courier'},
-					{name: 'amount_insured', sortField: 'amount_insured', title: 'Insurance'},
-					{name: 'process_status', callback: 'returnStatusLabel', title: 'Status', sortField: 'process_status'},
-					{name: '__component:returns-actions', title: 'Actions'}	
-				],
-				userSearchables: "process_status,returns.recipient_name",
 				selectedreturn: '',
 				dialogActive: false,
 				selectedProduct: '',
@@ -464,8 +454,8 @@
 			},
 
 			clearProductErrors(index) {
-				this.form.errors.clear("return_products");
-				this.form.errors.clear("return_products." + index);
+				this.form.errors.clear("products");
+				this.form.errors.clear("products." + index);
 				this.errorForProducts = '';
 			},
 
@@ -604,7 +594,7 @@
 					{name: 'arrival_date', sortField: 'arrival_date', title: 'Return date', callback: 'date'},
 					{name: 'total_carton', sortField: 'total_carton', title: 'Total carton'},
 					{name: 'process_status', callback: 'inboundStatusLabel', title: 'Status', sortField: 'process_status'},
-					{name: '__component:inbounds-actions', title: 'Actions'}];
+					{name: '__component:returns-actions', title: 'Actions'}];
 
 				if(this.can_manage)
 				{

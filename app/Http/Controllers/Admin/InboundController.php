@@ -102,9 +102,14 @@ class InboundController extends Controller
             {
                 foreach($inboundproduct->lots as $lot)
                 {
+                    $quantity = $inbound->type == 'return' ?
+                                $lot->pivot->quantity_original :
+                                $lot->pivot->quantity_received;
+
+                    Log::info($quantity);
                     $lot_product = $lot->products()->where('product_id', $inboundproduct->product_id)->first();
-                    $new_incoming_quantity = $lot_product->pivot->incoming_quantity - $lot->pivot->quantity_received;
-                    $new_quantity = $lot_product->pivot->quantity + $lot->pivot->quantity_received;
+                    $new_incoming_quantity = $lot_product->pivot->incoming_quantity - $quantity;
+                    $new_quantity = $lot_product->pivot->quantity + $quantity;
                     $lot->products()->updateExistingPivot($lot_product->id, ["incoming_quantity" => $new_incoming_quantity, "quantity" => $new_quantity]);
                     $lot->propagate_left_volume();
                 }
