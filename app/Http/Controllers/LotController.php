@@ -48,6 +48,11 @@ class LotController extends Controller
     {
         $user = auth()->user();
         
+        if($user->hasRole('subuser'))
+        {
+            $user = $user->parent;
+        }
+        
         if(request()->wantsJson() )
         {
             if($user->hasRole('admin')) {

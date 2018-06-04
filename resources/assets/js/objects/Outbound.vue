@@ -236,7 +236,7 @@
 							<p class="title" :class="statusClass">
 								{{ outbound.process_status | unslug | capitalize }}
 							</p>
-							<button class="button is-danger" v-if="outbound.process_status !== 'completed' && outbound.process_status !== 'canceled' " @click="confirmation = true">Cancel order</button>
+							<button class="button is-danger" v-if="outbound.process_status !== 'completed' && outbound.process_status !== 'canceled' && canEdit " @click="confirmation = true">Cancel order</button>
 						</div>
 
 					</div>
@@ -308,7 +308,7 @@
 
 <script>
 	export default {
-		props: ['outbound', 'canManage', 'fee', 'number'],
+		props: ['outbound', 'canManage', 'fee', 'number', 'canEdit'],
 		data() {
 			return {
 				loading: true,

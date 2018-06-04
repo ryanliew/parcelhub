@@ -222,7 +222,7 @@
 							<p class="title" :class="statusClass">
 								{{ recall.process_status | unslug | capitalize }}
 							</p>
-							<button class="button is-danger" v-if="recall.process_status !== 'completed' && recall.process_status !== 'canceled' " @click="confirmation = true">Cancel order</button>
+							<button class="button is-danger" v-if="recall.process_status !== 'completed' && recall.process_status !== 'canceled' && canEdit" @click="confirmation = true">Cancel order</button>
 						</div>
 
 					</div>
@@ -294,7 +294,7 @@
 
 <script>
 	export default {
-		props: ['recall', 'canManage', 'fee', 'number'],
+		props: ['recall', 'canManage', 'fee', 'number', 'canEdit'],
 		data() {
 			return {
 				loading: true,

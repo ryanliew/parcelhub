@@ -9,7 +9,7 @@
 								Inbound orders
 							</div>
 						</div>
-						<div class="level-right" v-if="!can_manage">
+						<div class="level-right" v-if="!can_manage && can_edit">
 							<div class="level-item">
 								<button class="button is-primary" @click="modalOpen()">
 									<i class="fa fa-plus-circle"></i>
@@ -34,7 +34,8 @@
 					:canManage="can_manage" 
 					@back="back()" 
 					@canceled="cancelInbound"
-					v-if="isViewing">
+					v-if="isViewing"
+					:canEdit="can_edit">
 			</inbound>
 		</transition>
 		<transition name="slide-fade">
@@ -183,7 +184,7 @@
 	import Inbound from '../objects/Inbound.vue';
 
 	export default {
-		props: ['can_manage'],
+		props: ['can_manage', 'can_edit'],
 
 		components: { TableView, Inbound },
 

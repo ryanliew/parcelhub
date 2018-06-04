@@ -48,20 +48,24 @@ class InboundController extends Controller
         if(request()->wantsJson())
         {
             $user = auth()->user();
+
+            $query = $user->inbounds()->with('products', 'products_with_lots.lots');
+
             if($user->hasRole('admin'))
-                 return Controller::VueTableListResult(Inbound::with('products', 'products_with_lots.lots')
-                                                                ->select('arrival_date',
-                                                                        'total_carton',
-                                                                        'process_status',
-                                                                        'inbounds.id as id',
-                                                                        'users.name as customer',
-                                                                        'inbounds.created_at as created_at'
-                                                                        )
-                                                                ->where('inbounds.type', 'inbound')
-                                                                ->leftJoin('users', 'user_id', '=', 'users.id')
-                                                                ->orderBy('arrival_date', 'desc'));
-            else
-                return Controller::VueTableListResult(auth()->user()->inbounds()->with('products', 'products_with_lots.lots')->where('inbounds.type', 'inbound')->orderBy('arrival_date', 'desc'));
+                $query = Inbound::with('products', 'products_with_lots.lots');
+            elseif($user->hasRole('subuser'))
+                $query = $user->parent->inbounds()->with('products', 'products_with_lots.lots');
+
+            return Controller::VueTableListResult($query->select('arrival_date',
+                                                                'total_carton',
+                                                                'process_status',
+                                                                'inbounds.id as id',
+                                                                'users.name as customer',
+                                                                'inbounds.created_at as created_at'
+                                                                )
+                                                            ->where('inbounds.type', 'inbound')
+                                                            ->leftJoin('users', 'user_id', '=', 'users.id')
+                                                            ->orderBy('arrival_date', 'desc'));
         }
         $inbounds = inbound::where('status', 'true')->get();
         $products = product::where('user_id', auth()->user()->id)->where('status', 'true')->get();

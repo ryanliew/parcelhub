@@ -43,9 +43,9 @@ class AccountVerificationNotification extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->greeting('Verify Your Email Address')
+                    ->greeting('Hello! ' . $this->user->name)
                     ->action('Verify Account', route('verify', ['token' => $this->user->tokens->token]))
-                    ->line('Thank you for using our application!');
+                    ->line('You have recently created an account at our site. Please press the button above to verify your account. Thank you for using our application!');
     }
 
     /**

@@ -45,6 +45,7 @@
 					{name: 'created_at', sortField: 'created_at', title: 'Member since', callback: 'date'},
 					{name: 'email', sortField: 'email'},
 					{name: 'phone', sortField: 'phone'},
+					{name: 'role_name', title: 'Type', callback: 'userTypeFormat'},
 					{name: '__component:users-actions', title: 'Actions'}	
 				],
 				searchables: "name,email",

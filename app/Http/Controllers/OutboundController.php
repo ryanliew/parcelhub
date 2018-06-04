@@ -51,7 +51,14 @@ class OutboundController extends Controller
     {
         if(request()->wantsJson()) {
             $user = auth()->user();
+
+            if($user->hasRole('subuser'))
+            {
+                $user = $user->parent;
+            }
+
             if($user->hasRole('admin'))
+                
                 return Controller::VueTableListResult( Outbound::with('tracking_numbers')
                                                                 ->select('outbounds.id as id',
                                                                     'amount_insured',
@@ -220,11 +227,11 @@ class OutboundController extends Controller
             'amount_insured' => 'required_if:insurance,==,1|numeric|min:0',
             'outbound_products' => 'required',
             'invoice_slip' => 'nullable|mimes:jpeg,png,pdf',
-            'payer_gst_vat' => 'required_unless:recipient_country,malaysia',
-            'harm_comm_code' => 'required_unless:recipient_country,malaysia',
-            'trade_term' => 'required_unless:recipient_country,malaysia',
-            'payment_term' => 'required_unless:recipient_country,malaysia',
-            'export_reason' => 'required_unless:recipient_country,malaysia'
+            'payer_gst_vat' => 'required_unless:recipient_country,malaysia,Malaysia',
+            'harm_comm_code' => 'required_unless:recipient_country,malaysia,Malaysia',
+            'trade_term' => 'required_unless:recipient_country,malaysia,Malaysia',
+            'payment_term' => 'required_unless:recipient_country,malaysia,Malaysia',
+            'export_reason' => 'required_unless:recipient_country,malaysia,Malaysia'
         ]);
 
         if(empty(auth()->user()->address))

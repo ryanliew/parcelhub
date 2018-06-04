@@ -10,7 +10,7 @@
 								Return Orders
 							</div>
 						</div>
-						<div class="level-right">
+						<div class="level-right" v-if="can_edit">
 							<div class="level-item">
 								<button class="button is-primary" @click="modalOpen()">
 									<i class="fa fa-plus-circle"></i>
@@ -37,7 +37,8 @@
 					@canceled="cancelreturn"
 					:fee="fee"
 					:number="number"
-					v-if="isViewing">
+					v-if="isViewing"
+					:canEdit="can_edit">
 			</return>
 		</transition>
 		<transition name="slide-fade">

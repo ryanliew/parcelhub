@@ -5,3 +5,7 @@
 @role('user')
 	@include('components.side-menu-user')
 @endrole
+
+@role('subuser')
+	@include('components.side-menu-user')
+@endrole

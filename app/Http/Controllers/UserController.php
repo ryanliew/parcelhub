@@ -20,7 +20,7 @@ class UserController extends Controller
 	public function page()
 	{
 		if(request()->wantsJson())
-			return Controller::VueTableListResult(User::with('inbounds')->with('outbounds'));
+			return Controller::VueTableListResult(User::with('inbounds')->with('outbounds')->with('roles'));
 
 		return view('user.page');
 	}

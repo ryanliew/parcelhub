@@ -90,7 +90,7 @@ class RegisterController extends Controller
 
         $user->tokens()->save($token);
 
-        User::admin()->first()->notify(new UserRegisteredNotification($user));
+        //User::admin()->first()->notify(new UserRegisteredNotification($user));
         // Send email verification to users email
         $user->notify(new AccountVerificationNotification($user));
 

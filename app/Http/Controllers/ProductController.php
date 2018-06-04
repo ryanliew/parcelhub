@@ -57,6 +57,12 @@ class ProductController extends Controller
         if(request()->wantsJson())
         {
             $user = auth()->user();
+
+            if($user->hasRole('subuser'))
+            {
+                $user = $user->parent;
+            }
+
             if($user->hasRole('admin'))
                 return Controller::VueTableListResult(Product::with(["inbounds", "lots", "outbounds", "adjustments"])->select('products.picture as picture',
                                         'products.sku as sku',
@@ -74,7 +80,7 @@ class ProductController extends Controller
                                 ->leftJoin('users', 'products.user_id', '=', 'users.id')
                                 ->where('status', 'true'));
             else
-                return Controller::VueTableListResult(auth()->user()->products()->with(["inbounds", "lots", "outbounds", "adjustments"])
+                return Controller::VueTableListResult($user->products()->with(["inbounds", "lots", "outbounds", "adjustments"])
                                                                                 ->select('products.picture as picture',
                                                                                         'products.sku as sku',
                                                                                         'products.id as id',

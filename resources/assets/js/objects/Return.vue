@@ -104,7 +104,7 @@
 							<p class="title" :class="statusClass">
 								{{ returnobj.process_status | unslug | capitalize }}
 							</p>
-							<button v-if="returnobj.process_status == 'awaiting_arrival'" @click="confirmation = true" class="button is-danger">Cancel order</button>
+							<button v-if="returnobj.process_status == 'awaiting_arrival' && canEdit" @click="confirmation = true" class="button is-danger">Cancel order</button>
 						</div>
 
 					</div>
@@ -177,7 +177,7 @@
 
 <script>
 	export default {
-		props: ['returnobj', 'canManage'],
+		props: ['returnobj', 'canManage', 'canEdit'],
 		data() {
 			return {
 				form: new Form({

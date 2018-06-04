@@ -53,6 +53,7 @@ Route::get('dashboard', 'AdminController@page')->name('dashboard');
 Route::get('outbounds/bulk', 'OutboundController@page_bulk')->name('outbounds.bulk');
 Route::get('products/bulk', 'ProductController@page_bulk')->name('products.bulk');
 Route::post('lots/products/update', 'LotController@editStock');
+Route::get('subusers', 'SubuserController@page')->name('subusers');
 
 /* Route for Socialite authentication */
 Route::group(['prefix' => 'auth', 'as' => 'auth.social.'], function() {
@@ -126,6 +127,13 @@ Route::group(['prefix' => 'internal'], function() {
 	Route::get('return/user', 'ReturnOrderController@index');
 	Route::get('recall/user', 'RecallOrderController@index');
 	Route::delete('products/{product}', 'ProductController@destroy');
+});
+
+Route::group(['prefix' => 'subuser'], function() {
+	Route::get('index', 'SubuserController@index');
+	Route::post('create', 'SubuserController@store');
+	Route::post('update/{user}', 'SubuserController@update');
+	Route::post('delete/{user}', 'SubuserController@destroy');
 });
 
 Route::group(['prefix' => 'courier'], function() {
