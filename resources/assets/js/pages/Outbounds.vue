@@ -10,7 +10,7 @@
 								Outbound orders
 							</div>
 						</div>
-						<div class="level-right" v-if="!can_manage">
+						<div class="level-right" v-if="!can_manage && can_edit">
 							<div class="level-item">
 								<button class="button is-primary" @click="modalOpen()">
 									<i class="fa fa-plus-circle"></i>
@@ -32,7 +32,8 @@
 			</div>
 			
 			<outbound :outbound="selectedoutbound"
-					:canManage="can_manage" 
+					:canManage="can_manage"
+					:canEdit="can_edit" 
 					@back="back()" 
 					@canceled="canceloutbound"
 					:fee="fee"
@@ -408,7 +409,7 @@
 	import TableView from '../components/TableView.vue';
 
 	export default {
-		props: ['can_manage', 'fee', 'number'],
+		props: ['can_manage', 'fee', 'number', 'can_edit'],
 
 		components: { TableView },
 

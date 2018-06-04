@@ -28,6 +28,12 @@ class RecallOrderController extends Controller
     {
         if(request()->wantsJson()) {
             $user = auth()->user();
+
+            if($user->hasRole('subuser'))
+            {
+                $user = $user->parent;
+            }
+
             if($user->hasRole('admin'))
                 return Controller::VueTableListResult( Outbound::with('tracking_numbers')
                                                                 ->select('outbounds.id as id',

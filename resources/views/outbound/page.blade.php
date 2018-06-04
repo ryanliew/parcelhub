@@ -11,7 +11,8 @@
 					<outbounds-page 
 						can_manage="{{ auth()->user()->hasRole('admin') }}" 
 						fee="{{ Settings::get('cancelation_fee') }}" 
-						number="{{ Settings::get('cancelation_number') }}">
+						number="{{ Settings::get('cancelation_number') }}"
+						can_edit="{{ !auth()->user()->hasRole('subuser') }}">
 					</outbounds-page>
 				</div>	
 			</div>

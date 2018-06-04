@@ -114,7 +114,7 @@
 							<p class="title" :class="statusClass">
 								{{ inbound.process_status | unslug | capitalize }}
 							</p>
-							<button v-if="inbound.process_status == 'awaiting_arrival'" @click="confirmation = true" class="button is-danger">Cancel order</button>
+							<button v-if="inbound.process_status == 'awaiting_arrival' && canEdit" @click="confirmation = true" class="button is-danger">Cancel order</button>
 						</div>
 
 					</div>
@@ -280,7 +280,7 @@
 
 <script>
 	export default {
-		props: ['inbound', 'canManage'],
+		props: ['inbound', 'canManage', 'canEdit'],
 		data() {
 			return {
 				form: new Form({

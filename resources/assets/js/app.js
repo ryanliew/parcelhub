@@ -56,6 +56,8 @@ Vue.component('UsersActions', require('./actions/UsersActions.vue'));
 Vue.component('CustomersActions', require('./actions/CustomersActions.vue'));
 Vue.component('ReturnsActions', require('./actions/ReturnsActions.vue'));
 Vue.component('RecallsActions', require('./actions/RecallsActions.vue'));
+Vue.component('SubusersActions', require('./actions/SubusersActions.vue'));
+Vue.component('ProductsActionsSubuser', require('./actions/ProductsActionsSubuser.vue'));
 
 // Fields components
 Vue.component('ProductStock', require('./actions/ProductStock.vue'));
@@ -76,6 +78,7 @@ Vue.component('settings-page', require('./pages/Settings.vue'));
 Vue.component('customers-page', require('./pages/Customers.vue'));
 Vue.component('outbounds-tracking-page', require('./pages/OutboundsTracking.vue'));
 Vue.component('products-excel-wizard', require('./pages/ProductsExcelWizard.vue'));
+Vue.component('subusers-page', require('./pages/Subusers.vue'));
 
 
 // Single instance view components

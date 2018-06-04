@@ -9,6 +9,24 @@ Vue.filter('capitalize', function(value) {
 	return _.capitalize(value);
 });
 
+Vue.filter('formatUserType', function(value) {
+	let color = 'is-success';
+	let text = _.capitalize(_.replace(value, '_', ' '));
+	switch(value) {
+		case 'admin':
+			color = 'is-success';
+			break;
+		case 'user':
+			color = 'is-info';
+			break;
+		case 'subuser':
+			color = 'is-warning';
+			break;
+	}
+
+	return '<span class="tag '+ color +'">'+ text +'</span>';
+});
+
 Vue.filter('formatInboundStatus', function(value) {
 	let color = 'is-success';
 	let text = _.capitalize(_.replace(value, '_', ' '));
