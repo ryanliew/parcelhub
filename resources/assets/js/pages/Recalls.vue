@@ -7,14 +7,14 @@
 					<div class="card-header-title level">
 						<div class="level-left">
 							<div class="level-item">
-								Outbound orders
+								Recall orders
 							</div>
 						</div>
-						<div class="level-right" v-if="!can_manage && can_edit">
+						<div class="level-right" v-if="can_edit">
 							<div class="level-item">
 								<button class="button is-primary" @click="modalOpen()">
 									<i class="fa fa-plus-circle"></i>
-									<span class="pl-5">Create new outbound order</span>
+									<span class="pl-5">Create new recall order</span>
 								</button>
 							</div>
 						</div>
@@ -23,7 +23,7 @@
 				<div class="card-content">
 					<table-view ref="outbounds" 
 								:fields="fields" 
-								url="/internal/outbound/user"
+								url="/internal/recall/user"
 								:searchables="searchables"
 								:dateFilterable="true"
 								dateFilterKey="outbounds.created_at">	
@@ -31,15 +31,15 @@
 				</div>
 			</div>
 			
-			<outbound :outbound="selectedoutbound"
-					:canManage="can_manage"
-					:canEdit="can_edit" 
+			<recall :recall="selectedoutbound"
+					:canManage="can_manage" 
 					@back="back()" 
 					@canceled="canceloutbound"
 					:fee="fee"
 					:number="number"
-					v-if="isViewing">
-			</outbound>
+					v-if="isViewing"
+					:canEdit="can_edit">
+			</recall>
 		</transition>
 		<transition name="slide-fade">
 			<div v-if="isCreating" class="card" :active="dialogActive" @close="dialogActive = false">
@@ -50,7 +50,7 @@
 								{{ dialogTitle }}
 							</div>
 						</div>
-						<div class="level-right" v-if="!can_manage">
+						<div class="level-right">
 							<div class="level-item">
 								<button class="button is-warning" @click="back()">
 									<i class="fa fa-arrow-circle-left"></i>
@@ -68,203 +68,94 @@
 						@keyup.enter="submit">
 						<p class="is-danger header" v-if="form.errors.get('overall')" v-text="form.errors.get('overall')"></p> <br>
 						<div class="field">
-							<selector-input v-model="selectedCustomer" :defaultData="selectedCustomer"
-									label="Customer"
-									name="customer_id"
+							<selector-input v-if="can_manage" v-model="selectedCustomer" :defaultData="selectedCustomer"
+									label="User"
+									name="user_id"
 									:required="false"
-									:potentialData="customersOptions"
+									:potentialData="userOptions"
 									@input="customerUpdate($event)"
 									:editable="true"
 									placeholder="Select customer"
-									:error="form.errors.get('customer_id')">
+									:error="form.errors.get('user_id')">
 
 							</selector-input>
 						</div>
-						<div class="columns">
-				         	<div class="column">
-				          		<text-input v-model="form.recipient_name" :defaultValue="form.recipient_name" 
-											label="Recipient name" 
-											:required="true"
-											name="recipient_name"
-											type="text"
-											:editable="true"
-											:error="form.errors.get('recipient_name')"
-											:focus="true">
-								</text-input>
-							</div>
-							<div class="column">
-								<text-input v-model="form.recipient_phone" :defaultValue="form.recipient_phone" 
-											label="Recipient phone" 
-											:required="true"
-											name="recipient_phone"
-											type="text"
-											:editable="true"
-											:error="form.errors.get('recipient_phone')">
-								</text-input>
-							</div>
-						</div>
-						<div class="field">
-							<text-input v-model="form.recipient_address" :defaultValue="form.recipient_address" 
-											label="Recipient address line 1" 
-											:required="true"
-											name="recipient_address"
-											type="text"
-											:editable="true"
-											:error="form.errors.get('recipient_address')">
-							</text-input>
-						</div>
-						<div class="field">
-							<text-input v-model="form.recipient_address_2" :defaultValue="form.recipient_address_2" 
-											label="Recipient address line 2" 
-											:required="false"
-											name="recipient_address_2"
-											type="text"
-											:editable="true"
-											:error="form.errors.get('recipient_address_2')">
-							</text-input>
-						</div>
-						<div class="columns">
-							<div class="column">
-								<text-input v-model="form.recipient_postcode" :defaultValue="form.recipient_postcode" 
-												label="Recipient postcode" 
-												:required="true"
-												name="recipient_postcode"
-												type="text"
-												:editable="true"
-												:error="form.errors.get('recipient_postcode')">
-								</text-input>
-							</div>
-							<div class="column">
-								<text-input v-model="form.recipient_state" :defaultValue="form.recipient_state" 
-												label="Recipient state" 
-												:required="true"
-												name="recipient_state"
-												type="text"
-												:editable="true"
-												:error="form.errors.get('recipient_state')">
-								</text-input>
-							</div>
-							<div class="column">
-								<text-input v-model="form.recipient_country" :defaultValue="form.recipient_country" 
-												label="Recipient country" 
-												:required="true"
-												name="recipient_country"
-												type="text"
-												:editable="true"
-												@input="isMalaysia($event)"
-												:error="form.errors.get('recipient_country')">
-								</text-input>
-							</div>
-						</div>
-						<div class="field">
-							<selector-input v-model="selectedCourier" :defaultData="selectedCourier" 
-													label="Courier"
-													name="couriers" 
-													:required="true"
-													:potentialData="couriersOptions"
-													@input="couriersUpdate($event)"
-													:editable="true"
-													placeholder="Select courier"
-													:error="form.errors.get('courier_id')">
-							</selector-input>
-			          	</div>
-						
-						<div class="columns">
-				          	<div class="column is-narrow">
-								<checkbox-input v-model="form.insurance" :defaultChecked="form.insurance"
-											label="Delivery insurance?" 
-											:required="false"
-											name="insurance"
-											:editable="true"
-											class="mt-10">
-								</checkbox-input>
-							</div>
-							
-							<transition name="fade">
-								<div class="column" v-if="form.insurance">
-									<text-input v-model="form.amount_insured" :defaultValue="form.amount_insured" 
-												label="Insured amount" 
-												:required="true"
-												name="amount_insured"
-												type="text"
-												:editable="true"
-												:error="form.errors.get('amount_insured')">
-									</text-input>
-								</div>
-							</transition>
-						</div>
-
-						<div v-if="!isMalaysiaData">
-				          	<div class="field">
-								<text-input  v-model="form.payer_gst_vat" :defaultValue="form.payer_gst_vat" 
-												label="Payer of GST/VAT" 
-												:required="true"
-												name="payer_gst_vat"
-												type="text"
-												seen="false"
-												:editable="true"
-												:error="form.errors.get('payer_gst_vat')">
-								</text-input>
-							</div>
+						<div v-if="showCustomer">
 							<div class="columns">
-								<div class="column">
-									<text-input  v-model="form.harm_comm_code" :defaultValue="form.harm_comm_code" 
-													label="HARM Comm Code" 
-													:required="true"
-													name="harm_comm_code"
-													type="text"
-													seen="false"
-													:editable="true"
-													:error="form.errors.get('harm_comm_code')">
+					         	<div class="column">
+					          		<text-input v-model="form.recipient_name" :defaultValue="form.recipient_name" 
+												label="Recipient name" 
+												:required="true"
+												name="recipient_name"
+												type="text"
+												:editable="false"
+												:error="form.errors.get('recipient_name')"
+												:focus="true">
 									</text-input>
 								</div>
 								<div class="column">
-									<text-input  v-model="form.trade_term" :defaultValue="form.trade_term" 
-													label="Term of Trade" 
-													:required="true"
-													name="trade_term"
-													type="text"
-													seen="false"
-													:editable="true"
-													:error="form.errors.get('trade_term')">
+									<text-input v-model="form.recipient_phone" :defaultValue="form.recipient_phone" 
+												label="Recipient phone" 
+												:required="true"
+												name="recipient_phone"
+												type="text"
+												:editable="false"
+												:error="form.errors.get('recipient_phone')">
 									</text-input>
 								</div>
 							</div>
 							<div class="field">
-									<text-input  v-model="form.payment_term" :defaultValue="form.payment_term" 
-													label="Term of Payment" 
-													:required="true"
-													name="payment_term"
-													type="text"
-													seen="false"
-													:editable="true"
-													:error="form.errors.get('payment_term')">
-									</text-input>
-								</div>
-							<div class="field">
-								<textarea-input  v-model="form.export_reason" :defaultValue="form.export_reason" 
-												label="Reason For Export" 
+								<text-input v-model="form.recipient_address" :defaultValue="form.recipient_address" 
+												label="Recipient address line 1" 
 												:required="true"
-												name="export_reason"
+												name="recipient_address"
 												type="text"
-												seen="false"
-												:editable="true"
-												:error="form.errors.get('export_reason')"
-												rows="2"
-												cols="4">
-								</textarea-input>
-							</div>	
-							<div class="columns">
-								<div class="column is-narrow">
-									<checkbox-input v-model="form.business" :defaultChecked="form.business"
-												label="Business?" 
+												:editable="false"
+												:error="form.errors.get('recipient_address')">
+								</text-input>
+							</div>
+							<div class="field">
+								<text-input v-model="form.recipient_address_2" :defaultValue="form.recipient_address_2" 
+												label="Recipient address line 2" 
 												:required="false"
-												name="business"
-												:editable="true"
-												class="mt-10">
-									</checkbox-input>
+												name="recipient_address_2"
+												type="text"
+												:editable="false"
+												:error="form.errors.get('recipient_address_2')">
+								</text-input>
+							</div>
+							<div class="columns">
+								<div class="column">
+									<text-input v-model="form.recipient_postcode" :defaultValue="form.recipient_postcode" 
+													label="Recipient postcode" 
+													:required="true"
+													name="recipient_postcode"
+													type="text"
+													:editable="false"
+													:error="form.errors.get('recipient_postcode')">
+									</text-input>
 								</div>
-							</div>	
+								<div class="column">
+									<text-input v-model="form.recipient_state" :defaultValue="form.recipient_state" 
+													label="Recipient state" 
+													:required="true"
+													name="recipient_state"
+													type="text"
+													:editable="false"
+													:error="form.errors.get('recipient_state')">
+									</text-input>
+								</div>
+								<div class="column">
+									<text-input v-model="form.recipient_country" :defaultValue="form.recipient_country" 
+													label="Recipient country" 
+													:required="true"
+													name="recipient_country"
+													type="text"
+													:editable="false"
+													:error="form.errors.get('recipient_country')">
+									</text-input>
+								</div>
+							</div>
 						</div>
 						
 						<table class="table is-hoverable is-fullwidth is-responsive is-multirow">
@@ -307,7 +198,7 @@
 										</td>
 										<td>
 											<text-input v-if="productRows[index]" v-model="productRows[index].quantity" :defaultValue="productRows[index].quantity"
-						          						label="Outbound quantity"
+						          						label="Recall quantity"
 						          						:required="true"
 						          						type="number"
 						          						:editable="true"
@@ -330,54 +221,11 @@
 						          			</textarea-input>
 										</td>
 										
-										<td :rowspan="!isMalaysiaData ? 2 : 1">
+										<td>
 											<div class="button is-danger is-small" @click="removeRow(index)">
 												<i class="fa fa-minus"></i>
 												<span class="pl-5">Remove product</span>
 											</div>
-										</td>
-									</tr>
-									<tr v-if="!isMalaysiaData">
-										<td>
-											<text-input v-if="productRows[index]" v-model="productRows[index].unit_value" :defaultValue="productRows[index].unit_value"
-						          						label="Unit Value (RM)"
-						          						:required="true"
-						          						type="number"
-						          						:editable="true"
-						          						:hideLabel="false"
-						          						name="unit_value"
-						          						@input="updateTotalValue(index)">
-						          			</text-input>
-										</td>
-										<td>
-											<text-input v-if="productRows[index]" v-model="productRows[index].total_value" :defaultValue="productRows[index].total_value"
-						          						label="Total Value (RM)"
-						          						:required="true"
-						          						type="text"
-						          						:editable="false"
-						          						:hideLabel="false"
-						          						name="total_value">
-						          			</text-input>
-										</td>
-										<td>
-											<text-input v-if="productRows[index]" v-model="productRows[index].weight" :defaultValue="productRows[index].weight"
-						          						label="Weight (kg)"
-						          						:required="true"
-						          						type="text"
-						          						:editable="true"
-						          						:hideLabel="false"
-						          						name="weight">
-						          			</text-input>
-										</td>
-										<td>
-											<text-input v-if="productRows[index]" v-model="productRows[index].manufacture_country" :defaultValue="productRows[index].manufacture_country"
-						          						label="Manufacture Country"
-						          						:required="true"
-						          						type="text"
-						          						:editable="true"
-						          						:hideLabel="false"
-						          						name="manufacture_country">
-						          			</text-input>
 										</td>
 									</tr>
 								</template>
@@ -389,7 +237,7 @@
 						<div class="field mt-10">
 					    	<image-input v-model="invoiceSlip" :defaultImage="invoiceSlip"
 					    				@loaded="changeInvoiceSlipImage"
-					    				label="invoice slip"
+					    				label="delivery slip"
 					    				name="invoice_slip"
 					    				:required="false"
 					    				accept="image/*,.pdf"
@@ -419,8 +267,6 @@
 					{name: 'id', title: '#'},
 					{name: 'recipient_name', sortField: 'outbounds.recipient_name', title: 'Recipient'},
 					{name: 'created_at', sortField: 'created_at', title: 'Order date'},
-					{name: 'courier', sortField: 'couriers.name', title: 'Courier'},
-					{name: 'amount_insured', sortField: 'amount_insured', title: 'Insurance'},
 					{name: 'process_status', callback: 'outboundStatusLabel', title: 'Status', sortField: 'process_status'},
 					{name: '__component:outbounds-actions', title: 'Actions'}	
 				],
@@ -435,18 +281,12 @@
 					recipient_state: '',
 					recipient_postcode: '',
 					recipient_country: '',
-					customer_id: '',
+					user_id: '',
 					insurance: '',
 					amount_insured: '0',
 					courier_id: '',
 					outbound_products: [],
-					invoice_slip: '',
-					payer_gst_vat: '',
-					harm_comm_code: '',
-					payment_term: '',
-					trade_term: '',
-					export_reason: '',
-					business: ''
+					invoice_slip: ''
 				}),
 				isDeleting: false,
 				errorForProducts: '',
@@ -458,7 +298,7 @@
 				customersOptions: [],
 				isViewing: false,
 				isCreating: false,
-				isMalaysiaData: true,
+				showCustomer: false,
 				errorForProducts: '',
 				invoiceSlip: {name: 'No file selected'}
 
@@ -467,12 +307,44 @@
 
 		mounted() {
 			this.getProducts();
+			this.getUsers();
 			this.$events.on('viewOutbound', data => this.view(data));
 		},
 
 		methods: {
-			isMalaysia(data) {
-				this.isMalaysiaData = data.toLowerCase() == "malaysia" || data == '';
+			getUsers() {
+				if(this.can_manage)
+					axios.get('internal/users/selector')
+						.then(response => this.setUsers(response));
+				else
+					axios.get('internal/user')
+						.then(response => this.setUsers(response));
+			},
+
+			setUsers(data) {
+				if(this.can_manage) {
+					this.userOptions = data.data.map(user => {
+						let obj = {};
+						obj['label'] = user.name;
+						obj['value'] = user.id;
+						obj['recipient_name'] = user.name;
+						obj['recipient_phone'] = user.phone;
+						obj['recipient_address'] = user.address;
+						obj['recipient_address_2'] = user.address_2;
+						obj['recipient_state'] = user.state;
+						obj['recipient_postcode'] = user.postcode;
+						obj['recipient_country'] = user.country;
+						return obj;
+					});
+				}
+				else {
+					this.form.user_id = data.data.id;
+				}
+			},
+
+			getProductForAdmin(id){
+				axios.get('internal/products/admin/selector/' + id)
+					.then(response => this.setProducts(response));
 			},
 
 			getProducts() {
@@ -482,43 +354,6 @@
 
 			setProducts(response) {
 				this.productsOptions = response.data.data;
-				this.getCouriers();
-			},
-
-			getCustomers() {
-				axios.get('internal/customers')
-					.then(response => this.setCustomers(response));
-			},
-
-			setCustomers(response) {
-				this.customersOptions = response.data.data.map(customer => {
-					let obj = {};
-					obj['value'] = customer.id;
-					obj['label'] = customer.customer_name;
-					obj['recipient_name'] = customer.customer_name;
-					obj['recipient_phone'] = customer.customer_phone;
-					obj['recipient_address'] = customer.customer_address;
-					obj['recipient_address_2'] = customer.customer_address_2;
-					obj['recipient_state'] = customer.customer_state;
-					obj['recipient_postcode'] = customer.customer_postcode;
-					obj['recipient_country'] = customer.customer_country;
-
-					return obj;
-				});
-			},
-
-			getCouriers() {
-				axios.get('internal/couriers')
-					.then(response => this.setCouriers(response));
-			},
-
-			setCouriers(response) {
-				this.couriersOptions = response.data.data.map(courier =>{
-					let obj = {};
-					obj['label'] = courier.name;
-					obj['value'] = courier.id;
-					return obj;
-				});
 			},
 
 			updateTotalValue(index) {
@@ -528,7 +363,7 @@
 			},
 
 			addRow() {
-				this.productRows.push({ product: null, quantity: '', remarks: "", unit_value: "", total_value: "", weight: "", manufacture_country: ""});
+				this.productRows.push({ product: null, quantity: '', remarks: ""});
 				this.clearProductErrors();
 			},
 
@@ -556,19 +391,12 @@
 
 						if(product > -1) {
 							this.form.outbound_products[product].quantity = this.form.outbound_products[product].quantity + parseInt(element.quantity);
-							this.form.outbound_products[product].unit_value = parseInt(element.unit_value);
-							this.form.outbound_products[product].total_value = this.form.outbound_products[product].quantity * parseInt(element.unit_value);
-							this.form.outbound_products[product].weight = this.form.outbound_products[product].weight + parseInt(element.weight);
-							this.form.outbound_products[product].manufacture_country = element.manufacture_country;
 						}
 						else {
 							this.form.outbound_products.push({id: element.product.id, 
 															quantity: parseInt(element.quantity), 
 															remarks: element.remarks, 
-															unit_value: parseInt(element.unit_value), 
-															total_value: parseInt(element.total_value), 
-															weight: parseInt(element.weight), 
-															manufacture_country: element.manufacture_country});
+															});
 						}
 					}
 				}.bind(this));							
@@ -587,7 +415,6 @@
 				this.selectedCustomer = '';
 				this.selectedCourier = '';
 				this.getProducts();
-				this.getCustomers();
 				this.isCreating = true;
 			},
 
@@ -599,6 +426,7 @@
 			onSuccess(data) {
 				this.productRows = [];
 				this.dialogActive = false;
+				this.user_id = '';
 				this.back();
 				this.$refs.outbounds.refreshTable();
 				this.getProducts();
@@ -612,6 +440,7 @@
 			back() {
 				this.isViewing = false;
 				this.isCreating = false;
+				this.showCustomer = false;
 				this.selectedoutbound = '';
 			},
 
@@ -642,10 +471,10 @@
 			},
 
 			customerUpdate(data) {
-				this.form.customer_id = '';
+				this.form.user_id = '';
 				if(data){
-					this.form.customer_id = data.value;
-					this.form.errors.clear('customer_id');
+					this.form.user_id = data.value;
+					this.form.errors.clear('user_id');
 
 					this.form.recipient_name = data.recipient_name;
 					this.form.recipient_phone = data.recipient_phone;
@@ -654,8 +483,8 @@
 					this.form.recipient_state = data.recipient_state;
 					this.form.recipient_postcode = data.recipient_postcode;
 					this.form.recipient_country = data.recipient_country;
-					this.form.recipient_country.toLowerCase() == "malaysia"?
-					this.isMalaysiaData = true : this.isMalaysiaData = false;
+					this.showCustomer = true;
+					this.getProductForAdmin(data.value);
 				}
 			},
 
@@ -671,12 +500,12 @@
 			dialogTitle() {
 				return this.selectedoutbound
 						? "Edit order #" + this.selectedoutbound.id
-						: "Create new outbound order";
+						: "Create new recall order";
 			},
 
 			action() {
 				let action = this.selectedoutbound ? "update" : "store";
-				return "/outbound/" + action;
+				return "/recall/" + action;
 			},
 
 			buttonClass() {

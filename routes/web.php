@@ -42,6 +42,8 @@ Route::get('lots/categories', 'CategoryController@page')->name('lots.categories'
 Route::get('lots', 'LotController@page')->name('lots');
 Route::get('products', 'ProductController@page')->name('products');
 Route::get('inbounds', 'InboundController@page')->name('inbounds');
+Route::get('returns', 'ReturnOrderController@page')->name('returns');
+Route::get('recalls', 'RecallOrderController@page')->name('recalls');
 Route::get('outbounds', 'OutboundController@page')->name('outbounds');
 Route::get('purchase', 'PaymentController@page')->name('payment');
 Route::get('users', 'UserController@page')->name('users');
@@ -51,6 +53,7 @@ Route::get('dashboard', 'AdminController@page')->name('dashboard');
 Route::get('outbounds/bulk', 'OutboundController@page_bulk')->name('outbounds.bulk');
 Route::get('products/bulk', 'ProductController@page_bulk')->name('products.bulk');
 Route::post('lots/products/update', 'LotController@editStock');
+Route::get('subusers', 'SubuserController@page')->name('subusers');
 
 /* Route for Socialite authentication */
 Route::group(['prefix' => 'auth', 'as' => 'auth.social.'], function() {
@@ -99,6 +102,7 @@ Route::group(['prefix' => 'internal'], function() {
 	Route::get('categories', 'CategoryController@index');
 	Route::get('lots', 'LotController@index');
 	Route::get('couriers', 'CourierController@index');
+	Route::get('products/admin/selector/{id}', 'ProductController@adminProduct');
 	Route::get('products/selector', 'ProductController@selector');
 	Route::get('products', 'ProductController@index');
 	Route::get('inbound/user', 'InboundController@index');
@@ -119,7 +123,17 @@ Route::group(['prefix' => 'internal'], function() {
 	Route::get('user', 'UserController@show');
 	Route::get('user/{user}/lots', 'UserController@lotSelector');
 	Route::get('customers', 'CustomerController@index');
+	Route::get('admin/customers/{id}', 'CustomerController@adminCustomer');
+	Route::get('return/user', 'ReturnOrderController@index');
+	Route::get('recall/user', 'RecallOrderController@index');
 	Route::delete('products/{product}', 'ProductController@destroy');
+});
+
+Route::group(['prefix' => 'subuser'], function() {
+	Route::get('index', 'SubuserController@index');
+	Route::post('create', 'SubuserController@store');
+	Route::post('update/{user}', 'SubuserController@update');
+	Route::post('delete/{user}', 'SubuserController@destroy');
 });
 
 Route::group(['prefix' => 'courier'], function() {
@@ -159,6 +173,16 @@ Route::group(['middleware' => ['auth', 'role:admin']], function () {
 Route::group(['prefix' => 'outbound'], function() {
     Route::get('index', 'OutboundController@index')->name('outbound.index');
     Route::post('store', 'OutboundController@store')->name('outbound.store');
+});
+
+Route::group(['prefix' => 'return'], function() {
+    Route::get('index', 'ReturnOrderController@index')->name('return.index');
+    Route::post('store', 'ReturnOrderController@store')->name('return.store');
+});
+
+Route::group(['prefix' => 'recall'], function() {
+    Route::get('index', 'RecallOrderController@index')->name('recall.index');
+    Route::post('store', 'RecallOrderController@store')->name('recall.store');
 });
 
 Route::group(['prefix' => 'download'], function () {

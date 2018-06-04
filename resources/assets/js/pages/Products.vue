@@ -9,7 +9,7 @@
 								Products
 							</div>
 						</div>
-						<div class="level-right">
+						<div class="level-right" v-if="can_edit">
 							<div class="level-item">
 								<button class="button is-primary" @click="modalOpen()">
 									<i class="fa fa-plus-circle"></i>
@@ -31,7 +31,8 @@
 			</div>
 			<product :product="selectedProduct" v-else
 					@back="back"
-					:can_manage="can_manage">
+					:can_manage="can_manage"
+					:can_edit="can_edit">
 			</product>
 		</transition>
 
@@ -67,12 +68,12 @@
 	          	</div>
 
 	          	<div class="field">
-	          		<text-input v-model="form.trashole" :defaultValue="form.trashole" 
+	          		<text-input v-model="form.threshold" :defaultValue="form.threshold" 
 								label="Minimum Stock level"
-								name="trashole"
+								name="threshold"
 								type="text"
 								:editable="true"
-								:error="form.errors.get('trashole')">
+								:error="form.errors.get('threshold')">
 					</text-input>
 	          	</div>
 
@@ -182,7 +183,7 @@
 	import Product from '../objects/Product.vue';
 
 	export default {
-		props: ['can_manage'],
+		props: ['can_manage', 'can_edit'],
 
 		components: { TableView, Product },
 
@@ -279,7 +280,7 @@
 				this.form.height = data.height;
 				this.form.width = data.width;
 				this.form.length = data.length;
-				this.form.trashole = data.trashole;
+				this.form.threshold = data.threshold;
 				this.form.is_dangerous = data.is_dangerous;
 				this.form.is_fragile = data.is_fragile;
 				this.form.user_id = 1;
@@ -351,7 +352,7 @@
 					{name: 'picture', callback: 'image', title: 'Image'},
 					{name: 'product_name', sortField: 'product_name', title: 'Name'},
 					{name: 'volume', title: 'Volume(cm³)'},
-					{name: 'total_quantity', title: 'Stock'},
+					{name: '__component:product-stock', title: 'Stock'},
 					{name: 'is_dangerous', title: 'Dangerous', sortField: 'is_dangerous', callback: 'dangerousTag'},
 					{name: 'is_fragile', title: 'Fragile', sortField: 'is_fragile', callback: 'fragileTag'}	
 				];
@@ -361,7 +362,14 @@
 					field.push({name: 'user_name', title: 'Owner', sortField: 'user_name'});
 				}
 
-				field.push({name: '__component:products-actions', title: 'Actions'});
+				if(this.can_manage || this.can_edit)
+				{
+					field.push({name: '__component:products-actions', title: 'Actions'});
+				}
+				else
+				{
+					field.push({name: '__component:products-actions-subuser', title: 'Actions'});
+				}
 
 				return field;
 			},

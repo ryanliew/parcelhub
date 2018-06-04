@@ -137,9 +137,30 @@
             height:5px;
             border: 1px solid #000;
         }
+        .pull-left {
+            float: left;
+        }
+        .barcode {
+            padding-top: 25px;
+            padding-left: 120px;
+        }
+        .width-quarter {
+            width: 25%;
+        }
     </style>
 </head>
 <body>
+    <table class="term-table">
+        <tr>
+            <td>
+            </td>
+            <td>
+                <div class="barcode">
+                    {!! DNS1D::getBarcodeHTML( $outbound->PREFIX() . $outbound->id , "C128",2, 44,"black", true) !!}
+                </div>
+            </td>
+        </tr>
+    </table>
     <table class="item-table pt-2">
         <thead>
         <tr>
@@ -212,18 +233,18 @@
             <tr>
                 <td>{{$index+1}}) {{$product->name}}</td>
                 <td>{{$product->pivot->quantity}}</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td>{{$product->pivot->unit_value}}</td>
+                <td>{{$product->pivot->total_value}}</td>
+                <td>{{$product->pivot->weight}}</td>
+                <td>{{$product->pivot->manufacture_country}}</td>
             </tr>
             @endforeach
             <tr>
                 <td class="no-left-border no-bottom-border text-align-right">Total</td>
-                <td></td>
+                <td>{{$totalQuantity}}</td>
                 <td class="no-bottom-border"></td>
                 <td class="text-align-center">Total Price</td>
-                <td></td>
+                <td>{{$totalPrice}}</td>
                 <td class="no-right-border no-bottom-border"></td>
             </tr>
         </tbody>
@@ -232,20 +253,27 @@
     <table class="term-table" style="margin-top: 30px;">
         <tbody>
             <tr>
-                <td>Payer of GST/VAT: </td>
-                <td>Currencty: <b>USD</b></td>
+                <td>Payer of GST/VAT: {{$outbound->payer_gst_vat}}</td>
+                <td>Currency: <b>USD</b></td>
             </tr>
             <tr>
-                <td>HARM Comm Code: </td>
-                <td>Term of Trade: </td>
+                <td>HARM Comm Code: {{$outbound->harm_comm_code}}</td>
+                <td>Term of Trade: {{$outbound->trade_term}}</td>
             </tr>
             <tr>
-                <td>Term of Payment: </td>
+                <td>Term of Payment: {{$outbound->payment_term}}</td>
             </tr>
             <tr>
-                <td>Reason For Export: </td>
+                <td>Reason For Export: {{$outbound->export_reason}}</td>
             </tr>
             <tr>
+                @if($outbound->is_business === true)
+                    <td>Business</td>
+                @else
+                    <td>Non-business</td>
+                @endif
+            </tr>
+            {{-- <tr>
                 <table class="business-table">
                     <tbody>
                         <tr>
@@ -257,7 +285,7 @@
                         </tr>
                     </tbody>
                 </table>
-            </tr>
+            </tr> --}}
         </tbody>
     </table>
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Product;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Storage;
@@ -56,6 +57,12 @@ class ProductController extends Controller
         if(request()->wantsJson())
         {
             $user = auth()->user();
+
+            if($user->hasRole('subuser'))
+            {
+                $user = $user->parent;
+            }
+
             if($user->hasRole('admin'))
                 return Controller::VueTableListResult(Product::with(["inbounds", "lots", "outbounds", "adjustments"])->select('products.picture as picture',
                                         'products.sku as sku',
@@ -67,12 +74,13 @@ class ProductController extends Controller
                                         'products.height as height',
                                         'products.length as length',
                                         'users.name as user_name',
-                                        'users.id as user_id'
+                                        'users.id as user_id',
+                                        'products.trash_hole as threshold'
                                     )
                                 ->leftJoin('users', 'products.user_id', '=', 'users.id')
                                 ->where('status', 'true'));
             else
-                return Controller::VueTableListResult(auth()->user()->products()->with(["inbounds", "lots", "outbounds", "adjustments"])
+                return Controller::VueTableListResult($user->products()->with(["inbounds", "lots", "outbounds", "adjustments"])
                                                                                 ->select('products.picture as picture',
                                                                                         'products.sku as sku',
                                                                                         'products.id as id',
@@ -84,7 +92,8 @@ class ProductController extends Controller
                                                                                         'products.height as height',
                                                                                         'products.length as length',
                                                                                         'users.name as user_name',
-                                                                                        'users.id as user_id'
+                                                                                        'users.id as user_id',
+                                                                                        'products.trash_hole as threshold'
                                                                                     )
                                                                                 ->leftJoin('users', 'products.user_id', '=', 'users.id')
                                                                                 ->where('status', 'true')
@@ -105,6 +114,11 @@ class ProductController extends Controller
     public function selector()
     {
         return Controller::VueTableListResult(auth()->user()->products()->with(["inbounds", "lots", "outbounds"])->where('status', 'true'));
+    }
+
+    public function adminProduct($id)
+    {
+        return Controller::VueTableListResult(User::find($id)->products()->with(["inbounds", "lots", "outbounds"])->where('status', 'true'));
     }
 
     /**
@@ -188,8 +202,8 @@ class ProductController extends Controller
         $product->width = $request->width;
         $product->is_fragile = $request->has('is_fragile');
         $product->is_dangerous = $request->has('is_dangerous');
-        if($request->trashole){
-            $product->trash_hole = $request->trashole;     
+        if($request->threshold){
+            $product->trash_hole = $request->threshold;     
         }
         $product->sku = $request->sku;
         if(Input::hasFile('picture')){

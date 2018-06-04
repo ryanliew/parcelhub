@@ -63,6 +63,8 @@ class User extends Authenticatable
      */
     protected $guarded = [];
 
+    protected $appends = ['role_name'];
+
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -105,10 +107,25 @@ class User extends Authenticatable
         return $this->hasMany('App\Customer');
     }
 
+    public function subusers()
+    {
+        return $this->hasMany('App\User', 'parent_id');
+    }
+
+    public function parent()
+    {
+        return $this->belongsTo('App\User', 'parent_id');
+    }
+
     public function scopeAdmin($query) {
         return $query->whereHas('roles', function ($query) {
             $query->where('name', '=', 'admin');
         });
+    }
+
+    public function getRoleNameAttribute()
+    {
+        return $this->roles()->first()->name;
     }
 
     public function getTotalLotLeftVolumeAttribute() {

@@ -1,5 +1,8 @@
 <?php
+
 namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
 use App\Inbound;
 use App\InboundProduct;
 use App\Lot;
@@ -7,37 +10,14 @@ use App\Notifications\InboundCreatedNotification;
 use App\Product;
 use App\Utilities;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
+use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use PDF;
 use Settings;
-class InboundController extends Controller
+
+class ReturnOrderController extends Controller
 {
-    protected $rules = [
-        'arrival_date' => 'required',
-        'total_carton' => 'required',
-        'products'  => 'required'
-    ];
-
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
-    /**
-     * Return the view which contains the vue page for product
-     * @return \Illuminate\Http\Response
-     */
-    public function page()
-    {
-        return view('inbound.page');
-    }
     /**
      * Display a listing of the resource.
      *
@@ -49,32 +29,13 @@ class InboundController extends Controller
         {
             $user = auth()->user();
 
-            $query = $user->inbounds()->with('products', 'products_with_lots.lots');
+            if($user->hasRole('subuser'))
+            {
+                $user = $user->parent;
+            }
 
             if($user->hasRole('admin'))
-                $query = Inbound::with('products', 'products_with_lots.lots');
-            elseif($user->hasRole('subuser'))
-                $query = $user->parent->inbounds()->with('products', 'products_with_lots.lots');
-
-            return Controller::VueTableListResult($query->select('arrival_date',
-                                                                'total_carton',
-                                                                'process_status',
-                                                                'inbounds.id as id',
-                                                                'users.name as customer',
-                                                                'inbounds.created_at as created_at'
-                                                                )
-                                                            ->where('inbounds.type', 'inbound')
-                                                            ->leftJoin('users', 'user_id', '=', 'users.id')
-                                                            ->orderBy('arrival_date', 'desc'));
-        }
-        $inbounds = inbound::where('status', 'true')->get();
-        $products = product::where('user_id', auth()->user()->id)->where('status', 'true')->get();
-        return view('inbound.index')->with('inbounds', $inbounds)->with('products', $products);
-    }
-
-    public function indexToday()
-    {
-        return Controller::VueTableListResult(Inbound::with('products', 'products_with_lots.lots')
+                 return Controller::VueTableListResult(Inbound::with('products', 'products_with_lots.lots')
                                                                 ->select('arrival_date',
                                                                         'total_carton',
                                                                         'process_status',
@@ -82,11 +43,22 @@ class InboundController extends Controller
                                                                         'users.name as customer',
                                                                         'inbounds.created_at as created_at'
                                                                         )
-                                                                ->where('inbounds.type', 'inbound')
+                                                                ->where('type', 'return')
                                                                 ->leftJoin('users', 'user_id', '=', 'users.id')
-                                                                ->whereDate('arrival_date', DB::raw('CURDATE()'))
                                                                 ->orderBy('arrival_date', 'desc'));
+            else
+                return Controller::VueTableListResult($user->inbounds()->with('products', 'products_with_lots.lots')->orderBy('arrival_date', 'desc'));
+        }
+        $inbounds = inbound::where('status', 'true')->get();
+        $products = product::where('user_id', auth()->user()->id)->where('status', 'true')->get();
+        return view('inbound.index')->with('inbounds', $inbounds)->with('products', $products);
     }
+
+    public function page()
+    {
+        return view('return.page');
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -97,16 +69,6 @@ class InboundController extends Controller
         //
     }
 
-    public function report($id)
-    {
-        $inbound = Inbound::find($id);
-
-        $pdf = PDF::loadView('inbound.report', compact('inbound'));
-
-        $filename = Inbound::prefix() . $inbound->id . '.pdf';
-        return $pdf->setPaper('A4')->download($filename);
-    }
-
     /**
      * Store a newly created resource in storage.
      *
@@ -115,9 +77,11 @@ class InboundController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, $this->rules, ['products.required' => "Please select at least 1 product."]);
         $auth = auth()->user();
-
+        if($request->user_id){
+            $auth = User::find($request->user_id);
+        }
+        
         if(empty(auth()->user()->address))
         {
             return response(json_encode(array('overall' => ['You must update your contact details in the My Profile page before proceeding'])), 422);
@@ -129,15 +93,14 @@ class InboundController extends Controller
         $collection_index = 0;
         $product_total_volume = 0;
         $products = [];
-        $rproducts = json_decode(request()->products);
+        $rproducts = json_decode(request()->return_products);
         foreach($rproducts as $product){
             $product_volume_from_db = product::where('id', $product->id)->first();
             $product_total_volume = $product_total_volume + ($product_volume_from_db->volume * $product->quantity);
             $products[$product->id] = [];
             $products[$product->id]["quantity"] = $product->quantity;
             $products[$product->id]["volume"] = $product_volume_from_db->volume * $product->quantity;
-            $products[$product->id]["remark"] = $product->remark;
-            $products[$product->id]["expiry_date"] = $product->expiry_date;
+            $products[$product->id]["remark"] = $product->remarks;
             $products[$product->id]["singleVolume"] = $product_volume_from_db->volume;
         }
         // Check for quantity
@@ -168,12 +131,13 @@ class InboundController extends Controller
         $inbound->user_id = $auth->id;
         $inbound->arrival_date = $request->arrival_date;
         $inbound->total_carton = $request->total_carton;
+        $inbound->customer_id = $request->customer_id;
         $inbound->status = "true";
+        $inbound->type = "return";
         $inbound->save();
         // Insert products into many to many table
         foreach($products as $key => $product){
             $inbound->products()->attach($key, ['quantity' => $product["quantity"], 
-                                                'expiry_date' => $product["expiry_date"] ? $product["expiry_date"] : null, 
                                                 'remark' => $product["remark"]
                                                 ]);
         }
@@ -192,7 +156,7 @@ class InboundController extends Controller
                         $products[$key]["volume"] = $product["volume"] - ( $product["singleVolume"] * $quantityIntoLot );
                         $products[$key]["quantity"] = $product["quantity"] - $quantityIntoLot;
                         $product["quantity"] = $products[$key]["quantity"];
-                        $this->attachLot($inbound->id, $key, $lot, $product["expiry_date"], $quantityIntoLot);
+                        $this->attachLot($inbound->id, $key, $lot, $quantityIntoLot);
                     }
                 }
                 $lot->save();
@@ -215,7 +179,7 @@ class InboundController extends Controller
                         $lot_products[$key]['incoming_quantity'] = $quantityIntoLot;
                         $products[$key]["volume"] = $product["volume"] - ($product["singleVolume"] * $quantityIntoLot);
                         $products[$key]["quantity"] = $product["quantity"] - $quantityIntoLot;
-                        $inboundproduct = $this->attachLot($inbound->id, $key, $lot, $product["expiry_date"], $quantityIntoLot);
+                        $inboundproduct = $this->attachLot($inbound->id, $key, $lot, $quantityIntoLot);
                         
                     }
                 }
@@ -225,9 +189,7 @@ class InboundController extends Controller
             $lot->propagate_left_volume();
         }
 
-        Auth::user()->notify(new InboundCreatedNotification($inbound));
-
-        return ['message' => "Inbound order created"];
+        return ['message' => "Return order created"];
     }
 
     public function calculateQuantity($volume, $singleVolume, $quantity){
@@ -235,13 +197,14 @@ class InboundController extends Controller
         return min($quantityIntoLot, $quantity);
     }
 
-    public function attachLot($inbound, $product, $lot, $expiry_date, $quantity) {
+    public function attachLot($inbound, $product, $lot, $quantity) {
         // Attach lot to inbound product
         $inbound_product = InboundProduct::where('inbound_id', $inbound)->where('product_id', $product)->first();
-        $inbound_product->lots()->attach($lot, ['quantity_original' => $quantity, 'expiry_date' => $expiry_date ? $expiry_date : null]);
+        $inbound_product->lots()->attach($lot, ['quantity_original' => $quantity]);
 
         return $inbound_product;
     }
+
     /**
      * Display the specified resource.
      *
@@ -250,12 +213,9 @@ class InboundController extends Controller
      */
     public function show($id)
     {
-        return inbound::with(['products', 'products_with_lots.lots'])->where('id', $id)->first();
-
-        $inbound = inbound::where('id', $id)->first();
-        
-        return view('inbound.show')->with('inbound', $inbound);
+        //
     }
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -266,6 +226,7 @@ class InboundController extends Controller
     {
         //
     }
+
     /**
      * Update the specified resource in storage.
      *
@@ -275,69 +236,9 @@ class InboundController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $products = json_decode($request->products);
-        
-        // We need to validate all the lots volume first
-        foreach($products as $product)
-        {
-            $the_product = Product::find($product->product_id);
-
-            $unique = collect($product->lots)->pluck('lot.value')->unique();
-
-            if($unique->count() !== collect($product->lots)->count())
-            {
-                return response(json_encode(array('products' => ['You have repeating lots defined in ' . $the_product->name . '.'])), 422);
-            }
-
-            foreach($product->lots as $lot)
-            {
-                if($lot->original_lot !== $lot->lot->value)
-                {                
-                    $new_lot = Lot::find($lot->lot->value);
-
-                    $volume_required = $lot->quantity_received * $the_product->volume;
-
-                    if($new_lot->left_volume < $volume_required)
-                    {
-                        return response(json_encode(array('products' => ['You only have ' . Utilities::convertCentimeterCubeToMeterCube($new_lot->left_volume) . 'm³ of space left in ' . $new_lot->name . ' but you are trying to fit in ' . Utilities::convertCentimeterCubeToMeterCube($volume_required) . 'm³.'])), 422);
-                    }
-                }
-            }
-        }
-
-        // Validate complete
-
-        foreach($products as $product)
-        {
-
-            $inbound_product = InboundProduct::find($product->inbound_product_id);
-
-            $inbound_product->lots()->sync(collect($product->lots)->pluck('lot.value'));
-
-            foreach($product->lots as $lot)
-            {
-                $original_lot = Lot::find($lot->original_lot);
-
-                $original_lot->deduct_incoming_product($inbound_product->product, $lot->original_quantity);
-
-                $original_lot->propagate_left_volume();
-
-                $new_lot = Lot::find($lot->lot->value);
-
-                $new_lot->increase_incoming_product($inbound_product->product, $lot->quantity_received); 
-
-                $new_lot->propagate_left_volume();
-
-                $inbound_product->lots()->updateExistingPivot($lot->lot->value, [
-                        'quantity_received' => $lot->quantity_received,
-                        'expiry_date' => $lot->expiry_date,
-                        'remark' => $lot->remark
-                    ]);
-            }
-        }
-
-        return ['message' => 'Inbound details updated successfully'];
+        //
     }
+
     /**
      * Remove the specified resource from storage.
      *

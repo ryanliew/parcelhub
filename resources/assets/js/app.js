@@ -54,6 +54,13 @@ Vue.component('OutboundsActions', require('./actions/OutboundsActions.vue'));
 Vue.component('PaymentsActions', require('./actions/PaymentsActions.vue'));
 Vue.component('UsersActions', require('./actions/UsersActions.vue'));
 Vue.component('CustomersActions', require('./actions/CustomersActions.vue'));
+Vue.component('ReturnsActions', require('./actions/ReturnsActions.vue'));
+Vue.component('RecallsActions', require('./actions/RecallsActions.vue'));
+Vue.component('SubusersActions', require('./actions/SubusersActions.vue'));
+Vue.component('ProductsActionsSubuser', require('./actions/ProductsActionsSubuser.vue'));
+
+// Fields components
+Vue.component('ProductStock', require('./actions/ProductStock.vue'));
 
 // Pages components
 Vue.component('categories-page', require('./pages/Categories.vue'));
@@ -62,6 +69,8 @@ Vue.component('couriers-page', require('./pages/Couriers.vue'));
 Vue.component('products-page', require('./pages/Products.vue'));
 Vue.component('inbounds-page', require('./pages/Inbounds.vue'));
 Vue.component('outbounds-page', require('./pages/Outbounds.vue'));
+Vue.component('returns-page', require('./pages/Returns.vue'));
+Vue.component('recalls-page', require('./pages/Recalls.vue'));
 Vue.component('payments-page', require('./pages/Payments.vue'));
 Vue.component('users-page', require('./pages/Users.vue'));
 Vue.component('dashboard-page', require('./pages/Dashboard.vue'));
@@ -69,12 +78,15 @@ Vue.component('settings-page', require('./pages/Settings.vue'));
 Vue.component('customers-page', require('./pages/Customers.vue'));
 Vue.component('outbounds-tracking-page', require('./pages/OutboundsTracking.vue'));
 Vue.component('products-excel-wizard', require('./pages/ProductsExcelWizard.vue'));
+Vue.component('subusers-page', require('./pages/Subusers.vue'));
 
 
 // Single instance view components
 Vue.component('product', require('./objects/Product.vue'));
 Vue.component('inbound', require('./objects/Inbound.vue'));
 Vue.component('outbound', require('./objects/Outbound.vue'));
+Vue.component('return', require('./objects/Return.vue'));
+Vue.component('recall', require('./objects/Recall.vue'));
 
 window.flash = function(message, level = 'success'){
  	window.events.$emit('flash', {message, level});

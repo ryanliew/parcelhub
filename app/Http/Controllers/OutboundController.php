@@ -8,6 +8,7 @@ use App\Outbound;
 use App\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
 use PDF;
 use Storage;
 
@@ -50,7 +51,14 @@ class OutboundController extends Controller
     {
         if(request()->wantsJson()) {
             $user = auth()->user();
+
+            if($user->hasRole('subuser'))
+            {
+                $user = $user->parent;
+            }
+
             if($user->hasRole('admin'))
+                
                 return Controller::VueTableListResult( Outbound::with('tracking_numbers')
                                                                 ->select('outbounds.id as id',
                                                                     'amount_insured',
@@ -66,6 +74,7 @@ class OutboundController extends Controller
                                                                     'outbounds.recipient_postcode',
                                                                     'users.name as customer'
                                                                     )
+                                                                ->where('outbounds.type', 'outbound')
                                                                 ->leftJoin('couriers', 'courier_id', '=', 'couriers.id')
                                                                 ->leftJoin('users', 'user_id', '=', 'users.id')
                                                                 ->orderBy('outbounds.created_at', 'desc') );
@@ -85,6 +94,7 @@ class OutboundController extends Controller
                                                                     'outbounds.recipient_country',
                                                                     'outbounds.recipient_postcode'
                                                                     )
+                                                            ->where('outbounds.type', 'outbound')
                                                             ->leftJoin('couriers', 'courier_id', '=', 'couriers.id')
                                                             ->orderBy('outbounds.created_at', 'desc') );
 
@@ -124,6 +134,7 @@ class OutboundController extends Controller
                                                                     )
                                                                 ->leftJoin('couriers', 'courier_id', '=', 'couriers.id')
                                                                 ->leftJoin('users', 'user_id', '=', 'users.id')
+                                                                ->where('outbounds.type', 'outbound')
                                                                 ->where('outbounds.process_status', '<>', 'completed')
                                                                 ->where('outbounds.process_status', '<>', 'canceled')
                                                                 ->orderBy('outbounds.created_at', 'desc'));
@@ -139,18 +150,6 @@ class OutboundController extends Controller
         //
     }
 
-    public function proformaInvoice($id)
-    {
-        $outbound = Outbound::with('products')->find($id);
-        $courier = Courier::find($outbound->courier_id);
-        $auth = auth()->user();
-        // return view('outbound.proforma', compact(['outbound', 'courier', 'auth']));
-
-        $pdf = PDF::loadView('outbound.proforma', compact(['outbound', 'courier', 'auth']));
-
-        return $pdf->setPaper('A4')->download('outbound-proforma-invoice.pdf');
-    }
-
     public function packingList($id)
     {
         $outbound = Outbound::with('products.lots')->find($id);
@@ -164,11 +163,22 @@ class OutboundController extends Controller
 
     public function report($id)
     {
-        $outbound = Outbound::find($id);
+        $outbound = Outbound::with('products')->find($id);
         $path = storage_path();
         $pdf = PDF::loadView('outbound.report', compact(['outbound', 'path']));
         $filename = Outbound::prefix() . $outbound->id . '.pdf';
         $mime = "";
+
+        if($outbound->payer_gst_vat != null){
+            $courier = Courier::find($outbound->courier_id);
+            $auth = auth()->user();
+            $totalQuantity = $outbound->totalQuantity();
+            $totalPrice = $outbound->totalValue();
+
+            $pdf = PDF::loadView('outbound.proforma', compact(['outbound', 'courier', 'auth', 'totalQuantity', 'totalPrice']));
+
+            return $pdf->setPaper('A4')->download('outbound-proforma-invoice-'.$id.'.pdf');
+        }
 
         if($outbound->invoice_slip) {
             
@@ -217,6 +227,11 @@ class OutboundController extends Controller
             'amount_insured' => 'required_if:insurance,==,1|numeric|min:0',
             'outbound_products' => 'required',
             'invoice_slip' => 'nullable|mimes:jpeg,png,pdf',
+            'payer_gst_vat' => 'required_unless:recipient_country,malaysia,Malaysia',
+            'harm_comm_code' => 'required_unless:recipient_country,malaysia,Malaysia',
+            'trade_term' => 'required_unless:recipient_country,malaysia,Malaysia',
+            'payment_term' => 'required_unless:recipient_country,malaysia,Malaysia',
+            'export_reason' => 'required_unless:recipient_country,malaysia,Malaysia'
         ]);
 
         if(empty(auth()->user()->address))
@@ -250,11 +265,12 @@ class OutboundController extends Controller
                     'customer_country' => $request->recipient_country,
                 ]);
 
-            $outbound = new Outbound($request->all());
+            $outbound = new Outbound($request->except(['business']));
             $outbound->insurance = request()->has('insurance');
             $outbound->invoice_slip = $request->hasFile('invoice_slip') ? $request->file('invoice_slip')->store('public') : null;
             $outbound->amount_insured = $outbound->insurance ? request()->amount_insured : 0;
             $outbound->user_id = $user->id;
+            $outbound->is_business = $request->business == "true" ? true : false;
             $outbound->status = 'true';
             $outbound->process_status = 'pending';
             $outbound->save();
@@ -281,7 +297,7 @@ class OutboundController extends Controller
 
                         $product->lots()->updateExistingPivot($lot->id, ['outgoing_product' => $newQuantityForOutgoingProduct]);
 
-                        $outbound->products()->attach($product->id, ['quantity' => $quantity, 'lot_id' => $lot->id, 'remark' => $outboundProduct['remarks']]);
+                        $outbound->products()->attach($product->id, ['quantity' => $quantity, 'lot_id' => $lot->id, 'remark' => $outboundProduct['remarks'], 'unit_value' => $outboundProduct['unit_value'], 'total_value' => $outboundProduct['total_value'], 'weight' => $outboundProduct['weight'], 'manufacture_country' => $outboundProduct['manufacture_country']]);
 
                         break;
 
@@ -295,7 +311,7 @@ class OutboundController extends Controller
 
                         $product->lots()->updateExistingPivot($lot->id, ['outgoing_product' => $newQuantityForOutgoingProduct]);
 
-                        $outbound->products()->attach($product->id, ['quantity' => $lot->pivot->quantity, 'lot_id' => $lot->id, 'remark' => $outboundProduct['remarks']]);
+                        $outbound->products()->attach($product->id, ['quantity' => $lot->pivot->quantity, 'lot_id' => $lot->id, 'remark' => $outboundProduct['remarks'], 'unit_value' => $outboundProduct['unit_value'], 'total_value' => $outboundProduct['total_value'], 'weight' => $outboundProduct['weight'], 'manufacture_country' => $outboundProduct['manufacture_country']]);
 
                         // Update how many quantity left require to acquire from the other lot
                         $quantity -= $sumOfQuantityAndIncomingQuantity;

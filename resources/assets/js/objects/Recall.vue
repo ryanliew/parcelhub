@@ -2,13 +2,13 @@
 	<div>
 		<div class="columns">
 			<div class="column">
-				<!-- Outbound details -->
+				<!-- Recall details -->
 				<div class="card">
 					<div class="card-header">
 						<div class="card-header-title level">
 							<div class="level-left">
 								<div class="level-item">
-									<span>Outbound #{{ outbound.id }}</span>
+									<span>Recall #{{ recall.id }}</span>
 								</div>
 							</div>
 							<div class="level-right">
@@ -16,10 +16,6 @@
 									<a class="button is-info ml-5" :href="download" target="_blank">
 										<i class="fa fa-download"></i>
 										<span class="pl-5">Download invoice</span>
-									</a>
-									<a class="button is-info ml-5" :href="downloadPackinglist" target="_blank">
-										<i class="fa fa-download"></i>
-										<span class="pl-5">Download packing list</span>
 									</a>
 								</div>
 							</div>
@@ -30,20 +26,10 @@
 							<div class="level-item has-text-centered">
 								<div>
 									<p class="heading">
-										Order date
+										Recall date
 									</p>
 									<p class="title">
-										{{ outbound.created_at | date }}
-									</p>
-								</div>
-							</div>
-							<div class="level-item has-text-centered">
-								<div>
-									<p class="heading">
-										Courier
-									</p>
-									<p class="title">
-										{{ outbound.courier.name || outbound.courier }}
+										{{ recall.created_at | date }}
 									</p>
 								</div>
 							</div>
@@ -61,13 +47,13 @@
 					</div>
 				</div>
 				
-				<!-- Outbound products -->
+				<!-- Recall products -->
 				<div class="card mt-15">
 					<div class="card-header">
 						<div class="card-header-title level">
 							<div class="level-left">
 								<div class="level-item">
-									Outbound products
+									Recall products
 								</div>
 							</div>
 						</div>
@@ -102,7 +88,7 @@
 				</div>
 					
 				<!-- Tracking numbers -->
-				<div class="card mt-15" v-if="outbound.tracking_numbers.length > 0">
+				<div class="card mt-15" v-if="recall.tracking_numbers.length > 0">
 					<div class="card-header">
 						<div class="card-header-title level">
 							<div class="level-left">
@@ -139,7 +125,7 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr v-for="(number, index) in outbound.tracking_numbers">
+								<tr v-for="(number, index) in recall.tracking_numbers">
 									<td>{{ index + 1 }}</td>
 									<td v-text="number.number"></td>
 								</tr>
@@ -194,7 +180,7 @@
 							@keydown="form.errors.clear($event.target.name)" 
 							@input="form.errors.clear($event.target.name)"
 							@keyup.enter="submit"
-							v-if="canManage && outbound.process_status !== 'completed'">
+							v-if="canManage && recall.process_status !== 'completed'">
 							
 							<div class="field">
 								<selector-input v-model="selectedStatus" :defaultData="selectedStatus"
@@ -234,9 +220,9 @@
           				</form>
 						<div class="has-text-centered" v-else>
 							<p class="title" :class="statusClass">
-								{{ outbound.process_status | unslug | capitalize }}
+								{{ recall.process_status | unslug | capitalize }}
 							</p>
-							<button class="button is-danger" v-if="outbound.process_status !== 'completed' && outbound.process_status !== 'canceled' && canEdit " @click="confirmation = true">Cancel order</button>
+							<button class="button is-danger" v-if="recall.process_status !== 'completed' && recall.process_status !== 'canceled' && canEdit" @click="confirmation = true">Cancel order</button>
 						</div>
 
 					</div>
@@ -255,20 +241,20 @@
 						<p class="heading">
 							Name
 						</p>
-						{{ outbound.recipient_name }}
+						{{ recall.recipient_name }}
 						
 						<hr>
 						<p class="heading">
 							Address
 						</p>
-						{{ outbound.recipient_address }}, <br>
-						<div v-if="outbound.recipient_address_2">{{ outbound.recipient_address_2 }}, <br></div> 
-						{{ outbound.recipient_postcode }} {{ outbound.recipient_state }}, {{ outbound.recipient_country }}
+						{{ recall.recipient_address }}, <br>
+						<div v-if="recall.recipient_address_2">{{ recall.recipient_address_2 }}, <br></div> 
+						{{ recall.recipient_postcode }} {{ recall.recipient_state }}, {{ recall.recipient_country }}
 						<hr>
 						<p class="heading">
 							Phone
 						</p>
-						{{ outbound.recipient_phone }}
+						{{ recall.recipient_phone }}
 							
 
 
@@ -279,20 +265,20 @@
 
 		<modal :active="confirmation" @close="confirmation = false">
 			<template slot="header">Cancel order</template>
-			<p v-if="outbound.process_status == 'processing'">
+			<p v-if="recall.process_status == 'processing'">
 				Unfortunately, we are already processing your order. <br>
 				Please call <b>{{ number }}</b> for assistance. A cancelation fee of <b>RM{{ fee }}</b> might be charged.
 			</p>
-			<p v-else>Are you sure you want to cancel this outbound order?</p>
+			<p v-else>Are you sure you want to cancel this recall order?</p>
 
-			<template slot="footer" v-if="outbound.process_status !== 'processing'">
+			<template slot="footer" v-if="recall.process_status !== 'processing'">
 				<button class="button is-danger" @click="confirmCancel">Cancel</button>
           	</template>
         </modal>
 
         <confirmation :isConfirming="confirmSubmit"
         				title="Confirmation"
-        				message="Confirm changing the status of the outbound order?"
+        				message="Confirm changing the status of the recall order?"
         				@close="confirmSubmit = false"
         				@confirm="onSubmit">
         </confirmation>
@@ -308,7 +294,7 @@
 
 <script>
 	export default {
-		props: ['outbound', 'canManage', 'fee', 'number', 'canEdit'],
+		props: ['recall', 'canManage', 'fee', 'number', 'canEdit'],
 		data() {
 			return {
 				loading: true,
@@ -323,8 +309,8 @@
 					id: ''
 				}),
 				selectedStatus: {
-					value: this.outbound.process_status,
-					label: this.$options.filters.capitalize(this.$options.filters.unslug(this.outbound.process_status))
+					value: this.recall.process_status,
+					label: this.$options.filters.capitalize(this.$options.filters.unslug(this.recall.process_status))
 				},
 				processStatusOptions: [
 					{
@@ -353,21 +339,21 @@
 		},
 
 		mounted() {
-			this.getOutbound();
+			this.getRecall();
 		},
 
 		methods: {
-			getOutbound() {
-				axios.get('/internal/outbound/products/' + this.outbound.id)
-					.then(response => this.setOutbound(response));
+			getRecall() {
+				axios.get('/internal/outbound/products/' + this.recall.id)
+					.then(response => this.setRecall(response));
 			},
 
-			setOutbound(response) {
+			setRecall(response) {
 				this.products = response.data;
 
-				this.form.id = this.outbound.id;
+				this.form.id = this.recall.id;
 
-				this.form.process_status = this.outbound.process_status;
+				this.form.process_status = this.recall.process_status;
 			},
 
 			back() {
@@ -381,7 +367,7 @@
 			editTracking() {
 				this.isEditTracking = true;
 
-				this.trackingForm.tracking_numbers = _.map(this.outbound.tracking_numbers, function(value) {
+				this.trackingForm.tracking_numbers = _.map(this.recall.tracking_numbers, function(value) {
 					return value.number;
 				}).join(";");
 			},
@@ -399,7 +385,7 @@
 
 			onSubmitTracking() {
 				this.confirmSubmitTracking = false;
-				this.trackingForm.id = this.outbound.id;
+				this.trackingForm.id = this.recall.id;
 
 				// Trim out the last semicolon if it exists
 				let numbers = this.trackingForm.tracking_numbers;
@@ -414,12 +400,12 @@
 			},
 
 			onSuccess(response) {
-				this.form.id = this.outbound.id;
+				this.form.id = this.recall.id;
 				this.back();
 			},
 
 			onError(response) {
-				this.form.id = this.outbound.id
+				this.form.id = this.recall.id
 			},
 
 			onCancel() {
@@ -456,7 +442,7 @@
 
 			statusClass() {
 				let color = 'is-success';
-				let value = this.outbound.process_status;
+				let value = this.recall.process_status;
 				switch(value) {
 					case 'pending':
 						color = 'is-warning';
@@ -479,11 +465,11 @@
 			},
 
 			download() {
-				return "/download/outbound/report/" + this.outbound.id;
+				return "/download/outbound/report/" + this.recall.id;
 			},
 
 			downloadPackinglist() {
-				return "/download/outbound/packingList/" + this.outbound.id;
+				return "/download/outbound/packingList/" + this.recall.id;
 			},
 		}
 	}

@@ -7,7 +7,7 @@
 						<div class="card-header-title level">
 							<div class="level-left">
 								<div class="level-item">
-									<span>Inbound #{{ inbound.id }}</span>
+									<span>Return #{{ returnobj.id }}</span>
 								</div>
 							</div>
 							<div class="level-right">
@@ -25,20 +25,10 @@
 							<div class="level-item has-text-centered">
 								<div>
 									<p class="heading">
-										Order date
+										Return date
 									</p>
 									<p class="title">
-										{{ inbound.created_at | date }}
-									</p>
-								</div>
-							</div>
-							<div class="level-item has-text-centered">
-								<div>
-									<p class="heading">
-										Arrival date
-									</p>
-									<p class="title">
-										{{ inbound.arrival_date | date }}
+										{{ returnobj.arrival_date | date }}
 									</p>
 								</div>
 							</div>
@@ -48,7 +38,7 @@
 										Total carton
 									</p>
 									<p class="title">
-										{{ inbound.total_carton }}
+										{{ returnobj.total_carton }}
 									</p>
 								</div>
 							</div>
@@ -112,9 +102,9 @@
           				</form>
 						<div class="has-text-centered" v-else>
 							<p class="title" :class="statusClass">
-								{{ inbound.process_status | unslug | capitalize }}
+								{{ returnobj.process_status | unslug | capitalize }}
 							</p>
-							<button v-if="inbound.process_status == 'awaiting_arrival' && canEdit" @click="confirmation = true" class="button is-danger">Cancel order</button>
+							<button v-if="returnobj.process_status == 'awaiting_arrival' && canEdit" @click="confirmation = true" class="button is-danger">Cancel order</button>
 						</div>
 
 					</div>
@@ -122,29 +112,12 @@
 			</div>
 		</div>
 
-
 		<div class="card">
 			<div class="card-header">
 				<div class="card-header-title level">
 					<div class="level-left">
 						<div class="level-item">
-							Inbound products
-						</div>
-					</div>
-					<div class="level-right" v-if="canManage && inbound.process_status !== 'completed' && inbound.process_status !== 'canceled'">
-						<button class="button is-primary" :class="loadingClass" v-if="!isEditing" @click="edit()">
-							<i class="fa fa-edit"></i>
-							<span class="pl-5">Edit inbound details</span>
-						</button>
-						<div v-else>
-							<button class="button is-danger" @click="onCancel()">
-								<i class="fa fa-times"></i>
-								<span class="pl-5">Cancel</span>
-							</button>
-							<button class="button is-success" @click="submitEdit()">
-								<i class="fa fa-check"></i>
-								<span class="pl-5">Confirm changes</span>
-							</button>
+							Return products
 						</div>
 					</div>
 				</div>
@@ -157,19 +130,19 @@
 							<th>Name</th>
 							<th>Quantity</th>
 							<th>Attributes</th>
-							<th>User remark</th>
+							<th>Remark</th>
 						</tr>
 					</thead>
 					<tbody>
-						<template v-for="(product_with_lots, index) in inbound.products_with_lots">
+						<template v-for="(product_with_lots, index) in returnobj.products_with_lots">
 							<tr>
-								<td><figure class="image is-48x48"><img :src="inbound.products[index].picture"></figure></td>
-								<td v-text="inbound.products[index].name"></td>
+								<td><figure class="image is-48x48"><img :src="returnobj.products[index].picture"></figure></td>
+								<td v-text="returnobj.products[index].name"></td>
 								<td v-text="product_with_lots.quantity"></td>
 								<td>
 									<div class="tags">
-										<span class="tag is-danger" v-if="inbound.products[index].is_dangerous">Dangerous</span>
-										<span class="tag is-warning" v-if="inbound.products[index].is_fragile">Fragile</span>
+										<span class="tag is-danger" v-if="returnobj.products[index].is_dangerous">Dangerous</span>
+										<span class="tag is-warning" v-if="returnobj.products[index].is_fragile">Fragile</span>
 									</div>
 								</td>
 								
@@ -177,85 +150,16 @@
 									{{ product_with_lots.remark }}
 								</td>
 							</tr>
-								
-							<tr class="subrow">
-								<th>Lots</th>
-								<th>Quantity</th>
-								<th>Received</th>
-								<th>Expiry date</th>
-								<th>Admin remark</th>
-							</tr>
-							<tr class="subrow" v-for="(lot, lotindex) in product_with_lots.lots">
-								<td v-text="lot.name" v-if="!isEditing">
-							
-								</td>
-								<td v-else>
-									<selector-input v-model="inboundForm.products[index].lots[lotindex].lot"
-										:defaultData="inboundForm.products[index].lots[lotindex].lot"
-										:hideLabel="true"
-										:potentialData="lotsOptions"
-										placeholder="Select lot"
-										name="products"
-										:unclearable="true"
-										v-if="inboundForm.products[index] && inboundForm.products[index].lots[lotindex]">
-									</selector-input>
-								</td>
-								<td>
-									{{ lot.pivot.quantity_original }}
-								</td>
-								<td>
-									<text-input
-										v-model="inboundForm.products[index].lots[lotindex].quantity_received"
-										:defaultValue="inboundForm.products[index].lots[lotindex].quantity_received" 
-										:editable="isEditing && canManage"
-										name="products"
-										:hideLabel="true"
-										:required="true"
-										type="number"
-										v-if="inboundForm.products[index] && inboundForm.products[index].lots[lotindex]"
-									>
-									</text-input>
-								</td>
-								<td>
-									<text-input
-										v-model="inboundForm.products[index].lots[lotindex].expiry_date"
-										:defaultValue="inboundForm.products[index].lots[lotindex].expiry_date" 
-										:editable="isEditing"
-										:hideLabel="true"
-										:required="false"
-										:focus="true"
-										type="date"
-										v-if="inboundForm.products[index] && inboundForm.products[index].lots[lotindex]"
-									>
-									</text-input>
-								</td>
-								<td>
-									<textarea-input
-										v-if="inboundForm.products[index] && inboundForm.products[index].lots[lotindex]"
-										v-model="inboundForm.products[index].lots[lotindex].remark"
-										:defaultValue="inboundForm.products[index].lots[lotindex].remark" 
-										:editable="isEditing"
-										label="Remark"
-										name="remark"
-										type="text"
-										:hideLabel="true"
-										:required="false"
-										rows="0.5"
-										cols="4">
-									</textarea-input>
-								</td>
-							</tr>
 						</template>
 					</tbody>
 				</table>
-				<p class="has-text-danger" v-text="inboundForm.errors.get('products')"></p>
 			</div>
 		</div>
 
 		<modal :active="confirmation" @close="confirmation = false">
 			<template slot="header">Cancel order</template>
 			
-			Are you sure you want to cancel this inbound order?
+			Are you sure you want to cancel this return order?
 
 			<template slot="footer">
 				<button class="button is-danger" @click="confirmCancel">Cancel</button>
@@ -264,37 +168,30 @@
 
         <confirmation :isConfirming="confirmSubmit"
         				title="Confirmation"
-        				message="Confirm changing the status of the inbound order? Editing is no longer allowed after changing the order to completed."
+        				message="Confirm changing the status of the return order? Editing is no longer allowed after changing the order to completed."
         				@close="confirmSubmit = false"
         				@confirm="onSubmit">
-        </confirmation>
-
-        <confirmation :isConfirming="confirmSubmitEdit"
-        				title="Confirmation"
-        				message="Confirm editing the inbound order details?"
-        				@close="confirmSubmitEdit = false"
-        				@confirm="onSubmitEdit">
         </confirmation>
 	</div>
 </template>
 
 <script>
 	export default {
-		props: ['inbound', 'canManage', 'canEdit'],
+		props: ['returnobj', 'canManage', 'canEdit'],
 		data() {
 			return {
 				form: new Form({
-					process_status: this.inbound.process_status,
-					id: this.inbound.id
+					process_status: this.returnobj.process_status,
+					id: this.returnobj.id
 				}),
-				inboundForm: new Form({
+				returnobjForm: new Form({
 					products: [],
-					id: this.inbound.id
+					id: this.returnobj.id
 				}),
 				lotsOptions: [],
 				selectedStatus: {
-					value: this.inbound.process_status,
-					label: this.$options.filters.capitalize(this.$options.filters.unslug(this.inbound.process_status))
+					value: this.returnobj.process_status,
+					label: this.$options.filters.capitalize(this.$options.filters.unslug(this.returnobj.process_status))
 				},
 				processStatusOptions: [
 					{
@@ -328,7 +225,7 @@
 
 		methods: {
 			getLots() {
-				axios.get('/internal/user/' + this.inbound.products[0].user_id + '/lots')
+				axios.get('/internal/user/' + this.returnobj.products[0].user_id + '/lots')
 					.then(data => this.setLots(data));
 
 			},
@@ -348,10 +245,10 @@
 			setFormData() {
 				this.editLoading = false;
 
-				this.inboundForm.products = this.inbound.products_with_lots.map(product_with_lots => {
+				this.returnobjForm.products = this.returnobj.products_with_lots.map(product_with_lots => {
 					let obj = {};
 
-					obj['inbound_product_id'] = product_with_lots.id;
+					obj['returnobj_product_id'] = product_with_lots.id;
 					obj['product_id'] = product_with_lots.product_id;
 					obj['lots'] = product_with_lots.lots.map(lot => {
 						let lotobj = {};
@@ -388,7 +285,7 @@
 			onSuccess() {
 				this.confirmSubmit = false;
 				this.isEditing = false;
-				this.form.id = this.inbound.id;
+				this.form.id = this.returnobj.id;
 				this.back();
 			},
 
@@ -424,7 +321,7 @@
 			onSubmitEdit() {
 				this.confirmSubmitEdit = false;
 
-				this.inboundForm.post('/inbound/update/' + this.inbound.id)
+				this.returnobjForm.post('/inbound/update/' + this.returnobj.id)
 					.then(response => this.onSuccess(response))
 					.catch(response => this.onError(response));
 			}
@@ -432,7 +329,7 @@
 
 		computed: {
 			totalProducts() {
-				return this.inbound.products ? this.inbound.products.length : 0;
+				return this.returnobj.products ? this.returnobj.products.length : 0;
 			},
 
 			action() {
@@ -442,7 +339,7 @@
 
 			statusClass() {
 				let color = 'is-success';
-				let value = this.inbound.process_status;
+				let value = this.returnobj.process_status;
 				switch(value) {
 					case 'awaiting_arrival':
 						color = 'is-warning';
@@ -462,7 +359,7 @@
 			},
 
 			download() {
-				return "/download/inbound/report/" + this.inbound.id;
+				return "/download/inbound/report/" + this.returnobj.id;
 			},
 
 			loadingClass() {

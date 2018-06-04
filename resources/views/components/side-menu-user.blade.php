@@ -9,6 +9,7 @@
             <a @if( url()->current() == route('products') ) class="is-active" @endif href="{{ route('products') }}">
                 My products
             </a>
+            @if(!auth()->user()->hasRole('subuser'))
             <ul>
                 <li>
                     <a @if( url()->current() == route('products.bulk') ) class="is-active" @endif href="{{ route('products.bulk') }}">
@@ -16,16 +17,20 @@
                     </a>
                 </li>
             </ul>
+            @endif
         </li>
+        @if(!auth()->user()->hasRole('subuser'))
         <li>
             <a @if( url()->current() == route('customers') ) class="is-active" @endif href="{{ route('customers') }}">
                 My customers
             </a>
         </li>
+        @endif
         <li>
             <a @if( url()->current() == route('lots') ) class="is-active" @endif href="{{ route('lots') }}">
                 My lots
             </a>
+            @if(!auth()->user()->hasRole('subuser'))
             <ul>
                 <li>
                     <a @if( url()->current() == route('payment') ) class="is-active" @endif href="{{ route('payment') }}">
@@ -38,7 +43,15 @@
                     </a>
                 </li>
             </ul>
+            @endif
         </li>
+        @if(!auth()->user()->hasRole('subuser'))
+        <li>
+            <a @if( url()->current() == route('subusers') ) class="is-active" @endif href="{{ route('subusers') }}">
+                My subusers
+            </a>
+        </li>
+        @endif
     </ul>
     <p class="menu-label">
         My orders
@@ -52,6 +65,16 @@
         <li>
             <a @if( url()->current() == route('outbounds') ) class="is-active" @endif href="{{ route('outbounds') }}">
                 Outbounds
+            </a>
+        </li>
+        <li>
+            <a @if( url()->current() == route('returns') ) class="is-active" @endif href="{{ route('returns') }}">
+                Return Order
+            </a>
+        </li>
+        <li>
+            <a @if( url()->current() == route('recalls') ) class="is-active" @endif href="{{ route('recalls') }}">
+                Recall Order
             </a>
         </li>
     </ul>

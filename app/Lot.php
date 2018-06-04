@@ -5,6 +5,7 @@ namespace App;
 use App\Product;
 use App\Utilities;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 /**
  * App\Lot
@@ -98,12 +99,12 @@ class Lot extends Model
     {
         $lot_product = $this->products()->where('product_id', $product->id)->first();
         $new_quantity = $lot_product->pivot->incoming_quantity - $quantity;
-
         if($new_quantity <= 0 
             && $lot_product->pivot->quantity <= 0 
             && $lot_product->pivot->outgoing_product <= 0)
         {
             $this->products()->detach($lot_product);
+            Log::info("Lot detached: " . $this->id);
         }
         else
         {
@@ -113,8 +114,7 @@ class Lot extends Model
 
     public function increase_incoming_product(Product $product, $quantity)
     {
-        $lot_product = $this->products()->where('product_id', $product->id)->first();
-
+        $lot_product = $this->fresh()->products()->where('product_id', $product->id)->first();
         if(is_null($lot_product))
         {
             $this->products()->attach($product->id);
@@ -122,7 +122,7 @@ class Lot extends Model
         }
 
         $new_quantity = $lot_product->pivot->incoming_quantity + $quantity;
-
+        Log::info("New quantity:" . $new_quantity);
         $this->products()->updateExistingPivot($product->id, ['incoming_quantity' => $new_quantity]);
     }
 }

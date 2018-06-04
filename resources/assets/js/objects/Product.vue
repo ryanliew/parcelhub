@@ -303,12 +303,14 @@
 			<inbound :inbound="selectedInbound"
 						:canManage="can_manage" 
 						@back="orderBack"
-						v-if="isViewingInbound">
+						v-if="isViewingInbound"
+						:canEdit="can_edit">
 			</inbound>
 			<outbound :outbound="selectedOutbound"
 						:canManage="can_manage" 
 						@back="orderBack" 
-						v-if="isViewingOutbound">
+						v-if="isViewingOutbound"
+						:canEdit="can_edit">
 			</outbound>
 		</transition>
         <confirmation :isConfirming="confirmStockUpdate"
@@ -325,7 +327,7 @@
 <script>
 	import moment from 'moment';
 	export default {
-		props: ['product', 'can_manage'],
+		props: ['product', 'can_manage', 'can_edit'],
 		data() {
 			return {
 				isEditing: false,

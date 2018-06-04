@@ -8,7 +8,7 @@
 					@include('components.side-menu')
 				</div>
 				<div class="column">
-					<inbounds-page can_manage="{{ auth()->user()->hasRole('admin') }}" can_edit="{{ !auth()->user()->hasRole('subuser') }}"></inbounds-page>
+					<subusers-page can_manage="{{ auth()->user()->hasRole('admin') || auth()->user()->hasRole('user') }}" parent="{{ auth()->user()->id }}"></subusers-page>
 				</div>	
 			</div>
 		</section>
