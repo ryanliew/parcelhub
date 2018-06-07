@@ -138,6 +138,7 @@
 			    				label="product image"
 			    				name="picture"
 			    				accept="image/*"
+			    				:required="true"
 			    				:error="form.errors.get('picture')">
 			    	</image-input>
 			    </div>

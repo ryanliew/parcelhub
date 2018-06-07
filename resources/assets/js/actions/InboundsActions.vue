@@ -26,6 +26,9 @@ export default {
     },
     methods: {
         itemAction(action, data, index){
+            if(data.type !== 'inbound')
+                action = 'viewReturn';
+
             this.$events.fire(action, data);            
         }
     }

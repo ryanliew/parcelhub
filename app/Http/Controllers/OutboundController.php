@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
 use PDF;
 use Storage;
+use Intervention\Image\ImageManagerStatic as Image;
 
 class OutboundController extends Controller
 {
@@ -72,7 +73,8 @@ class OutboundController extends Controller
                                                                     'outbounds.recipient_state',
                                                                     'outbounds.recipient_country',
                                                                     'outbounds.recipient_postcode',
-                                                                    'users.name as customer'
+                                                                    'users.name as customer',
+                                                                    'outbounds.type as type'
                                                                     )
                                                                 ->where('outbounds.type', 'outbound')
                                                                 ->leftJoin('couriers', 'courier_id', '=', 'couriers.id')
@@ -92,7 +94,8 @@ class OutboundController extends Controller
                                                                     'outbounds.recipient_phone',
                                                                     'outbounds.recipient_state',
                                                                     'outbounds.recipient_country',
-                                                                    'outbounds.recipient_postcode'
+                                                                    'outbounds.recipient_postcode',
+                                                                    'outbounds.type as type'
                                                                     )
                                                             ->where('outbounds.type', 'outbound')
                                                             ->leftJoin('couriers', 'courier_id', '=', 'couriers.id')
@@ -130,7 +133,8 @@ class OutboundController extends Controller
                                                                     'outbounds.recipient_state',
                                                                     'outbounds.recipient_country',
                                                                     'outbounds.recipient_postcode',
-                                                                    'users.name as customer'
+                                                                    'users.name as customer',
+                                                                    'outbounds.type as type'
                                                                     )
                                                                 ->leftJoin('couriers', 'courier_id', '=', 'couriers.id')
                                                                 ->leftJoin('users', 'user_id', '=', 'users.id')
@@ -267,12 +271,34 @@ class OutboundController extends Controller
 
             $outbound = new Outbound($request->except(['business']));
             $outbound->insurance = request()->has('insurance');
-            $outbound->invoice_slip = $request->hasFile('invoice_slip') ? $request->file('invoice_slip')->store('public') : null;
+            
             $outbound->amount_insured = $outbound->insurance ? request()->amount_insured : 0;
             $outbound->user_id = $user->id;
             $outbound->is_business = $request->business == "true" ? true : false;
             $outbound->status = 'true';
             $outbound->process_status = 'pending';
+
+            if( $request->hasFile('invoice_slip') )
+            {
+                $file = $request->file('invoice_slip');
+                if($file->extension() !== 'pdf')
+                {
+                    $path = $file->hashName('public');
+                    $image = Image::make($file);
+
+                    $image->resize(705,null, function($constraint) {
+                        $constraint->aspectRatio();
+                    });
+                    Storage::put($path, (string) $image->encode());
+
+                    // $product->picture = $file->store('public');
+                    $outbound->invoice_slip = $path;
+                }
+                else
+                {
+                    $outbound->invoice_slip = $file->store('public');
+                }
+            } 
             $outbound->save();
 
             foreach ($outboundProducts as $outboundProduct) {
@@ -301,7 +327,7 @@ class OutboundController extends Controller
 
                         break;
 
-                    } else {
+                    } else if($sumOfQuantityAndIncomingQuantity > 0){
                         // If we still need to go to next lot to get product, means take everything out
                         $volumeAfterDeductProduct = $lot->left_volume + ($product->volume * $lot->pivot->quantity);
 
