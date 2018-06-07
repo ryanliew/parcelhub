@@ -65,22 +65,29 @@
 						<p class="is-danger header" v-if="form.errors.get('overall')" v-text="form.errors.get('overall')"></p> <br>
 						<div class="columns">
 				         	<div class="column">
-				          		<text-input v-model="form.arrival_date" :defaultValue="form.arrival_date" 
+				         		<date-time-input v-model="form.arrival_date" :defaultValue="form.arrival_date"
+				         						label="Arrival date"
+				         						:required="true"
+				         						name="arrival_date"
+				         						type="datetime"
+				         						:error="form.errors.get('arrival_date')">
+				         		</date-time-input>
+				          		<!-- <text-input v-model="form.arrival_date" :defaultValue="form.arrival_date" 
 											label="Arrival date" 
 											:required="true"
 											name="arrival_date"
-											type="date"
+											type="datetime"
 											:editable="true"
 											:error="form.errors.get('arrival_date')"
 											:focus="true">
-								</text-input>
+								</text-input> -->
 							</div>
 							<div class="column">
 								<text-input v-model="form.total_carton" :defaultValue="form.total_carton" 
 											label="Total carton" 
 											:required="true"
 											name="total_carton"
-											type="text"
+											type="number"
 											:editable="true"
 											:error="form.errors.get('total_carton')">
 								</text-input>
@@ -180,13 +187,14 @@
 </template>
 
 <script>
+	import DateTimeInput from '../components/DateTimeInput.vue';
 	import TableView from '../components/TableView.vue';
 	import Inbound from '../objects/Inbound.vue';
 
 	export default {
 		props: ['can_manage', 'can_edit'],
 
-		components: { TableView, Inbound },
+		components: { TableView, Inbound, DateTimeInput },
 
 		data() {
 			return {

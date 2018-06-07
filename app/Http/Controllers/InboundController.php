@@ -150,14 +150,16 @@ class InboundController extends Controller
 
         $left_volume = $user_lots->sum('left_volume');
         // Check for total left over volume
+        /* We are turning this check off at the moment, this should not restrict the stock from coming in for now
         if($product_total_volume > $left_volume){
             if(request()->wantsJson()) {
                 return response(json_encode(array('products' => ['You only have ' . Utilities::convertCentimeterCubeToMeterCube($left_volume) . 'm³ of space left but you are trying to fit in ' . Utilities::convertCentimeterCubeToMeterCube($product_total_volume) . 'm³. Please purchase more lots.'])), 422);
             }
             return redirect()->back()->withErrors("You have exceeded your lot limit.");
         }
+        */
         // Check for days before order
-        if($compare->diffInDays($now) < Settings::get('days_before_order') ){
+        if( Settings::get('days_before_order') !== 0 && $compare->diffInDays($now) < Settings::get('days_before_order') ){
             if(request()->wantsJson()) {
                 return response(json_encode(array('arrival_date' => ['Inbound must be created '.Settings::get('days_before_order').' day(s) before.'])), 422);
             }
@@ -204,12 +206,16 @@ class InboundController extends Controller
         }
         // Assign products to user lots
         $user_lots_with_enough_volume = $auth->lots()->where('left_volume', '>=', $product["singleVolume"])->get();
-        foreach($user_lots_with_enough_volume as $lot){
+        foreach($user_lots_with_enough_volume as $key => $lot ){
             $lot_products = [];
             foreach($products as $key => $product){
                 if($product["quantity"] > 0) {
                     // If there are still volume needed to be assigned
                     $quantityIntoLot = $this->calculateQuantity($lot->left_volume, $product["singleVolume"], $product["quantity"]);
+
+                    if($key + 1 == $user_lots_with_enough_volume->count() )
+                        $quantityIntoLot = $product["quantity"];
+
                     //dd($quantityIntoLot);
                     if($quantityIntoLot > 0){
                         $lot_products[$key]['incoming_quantity'] = $quantityIntoLot;
@@ -289,7 +295,7 @@ class InboundController extends Controller
                 return response(json_encode(array('products' => ['You have repeating lots defined in ' . $the_product->name . '.'])), 422);
             }
 
-            foreach($product->lots as $lot)
+            /*foreach($product->lots as $lot)
             {
                 if($lot->original_lot !== $lot->lot->value)
                 {                
@@ -302,7 +308,7 @@ class InboundController extends Controller
                         return response(json_encode(array('products' => ['You only have ' . Utilities::convertCentimeterCubeToMeterCube($new_lot->left_volume) . 'm³ of space left in ' . $new_lot->name . ' but you are trying to fit in ' . Utilities::convertCentimeterCubeToMeterCube($volume_required) . 'm³.'])), 422);
                     }
                 }
-            }
+            }*/
         }
 
         // Validate complete
@@ -329,6 +335,7 @@ class InboundController extends Controller
                 $new_lot->propagate_left_volume();
 
                 $inbound_product->lots()->updateExistingPivot($lot->lot->value, [
+                        'quantity_original' => $lot->original_quantity,
                         'quantity_received' => $lot->quantity_received,
                         'expiry_date' => $lot->expiry_date,
                         'remark' => $lot->remark
