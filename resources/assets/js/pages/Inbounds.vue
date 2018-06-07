@@ -323,7 +323,7 @@
 
 			fields() {
 				let displayFields = [{name: 'id', title: '#'},
-					{name: 'arrival_date', sortField: 'arrival_date', title: 'Arrival date', callback: 'date'},
+					{name: 'arrival_date', sortField: 'arrival_date', title: 'Arrival date'},
 					{name: 'total_carton', sortField: 'total_carton', title: 'Total carton'},
 					{name: 'process_status', callback: 'inboundStatusLabel', title: 'Status', sortField: 'process_status'},
 					{name: '__component:inbounds-actions', title: 'Actions'}];

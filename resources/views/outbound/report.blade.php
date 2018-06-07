@@ -85,7 +85,7 @@
             $path = $path . str_replace('public/', '/app/public/', $outbound->invoice_slip); 
         ?>
         @if($mime == "image/png" || $mime == "image/jpeg")
-            <img src="{{ $path }}" width="500px">
+            <img src="{{ $path }}" width="705px">
             <div class="page-break"></div>
         @endif
     @endif

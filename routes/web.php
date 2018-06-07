@@ -107,10 +107,12 @@ Route::group(['prefix' => 'internal'], function() {
 	Route::get('products', 'ProductController@index');
 	Route::get('inbound/user', 'InboundController@index');
 	Route::get('inbounds/today', 'InboundController@indexToday');
+	Route::get('returns/pending', 'ReturnOrderController@indexToday');
 	Route::get('outbound/user', 'OutboundController@index');
 	Route::get('inbound/admin', 'Admin\InboundController@index');
 	Route::get('inbound/{inbound}', 'InboundController@show');
 	Route::get('outbounds/pending', 'OutboundController@indexPending');
+	Route::get('recalls/pending', 'RecallOrderController@indexPending');
 	Route::get('outbound/admin', 'Admin\OutboundController@index');
 	Route::get('outbound/products/{outbound}', 'OutboundController@products');
 	Route::get('outbound/{outbound}', 'OutboundController@show');

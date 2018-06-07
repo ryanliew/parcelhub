@@ -56765,6 +56765,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     methods: {
         itemAction: function itemAction(action, data, index) {
+            if (data.type !== 'inbound') action = 'viewReturn';
+
             this.$events.fire(action, data);
         }
     }
@@ -56897,6 +56899,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     methods: {
         itemAction: function itemAction(action, data, index) {
+            if (data.type !== 'outbound') action = 'viewOutbound';
+
             this.$events.fire(action, data);
         }
     }
@@ -60213,6 +60217,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 
 
@@ -62039,6 +62044,7 @@ var render = function() {
                       label: "product image",
                       name: "picture",
                       accept: "image/*",
+                      required: true,
                       error: _vm.form.errors.get("picture")
                     },
                     on: { loaded: _vm.changeProductImage },
@@ -62516,7 +62522,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			return this.form.submitting ? 'is-loading' : '';
 		},
 		fields: function fields() {
-			var displayFields = [{ name: 'id', title: '#' }, { name: 'arrival_date', sortField: 'arrival_date', title: 'Arrival date', callback: 'date' }, { name: 'total_carton', sortField: 'total_carton', title: 'Total carton' }, { name: 'process_status', callback: 'inboundStatusLabel', title: 'Status', sortField: 'process_status' }, { name: '__component:inbounds-actions', title: 'Actions' }];
+			var displayFields = [{ name: 'id', title: '#' }, { name: 'arrival_date', sortField: 'arrival_date', title: 'Arrival date' }, { name: 'total_carton', sortField: 'total_carton', title: 'Total carton' }, { name: 'process_status', callback: 'inboundStatusLabel', title: 'Status', sortField: 'process_status' }, { name: '__component:inbounds-actions', title: 'Actions' }];
 
 			if (this.can_manage) {
 				displayFields.splice(1, 0, { name: 'customer', sortField: 'users.name', title: 'Customer' });
@@ -65936,13 +65942,20 @@ var render = function() {
                       )
                     ]),
                     _vm._v(" "),
-                    _c("p", { staticClass: "title" }, [
-                      _vm._v(
-                        "\n\t\t\t\t\t\t\t\t\t\t" +
-                          _vm._s(_vm._f("date")(_vm.inbound.arrival_date)) +
-                          "\n\t\t\t\t\t\t\t\t\t"
-                      )
-                    ])
+                    _c(
+                      "p",
+                      {
+                        staticClass: "title",
+                        staticStyle: { "max-width": "153.6px" }
+                      },
+                      [
+                        _vm._v(
+                          "\n\t\t\t\t\t\t\t\t\t\t" +
+                            _vm._s(_vm.inbound.arrival_date) +
+                            "\n\t\t\t\t\t\t\t\t\t"
+                        )
+                      ]
+                    )
                   ])
                 ]),
                 _vm._v(" "),
@@ -67738,6 +67751,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 		},
 		onSuccess: function onSuccess(data) {
 			this.productRows = [];
+			this.invoiceSlip = { name: 'No file selected' };
 			this.dialogActive = false;
 			this.back();
 			this.$refs.outbounds.refreshTable();
@@ -68667,7 +68681,7 @@ var render = function() {
                                                   _vm.productRows[index]
                                                     .remarks,
                                                 label: "Remarks",
-                                                required: true,
+                                                required: false,
                                                 type: "text",
                                                 editable: true,
                                                 hideLabel: false,
@@ -69297,7 +69311,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-	props: ['can_manage', 'fee', 'number'],
+	props: ['can_manage', 'fee', 'number', 'can_edit'],
 
 	components: { TableView: __WEBPACK_IMPORTED_MODULE_0__components_TableView_vue___default.a },
 
@@ -69594,7 +69608,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 			return this.form.submitting ? 'is-loading' : '';
 		},
 		fields: function fields() {
-			var displayFields = [{ name: 'id', title: '#' }, { name: 'arrival_date', sortField: 'arrival_date', title: 'Return date', callback: 'date' }, { name: 'total_carton', sortField: 'total_carton', title: 'Total carton' }, { name: 'process_status', callback: 'inboundStatusLabel', title: 'Status', sortField: 'process_status' }, { name: '__component:returns-actions', title: 'Actions' }];
+			var displayFields = [{ name: 'id', title: '#' }, { name: 'arrival_date', sortField: 'arrival_date', title: 'Return date' }, { name: 'total_carton', sortField: 'total_carton', title: 'Total carton' }, { name: 'process_status', callback: 'inboundStatusLabel', title: 'Status', sortField: 'process_status' }, { name: '__component:returns-actions', title: 'Actions' }];
 
 			if (this.can_manage) {
 				displayFields.splice(1, 0, { name: 'customer', sortField: 'users.name', title: 'Customer' });
@@ -69639,7 +69653,7 @@ var render = function() {
                       ])
                     ]),
                     _vm._v(" "),
-                    _vm.can_edit
+                    _vm.can_edit && !_vm.can_manage
                       ? _c("div", { staticClass: "level-right" }, [
                           _c("div", { staticClass: "level-item" }, [
                             _c(
@@ -70998,7 +71012,7 @@ var render = function() {
                       ])
                     ]),
                     _vm._v(" "),
-                    _vm.can_edit
+                    !_vm.can_manage && _vm.can_edit
                       ? _c("div", { staticClass: "level-right" }, [
                           _c("div", { staticClass: "level-item" }, [
                             _c(
@@ -71642,32 +71656,6 @@ var render = function() {
                           )
                         }
                       }),
-                      _vm._v(" "),
-                      _c(
-                        "div",
-                        { staticClass: "field mt-10" },
-                        [
-                          _c("image-input", {
-                            attrs: {
-                              defaultImage: _vm.invoiceSlip,
-                              label: "delivery slip",
-                              name: "invoice_slip",
-                              required: false,
-                              accept: "image/*,.pdf",
-                              error: _vm.form.errors.get("invoice_slip")
-                            },
-                            on: { loaded: _vm.changeInvoiceSlipImage },
-                            model: {
-                              value: _vm.invoiceSlip,
-                              callback: function($$v) {
-                                _vm.invoiceSlip = $$v
-                              },
-                              expression: "invoiceSlip"
-                            }
-                          })
-                        ],
-                        1
-                      ),
                       _vm._v(" "),
                       _c(
                         "button",
@@ -74197,6 +74185,66 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -74216,6 +74264,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			isViewingInbound: false,
 			selectedOutbound: '',
 			isViewingOutbound: false,
+			selectedReturn: '',
+			isViewingReturn: false,
+			selectedRecall: '',
+			isViewingRecall: false,
 			confirmSubmit: false
 		};
 	},
@@ -74230,6 +74282,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		});
 		this.$events.on('viewOutbound', function (data) {
 			return _this.viewOutbound(data);
+		});
+		this.$events.on('viewRecall', function (data) {
+			return _this.viewRecall(data);
+		});
+		this.$events.on('viewReturn', function (data) {
+			return _this.viewReturn(data);
 		});
 	},
 
@@ -74255,13 +74313,24 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			this.selectedInbound = data;
 			this.isViewingInbound = true;
 		},
+		viewReturn: function viewReturn(data) {
+			this.selectedReturn = data;
+			this.isViewingReturn = true;
+		},
 		viewOutbound: function viewOutbound(data) {
 			this.selectedOutbound = data;
 			this.isViewingOutbound = true;
 		},
+		viewRecall: function viewRecall(data) {
+			this.selectedRecall = data;
+			this.isViewingRecall = true;
+		},
 		back: function back() {
 			this.isViewingOutbound = false;
 			this.isViewingInbound = false;
+			this.isViewingRecall = false;
+			this.isViewingReturn = false;
+			this.isViewingPayment = false;
 		},
 		onSuccess: function onSuccess() {
 			this.isViewingPayment = false;
@@ -74287,7 +74356,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			return displayFields;
 		},
 		inboundFields: function inboundFields() {
-			var displayFields = [{ name: 'customer', sortField: 'users.name', title: 'Customer' }, { name: 'arrival_date', sortField: 'date', title: 'Arrival date', callback: 'date' }, { name: 'total_carton', sortField: 'carton', title: 'Total carton' }, { name: 'process_status', callback: 'inboundStatusLabel', title: 'Status', sortField: 'process_status' }, { name: '__component:inbounds-actions', title: 'Actions' }];
+			var displayFields = [{ name: 'customer', sortField: 'users.name', title: 'Customer' }, { name: 'arrival_date', sortField: 'date', title: 'Arrival date' }, { name: 'total_carton', sortField: 'carton', title: 'Total carton' }, { name: 'process_status', callback: 'inboundStatusLabel', title: 'Status', sortField: 'process_status' }, { name: '__component:inbounds-actions', title: 'Actions' }];
 
 			if (this.can_manage) {
 				displayFields.splice(1, 0);
@@ -74313,7 +74382,10 @@ var render = function() {
         "transition",
         { attrs: { name: "slide-fade", mode: "out-in" } },
         [
-          !_vm.isViewingOutbound && !_vm.isViewingInbound
+          !_vm.isViewingOutbound &&
+          !_vm.isViewingInbound &&
+          !_vm.isViewingRecall &&
+          !_vm.isViewingReturn
             ? _c(
                 "div",
                 [
@@ -74530,7 +74602,7 @@ var render = function() {
                               _c("div", { staticClass: "level-left" }, [
                                 _c("div", { staticClass: "level-item" }, [
                                   _vm._v(
-                                    "\n\t\t\t\t\t\t\t\t\t\t\tInbounds today\n\t\t\t\t\t\t\t\t\t\t"
+                                    "\n\t\t\t\t\t\t\t\t\t\t\tPending inbounds\n\t\t\t\t\t\t\t\t\t\t"
                                   )
                                 ])
                               ])
@@ -74547,7 +74619,7 @@ var render = function() {
                               attrs: {
                                 fields: _vm.inboundFields,
                                 url: "/internal/inbounds/today",
-                                empty: "No incoming inbound order today"
+                                empty: "No pending inbounds"
                               }
                             })
                           ],
@@ -74591,6 +74663,80 @@ var render = function() {
                         )
                       ])
                     ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "columns mt-15" }, [
+                    _c("div", { staticClass: "column" }, [
+                      _c("div", { staticClass: "card" }, [
+                        _c("div", { staticClass: "card-header" }, [
+                          _c(
+                            "div",
+                            { staticClass: "card-header-title level" },
+                            [
+                              _c("div", { staticClass: "level-left" }, [
+                                _c("div", { staticClass: "level-item" }, [
+                                  _vm._v(
+                                    "\n\t\t\t\t\t\t\t\t\t\t\tPending returns\n\t\t\t\t\t\t\t\t\t\t"
+                                  )
+                                ])
+                              ])
+                            ]
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          { staticClass: "card-content" },
+                          [
+                            _c("table-view", {
+                              ref: "returns",
+                              attrs: {
+                                fields: _vm.inboundFields,
+                                url: "/internal/returns/pending",
+                                empty: "No pending returns"
+                              }
+                            })
+                          ],
+                          1
+                        )
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "column" }, [
+                      _c("div", { staticClass: "card" }, [
+                        _c("div", { staticClass: "card-header" }, [
+                          _c(
+                            "div",
+                            { staticClass: "card-header-title level" },
+                            [
+                              _c("div", { staticClass: "level-left" }, [
+                                _c("div", { staticClass: "level-item" }, [
+                                  _vm._v(
+                                    "\n\t\t\t\t\t\t\t\t\t\t\tIncomplete recalls\n\t\t\t\t\t\t\t\t\t\t"
+                                  )
+                                ])
+                              ])
+                            ]
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          { staticClass: "card-content" },
+                          [
+                            _c("table-view", {
+                              ref: "recalls",
+                              attrs: {
+                                fields: _vm.outboundFields,
+                                url: "/internal/recalls/pending",
+                                empty: "All recall orders have been completed"
+                              }
+                            })
+                          ],
+                          1
+                        )
+                      ])
+                    ])
                   ])
                 ],
                 1
@@ -74608,9 +74754,31 @@ var render = function() {
               })
             : _vm._e(),
           _vm._v(" "),
+          _vm.isViewingReturn
+            ? _c("return", {
+                attrs: { returnobj: _vm.selectedReturn, canManage: true },
+                on: {
+                  back: function($event) {
+                    _vm.back()
+                  }
+                }
+              })
+            : _vm._e(),
+          _vm._v(" "),
           _vm.isViewingOutbound
             ? _c("outbound", {
                 attrs: { outbound: _vm.selectedOutbound, canManage: true },
+                on: {
+                  back: function($event) {
+                    _vm.back()
+                  }
+                }
+              })
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.isViewingRecall
+            ? _c("recall", {
+                attrs: { recall: _vm.selectedRecall, canManage: true },
                 on: {
                   back: function($event) {
                     _vm.back()

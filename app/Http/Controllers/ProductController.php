@@ -7,6 +7,7 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Storage;
+use Intervention\Image\ImageManagerStatic as Image;
 
 class ProductController extends Controller
 {
@@ -16,7 +17,8 @@ class ProductController extends Controller
         'length' => 'required',
         'width' => 'required',
         'sku' => 'required',
-        'user_id' => 'required'
+        'user_id' => 'required',
+        'picture' => 'required|max:20000'
     ];
 
     /**
@@ -145,13 +147,22 @@ class ProductController extends Controller
             $product->trash_hole = $request->trashole;
         }
         $product->status = 'true';
-        $product->save();
+        
 
         if(Input::hasFile('picture')){
             $file = Input::file('picture');
-            $product->picture = $file->store('public');
-            $product->save();
+            $path = $file->hashName('public');
+            $image = Image::make($file);
+
+            $image->resize(300,null, function($constraint) {
+                $constraint->aspectRatio();
+            });
+            Storage::put($path, (string) $image->encode());
+
+            // $product->picture = $file->store('public');
+            $product->picture = $path;
         }
+        $product->save();
 
         if(request()->wantsJson())
         {   
@@ -208,8 +219,16 @@ class ProductController extends Controller
         $product->sku = $request->sku;
         if(Input::hasFile('picture')){
             $file = Input::file('picture');
-            $product->picture = $file->store('public');
-            $product->save();
+            $path = $file->hashName('public');
+            $image = Image::make($file);
+
+            $image->resize(300,null, function($constraint) {
+                $constraint->aspectRatio();
+            });
+            Storage::put($path, (string) $image->encode());
+
+            // $product->picture = $file->store('public');
+            $product->picture = $path;
         }
         $product->save();
 

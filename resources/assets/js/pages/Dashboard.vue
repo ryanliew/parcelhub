@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<transition name="slide-fade" mode="out-in">
-			<div v-if="!isViewingOutbound && !isViewingInbound">
+			<div v-if="!isViewingOutbound && !isViewingInbound && !isViewingRecall && !isViewingReturn">
 				<!-- Pending payment -->
 				<div class="card">
 					<div class="card-header">
@@ -91,14 +91,14 @@
 
 				
 				<div class="columns mt-15">
-					<!-- Inbound order today -->
+					<!-- Inbound order pending -->
 					<div class="column">
 						<div class="card">
 							<div class="card-header">
 								<div class="card-header-title level">
 									<div class="level-left">
 										<div class="level-item">
-											Inbounds today
+											Pending inbounds
 										</div>
 									</div>
 								</div>
@@ -107,12 +107,12 @@
 								<table-view ref="inbounds" 
 											:fields="inboundFields" 
 											url="/internal/inbounds/today"
-											empty="No incoming inbound order today">	
+											empty="No pending inbounds">	
 								</table-view>
 							</div>
 						</div>
 					</div>
-					<!-- Inbound order today -->
+					<!-- Inbound order pending -->
 					
 					<div class="column">
 						<div class="card">
@@ -136,17 +136,77 @@
 						
 					</div>
 				</div>
+
+				<div class="columns mt-15">
+					<!-- Inbound order pending -->
+					<div class="column">
+						<div class="card">
+							<div class="card-header">
+								<div class="card-header-title level">
+									<div class="level-left">
+										<div class="level-item">
+											Pending returns
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="card-content">
+								<table-view ref="returns" 
+											:fields="inboundFields" 
+											url="/internal/returns/pending"
+											empty="No pending returns">	
+								</table-view>
+							</div>
+						</div>
+					</div>
+					<!-- Inbound order pending -->
+					
+					<div class="column">
+						<div class="card">
+							<div class="card-header">
+								<div class="card-header-title level">
+									<div class="level-left">
+										<div class="level-item">
+											Incomplete recalls
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="card-content">
+								<table-view ref="recalls" 
+											:fields="outboundFields" 
+											url="/internal/recalls/pending"
+											empty="All recall orders have been completed">	
+								</table-view>
+							</div>
+						</div>
+						
+					</div>
+				</div>
 			</div>
 			<inbound :inbound="selectedInbound"
 						:canManage="true" 
 						@back="back()"
 						v-if="isViewingInbound">
 			</inbound>
+
+			<return :returnobj="selectedReturn"
+						:canManage="true" 
+						@back="back()"
+						v-if="isViewingReturn">
+			</return>
+
 			<outbound :outbound="selectedOutbound"
 						:canManage="true" 
 						@back="back()" 
 						v-if="isViewingOutbound">
 			</outbound>
+
+			<recall :recall="selectedRecall"
+						:canManage="true" 
+						@back="back()" 
+						v-if="isViewingRecall">
+			</recall>
 		</transition>
 
 		<confirmation :isConfirming="confirmSubmit"
@@ -177,6 +237,10 @@
 				isViewingInbound: false,
 				selectedOutbound: '',
 				isViewingOutbound: false,
+				selectedReturn: '',
+				isViewingReturn: false,
+				selectedRecall: '',
+				isViewingRecall: false,
 				confirmSubmit: false
 			};
 		},
@@ -185,6 +249,8 @@
 			this.$events.on('viewPayment', data => this.viewPayment(data));
 			this.$events.on('viewInbound', data => this.viewInbound(data));
 			this.$events.on('viewOutbound', data => this.viewOutbound(data));
+			this.$events.on('viewRecall', data => this.viewRecall(data));
+			this.$events.on('viewReturn', data => this.viewReturn(data));
 		},
 
 		methods: {
@@ -209,14 +275,27 @@
 				this.isViewingInbound = true;
 			},
 
+			viewReturn(data) {
+				this.selectedReturn = data;
+				this.isViewingReturn = true;
+			},
+
 			viewOutbound(data) {
 				this.selectedOutbound = data;
 				this.isViewingOutbound = true;
 			},
 
+			viewRecall(data) {
+				this.selectedRecall = data;
+				this.isViewingRecall = true;
+			},
+
 			back() {
 				this.isViewingOutbound = false;
 				this.isViewingInbound = false;
+				this.isViewingRecall = false;
+				this.isViewingReturn = false;
+				this.isViewingPayment = false;
 			},
 
 			onSuccess() {
@@ -258,7 +337,7 @@
 
 			inboundFields() {
 				let displayFields = [{name: 'customer', sortField: 'users.name', title: 'Customer'},
-					{name: 'arrival_date', sortField: 'date', title: 'Arrival date', callback: 'date'},
+					{name: 'arrival_date', sortField: 'date', title: 'Arrival date'},
 					{name: 'total_carton', sortField: 'carton', title: 'Total carton'},
 					{name: 'process_status', callback: 'inboundStatusLabel', title: 'Status', sortField: 'process_status'},
 					{name: '__component:inbounds-actions', title: 'Actions'}];

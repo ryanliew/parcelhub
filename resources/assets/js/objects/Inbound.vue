@@ -37,8 +37,8 @@
 									<p class="heading">
 										Arrival date
 									</p>
-									<p class="title">
-										{{ inbound.arrival_date | date }}
+									<p class="title" style="max-width:153.6px;">
+										{{ inbound.arrival_date}}
 									</p>
 								</div>
 							</div>
