@@ -47,7 +47,7 @@ class ReturnOrderController extends Controller
                                                                 ->leftJoin('users', 'user_id', '=', 'users.id')
                                                                 ->orderBy('arrival_date', 'desc'));
             else
-                return Controller::VueTableListResult($user->inbounds()->with('products', 'products_with_lots.lots')->orderBy('arrival_date', 'desc'));
+                return Controller::VueTableListResult($user->inbounds()->with('products', 'products_with_lots.lots')->where('type', 'return')->orderBy('arrival_date', 'desc'));
         }
         $inbounds = inbound::where('status', 'true')->get();
         $products = product::where('user_id', auth()->user()->id)->where('status', 'true')->get();
