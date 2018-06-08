@@ -78,6 +78,8 @@ Vue.component('settings-page', require('./pages/Settings.vue'));
 Vue.component('customers-page', require('./pages/Customers.vue'));
 Vue.component('outbounds-tracking-page', require('./pages/OutboundsTracking.vue'));
 Vue.component('products-excel-wizard', require('./pages/ProductsExcelWizard.vue'));
+Vue.component('outbounds-excel-wizard', require('./pages/OutboundsExcelWizard.vue'));
+Vue.component('inbounds-excel-wizard', require('./pages/InboundsExcelWizard.vue'));
 Vue.component('subusers-page', require('./pages/Subusers.vue'));
 
 

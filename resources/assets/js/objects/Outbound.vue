@@ -81,6 +81,7 @@
 									<th>Quantity</th>
 									<th>Attributes</th>
 									<th>Lot</th>
+									<th>Remark</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -95,6 +96,7 @@
 										</div>
 									</td>
 									<td v-text="product.lot_name"></td>
+									<td v-text="product.pivot.remark"></td>
 								</tr>
 							</tbody>
 						</table>

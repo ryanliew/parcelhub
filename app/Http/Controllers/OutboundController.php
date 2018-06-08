@@ -34,6 +34,11 @@ class OutboundController extends Controller
         return view('outbound.page');
     }
 
+    public function page_excel()
+    {
+        return view('outbound.excel');
+    }
+
     /**
      * Return the bulk tracking insert page view for outbounds
      * @return \Illuminate\Http\Response

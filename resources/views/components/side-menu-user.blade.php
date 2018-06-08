@@ -12,7 +12,7 @@
             @if(!auth()->user()->hasRole('subuser'))
             <ul>
                 <li>
-                    <a @if( url()->current() == route('products.bulk') ) class="is-active" @endif href="{{ route('products.bulk') }}">
+                    <a @if( url()->current() == route('products.excel') ) class="is-active" @endif href="{{ route('products.excel') }}">
                         Bulk upload product
                     </a>
                 </li>
@@ -61,11 +61,29 @@
             <a @if( url()->current() == route('inbounds') ) class="is-active" @endif href="{{ route('inbounds') }}">
                 Inbounds
             </a>
+            @if(!auth()->user()->hasRole('subuser'))
+            <ul>
+                <li>
+                    <a @if( url()->current() == route('inbounds.excel') ) class="is-active" @endif href="{{ route('inbounds.excel') }}">
+                        Bulk upload inbounds
+                    </a>
+                </li>
+            </ul>
+            @endif
         </li>
         <li>
             <a @if( url()->current() == route('outbounds') ) class="is-active" @endif href="{{ route('outbounds') }}">
                 Outbounds
             </a>
+            @if(!auth()->user()->hasRole('subuser'))
+            <ul>
+                <li>
+                    <a @if( url()->current() == route('outbounds.excel') ) class="is-active" @endif href="{{ route('outbounds.excel') }}">
+                        Bulk upload outbounds
+                    </a>
+                </li>
+            </ul>
+            @endif
         </li>
         <li>
             <a @if( url()->current() == route('returns') ) class="is-active" @endif href="{{ route('returns') }}">
