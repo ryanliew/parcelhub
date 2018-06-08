@@ -38,6 +38,15 @@ class InboundController extends Controller
     {
         return view('inbound.page');
     }
+
+    /**
+     * Return the view which contains the vue page for product
+     * @return \Illuminate\Http\Response
+     */
+    public function page_excel()
+    {
+        return view('inbound.excel');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -185,42 +194,53 @@ class InboundController extends Controller
         foreach($products as $key => $product)
         {
             $theproduct = product::find($key);
-            $lots = $theproduct->lots()->where('left_volume', '>=', $product["singleVolume"])->get();
+            $lots = $theproduct->lots()->get();
             foreach($lots as $lot)
             {
                 if($product["quantity"] > 0) {
                     $quantityIntoLot = $this->calculateQuantity($lot->left_volume, $product["singleVolume"], $product["quantity"]);
-
                     if($quantityIntoLot > 0){
-                        $lot_products[$key]['incoming_quantity'] = $quantityIntoLot;
+                        
                         $products[$key]["volume"] = $product["volume"] - ( $product["singleVolume"] * $quantityIntoLot );
                         $products[$key]["quantity"] = $product["quantity"] - $quantityIntoLot;
                         $product["quantity"] = $products[$key]["quantity"];
                         $this->attachLot($inbound->id, $key, $lot, $product["expiry_date"], $quantityIntoLot);
+                        $lot->save();
+                        $new_quantity = $lot->pivot->incoming_quantity + $quantityIntoLot;
+                        $lot->products()->updateExistingPivot($key, ["incoming_quantity" => $new_quantity]);
                     }
                 }
-                $lot->save();
-                $new_quantity = $lot->pivot->incoming_quantity + $quantityIntoLot;
-                $lot->products()->updateExistingPivot($key, ["incoming_quantity" => $new_quantity]);
+                
 
             $lot->propagate_left_volume();
             }
         }
         // Assign products to user lots
-        $user_lots_with_enough_volume = $auth->lots()->where('left_volume', '>=', $product["singleVolume"])->get();
-        foreach($user_lots_with_enough_volume as $key => $lot ){
+        $user_lots_with_enough_volume = $auth->lots()->get();
+        foreach($user_lots_with_enough_volume as $lot_key => $lot ){
             $lot_products = [];
             foreach($products as $key => $product){
                 if($product["quantity"] > 0) {
                     // If there are still volume needed to be assigned
                     $quantityIntoLot = $this->calculateQuantity($lot->left_volume, $product["singleVolume"], $product["quantity"]);
 
-                    if($key + 1 == $user_lots_with_enough_volume->count() )
+                    if($lot_key + 1 == $user_lots_with_enough_volume->count() )
                         $quantityIntoLot = $product["quantity"];
 
                     //dd($quantityIntoLot);
                     if($quantityIntoLot > 0){
-                        $lot_products[$key]['incoming_quantity'] = $quantityIntoLot;
+                        $new_incoming_quantity = $quantityIntoLot;
+                        $existing_lot_product = $lot->products()->where('id', $key)->first();
+                        if($existing_lot_product)
+                        {
+                            $new_incoming_quantity += $existing_lot_product->pivot->incoming_quantity;
+                            $existing_lot_product->lots()->updateExistingPivot($lot->id, ["incoming_quantity" => $new_incoming_quantity]);
+                        }
+                        else
+                        {
+                            $lot_products[$key]['incoming_quantity'] = $quantityIntoLot;
+                        }
+
                         $products[$key]["volume"] = $product["volume"] - ($product["singleVolume"] * $quantityIntoLot);
                         $products[$key]["quantity"] = $product["quantity"] - $quantityIntoLot;
                         $inboundproduct = $this->attachLot($inbound->id, $key, $lot, $product["expiry_date"], $quantityIntoLot);
@@ -243,8 +263,22 @@ class InboundController extends Controller
         return min($quantityIntoLot, $quantity);
     }
 
+    public static function CALCULATE_QUANTITY($volume, $singleVolume, $quantity)
+    {   
+        $quantityIntoLot = floor($volume / $singleVolume);
+        return min($quantityIntoLot, $quantity);
+    }
+
     public function attachLot($inbound, $product, $lot, $expiry_date, $quantity) {
         // Attach lot to inbound product
+        $inbound_product = InboundProduct::where('inbound_id', $inbound)->where('product_id', $product)->first();
+        $inbound_product->lots()->attach($lot, ['quantity_original' => $quantity, 'expiry_date' => $expiry_date ? $expiry_date : null]);
+
+        return $inbound_product;
+    }
+
+    public static function ATTACH_LOT($inbound, $product, $lot, $expiry_date, $quantity)
+    {
         $inbound_product = InboundProduct::where('inbound_id', $inbound)->where('product_id', $product)->first();
         $inbound_product->lots()->attach($lot, ['quantity_original' => $quantity, 'expiry_date' => $expiry_date ? $expiry_date : null]);
 
