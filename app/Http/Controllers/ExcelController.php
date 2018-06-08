@@ -6,8 +6,11 @@ use App\Courier;
 use App\Customer;
 use App\Http\Controllers\InboundController;
 use App\Inbound;
+use App\Notifications\Admin\InboundCreatedNotification;
+use App\Notifications\Admin\OutboundCreatedNotification;
 use App\Outbound;
 use App\Product;
+use App\User;
 use App\Utilities;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -193,6 +196,7 @@ class ExcelController extends Controller
             $count++;
         }
 
+        User::admin()->first()->notify(new OutboundCreatedNotification());
         return response()->json(['message' => $count . ' outbound orders created successfully']); 
 
     }
@@ -316,6 +320,7 @@ class ExcelController extends Controller
             } 
         }
 
+        User::admin()->first()->notify(new InboundCreatedNotification());
         return response()->json(['message' => $count . ' inbound orders created successfully']); 
 
     }

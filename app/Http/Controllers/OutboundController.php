@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use App\Courier;
 use App\Notifications\OutboundCreatedNotification;
+use App\Notifications\Admin\OutboundCreatedNotification as AdminOutboundCreatedNotification;
 use App\Outbound;
 use App\Product;
 use Illuminate\Http\Request;
@@ -349,7 +351,7 @@ class OutboundController extends Controller
                     }
                 }
             }
-
+            User::admin()->first()->notify(new AdminOutboundCreatedNotification());
             $user->notify(new OutboundCreatedNotification($outbound));
 
         } catch (\Exception $exception) {

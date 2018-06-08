@@ -3,8 +3,10 @@ namespace App\Http\Controllers;
 use App\Inbound;
 use App\InboundProduct;
 use App\Lot;
+use App\Notifications\Admin\InboundCreatedNotification as AdminInboundCreatedNotification;
 use App\Notifications\InboundCreatedNotification;
 use App\Product;
+use App\User;
 use App\Utilities;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -253,6 +255,7 @@ class InboundController extends Controller
             $lot->propagate_left_volume();
         }
 
+        User::admin()->first()->notify(new AdminInboundCreatedNotification());
         Auth::user()->notify(new InboundCreatedNotification($inbound));
 
         return ['message' => "Inbound order created"];

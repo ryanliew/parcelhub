@@ -1,6 +1,8 @@
 @component('mail::message')
 
-# User {{ $inbound->user->name }} inbound order #{{ $inbound->id }}
+# Hi, {{ $inbound->user->name }}.#
+
+Your inbound order (#{{ $inbound->id }}) has been updated to
 
 # status : {{ $inbound->process_status }}
 
