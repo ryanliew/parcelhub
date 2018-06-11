@@ -620,9 +620,9 @@
                                             <td width="100%" style="font-size: 12px; color: #969696; text-align: left; font-family: Helvetica, Arial, sans-serif, 'Open Sans'; font-weight: 400; line-height: 20px; vertical-align: top;" class="fullCenter">   
                                                 <b>How can we help you? Talk to us at</b>
                                                 <br>
-                                                <a href="mailto:parcelhub@email.com">parcelhub@email.com</a>
+                                                <a href="mailto:parcelhub@email.com">percelhub.hq@gmail.com</a>
                                                 <br>
-                                                <a href="tel:+13174562564">317-456-2564</a>
+                                                <a href="tel:+60182991234">018 299 1234</a>
                                                 <br><br>
                                                 No. 26, Jalan PJU 3/49,
                                                 Sunway Damansara 47810 Petaling Jaya,
