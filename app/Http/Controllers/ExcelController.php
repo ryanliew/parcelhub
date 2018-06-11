@@ -17,6 +17,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Maatwebsite\Excel\Facades\Excel;
 use Storage;
+use Intervention\Image\ImageManagerStatic as Image;
 
 class ExcelController extends Controller
 {
@@ -373,9 +374,20 @@ class ExcelController extends Controller
     public function uploadPhotos(Request $request)
     {
         $filename = explode('.', $request->file->getClientOriginalName())[0];
-        $product = Product::where('SKU', $filename)->first();
+        $product = Product::where('SKU', $filename)->first();         
+
         if(!is_null($product)){
-            $product->picture = $request->file->store('public');
+            $file = $request->file;
+            $path = $file->hashName('public');
+
+            $image = Image::make($file);
+            $image->resize(300,null, function($constraint) {
+                $constraint->aspectRatio();
+            });
+             Storage::put($path, (string) $image->encode());
+             $product->picture = $path;
+
+            //$product->picture = $request->file->store('public');
             $product->save();
         }
     }
