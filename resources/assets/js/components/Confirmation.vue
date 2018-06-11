@@ -15,12 +15,19 @@
     export default {
         props: ['title', 'message', 'isConfirming'],
 
+        data() {
+            return {
+                isLoading: false
+            }
+        },
+
         methods: {
             close() {
                 this.$emit('close');
             },
 
             confirm() {
+                this.isLoading = true;
                 this.$emit('confirm');
             }
         }

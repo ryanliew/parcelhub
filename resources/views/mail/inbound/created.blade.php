@@ -1,5 +1,9 @@
 @component('mail::message')
-# User {{ $inbound->user->name }} has created an inbound order #{{ $inbound->id }}
+# Hi, {{ $inbound->user->name }}.#
+
+This email is to inform you that we have received your inbound order #{{ $inbound->id }}
+
+Our administrators will look into it as soon as possible.
 
 Thanks,<br>
 {{ config('app.name') }}

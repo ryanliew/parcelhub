@@ -320,7 +320,7 @@
 										<td>
 											<textarea-input v-if="productRows[index]" v-model="productRows[index].remarks" :defaultValue="productRows[index].remarks"
 						          						:label="'Remarks'"
-						          						:required="true"
+						          						:required="false"
 						          						type="text"
 						          						:editable="true"
 						          						:hideLabel="false"
@@ -598,6 +598,7 @@
 
 			onSuccess(data) {
 				this.productRows = [];
+				this.invoiceSlip = {name: 'No file selected'};
 				this.dialogActive = false;
 				this.back();
 				this.$refs.outbounds.refreshTable();

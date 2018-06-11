@@ -5,13 +5,13 @@
 			<span v-if="required" class="is-danger">*</span>
 		</label>
 		<div class="control">
-			<v-select :multiple="multiple" :options="potentialData" :value="this.defaultData" @input="updateValue" name="name" :placeholder="placeholder" label="name">
+			<v-select :multiple="multiple" :options="potentialData" :value="this.defaultData" @input="updateValue" name="name" :placeholder="placeholder" label="selector_name">
 				<template slot="option" slot-scope="option">
 					<div class="level">
 						<figure class="image is-48x48">
 							<img :src="option.picture">
 						</figure>
-						<span class="level-item" v-text="option.name"></span>
+						<span class="level-item" v-text="option.selector_name"></span>
 					</div>
 				</template>
 			</v-select>

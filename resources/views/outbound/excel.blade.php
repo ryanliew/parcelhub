@@ -8,12 +8,8 @@
 					@include('components.side-menu')
 				</div>
 				<div class="column">
-					<returns-page 
-						can_manage="{{ auth()->user()->hasRole('admin') }}" 
-						fee="{{ Settings::get('cancelation_fee') }}" 
-						number="{{ Settings::get('cancelation_number') }}"
-						can_edit="{{ !auth()->user()->hasRole('subuser') }}">
-					</returns-page>
+					<outbounds-excel-wizard>
+					</outbounds-excel-wizard>
 				</div>	
 			</div>
 		</section>

@@ -10,7 +10,7 @@
 								Return Orders
 							</div>
 						</div>
-						<div class="level-right" v-if="can_edit">
+						<div class="level-right" v-if="can_edit && !can_manage">
 							<div class="level-item">
 								<button class="button is-primary" @click="modalOpen()">
 									<i class="fa fa-plus-circle"></i>
@@ -280,7 +280,7 @@
 	import TableView from '../components/TableView.vue';
 
 	export default {
-		props: ['can_manage', 'fee', 'number'],
+		props: ['can_manage', 'fee', 'number', 'can_edit'],
 
 		components: { TableView },
 
@@ -592,7 +592,7 @@
 
 			fields() {
 				let displayFields = [{name: 'id', title: '#'},
-					{name: 'arrival_date', sortField: 'arrival_date', title: 'Return date', callback: 'date'},
+					{name: 'arrival_date', sortField: 'arrival_date', title: 'Return date'},
 					{name: 'total_carton', sortField: 'total_carton', title: 'Total carton'},
 					{name: 'process_status', callback: 'inboundStatusLabel', title: 'Status', sortField: 'process_status'},
 					{name: '__component:returns-actions', title: 'Actions'}];

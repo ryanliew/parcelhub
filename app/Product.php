@@ -57,7 +57,7 @@ class Product extends Model
 {
 	protected $guarded = [];
     
-    protected $appends = ['volume', 'total_quantity', 'total_incoming_quantity', 'total_outgoing_quantity', 'total_usable_quantity'];
+    protected $appends = ['volume', 'total_quantity', 'total_incoming_quantity', 'total_outgoing_quantity', 'total_usable_quantity', 'selector_name'];
     
     public function lots() {
     	return $this->belongsToMany('App\Lot')->withPivot('quantity', 'incoming_quantity','outgoing_product');
@@ -113,6 +113,11 @@ class Product extends Model
             $total += $lot->pivot->quantity;
         }
         return $total;
+    }
+
+    public function getSelectorNameAttribute()
+    {
+        return $this->sku . " - " . $this->name;
     }
 
     public function getTotalIncomingQuantityAttribute() {

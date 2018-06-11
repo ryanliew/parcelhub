@@ -51,7 +51,9 @@ Route::get('profile', 'UserController@page')->name('profile');
 Route::get('customers', 'CustomerController@page')->name('customers');
 Route::get('dashboard', 'AdminController@page')->name('dashboard');
 Route::get('outbounds/bulk', 'OutboundController@page_bulk')->name('outbounds.bulk');
-Route::get('products/bulk', 'ProductController@page_bulk')->name('products.bulk');
+Route::get('products/excel', 'ProductController@page_bulk')->name('products.excel');
+Route::get('outbounds/excel', 'OutboundController@page_excel')->name('outbounds.excel');
+Route::get('inbounds/excel', 'InboundController@page_excel')->name('inbounds.excel');
 Route::post('lots/products/update', 'LotController@editStock');
 Route::get('subusers', 'SubuserController@page')->name('subusers');
 
@@ -65,6 +67,8 @@ Route::group(['prefix' => 'auth', 'as' => 'auth.social.'], function() {
 Route::group(['prefix' => 'excel'], function() {
 	Route::get('index', 'ExcelController@index');
 	Route::post('store', 'ExcelController@store');
+	Route::post('outbound/store', 'ExcelController@processOutbound');
+	Route::post('inbound/store', 'ExcelController@processInbound');
 });
 
 Route::group(['prefix' => 'lot'], function() {
@@ -107,10 +111,12 @@ Route::group(['prefix' => 'internal'], function() {
 	Route::get('products', 'ProductController@index');
 	Route::get('inbound/user', 'InboundController@index');
 	Route::get('inbounds/today', 'InboundController@indexToday');
+	Route::get('returns/pending', 'ReturnOrderController@indexToday');
 	Route::get('outbound/user', 'OutboundController@index');
 	Route::get('inbound/admin', 'Admin\InboundController@index');
 	Route::get('inbound/{inbound}', 'InboundController@show');
 	Route::get('outbounds/pending', 'OutboundController@indexPending');
+	Route::get('recalls/pending', 'RecallOrderController@indexPending');
 	Route::get('outbound/admin', 'Admin\OutboundController@index');
 	Route::get('outbound/products/{outbound}', 'OutboundController@products');
 	Route::get('outbound/{outbound}', 'OutboundController@show');
@@ -191,6 +197,8 @@ Route::group(['prefix' => 'download'], function () {
     Route::get('outbound/packingList/{id}', 'OutboundController@packingList')->name('download.outbound.packingList');
     Route::get('outbound/proforma/{id}', 'OutboundController@proformaInvoice');
     Route::get('product/template/', 'ExcelController@download');
+    Route::get('outbound/template', 'ExcelController@downloadOutbound');
+    Route::get('inbound/template', 'ExcelController@downloadInbound');
 });
 
 Route::group(['middleware' => 'auth'], function () {

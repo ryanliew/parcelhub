@@ -47,11 +47,27 @@ class ReturnOrderController extends Controller
                                                                 ->leftJoin('users', 'user_id', '=', 'users.id')
                                                                 ->orderBy('arrival_date', 'desc'));
             else
-                return Controller::VueTableListResult($user->inbounds()->with('products', 'products_with_lots.lots')->orderBy('arrival_date', 'desc'));
+                return Controller::VueTableListResult($user->inbounds()->with('products', 'products_with_lots.lots')->where('type', 'return')->orderBy('arrival_date', 'desc'));
         }
         $inbounds = inbound::where('status', 'true')->get();
         $products = product::where('user_id', auth()->user()->id)->where('status', 'true')->get();
         return view('inbound.index')->with('inbounds', $inbounds)->with('products', $products);
+    }
+
+    public function indexToday()
+    {
+        return Controller::VueTableListResult(Inbound::with('products', 'products_with_lots.lots')
+                                                                ->select('arrival_date',
+                                                                        'total_carton',
+                                                                        'process_status',
+                                                                        'inbounds.id as id',
+                                                                        'users.name as customer',
+                                                                        'inbounds.created_at as created_at'
+                                                                        )
+                                                                ->where('inbounds.type', 'return')
+                                                                ->where('process_status', 'awaiting_arrival')
+                                                                ->leftJoin('users', 'user_id', '=', 'users.id')
+                                                                ->orderBy('arrival_date', 'desc'));
     }
 
     public function page()

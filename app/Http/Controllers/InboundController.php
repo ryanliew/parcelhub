@@ -3,8 +3,10 @@ namespace App\Http\Controllers;
 use App\Inbound;
 use App\InboundProduct;
 use App\Lot;
+use App\Notifications\Admin\InboundCreatedNotification as AdminInboundCreatedNotification;
 use App\Notifications\InboundCreatedNotification;
 use App\Product;
+use App\User;
 use App\Utilities;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -38,6 +40,15 @@ class InboundController extends Controller
     {
         return view('inbound.page');
     }
+
+    /**
+     * Return the view which contains the vue page for product
+     * @return \Illuminate\Http\Response
+     */
+    public function page_excel()
+    {
+        return view('inbound.excel');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -58,6 +69,7 @@ class InboundController extends Controller
 
             return Controller::VueTableListResult($query->select('arrival_date',
                                                                 'total_carton',
+                                                                'type',
                                                                 'process_status',
                                                                 'inbounds.id as id',
                                                                 'users.name as customer',
@@ -77,14 +89,15 @@ class InboundController extends Controller
         return Controller::VueTableListResult(Inbound::with('products', 'products_with_lots.lots')
                                                                 ->select('arrival_date',
                                                                         'total_carton',
+                                                                        'type',
                                                                         'process_status',
                                                                         'inbounds.id as id',
                                                                         'users.name as customer',
                                                                         'inbounds.created_at as created_at'
                                                                         )
                                                                 ->where('inbounds.type', 'inbound')
+                                                                ->where('process_status', 'awaiting_arrival')
                                                                 ->leftJoin('users', 'user_id', '=', 'users.id')
-                                                                ->whereDate('arrival_date', DB::raw('CURDATE()'))
                                                                 ->orderBy('arrival_date', 'desc'));
     }
     /**
@@ -150,14 +163,16 @@ class InboundController extends Controller
 
         $left_volume = $user_lots->sum('left_volume');
         // Check for total left over volume
+        /* We are turning this check off at the moment, this should not restrict the stock from coming in for now
         if($product_total_volume > $left_volume){
             if(request()->wantsJson()) {
                 return response(json_encode(array('products' => ['You only have ' . Utilities::convertCentimeterCubeToMeterCube($left_volume) . 'm³ of space left but you are trying to fit in ' . Utilities::convertCentimeterCubeToMeterCube($product_total_volume) . 'm³. Please purchase more lots.'])), 422);
             }
             return redirect()->back()->withErrors("You have exceeded your lot limit.");
         }
+        */
         // Check for days before order
-        if($compare->diffInDays($now) < Settings::get('days_before_order') ){
+        if( Settings::get('days_before_order') !== 0 && $compare->diffInDays($now) < Settings::get('days_before_order') ){
             if(request()->wantsJson()) {
                 return response(json_encode(array('arrival_date' => ['Inbound must be created '.Settings::get('days_before_order').' day(s) before.'])), 422);
             }
@@ -181,38 +196,53 @@ class InboundController extends Controller
         foreach($products as $key => $product)
         {
             $theproduct = product::find($key);
-            $lots = $theproduct->lots()->where('left_volume', '>=', $product["singleVolume"])->get();
+            $lots = $theproduct->lots()->get();
             foreach($lots as $lot)
             {
                 if($product["quantity"] > 0) {
                     $quantityIntoLot = $this->calculateQuantity($lot->left_volume, $product["singleVolume"], $product["quantity"]);
-
                     if($quantityIntoLot > 0){
-                        $lot_products[$key]['incoming_quantity'] = $quantityIntoLot;
+                        
                         $products[$key]["volume"] = $product["volume"] - ( $product["singleVolume"] * $quantityIntoLot );
                         $products[$key]["quantity"] = $product["quantity"] - $quantityIntoLot;
                         $product["quantity"] = $products[$key]["quantity"];
                         $this->attachLot($inbound->id, $key, $lot, $product["expiry_date"], $quantityIntoLot);
+                        $lot->save();
+                        $new_quantity = $lot->pivot->incoming_quantity + $quantityIntoLot;
+                        $lot->products()->updateExistingPivot($key, ["incoming_quantity" => $new_quantity]);
                     }
                 }
-                $lot->save();
-                $new_quantity = $lot->pivot->incoming_quantity + $quantityIntoLot;
-                $lot->products()->updateExistingPivot($key, ["incoming_quantity" => $new_quantity]);
+                
 
             $lot->propagate_left_volume();
             }
         }
         // Assign products to user lots
-        $user_lots_with_enough_volume = $auth->lots()->where('left_volume', '>=', $product["singleVolume"])->get();
-        foreach($user_lots_with_enough_volume as $lot){
+        $user_lots_with_enough_volume = $auth->lots()->get();
+        foreach($user_lots_with_enough_volume as $lot_key => $lot ){
             $lot_products = [];
             foreach($products as $key => $product){
                 if($product["quantity"] > 0) {
                     // If there are still volume needed to be assigned
                     $quantityIntoLot = $this->calculateQuantity($lot->left_volume, $product["singleVolume"], $product["quantity"]);
+
+                    if($lot_key + 1 == $user_lots_with_enough_volume->count() )
+                        $quantityIntoLot = $product["quantity"];
+
                     //dd($quantityIntoLot);
                     if($quantityIntoLot > 0){
-                        $lot_products[$key]['incoming_quantity'] = $quantityIntoLot;
+                        $new_incoming_quantity = $quantityIntoLot;
+                        $existing_lot_product = $lot->products()->where('id', $key)->first();
+                        if($existing_lot_product)
+                        {
+                            $new_incoming_quantity += $existing_lot_product->pivot->incoming_quantity;
+                            $existing_lot_product->lots()->updateExistingPivot($lot->id, ["incoming_quantity" => $new_incoming_quantity]);
+                        }
+                        else
+                        {
+                            $lot_products[$key]['incoming_quantity'] = $quantityIntoLot;
+                        }
+
                         $products[$key]["volume"] = $product["volume"] - ($product["singleVolume"] * $quantityIntoLot);
                         $products[$key]["quantity"] = $product["quantity"] - $quantityIntoLot;
                         $inboundproduct = $this->attachLot($inbound->id, $key, $lot, $product["expiry_date"], $quantityIntoLot);
@@ -225,6 +255,7 @@ class InboundController extends Controller
             $lot->propagate_left_volume();
         }
 
+        User::admin()->first()->notify(new AdminInboundCreatedNotification());
         Auth::user()->notify(new InboundCreatedNotification($inbound));
 
         return ['message' => "Inbound order created"];
@@ -235,8 +266,22 @@ class InboundController extends Controller
         return min($quantityIntoLot, $quantity);
     }
 
+    public static function CALCULATE_QUANTITY($volume, $singleVolume, $quantity)
+    {   
+        $quantityIntoLot = floor($volume / $singleVolume);
+        return min($quantityIntoLot, $quantity);
+    }
+
     public function attachLot($inbound, $product, $lot, $expiry_date, $quantity) {
         // Attach lot to inbound product
+        $inbound_product = InboundProduct::where('inbound_id', $inbound)->where('product_id', $product)->first();
+        $inbound_product->lots()->attach($lot, ['quantity_original' => $quantity, 'expiry_date' => $expiry_date ? $expiry_date : null]);
+
+        return $inbound_product;
+    }
+
+    public static function ATTACH_LOT($inbound, $product, $lot, $expiry_date, $quantity)
+    {
         $inbound_product = InboundProduct::where('inbound_id', $inbound)->where('product_id', $product)->first();
         $inbound_product->lots()->attach($lot, ['quantity_original' => $quantity, 'expiry_date' => $expiry_date ? $expiry_date : null]);
 
@@ -289,7 +334,7 @@ class InboundController extends Controller
                 return response(json_encode(array('products' => ['You have repeating lots defined in ' . $the_product->name . '.'])), 422);
             }
 
-            foreach($product->lots as $lot)
+            /*foreach($product->lots as $lot)
             {
                 if($lot->original_lot !== $lot->lot->value)
                 {                
@@ -302,7 +347,7 @@ class InboundController extends Controller
                         return response(json_encode(array('products' => ['You only have ' . Utilities::convertCentimeterCubeToMeterCube($new_lot->left_volume) . 'm³ of space left in ' . $new_lot->name . ' but you are trying to fit in ' . Utilities::convertCentimeterCubeToMeterCube($volume_required) . 'm³.'])), 422);
                     }
                 }
-            }
+            }*/
         }
 
         // Validate complete
@@ -329,6 +374,7 @@ class InboundController extends Controller
                 $new_lot->propagate_left_volume();
 
                 $inbound_product->lots()->updateExistingPivot($lot->lot->value, [
+                        'quantity_original' => $lot->original_quantity,
                         'quantity_received' => $lot->quantity_received,
                         'expiry_date' => $lot->expiry_date,
                         'remark' => $lot->remark
