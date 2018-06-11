@@ -64,14 +64,14 @@
                         </div>
                         <div class="field">
                             <div class="has-text-centered">
-                                <a href="{{ route('auth.social.redirect', ['provider' => 'facebook']) }}" class="button is-facebook">
+                                {{-- <a href="{{ route('auth.social.redirect', ['provider' => 'facebook']) }}" class="button is-facebook">
                                     <i class="fa fa-facebook"></i>
                                     <span class="pl-5">Facebook Login</span>
                                 </a>
                                 <a href="{{ route('auth.social.redirect', ['provider' => 'google']) }}" class="button is-google-plus">
                                     <i class="fa fa-google"></i> 
                                     <span class="pl-5">Google+ Login</span>
-                                </a>
+                                </a> --}}
                             </div>
                         </div>
                         <div class="has-text-centered">
