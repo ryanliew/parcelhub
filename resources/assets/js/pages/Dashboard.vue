@@ -220,6 +220,7 @@
 
 <script>
 	import TableView from '../components/TableView.vue';
+	import Echo from "laravel-echo";
 
 	export default {
 		props: [''],
@@ -243,6 +244,29 @@
 				isViewingRecall: false,
 				confirmSubmit: false
 			};
+		},
+
+		created() {
+
+	       window.Echo.private('EventTriggerChannel')
+	            .listen('.EventTrigger', (e) => {
+	                if( e.instanceType == 'inbound')
+	                {
+	                	this.$refs.inbounds.refreshTable();
+	                }
+	                else if( e.instanceType == 'outbound' )
+	                {
+	                	this.$refs.outbounds.refreshTable();
+	                }
+	                else if( e.instanceType == 'recall' )
+	                {
+	                	this.$refs.recalls.refreshTable();
+	                }
+	                else if( e.instanceType == 'return' )
+	                {
+	                	this.$refs.returns.refreshTable();
+	                }
+	            });
 		},
 
 		mounted() {
@@ -301,6 +325,10 @@
 			onSuccess() {
 				this.isViewingPayment = false;
 				this.$refs.payments.refreshTable();
+			},
+
+			test(){
+				alert('Hello Rey');
 			},
 		},
 

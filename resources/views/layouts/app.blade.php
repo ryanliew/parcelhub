@@ -15,7 +15,7 @@
     <!-- Stylesheet -->
     <link rel="stylesheet" href="{{ asset('css/app.css?v=0.0.8') }}">
     <link rel="stylesheet" href="{{ asset('css/responsive-tables.css') }}">
-    
+
     <script>
         window.App = {!! json_encode([
                 'signedIn' => Auth::check()
@@ -52,6 +52,7 @@
     <script src="{{ asset('js/app.js?v=1.1.1.0') }}"></script>
     <script src="{{ asset('js/jquery-1.7.1.min.js') }}"></script>
     <script src="{{ asset('js/responsive-tables.js') }}"></script>
+    <script src="{{ asset('js/broadcast.js') }}"></script>
     @yield('js')
 
 </body>
