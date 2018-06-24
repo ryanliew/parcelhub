@@ -12,3 +12,4 @@ yarn-error.log
 .env
 _ide_helper*
 .phpstorm.meta.php
+storage/settings.json
