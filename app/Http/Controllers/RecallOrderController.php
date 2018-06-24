@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
 use PDF;
 use Storage;
+use App\Events\EventTrigger;
 
 class RecallOrderController extends Controller
 {
@@ -251,6 +252,8 @@ class RecallOrderController extends Controller
             return response()->json($exception->getMessage(), 422);
 
         }
+
+        event(new EventTrigger('recall'));
 
         return response()->json(['message' => 'Outbound order created successfully']);
     }

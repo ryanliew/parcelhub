@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Log;
 use PDF;
 use Storage;
 use Intervention\Image\ImageManagerStatic as Image;
+use App\Events\EventTrigger;
 
 class OutboundController extends Controller
 {
@@ -275,6 +276,13 @@ class OutboundController extends Controller
                     'customer_state' => $request->recipient_state,
                     'customer_country' => $request->recipient_country,
                 ]);
+            if(collect($outboundProducts)->sum('quantity') == 0)
+            {
+                if(request()->wantsJson()) {
+                    return response(json_encode(array('outbound_products' => ['Please select at least 1 product'])), 422);
+                }
+            }
+            
 
             $outbound = new Outbound($request->except(['business']));
             $outbound->insurance = request()->has('insurance');
@@ -359,6 +367,8 @@ class OutboundController extends Controller
             return response()->json($exception->getMessage(), 422);
 
         }
+
+        event(new EventTrigger('outbound'));
 
         return response()->json(['message' => 'Outbound order created successfully']);
     }

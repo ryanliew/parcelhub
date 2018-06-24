@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use PDF;
 use Settings;
+use App\Events\EventTrigger;
 class InboundController extends Controller
 {
     protected $rules = [
@@ -162,6 +163,15 @@ class InboundController extends Controller
         }
 
         $left_volume = $user_lots->sum('left_volume');
+
+        // Check that user will need to have at least 1 lot
+        
+        if($user->lots()->count() == 0)
+        {
+            if(request()->wantsJson()) {
+                return response(json_encode(array('products' => ['You do not have any approved lots yet. Please purchase a lot.'])), 422);
+            }
+        }
         // Check for total left over volume
         /* We are turning this check off at the moment, this should not restrict the stock from coming in for now
         if($product_total_volume > $left_volume){
@@ -257,6 +267,8 @@ class InboundController extends Controller
 
         User::admin()->first()->notify(new AdminInboundCreatedNotification());
         Auth::user()->notify(new InboundCreatedNotification($inbound));
+
+        event(new EventTrigger('inbound'));
 
         return ['message' => "Inbound order created"];
     }
