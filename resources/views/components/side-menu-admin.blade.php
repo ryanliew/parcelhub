@@ -42,16 +42,16 @@
         Orders
     </p>
     <ul class="menu-list">
-        <li id='inbound-menu'>
+        <li id='inbound-menu' class="notifiable @if($hasInbounds && url()->current() !== route('inbounds')) has-notification @endif">
             
             <a @if( url()->current() == route('inbounds') ) class="is-active" @endif href="{{ route('inbounds') }}">
                 Inbounds
-            <span class="dot1"></span></a>
+            </a>
         </li>
-        <li id='outbound-menu'>
+        <li id='outbound-menu' class="notifiable @if($hasOutbounds && url()->current() !== route('outbounds')) has-notification @endif">
             <a @if( url()->current() == route('outbounds') ) class="is-active" @endif href="{{ route('outbounds') }}">
                 Outbounds
-            <span class="dot2"></span></a></a>
+            </a>
             <ul>
                 <li>
                     <a @if( url()->current() == route('outbounds.bulk') ) class="is-active" @endif href="{{ route('outbounds.bulk') }}">
@@ -60,12 +60,12 @@
                 </li>
             </ul>
         </li>
-        <li>
+        <li id='return-menu' class="notifiable @if($hasReturns && url()->current() !== route('returns')) has-notification @endif">
             <a @if( url()->current() == route('returns') ) class="is-active" @endif href="{{ route('returns') }}">
                 Return Order
             </a>
         </li>
-        <li>
+        <li id='recall-menu' class="notifiable @if($hasRecalls && url()->current() !== route('recalls')) has-notification @endif">
             <a @if( url()->current() == route('recalls') ) class="is-active" @endif href="{{ route('recalls') }}">
                 Recall Order
             </a>

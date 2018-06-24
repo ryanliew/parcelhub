@@ -10,18 +10,20 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class InboundCreatedEvent implements ShouldBroadcast
+class EventTrigger implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
+
+    public $instanceType ='';
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($input)
     {
-        //
+        $this->instanceType = $input;
     }
 
     /**
@@ -31,7 +33,7 @@ class InboundCreatedEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('InboundCreatedEvent');
+        return new PrivateChannel('EventTriggerChannel');
     }
 
     /**
@@ -41,6 +43,8 @@ class InboundCreatedEvent implements ShouldBroadcast
      */
     public function broadcastAs()
     {
-        return 'InboundCreated';
+        return 'EventTrigger';
     }
+    
+
 }

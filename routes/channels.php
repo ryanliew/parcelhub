@@ -15,11 +15,8 @@ Broadcast::channel('App.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
 
-Broadcast::channel('InboundCreatedEvent', function ($user) {
+Broadcast::channel('EventTriggerChannel', function ($user) {
     return $user->hasRole('admin');
 });
 
-Broadcast::channel('OutboundCreatedEvent', function ($user) {
-    return $user->hasRole('admin');
-});
 

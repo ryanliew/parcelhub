@@ -15,7 +15,6 @@
     <!-- Stylesheet -->
     <link rel="stylesheet" href="{{ asset('css/app.css?v=0.0.8') }}">
     <link rel="stylesheet" href="{{ asset('css/responsive-tables.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/bubble.css') }}">
 
     <script>
         window.App = {!! json_encode([

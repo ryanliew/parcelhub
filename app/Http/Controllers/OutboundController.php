@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Log;
 use PDF;
 use Storage;
 use Intervention\Image\ImageManagerStatic as Image;
-use App\Events\OutboundCreatedEvent;
+use App\Events\EventTrigger;
 
 class OutboundController extends Controller
 {
@@ -361,7 +361,7 @@ class OutboundController extends Controller
 
         }
 
-        event(new OutboundCreatedEvent());
+        event(new EventTrigger('outbound'));
 
         return response()->json(['message' => 'Outbound order created successfully']);
     }

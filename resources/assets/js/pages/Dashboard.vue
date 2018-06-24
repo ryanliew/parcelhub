@@ -247,14 +247,25 @@
 		},
 
 		created() {
-			window.Echo.private('InboundCreatedEvent')
-	            .listen('.InboundCreated', (e) => {
-	                this.$refs.inbounds.refreshTable();
-	            });
 
-	       window.Echo.private('OutboundCreatedEvent')
-	            .listen('.OutboundCreated', (e) => {
-	                this.$refs.outbounds.refreshTable();
+	       window.Echo.private('EventTriggerChannel')
+	            .listen('.EventTrigger', (e) => {
+	                if( e.instanceType == 'inbound')
+	                {
+	                	this.$refs.inbounds.refreshTable();
+	                }
+	                else if( e.instanceType == 'outbound' )
+	                {
+	                	this.$refs.outbounds.refreshTable();
+	                }
+	                else if( e.instanceType == 'recall' )
+	                {
+	                	this.$refs.recalls.refreshTable();
+	                }
+	                else if( e.instanceType == 'return' )
+	                {
+	                	this.$refs.returns.refreshTable();
+	                }
 	            });
 		},
 
