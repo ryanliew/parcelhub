@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Courier;
 use App\Customer;
+use App\Events\EventTrigger;
 use App\Http\Controllers\InboundController;
 use App\Inbound;
 use App\Notifications\Admin\InboundCreatedNotification;
@@ -15,9 +16,9 @@ use App\Utilities;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
+use Intervention\Image\ImageManagerStatic as Image;
 use Maatwebsite\Excel\Facades\Excel;
 use Storage;
-use Intervention\Image\ImageManagerStatic as Image;
 
 class ExcelController extends Controller
 {
@@ -212,6 +213,8 @@ class ExcelController extends Controller
         }
 
         User::admin()->first()->notify(new OutboundCreatedNotification());
+        event(new EventTrigger('outbound'));
+        
         return response()->json(['message' => $count . ' outbound orders created successfully']); 
 
     }
@@ -336,6 +339,8 @@ class ExcelController extends Controller
         }
 
         User::admin()->first()->notify(new InboundCreatedNotification());
+        event(new EventTrigger('inbound'));
+
         return response()->json(['message' => $count . ' inbound orders created successfully']); 
 
     }
