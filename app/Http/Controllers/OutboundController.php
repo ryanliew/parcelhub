@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Log;
 use PDF;
 use Storage;
 use Intervention\Image\ImageManagerStatic as Image;
+use App\Events\OutboundCreatedEvent;
 
 class OutboundController extends Controller
 {
@@ -359,6 +360,8 @@ class OutboundController extends Controller
             return response()->json($exception->getMessage(), 422);
 
         }
+
+        event(new OutboundCreatedEvent());
 
         return response()->json(['message' => 'Outbound order created successfully']);
     }

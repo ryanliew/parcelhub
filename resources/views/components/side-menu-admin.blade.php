@@ -42,15 +42,16 @@
         Orders
     </p>
     <ul class="menu-list">
-        <li>
+        <li id='inbound-menu'>
+            
             <a @if( url()->current() == route('inbounds') ) class="is-active" @endif href="{{ route('inbounds') }}">
                 Inbounds
-            </a>
+            <span class="dot1"></span></a>
         </li>
-        <li>
+        <li id='outbound-menu'>
             <a @if( url()->current() == route('outbounds') ) class="is-active" @endif href="{{ route('outbounds') }}">
                 Outbounds
-            </a>
+            <span class="dot2"></span></a></a>
             <ul>
                 <li>
                     <a @if( url()->current() == route('outbounds.bulk') ) class="is-active" @endif href="{{ route('outbounds.bulk') }}">
