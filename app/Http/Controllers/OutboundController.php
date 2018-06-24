@@ -276,6 +276,13 @@ class OutboundController extends Controller
                     'customer_state' => $request->recipient_state,
                     'customer_country' => $request->recipient_country,
                 ]);
+            if(collect($outboundProducts)->sum('quantity') == 0)
+            {
+                if(request()->wantsJson()) {
+                    return response(json_encode(array('outbound_products' => ['Please select at least 1 product'])), 422);
+                }
+            }
+            
 
             $outbound = new Outbound($request->except(['business']));
             $outbound->insurance = request()->has('insurance');

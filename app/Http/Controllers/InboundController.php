@@ -163,6 +163,15 @@ class InboundController extends Controller
         }
 
         $left_volume = $user_lots->sum('left_volume');
+
+        // Check that user will need to have at least 1 lot
+        
+        if($user->lots()->count() == 0)
+        {
+            if(request()->wantsJson()) {
+                return response(json_encode(array('products' => ['You do not have any approved lots yet. Please purchase a lot.'])), 422);
+            }
+        }
         // Check for total left over volume
         /* We are turning this check off at the moment, this should not restrict the stock from coming in for now
         if($product_total_volume > $left_volume){

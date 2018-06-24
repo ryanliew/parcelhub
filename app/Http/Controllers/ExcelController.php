@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Courier;
 use App\Customer;
+use App\Events\EventTrigger;
 use App\Http\Controllers\InboundController;
 use App\Inbound;
 use App\Notifications\Admin\InboundCreatedNotification;
@@ -15,9 +16,9 @@ use App\Utilities;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
+use Intervention\Image\ImageManagerStatic as Image;
 use Maatwebsite\Excel\Facades\Excel;
 use Storage;
-use Intervention\Image\ImageManagerStatic as Image;
 
 class ExcelController extends Controller
 {
@@ -53,18 +54,23 @@ class ExcelController extends Controller
      */
     public function store(Request $request)
     {
-        $excelRows = Excel::load($request->file('file'))->toArray();
+
+        $this->validate($request, [
+            'file' => 'required'
+        ]);
+        
+        $excelRows = Excel::load($request->file('file'))->noHeading()->skipRows(3)->toArray();
         foreach($excelRows as $excelRow){
             $product = Product::firstOrCreate(
-                 ['sku' => $excelRow['sku']],
-                 ['sku' => $excelRow['sku'],
-                'name' => $excelRow['name'],
-                'height' => $excelRow['heightcm'],
-                'length' => $excelRow['lengthcm'],
-                'width' => $excelRow['widthcm'],
-                'is_dangerous' => $excelRow['dangerous'],
-                'is_fragile' => $excelRow['fragile'],
-                'trash_hole' => $excelRow['minstocklevel'],
+                 ['sku' => $excelRow[0]],
+                 ['sku' => $excelRow[0],
+                'name' => $excelRow[1],
+                'height' => $excelRow[2],
+                'length' => $excelRow[3],
+                'width' => $excelRow[4],
+                'is_dangerous' => strtolower($excelRow[5]) == 'yes',
+                'is_fragile' => strtolower($excelRow[6]) == 'yes',
+                'trash_hole' => $excelRow[7],
                 'user_id' => auth()->id()
             ]);
         }
@@ -78,44 +84,53 @@ class ExcelController extends Controller
             'file' => 'required'
         ]);
 
-        $excelRows = Excel::load($request->file('file'))->toArray();
+        $excelRows = Excel::load($request->file('file'))->noHeading()->skipRows(2)->toArray();
         $details = collect([]);
+
+
 
         // Save product and customer into processing queue
         foreach($excelRows as $excelRow) 
         {
             $detail = [];
-            if(!is_null($excelRow['customername'])) {
 
-                $customer = Customer::where('customer_name', $excelRow['customername'])->first();
+            if(!is_null($excelRow[3])) {
+                
+                $customer = auth()->user()->customers()->updateOrCreate(
+                ['customer_name' => $excelRow[3]],
+                [
+                    'customer_name' => $excelRow[3],
+                    'customer_address' => $excelRow[5],
+                    'customer_address_2' => $excelRow[6],
+                    'customer_phone' => $excelRow[10],
+                    'customer_postcode' => $excelRow[8],
+                    'customer_state' => $excelRow[7],
+                    'customer_country' => $excelRow[9],
+                ]);
 
-                if(is_null($customer))
+                if(strtolower($customer->customer_country) !== 'malaysia')
                 {
-                    return response(json_encode(array('overall' => ['Customer ' . $excelRow['customername'] . ' not found. Please create your customer at "My Customer" page first.'])), 422);
-                }
-                else if(strtolower($customer->customer_country) !== 'malaysia')
-                {
-                    return response(json_encode(array('overall' => ['Customer ' . $excelRow['customername'] . ' does not have a Malaysia address. We only support excel import for Malaysia outbound for now. Please manually create a foreign outbound from the "Outbounds" page.'])), 422);
+                    return response(json_encode(array('overall' => ['Customer ' . $excelRow[3] . ' does not have a Malaysia address. We only support excel import for Malaysia outbound for now. Please manually create a foreign outbound from the "Outbounds" page.'])), 422);
                 }
 
-                $product = Product::where('sku', $excelRow['productsku'])->first();
+                $product = Product::where('sku', $excelRow[1])->first();
                 if(is_null($product))
                 {
-                    return response(json_encode(array('overall' => ['Product ' . $excelRow['productsku'] . ' not found. Please create your product at "My Products" page first.'])), 422);
+                    return response(json_encode(array('overall' => ['Product ' . $excelRow[1] . ' not found. Please create your product at "My Products" page first.'])), 422);
                 }
 
-                $courier = Courier::where('name', 'LIKE', '%' . $excelRow['courier'] . '%')->first();
+                $courier = Courier::where('name', 'LIKE', '%' . $excelRow[4] . '%')->first();
                 if(is_null($courier))
                 {
-                    return response(json_encode(array('overall' => ['Courier ' . $excelRow['courier'] . ' not found. Please check with our administrator.'])), 422);
+                    return response(json_encode(array('overall' => ['Courier ' . $excelRow[4] . ' not found. Please check with our administrator.'])), 422);
                 }
 
                 $detail['customer'] = $customer;
                 $detail['product'] = $product;
-                $detail['quantity'] = $excelRow['quantity'];
-                $detail['courier'] = $excelRow['courier'];
-                $detail['no'] = $excelRow['no'];
-                $detail['remark'] = $excelRow['remark'];
+                $detail['quantity'] = $excelRow[2];
+                $detail['courier'] = $excelRow[4];
+                $detail['no'] = $excelRow[0];
+                $detail['remark'] = $excelRow[11];
                 $detail['courier'] = $courier;
                 $details->push($detail);
             }
@@ -198,6 +213,8 @@ class ExcelController extends Controller
         }
 
         User::admin()->first()->notify(new OutboundCreatedNotification());
+        event(new EventTrigger('outbound'));
+        
         return response()->json(['message' => $count . ' outbound orders created successfully']); 
 
     }
@@ -208,35 +225,35 @@ class ExcelController extends Controller
             'file' => 'required'
         ]);
 
-        $excelRows = Excel::load($request->file('file'))->toArray();
+        $excelRows = Excel::load($request->file('file'))->noHeading()->skipRows(2)->toArray();
 
         $details = collect([]);
         $count = 0;
         foreach($excelRows as $excelRow) 
         {
             $detail = [];
-            if(!is_null($excelRow['arrivaldate']))
+            if(!is_null($excelRow[1]))
             {
-                if(Carbon::parse($excelRow['arrivaldate'])->lt(Carbon::now()))
+                if(Carbon::parse($excelRow[1])->lt(Carbon::now()))
                 {
-                    return response(json_encode(array('overall' => ['Arrival date ' . $excelRow['arrivaldate'] . ' is a past date.'])), 422);
+                    return response(json_encode(array('overall' => ['Arrival date ' . $excelRow[1] . ' is a past date.'])), 422);
                 }
                 
-                $product = Product::where('sku', $excelRow['productsku'])->first();
+                $product = Product::where('sku', $excelRow[2])->first();
                 if(is_null($product))
                 {
-                    return response(json_encode(array('overall' => ['Product ' . $excelRow['productsku'] . ' not found. Please create your product at "My Products" page first.'])), 422);
+                    return response(json_encode(array('overall' => ['Product ' . $excelRow[2] . ' not found. Please create your product at "My Products" page first.'])), 422);
                 }
+
+                $detail['arrival'] = $excelRow[1];
+                $detail['carton'] = $excelRow[3];
+                $detail['product'] = $product; 
+                $detail['remark'] = $excelRow[6];
+                $detail['expiry'] = is_null($excelRow[5]) ? null : $excelRow[5];
+                $detail['quantity'] = $excelRow[4];
+
+                $details->push($detail);
             }
-
-            $detail['arrival'] = $excelRow['arrivaldate'];
-            $detail['carton'] = $excelRow['totalcarton'];
-            $detail['product'] = $product; 
-            $detail['remark'] = $excelRow['remark'];
-            $detail['expiry'] = is_null($excelRow['expirydate']) ? null : $excelRow['expirydate'];
-            $detail['quantity'] = $excelRow['quantity'];
-
-            $details->push($detail);
         }
 
         $arrivals = $details->unique('arrival');
@@ -322,6 +339,8 @@ class ExcelController extends Controller
         }
 
         User::admin()->first()->notify(new InboundCreatedNotification());
+        event(new EventTrigger('inbound'));
+
         return response()->json(['message' => $count . ' inbound orders created successfully']); 
 
     }
