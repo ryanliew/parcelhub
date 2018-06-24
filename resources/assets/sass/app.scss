@@ -267,3 +267,21 @@ tr.subrow {
     border-bottom: 1px solid #dbdbdb;
   }
 }
+
+li.notifiable a:after {
+  height: 10px;
+  width: 10px;
+  border-radius: 50%;
+  background: red;
+  content: " ";
+  display: none;
+  margin-bottom: 5px;
+}
+
+li.notifiable.has-notification a:after {
+  display: inline-block;
+}
+
+li.notifiable ul a:after, li.notifiable.has-notification ul a:after {
+  display: none;
+}
