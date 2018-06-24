@@ -20,7 +20,7 @@
         "maatwebsite/excel": "~2.1.0",
         "milon/barcode": "^5.3",
         "oriceon/laravel-settings": "^1.2",
-        "pusher/pusher-php-server": "^3.0",
+        "pusher/pusher-php-server": "~3.0",
         "zizaco/entrust": "^1.9"
     },
     "require-dev": {
