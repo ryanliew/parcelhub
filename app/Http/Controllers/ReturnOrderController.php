@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use PDF;
 use Settings;
+use App\Events\EventTrigger;
 
 class ReturnOrderController extends Controller
 {
@@ -204,6 +205,8 @@ class ReturnOrderController extends Controller
             $lot->products()->attach($lot_products);
             $lot->propagate_left_volume();
         }
+
+        event(new EventTrigger('return'));
 
         return ['message' => "Return order created"];
     }

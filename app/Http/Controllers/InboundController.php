@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use PDF;
 use Settings;
+use App\Events\EventTrigger;
 class InboundController extends Controller
 {
     protected $rules = [
@@ -266,6 +267,8 @@ class InboundController extends Controller
 
         User::admin()->first()->notify(new AdminInboundCreatedNotification());
         Auth::user()->notify(new InboundCreatedNotification($inbound));
+
+        event(new EventTrigger('inbound'));
 
         return ['message' => "Inbound order created"];
     }
