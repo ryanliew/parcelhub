@@ -49,7 +49,7 @@
     </footer>
     @endif
     <script src="{{ asset('js/form.js?v=1.0.5') }}"></script>
-    <script src="{{ asset('js/app.js?v=1.1.2.0') }}"></script>
+    <script src="{{ asset('js/app.js?v=1.1.2.1') }}"></script>
     <script src="{{ asset('js/jquery-1.7.1.min.js') }}"></script>
     <script src="{{ asset('js/responsive-tables.js') }}"></script>
     <script src="{{ asset('js/broadcast.js') }}"></script>

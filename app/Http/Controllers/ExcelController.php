@@ -72,7 +72,8 @@ class ExcelController extends Controller
                     'is_dangerous' => strtolower($excelRow[5]) == 'yes',
                     'is_fragile' => strtolower($excelRow[6]) == 'yes',
                     'trash_hole' => $excelRow[7],
-                    'user_id' => auth()->id()
+                    'user_id' => auth()->id(),
+                    'status' => 'true'
                 ]);
             }
         }
