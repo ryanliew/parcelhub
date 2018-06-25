@@ -58,7 +58,7 @@
 		  			</vue2Dropzone>
 		  		</div>
 		  		<div class="step-content has-text-centered">
-		  			<h1 class="title is-4">{{ number }} of products have been processed!</h1>
+		  			<h1 class="title is-4">Complete! {{ number }} of products have been processed!</h1>
 		  		</div>
 		  	</div>
 		  	<div class="steps-actions">
