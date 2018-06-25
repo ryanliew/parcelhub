@@ -61,18 +61,20 @@ class ExcelController extends Controller
         
         $excelRows = Excel::load($request->file('file'))->noHeading()->skipRows(3)->toArray();
         foreach($excelRows as $excelRow){
-            $product = Product::firstOrCreate(
-                 ['sku' => $excelRow[0]],
-                 ['sku' => $excelRow[0],
-                'name' => $excelRow[1],
-                'height' => $excelRow[2],
-                'length' => $excelRow[3],
-                'width' => $excelRow[4],
-                'is_dangerous' => strtolower($excelRow[5]) == 'yes',
-                'is_fragile' => strtolower($excelRow[6]) == 'yes',
-                'trash_hole' => $excelRow[7],
-                'user_id' => auth()->id()
-            ]);
+            if($excelRow[0]) {
+                $product = Product::firstOrCreate(
+                     ['sku' => $excelRow[0]],
+                     ['sku' => $excelRow[0],
+                    'name' => $excelRow[1],
+                    'height' => $excelRow[2],
+                    'length' => $excelRow[3],
+                    'width' => $excelRow[4],
+                    'is_dangerous' => strtolower($excelRow[5]) == 'yes',
+                    'is_fragile' => strtolower($excelRow[6]) == 'yes',
+                    'trash_hole' => $excelRow[7],
+                    'user_id' => auth()->id()
+                ]);
+            }
         }
 
         return ["message" => "Products uploaded successfully", "number" => sizeof($excelRows)];
