@@ -60,10 +60,11 @@ class ExcelController extends Controller
         ]);
         
         $excelRows = Excel::load($request->file('file'))->noHeading()->skipRows(3)->toArray();
+        //dd($excelRows);
         foreach($excelRows as $excelRow){
-            if($excelRow[0]) {
-                $product = Product::firstOrCreate(
-                     ['sku' => $excelRow[0]],
+            if(!is_null($excelRow[0])) {
+                $product = Product::updateOrCreate(
+                     ['sku' => $excelRow[0], 'user_id' => auth()->id()],
                      ['sku' => $excelRow[0],
                     'name' => $excelRow[1],
                     'height' => $excelRow[2],
