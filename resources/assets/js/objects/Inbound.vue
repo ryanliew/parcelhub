@@ -14,7 +14,7 @@
 								<div class="level-item">
 									<a class="button is-primary ml-5" :href="download" target="_blank">
 										<i class="fa fa-download"></i>
-										<span class="pl-5">Download PDF</span>
+										<span class="pl-5">Goods received form</span>
 									</a>
 								</div>
 							</div>

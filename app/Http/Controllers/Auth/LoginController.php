@@ -34,17 +34,20 @@ class LoginController extends Controller
 
     public function authenticated()
     {
-        if(Auth::user()->verified) {
+        if(Auth::user()->verified && Auth::user()->is_approved) {
             if(Auth::user()->hasRole('admin')) {
                 return redirect()->intended('dashboard');
             }
         } else {
             $id = Auth::user()->id;
+            $message = Auth::user()->verified ? "You have been restricted from accessing the system. Please contact the administrator for help." : trans('auth.token_not_verify');
+            $banned = Auth::user()->verified && !Auth::user()->is_approved ;
             Auth::logout();
 
             return view('user.verify')->with([
-                'message' => trans('auth.token_not_verify'),
-                'id' => $id
+                'message' => $message,
+                'id' => $id,
+                'banned' => $banned
             ]);
         }
 

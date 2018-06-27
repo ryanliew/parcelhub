@@ -2,8 +2,9 @@
 
 namespace App;
 
-use Illuminate\Notifications\Notifiable;
+use App\Notifications\AccountApprovalNotification;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 use Zizaco\Entrust\Traits\EntrustUserTrait;
 
 /**
@@ -130,5 +131,13 @@ class User extends Authenticatable
 
     public function getTotalLotLeftVolumeAttribute() {
         return $this->lots->sum('left_volume');
+    }
+
+    public function toggleApproval()
+    {
+        $this->update(['is_approved' => !$this->is_approved]);
+
+        $this->notify(new AccountApprovalNotification($this));
+        return $this;
     }
 }

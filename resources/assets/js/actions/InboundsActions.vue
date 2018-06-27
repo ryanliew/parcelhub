@@ -9,6 +9,14 @@
                     <span>View</span>
                 </button>
             </p>
+            <p class="control">
+                <button class="button is-primary" @click="download">
+                    <span class="icon">
+                        <i class="fa fa-download"></i>
+                    </span>
+                    <span>GR Form</span>
+                </button>
+            </p>
         </div>
     </div>
 </template>
@@ -30,6 +38,10 @@ export default {
                 action = 'viewReturn';
 
             this.$events.fire(action, data);            
+        },
+
+        download() {
+            window.location.href = "/download/inbound/report/" + this.rowData.id;
         }
     }
   }

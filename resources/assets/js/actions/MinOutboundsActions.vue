@@ -6,7 +6,6 @@
                     <span class="icon">
                         <i class="fa fa-search"></i>
                     </span>
-                    <span>View</span>
                 </button>
             </p>
             <p class="control">
@@ -14,15 +13,13 @@
                     <span class="icon">
                         <i class="fa fa-download"></i>
                     </span>
-                    <span>PL form</span>
                 </button>
             </p>
             <p class="control">
-                <button class="button is-danger" @click="downloadInvoice" v-if="rowData.invoice_slip">
+                <button class="button is-danger" @click="downloadInvoice" v-if="!rowData.invoice_slip">
                     <span class="icon">
                         <i class="fa fa-download"></i>
                     </span>
-                    <span>Customer Invoice</span>
                 </button>
             </p>
         </div>

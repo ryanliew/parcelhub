@@ -75,4 +75,13 @@ class UserController extends Controller
 
     	return ['message' => 'User profile updated.'];
     }
+
+    public function approval(User $user)
+    {
+        $user = $user->toggleApproval();
+
+        $message = $user->is_approved ? "approved" : "banned";
+        
+        return ['message' => "User has been " . $message];
+    }
 }

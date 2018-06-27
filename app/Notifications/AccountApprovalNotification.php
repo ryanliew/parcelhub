@@ -2,24 +2,24 @@
 
 namespace App\Notifications;
 
+use App\User;
 use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Notification;
 
-class AccountVerificationNotification extends Notification
+class AccountApprovalNotification extends Notification
 {
     use Queueable;
 
     protected $user;
-
     /**
      * Create a new notification instance.
      *
-     * @param $user
+     * @return void
      */
-    public function __construct($user)
-    {
+    public function __construct(User $user)
+    {   
         $this->user = $user;
     }
 
@@ -42,10 +42,13 @@ class AccountVerificationNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        return (new MailMessage)
-                    ->greeting('Hello! ' . $this->user->name)
-                    ->action('Verify Account', route('verify', ['token' => $this->user->tokens->token]))
-                    ->line('You have recently created an account at our site. Please press the button above to verify your account. Please take note that you will still need to wait for our administrator to verify your account!');
+        if($this->user->is_approved)
+            return (new MailMessage)
+                        ->line('Your account has been approved. You can now login to the system.')
+                        ->action('Login', url('/login'));
+        else
+            return (new MailMessage)
+                        ->line('Your account has restricted from entering the system. Please contact the administrator if you believe this has been done by mistake.');
     }
 
     /**
