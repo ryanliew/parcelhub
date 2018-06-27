@@ -51,6 +51,8 @@ Vue.component('CouriersActions', require('./actions/CouriersActions.vue'));
 Vue.component('ProductsActions', require('./actions/ProductsActions.vue'));
 Vue.component('InboundsActions', require('./actions/InboundsActions.vue'));
 Vue.component('OutboundsActions', require('./actions/OutboundsActions.vue'));
+Vue.component('MinInboundsActions', require('./actions/MinInboundsActions.vue'));
+Vue.component('MinOutboundsActions', require('./actions/MinOutboundsActions.vue'));
 Vue.component('PaymentsActions', require('./actions/PaymentsActions.vue'));
 Vue.component('UsersActions', require('./actions/UsersActions.vue'));
 Vue.component('CustomersActions', require('./actions/CustomersActions.vue'));

@@ -170,6 +170,7 @@ class OutboundController extends Controller
 
         $filename = Outbound::prefix() . $outbound->id . '-packing.pdf';
 
+        // return view("outbound.packing", compact('outbound'));
         return $pdf->setPaper('A4')->download($filename);
     }
 

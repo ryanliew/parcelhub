@@ -118,6 +118,8 @@ class InboundController extends Controller
         $pdf = PDF::loadView('inbound.report', compact('inbound'));
 
         $filename = Inbound::prefix() . $inbound->id . '.pdf';
+
+        // return view('inbound.report', compact('inbound'));
         return $pdf->setPaper('A4')->download($filename);
     }
 

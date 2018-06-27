@@ -46,6 +46,10 @@
             }
         },
 
+        mounted() {
+            this.$events.on("set-filter-text", data => this.setFilterText(data));
+        },
+
         methods: {
             doFilter () {
                 this.$events.fire('filter-set', { text: this.filterText, start: this.filterDateStart, end: this.filterDateEnd });
@@ -55,6 +59,11 @@
                 this.filterDateStart = '';
                 this.filterDateEnd = '';
                 this.$events.fire('filter-reset');
+            },
+
+            setFilterText(data) {
+                this.filterText = data.text;
+                this.doFilter();
             }
         }
     }

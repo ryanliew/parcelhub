@@ -90,13 +90,14 @@ class RegisterController extends Controller
 
         $user->tokens()->save($token);
 
-        //User::admin()->first()->notify(new UserRegisteredNotification($user));
+        User::admin()->first()->notify(new UserRegisteredNotification($user));
         // Send email verification to users email
         $user->notify(new AccountVerificationNotification($user));
 
         return view('user.verify')->with([
             'message' => trans('auth.token_not_verify'),
-            'id' => $user->id
+            'id' => $user->id,
+            'banned' => false
         ]);
     }
 
@@ -123,6 +124,8 @@ class RegisterController extends Controller
 
             $user = $userToken->user;
 
+            $extra = $user->is_approved ? "" : ". Please wait while our administrator is inspecting your account.";
+            
             if($user->verified) {
 
                 return view('user.verify')->with([
@@ -147,6 +150,8 @@ class RegisterController extends Controller
             return view('user.verify')->withErrors( [trans('auth.token_not_found')] );
         }
 
-        return redirect($this->redirectTo);
+        return redirect("/login")->with([
+                    'message' => trans('auth.token_verified') . $extra,
+                ]);;
     }
 }

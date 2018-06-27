@@ -59,6 +59,7 @@
 		mounted() {
 			this.$events.$on('filter-set', eventData => this.onFilterSet(eventData));
 			this.$events.$on('filter-reset', e => this.onFilterReset());
+			this.$events.$on('filter-param', e => this.onFilterParam(e));
 		},
 
 		methods: {
@@ -98,6 +99,10 @@
 			onFilterReset() {
 				this.params = {}
 				Vue.nextTick( () => this.$refs.vuetable.refresh())
+			},
+
+			onFilterParam(data) {
+				Vue.nextTick( () => this.$events.fire("set-filter-text", data));
 			},
 
 			onLoaded() {

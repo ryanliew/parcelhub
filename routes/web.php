@@ -127,6 +127,7 @@ Route::group(['prefix' => 'internal'], function() {
 	Route::get('users/selector', 'UserController@selector');
 	Route::get('users', 'UserController@index');
 	Route::get('user', 'UserController@show');
+	Route::post('user/{user}/approval', 'UserController@approval');
 	Route::get('user/{user}/lots', 'UserController@lotSelector');
 	Route::get('customers', 'CustomerController@index');
 	Route::get('admin/customers/{id}', 'CustomerController@adminCustomer');
