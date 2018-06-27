@@ -6,7 +6,7 @@
             {{ message }}
 
             <template slot="footer">
-                <button class="button is-primary" @click="confirm">Confirm</button>
+                <button class="button is-primary" :class="buttonClass" @click="confirm">Confirm</button>
             </template>
         </modal>
     </div>
@@ -29,6 +29,21 @@
             confirm() {
                 this.isLoading = true;
                 this.$emit('confirm');
+            }
+        },
+
+        computed: {
+            buttonClass() {
+                return this.isLoading ? "is-loading" : '';
+            }
+        },
+
+        watch: {
+            isConfirming: function(newValue, oldValue) {
+                if(!oldValue)
+                {
+                    this.isLoading = false;
+                }
             }
         }
     };

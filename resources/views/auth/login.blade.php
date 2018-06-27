@@ -22,6 +22,15 @@
                             </div>
                         </article>
                     @endif
+
+                    @if(session('message'))
+                        <article class="message is-info">
+                            <div class="message-body has-text-centered">
+                                {{ session('message') }}
+                            </div>
+                        </article>
+                    @endif
+
                     <form method="POST" action="{{ route('login') }}">
                         {{ csrf_field() }}
                         <div class="field">
