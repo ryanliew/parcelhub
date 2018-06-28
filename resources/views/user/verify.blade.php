@@ -31,17 +31,19 @@
                             </div>
                         </article>
 
-                        @if(isset($id))
-                            <form method="POST" action="{{ route('resend', ['id' => $id] ) }}">
-                                {{ csrf_field() }}
+                        @if(!$banned)
+                            @if(isset($id))
+                                <form method="POST" action="{{ route('resend', ['id' => $id] ) }}">
+                                    {{ csrf_field() }}
+                                    <div class="has-text-centered">
+                                        <button class="button is-primary" type="submit">Resend Verification Email</button>
+                                    </div>
+                                </form>
+                            @else
                                 <div class="has-text-centered">
-                                    <button class="button is-primary" type="submit">Resend Verification Email</button>
+                                    <a class="button is-primary" role="button" href="{{ route('home') }}">Proceed to login</a>
                                 </div>
-                            </form>
-                        @else
-                            <div class="has-text-centered">
-                                <a class="button is-primary" role="button" href="{{ route('home') }}">Proceed to login</a>
-                            </div>
+                            @endif
                         @endif
                     @endif
                 </div>

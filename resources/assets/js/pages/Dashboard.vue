@@ -358,7 +358,7 @@
 					{name: 'customer', sortField: 'users.name', title: 'Customer'},	
 					{name: 'created_at', sortField: 'created_at', title: 'Order date'},
 					{name: 'process_status', callback: 'outboundStatusLabel', title: 'Status', sortField: 'process_status'},
-					{name: '__component:outbounds-actions', title: 'Actions'}];
+					{name: '__component:min-outbounds-actions', title: 'Actions'}];
 
 				return displayFields;
 			},
@@ -368,7 +368,7 @@
 					{name: 'arrival_date', sortField: 'date', title: 'Arrival date'},
 					{name: 'total_carton', sortField: 'carton', title: 'Total carton'},
 					{name: 'process_status', callback: 'inboundStatusLabel', title: 'Status', sortField: 'process_status'},
-					{name: '__component:inbounds-actions', title: 'Actions'}];
+					{name: '__component:min-inbounds-actions', title: 'Actions'}];
 
 				if(this.can_manage)
 				{

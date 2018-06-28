@@ -32,9 +32,23 @@ class SocialController extends Controller
 
         $authUser = $this->findOrCreateUser($socialUser);
 
-        auth()->login($authUser);
+        // Generate token used for email verification
+        $token = new UserToken([
+            'token' => str_random(60),
+            'expire_at' => Carbon::now()->addMinute(5)
+        ]);
+
+        $user->tokens()->save($token);
+
+        User::admin()->first()->notify(new UserRegisteredNotification($user));
+        // Send email verification to users email
+        $user->notify(new AccountVerificationNotification($user));
 		
-        return redirect()->action('HomeController@index');
+        return view('user.verify')->with([
+            'message' => trans('auth.token_not_verify'),
+            'id' => $user->id,
+            'banned' => false
+        ]);
     }
 
     public function findOrCreateUser($user)

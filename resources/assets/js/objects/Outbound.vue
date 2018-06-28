@@ -13,13 +13,13 @@
 							</div>
 							<div class="level-right">
 								<div class="level-item">
-									<a class="button is-info ml-5" :href="download" target="_blank">
+									<a v-if="outbound.invoice_slip" class="button is-info ml-5" :href="download" target="_blank">
 										<i class="fa fa-download"></i>
-										<span class="pl-5">Download invoice</span>
+										<span class="pl-5">Customer invoice</span>
 									</a>
 									<a class="button is-info ml-5" :href="downloadPackinglist" target="_blank">
 										<i class="fa fa-download"></i>
-										<span class="pl-5">Download packing list</span>
+										<span class="pl-5">Packing list</span>
 									</a>
 								</div>
 							</div>

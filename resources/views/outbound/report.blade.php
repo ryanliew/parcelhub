@@ -89,7 +89,7 @@
             <div class="page-break"></div>
         @endif
     @endif
-    <div class="pull-left width-half">
+    {{-- <div class="pull-left width-half">
         <h2>Parcel HUB</h2>
     </div>
     <div class="pull-left width-quarter">
@@ -168,15 +168,17 @@
         </tr>
         </thead>
         <tbody>
-        @foreach ($outbound->products as $key => $product)
-            <tr>
-                <td>{{ $key + 1 }}</td>
-                <td>{{ $product->sku }} - {{ $product->name }}</td>
-                <td class="text-center">{{ $product->pivot->quantity }}</td>
-                <td></td>
-                <td></td>
-            </tr>
-        @endforeach
+            @foreach ($outbound->products as $key => $product)
+                <tr>
+                    <td>{{ $key + 1 }}</td>
+                    <td>{{ $product->sku }} - {{ $product->name }}</td>
+                    <td class="text-center">{{ $product->pivot->quantity }}</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            @endforeach
+
+            
         </tbody>
-    </table>
+    </table> --}}
 </body>
