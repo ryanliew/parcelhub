@@ -289,15 +289,16 @@ class InboundController extends Controller
     public function attachLot($inbound, $product, $lot, $expiry_date, $quantity) {
         // Attach lot to inbound product
         $inbound_product = InboundProduct::where('inbound_id', $inbound)->where('product_id', $product)->first();
-        $inbound_product->lots()->attach($lot, ['quantity_original' => $quantity, 'expiry_date' => $expiry_date ? $expiry_date : null]);
+        $inbound_product->lots()->attach($lot, ['quantity_received' => $quantity, 'quantity_original' => $quantity, 'expiry_date' => $expiry_date ? $expiry_date : null]);
 
         return $inbound_product;
     }
 
     public static function ATTACH_LOT($inbound, $product, $lot, $expiry_date, $quantity)
     {
+        // Used by excel import, putting it here as it is easier to manage in the future
         $inbound_product = InboundProduct::where('inbound_id', $inbound)->where('product_id', $product)->first();
-        $inbound_product->lots()->attach($lot, ['quantity_original' => $quantity, 'expiry_date' => $expiry_date ? $expiry_date : null]);
+        $inbound_product->lots()->attach($lot, ['quantity_received' => $quantity, 'quantity_original' => $quantity, 'expiry_date' => $expiry_date ? $expiry_date : null]);
 
         return $inbound_product;
     }
