@@ -168,7 +168,7 @@ class InboundController extends Controller
 
         // Check that user will need to have at least 1 lot
         
-        if($user->lots()->count() == 0)
+        if($auth->lots()->count() == 0)
         {
             if(request()->wantsJson()) {
                 return response(json_encode(array('products' => ['You do not have any approved lots yet. Please purchase a lot.'])), 422);
