@@ -130,6 +130,7 @@ class RegisterController extends Controller
 
                 return view('user.verify')->with([
                     'message' => trans('auth.token_verified'),
+                    'banned' => false
                 ]);
             }
 
@@ -141,7 +142,8 @@ class RegisterController extends Controller
 
                 return view('user.verify')->with([
                     'message' => trans('auth.token_expired'),
-                    'id' => $userToken->user->id
+                    'id' => $userToken->user->id,
+                    'banned' => false
                 ]);
             }
 
