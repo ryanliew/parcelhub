@@ -45,6 +45,7 @@
 				    </div>
 				    <span class="help is-danger">{{ form.errors.get('overall') }}</span>
 			    	<button class="button is-primary mt-5" @click="submit" :class="buttonClass">Submit excel file</button>
+			    	<p><i>Make sure to follow the formats and fill all the columns</i></p>
 		  		</div>
 		  		<div class="step-content has-text-centered">
 		  			<h1 class="title is-4">{{ message }}</h1>
