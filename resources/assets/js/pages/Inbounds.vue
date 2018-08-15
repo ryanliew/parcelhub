@@ -232,7 +232,7 @@
 			},
 
 			setProducts(response) {
-				this.productsOptions = response.data.data;
+				this.productsOptions = response.data;
 			},
 
 			addRow() {
