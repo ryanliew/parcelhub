@@ -115,12 +115,12 @@ class ProductController extends Controller
      */
     public function selector()
     {
-        return Controller::VueTableListResult(auth()->user()->products()->with(["inbounds", "lots", "outbounds"])->where('status', 'true'));
+        return auth()->user()->products()->with(["inbounds", "lots", "outbounds"])->where('status', 'true')->get();
     }
 
     public function adminProduct($id)
     {
-        return Controller::VueTableListResult(User::find($id)->products()->with(["inbounds", "lots", "outbounds"])->where('status', 'true'));
+        return User::find($id)->products()->with(["inbounds", "lots", "outbounds"])->where('status', 'true')->get();
     }
 
     /**
