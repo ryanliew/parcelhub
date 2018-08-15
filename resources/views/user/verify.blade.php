@@ -31,7 +31,7 @@
                             </div>
                         </article>
 
-                        @if(!$banned)
+                        @if(!isset($banned))
                             @if(isset($id))
                                 <form method="POST" action="{{ route('resend', ['id' => $id] ) }}">
                                     {{ csrf_field() }}
