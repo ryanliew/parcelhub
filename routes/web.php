@@ -27,20 +27,20 @@ Route::get('testPDF', function(){
 
 Auth::routes();
 
-Route::get('phpinfo', function() {
-	return phpinfo();
-});
+// Route::get('phpinfo', function() {
+// 	return phpinfo();
+// });
 
 Route::group(['prefix' => 'user/account/'], function() {
     Route::get('verify/{token}', 'Auth\RegisterController@verify')->name('verify');
     Route::post('resend/{id}', 'Auth\RegisterController@resend')->name('resend');
 });
 
-Route::get('/impersonate/{user}', function(App\User $user) {
-	Auth::login($user);
+// Route::get('/impersonate/{user}', function(App\User $user) {
+// 	Auth::login($user);
 
-	return redirect("/dashboard");
-});
+// 	return redirect("/dashboard");
+// });
 
 // Pages route
 Route::get('couriers', 'CourierController@page')->name('couriers');
