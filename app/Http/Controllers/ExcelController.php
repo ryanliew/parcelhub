@@ -91,8 +91,6 @@ class ExcelController extends Controller
         $excelRows = Excel::load($request->file('file'))->noHeading()->skipRows(2)->toArray();
         $details = collect([]);
 
-
-
         // Save product and customer into processing queue
         foreach($excelRows as $excelRow) 
         {
@@ -342,10 +340,18 @@ class ExcelController extends Controller
             } 
         }
 
-        User::admin()->first()->notify(new InboundCreatedNotification());
-        event(new EventTrigger('inbound'));
+        if($count > 0)
+        {
+            $message = $count . ' inbound orders created successfully';
+            User::admin()->first()->notify(new InboundCreatedNotification());
+            event(new EventTrigger('inbound'));
+        }
+        else
+        {
+            $message = "The system failed to read the data. Kindlt refer to the required example in the previous step and check the date format.";
+        }
 
-        return response()->json(['message' => $count . ' inbound orders created successfully']); 
+        return response()->json(['message' => $message]); 
 
     }
 
