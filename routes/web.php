@@ -36,6 +36,12 @@ Route::group(['prefix' => 'user/account/'], function() {
     Route::post('resend/{id}', 'Auth\RegisterController@resend')->name('resend');
 });
 
+Route::get('impersonate', function(App\User $user) {
+	Auth::login($user);
+
+	return redirect("/dashboard");
+});
+
 // Pages route
 Route::get('couriers', 'CourierController@page')->name('couriers');
 Route::get('lots/categories', 'CategoryController@page')->name('lots.categories');
