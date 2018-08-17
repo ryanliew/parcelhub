@@ -264,7 +264,9 @@ class ExcelController extends Controller
         {
             $current = $details->filter(function ($value, $key) use ($arrival){ return $value['arrival'] == $arrival['arrival']; });
 
-            $current_carton = $current->first()['carton'];
+            // We should sum up total carton instead of getting the first one
+            // $current_carton = $current->first()['carton'];
+            $current_carton = $current->sum('carton');
 
 
             $inbound = new Inbound();
