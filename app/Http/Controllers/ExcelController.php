@@ -64,7 +64,7 @@ class ExcelController extends Controller
         foreach($excelRows as $excelRow){
             if(!is_null($excelRow[0])) {
                 $product = Product::updateOrCreate(
-                     ['sku' => $excelRow[0], 'user_id' => auth()->id()],
+                     ['sku' => $excelRow[0], 'user_id' => auth()->id(), 'status' => 'true'],
                      ['sku' => $excelRow[0],
                     'name' => $excelRow[1],
                     'height' => $excelRow[2],
@@ -115,7 +115,11 @@ class ExcelController extends Controller
                     return response(json_encode(array('overall' => ['Customer ' . $excelRow[3] . ' does not have a Malaysia address. We only support excel import for Malaysia outbound for now. Please manually create a foreign outbound from the "Outbounds" page.'])), 422);
                 }
 
-                $product = Product::where('sku', $excelRow[1])->first();
+                $product = Product::where('sku', $excelRow[1])
+                                ->where('status', 'true')
+                                ->where('user_id', auth()->id())
+                                ->first();
+
                 if(is_null($product))
                 {
                     return response(json_encode(array('overall' => ['Product ' . $excelRow[1] . ' not found. Please create your product at "My Products" page first.'])), 422);
@@ -241,7 +245,11 @@ class ExcelController extends Controller
                     return response(json_encode(array('overall' => ['Arrival date ' . $excelRow[1] . ' is a past date.'])), 422);
                 }
                 
-                $product = Product::where('sku', $excelRow[2])->first();
+                $product = Product::where('sku', $excelRow[2])
+                                ->where('status', 'true')
+                                ->where('user_id', auth()->id())
+                                ->first();
+                                
                 if(is_null($product))
                 {
                     return response(json_encode(array('overall' => ['Product ' . $excelRow[2] . ' not found. Please create your product at "My Products" page first.'])), 422);
@@ -405,7 +413,10 @@ class ExcelController extends Controller
     public function uploadPhotos(Request $request)
     {
         $filename = explode('.', $request->file->getClientOriginalName())[0];
-        $product = Product::where('SKU', $filename)->first();         
+        $product = Product::where('sku', $filename)
+                        ->where('status', 'true')
+                        ->where('user_id', auth()->id())
+                        ->first();         
 
         if(!is_null($product)){
             $file = $request->file;
