@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -30,5 +31,10 @@ class UserToken extends Model
     public function user()
     {
         return $this->belongsTo('App\User', 'user_id');
+    }
+
+    public function getIsExpiredAttribute()
+    {
+    	return $this->expire_at->lt(Carbon::now());
     }
 }
