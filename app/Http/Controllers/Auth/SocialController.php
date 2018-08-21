@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Notifications\AccountVerificationNotification;
+use App\Notifications\UserRegisteredNotification;
 use App\Role;
-use Illuminate\Database\Eloquent\Model;
-
 use App\User;
+use App\UserToken;
+use Illuminate\Database\Eloquent\Model;
 use Socialite;
 
 class SocialController extends Controller
