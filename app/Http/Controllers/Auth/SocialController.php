@@ -57,7 +57,7 @@ class SocialController extends Controller
         }
 
         // Not new user
-        Auth::login($authUser['user']);
+        auth()->login($authUser['user']);
 
         // Check if user is verified and approved by admin
         if($authUser['user']->verified && $authUser['user']->is_approved) {
@@ -69,7 +69,7 @@ class SocialController extends Controller
             $id = $authUser['user']->id;
             $message = $authUser['user']->verified ? "You have been restricted from accessing the system. Please contact the administrator for help." : trans('auth.token_not_verify');
             $banned = $authUser['user']->verified && !$authUser['user']->is_approved ;
-            Auth::logout();
+            auth()->logout();
 
             return view('user.verify')->with([
                 'message' => $message,
