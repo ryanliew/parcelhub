@@ -41,15 +41,15 @@ class SocialController extends Controller
             'expire_at' => Carbon::now()->addMinute(5)
         ]);
 
-        $user->tokens()->save($token);
+        $authUser->tokens()->save($token);
 
-        User::admin()->first()->notify(new UserRegisteredNotification($user));
+        User::admin()->first()->notify(new UserRegisteredNotification($authUser));
         // Send email verification to users email
-        $user->notify(new AccountVerificationNotification($user));
+        $authUser->notify(new AccountVerificationNotification($authUser));
 		
         return view('user.verify')->with([
             'message' => trans('auth.token_not_verify'),
-            'id' => $user->id,
+            'id' => $authUser->id,
             'banned' => false
         ]);
     }
