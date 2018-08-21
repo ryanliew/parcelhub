@@ -8,6 +8,7 @@ use App\Notifications\UserRegisteredNotification;
 use App\Role;
 use App\User;
 use App\UserToken;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Socialite;
 
