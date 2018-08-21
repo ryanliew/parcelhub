@@ -37,17 +37,25 @@ class SocialController extends Controller
 
         // User is new or not verified
         if($authUser['is_create'] || !$authUser['user']->verified) {
-            // Generate token used for email verification
-            $token = new UserToken([
-                'token' => str_random(60),
-                'expire_at' => Carbon::now()->addMinute(5)
-            ]);
+            
+            // We need to see if the user already has an active token
+            if($authUser['user']->tokens()->count() == 0 || $authUser['user']->tokens()->first()->is_expired) {
+                // Delete the token and generate a new token for email verification
+                $authUser['user']->tokens()->delete();
 
-            $authUser['user']->tokens()->save($token);
+                // Generate token used for email verification
+                $token = new UserToken([
+                    'token' => str_random(60),
+                    'expire_at' => Carbon::now()->addMinute(5)
+                ]);
 
-            // User::admin()->first()->notify(new UserRegisteredNotification($authUser['user']));
-            // Send email verification to users email
-            $authUser['user']->notify(new AccountVerificationNotification($authUser['user']));
+                $authUser['user']->tokens()->save($token);
+
+                // User::admin()->first()->notify(new UserRegisteredNotification($authUser['user']));
+
+                // Send email verification to users email
+                $authUser['user']->notify(new AccountVerificationNotification($authUser['user']));
+            }             
     		
             return view('user.verify')->with([
                 'message' => trans('auth.token_not_verify'),
@@ -63,6 +71,8 @@ class SocialController extends Controller
         if($authUser['user']->verified && $authUser['user']->is_approved) {
             if($authUser['user']->hasRole('admin')) {
                 return redirect()->intended('dashboard');
+            } else {
+                return redirect()->intended('lots');
             }
         } else {
             // User is not verified / approved by admin
