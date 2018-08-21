@@ -45,7 +45,7 @@ class SocialController extends Controller
 
             $authUser['user']->tokens()->save($token);
 
-            User::admin()->first()->notify(new UserRegisteredNotification($authUser['user']));
+            // User::admin()->first()->notify(new UserRegisteredNotification($authUser['user']));
             // Send email verification to users email
             $authUser['user']->notify(new AccountVerificationNotification($authUser['user']));
     		
