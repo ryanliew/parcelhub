@@ -125,6 +125,12 @@ class ExcelController extends Controller
                     return response(json_encode(array('overall' => ['Product ' . $excelRow[1] . ' not found. Please create your product at "My Products" page first.'])), 422);
                 }
 
+                if($product->lots()->count() == 0)
+                {
+                    return response(json_encode(array('overall' => ['Product ' . $excelRow[1] . ' cannot be found in any lot. Please create an inbound for the product or contact our administrator.'])), 422);
+                }
+
+
                 $courier = Courier::where('name', 'LIKE', '%' . $excelRow[4] . '%')->first();
                 if(is_null($courier))
                 {

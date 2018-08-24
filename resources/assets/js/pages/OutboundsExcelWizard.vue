@@ -33,6 +33,16 @@
 		  		<div class="step-content has-text-centered is-flex-center">
 		  			<img class="is-responsive" src="/images/outbound-excel.PNG"> 
 		  			<p><i class="is-dark-grey">Example input format</i></p>
+		  			<div class="has-text-left">
+		  			<h3 class="subtitle is-3">Instructions</h3>
+			  			<ol>
+			  				<li>Make sure to follow the formats and fill all the columns (only "Remarks" column can be empty).</li>
+			  				<li>The outbounds will be created by grouping the "No." column. <br>
+			  				Eg: To create a single outbound with PR1 and PR2, use the same number for both products like in the example above. This will create 1 single outbound with both products in it.</li>
+			  				<li>Make sure that the products have been sent inbound before.</li>
+			  			</ol>
+			  		</div>
+			  		<br>
 		  			<div class="field mt-5">
 			  			<image-input v-model="excelTemplate" :defaultImage="excelTemplate"
 				    				@loaded="changeExcelTemplate"
@@ -45,7 +55,6 @@
 				    </div>
 				    <span class="help is-danger">{{ form.errors.get('overall') }}</span>
 			    	<button class="button is-primary mt-5" @click="submit" :class="buttonClass">Submit excel file</button>
-			    	<p><i>Make sure to follow the formats and fill all the columns</i></p>
 		  		</div>
 		  		<div class="step-content has-text-centered">
 		  			<h1 class="title is-4">{{ message }}</h1>
