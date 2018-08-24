@@ -156,6 +156,10 @@
         .barcode > div {
             margin: 0 auto;
         }
+
+        .page-break {
+            page-break-after: always;
+        }
     </style>
 </head>
 <body>
@@ -230,7 +234,7 @@
                 </td>
             </tr>
         @endforeach
-        @for ($i = 0; $i <= 10 - $outbound->products->count(); $i++)
+        @for ($i = 0; $i <= 5 - $outbound->products->count(); $i++)
                 <tr class="extra-rows">
                     <td></td>
                     <td></td>
@@ -248,7 +252,9 @@
     </div>
 
     <div class="clear-both"></div>
-
+    @if($outbound->products->count() > 6 && $outbound->products->count() < 9)
+        <div class="page-break"></div>
+    @endif
     <table class="footer-table">
         <tbody>
             <tr>
