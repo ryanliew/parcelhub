@@ -446,7 +446,8 @@
 					payment_term: '',
 					trade_term: '',
 					export_reason: '',
-					business: ''
+					business: '',
+					is_malaysia: false,
 				}),
 				isDeleting: false,
 				errorForProducts: '',
@@ -657,6 +658,7 @@
 					this.form.recipient_country = data.recipient_country;
 					this.form.recipient_country.toLowerCase() == "malaysia"?
 					this.isMalaysiaData = true : this.isMalaysiaData = false;
+					this.form.is_malaysia = this.isMalaysiaData;
 				}
 			},
 
@@ -704,6 +706,6 @@
 
 				return searchables;
 			}
-		}
+		},
 	}
 </script>
