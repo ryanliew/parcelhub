@@ -229,6 +229,7 @@ class OutboundController extends Controller
      */
     public function store(Request $request)
     {
+
         $this->validate($request, [
             'recipient_name' => 'required',
             'recipient_address' => 'required',
@@ -240,11 +241,11 @@ class OutboundController extends Controller
             'amount_insured' => 'required_if:insurance,==,1|numeric|min:0',
             'outbound_products' => 'required',
             'invoice_slip' => 'nullable|mimes:jpeg,png,pdf',
-            'payer_gst_vat' => 'required_unless:recipient_country,malaysia,Malaysia',
-            'harm_comm_code' => 'required_unless:recipient_country,malaysia,Malaysia',
-            'trade_term' => 'required_unless:recipient_country,malaysia,Malaysia',
-            'payment_term' => 'required_unless:recipient_country,malaysia,Malaysia',
-            'export_reason' => 'required_unless:recipient_country,malaysia,Malaysia'
+            'payer_gst_vat' => 'required_unless:is_malaysia,true',
+            'harm_comm_code' => 'required_unless:is_malaysia,true',
+            'trade_term' => 'required_unless:is_malaysia,true',
+            'payment_term' => 'required_unless:is_malaysia,true',
+            'export_reason' => 'required_unless:is_malaysia,true'
         ]);
 
         if(empty(auth()->user()->address))
@@ -285,7 +286,7 @@ class OutboundController extends Controller
             }
             
 
-            $outbound = new Outbound($request->except(['business']));
+            $outbound = new Outbound($request->except(['business', 'is_malaysia']));
             $outbound->insurance = request()->has('insurance');
             
             $outbound->amount_insured = $outbound->insurance ? request()->amount_insured : 0;
