@@ -618,9 +618,9 @@
                                         </tr>
                                         <tr>
                                             <td width="100%" style="font-size: 12px; color: #969696; text-align: left; font-family: Helvetica, Arial, sans-serif, 'Open Sans'; font-weight: 400; line-height: 20px; vertical-align: top;" class="fullCenter">   
-                                                <b>How can we help you? Talk to us at</b>
+                                blob:https://web.whatsapp.com/cc5d5d4f-67e5-4fef-95a6-d628a93b9f3b                <b>How can we help you? Talk to us at</b>
                                                 <br>
-                                                <a href="mailto:parcelhub.hq@gmail.com">percelhub.hq@gmail.com</a>
+                                                <a href="mailto:parcelhub.hq@gmail.com">parcelhub.hq@gmail.com</a>
                                                 <br>
                                                 <a href="tel:+60182991234">018 299 1234</a>
                                                 <br><br>
