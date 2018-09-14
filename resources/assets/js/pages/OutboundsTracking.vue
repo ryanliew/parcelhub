@@ -122,7 +122,7 @@
 			barcodeSubmit() {
 				if(this.input !== '')
 				{
-					if(this.input.startsWith("POUT") || this.input.startsWith("PL"))
+					if(this.input.startsWith("POUT") || this.input.startsWith("PLA"))
 					{
 						this.outbounds.push({'id': this.input, 'tracking_numbers': ''});
 						this.form.outbounds.push({'id': this.input, 'tracking_numbers': ''});
