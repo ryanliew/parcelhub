@@ -74,6 +74,6 @@ class Inbound extends Model
     // Static methods
     public static function PREFIX()
     {
-        return 'GRA-';
+        return 'GRA';
     }
 }
