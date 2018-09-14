@@ -43,7 +43,7 @@ class UserRegisteredNotification extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->subject('User ' . $this->user->email . ' has just registered.')
+                    ->subject('[TEST] User ' . $this->user->email . ' has just registered.')
                     ->line('A new user ' . $this->user->name . '(' . $this->user->email . ') has just registered.')
                     ->action('Verify', url('/users?name=' . $this->user->name))
                     ->line('Click the button above to verify the user.');;
