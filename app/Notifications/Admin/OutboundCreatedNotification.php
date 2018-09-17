@@ -41,7 +41,7 @@ class OutboundCreatedNotification extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->subject('New outbound order')
+                    ->subject('[TEST] New outbound order')
                     ->line('New outbound order has been created.')
                     ->action('Dashboard', url('/dashbaord'))
                     ->line('Click the button above to go to the dashboard!');
