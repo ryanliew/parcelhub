@@ -106,16 +106,16 @@ class OutboundController extends Controller
             }
         }
 
-        if($request->process_status == 'completed' || $request->process_status == 'delivered') {
-            // Remove the lot product and its quantity
-            foreach($outbound->products as $product)
-            {
-                if($product->total_quantity < $product->pivot->quantity)
-                {
-                    return response(json_encode(array('process_status' => ['We do not have enough ' . $product->name . ' in the warehouse.'])), 422);
-                }                
-            }
-        }
+        // if($request->process_status == 'completed' || $request->process_status == 'delivered') {
+        //     // Remove the lot product and its quantity
+        //     foreach($outbound->products as $product)
+        //     {
+        //         if($product->total_quantity < $product->pivot->quantity && $product->)
+        //         {
+        //             return response(json_encode(array('process_status' => ['We do not have enough ' . $product->name . ' in the warehouse.'])), 422);
+        //         }                
+        //     }
+        // }
         
         if($request->process_status == 'completed') {
             foreach($outbound->products as $product) {
