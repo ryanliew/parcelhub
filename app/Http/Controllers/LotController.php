@@ -267,7 +267,7 @@ class LotController extends Controller
         $adjustments = [];
 
         $the_product = Product::find(collect($lot_products)->first()['product_id']);
-
+    
         foreach($lot_products as $lotproduct)
         {
             if($lotproduct['remark'] !== '')

@@ -108,7 +108,7 @@ class Lot extends Model
         }
         else
         {
-            $this->products()->updateExistingPivot($product->id, ['incoming_quantity' => $new_quantity]);
+            $this->products()->updateExistingPivot($product->id, ['incoming_quantity' => max($new_quantity, 0)]);
         }
     }
 
@@ -123,6 +123,6 @@ class Lot extends Model
 
         $new_quantity = $lot_product->pivot->incoming_quantity + $quantity;
         Log::info("New quantity:" . $new_quantity);
-        $this->products()->updateExistingPivot($product->id, ['incoming_quantity' => $new_quantity]);
+        $this->products()->updateExistingPivot($product->id, ['incoming_quantity' => max($new_quantity, 0)]);
     }
 }
