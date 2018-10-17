@@ -229,3 +229,5 @@ Route::group(['prefix' => 'payment'], function() {
 Route::group(['prefix' => 'user'], function(){
 	Route::post('update', 'UserController@update')->name('user.update');
 });
+
+Route::get('adjust', 'InboundController@adjustProduct');
