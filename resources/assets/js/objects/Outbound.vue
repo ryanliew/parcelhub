@@ -230,7 +230,7 @@
 							</div>
 
 							<div class="field">
-								<button type="submit" class="button is-success is-pulled-right">Change status</button>
+								<button type="submit" :disabled="form.submitting" class="button is-success is-pulled-right">Change status</button>
 							</div>
 							<div class="is-clearfix"></div>
           				</form>
