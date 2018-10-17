@@ -79,12 +79,11 @@ class Lot extends Model
     public function propagate_left_volume()
     {
         $used_volume = 0;
-
         foreach($this->products as $product)
         {
             $total_quantity = $product->pivot->quantity + $product->pivot->incoming_quantity - $product->pivot->outgoing_product;
 
-            if($total_quantity == 0)
+            if( $product->pivot->quantity == 0 && $product->pivot->incoming_quantity == 0 && $product->pivot->outgoing_product == 0)
             {
                 $this->products()->detach($product->id);
             }

@@ -409,4 +409,106 @@ class InboundController extends Controller
     {
         //
     }
+
+    public function adjustProduct()
+    {
+        $completed_inbounds = DB::table('inbounds')
+        ->select('inbound_product.product_id', 'inbound_product_lot.quantity_received', 'inbound_product_lot.lot_id')
+        ->join('inbound_product','inbounds.id','=','inbound_product.inbound_id' )
+        ->join('inbound_product_lot','inbound_product.id','=','inbound_product_lot.inbound_product_id' )
+        ->where('inbounds.process_status', 'completed')
+        ->get();
+        
+        foreach($completed_inbounds as $key => $completed_inbound){
+            $lot = Lot::where('id',$completed_inbound->lot_id)->first();
+            if($lot->products->where('id', $completed_inbound->product_id)->isEmpty()){
+                $lot->products()->attach($completed_inbound->product_id, ['quantity' => $completed_inbound->quantity_received]);
+            } else {
+                foreach($lot->products->where('id', $completed_inbound->product_id) as $product){
+                    $new_quantity = $product->pivot->quantity + $completed_inbound->quantity_received;
+                    $lot->products()->updateExistingPivot($completed_inbound->product_id, ["quantity" => $new_quantity]);
+                }
+            }
+        }
+
+        $awaiting_inbounds = DB::table('inbounds')
+        ->select('inbound_product.product_id', 'inbound_product_lot.quantity_received', 'inbound_product_lot.lot_id')
+        ->join('inbound_product','inbounds.id','=','inbound_product.inbound_id' )
+        ->join('inbound_product_lot','inbound_product.id','=','inbound_product_lot.inbound_product_id' )
+        ->where('inbounds.process_status', 'awaiting_arrival')
+        ->get();
+
+        foreach($awaiting_inbounds as $key => $awaiting_inbound){
+            $lot = Lot::where('id',$awaiting_inbound->lot_id)->first();
+            if($lot->products->where('id', $awaiting_inbound->product_id)->isEmpty()){
+                $lot->products()->attach($awaiting_inbound->product_id, ['incoming_quantity' => $awaiting_inbound->quantity_received]);
+            } else {
+                foreach($lot->products->where('id', $awaiting_inbound->product_id) as $product){
+                    $new_quantity = $product->pivot->incoming_quantity + $awaiting_inbound->quantity_received;
+                    $lot->products()->updateExistingPivot($awaiting_inbound->product_id, ["incoming_quantity" => $new_quantity]);
+                }
+            }
+        }
+
+        $processing_inbounds = DB::table('inbounds')
+        ->select('inbound_product.product_id', 'inbound_product_lot.quantity_received', 'inbound_product_lot.lot_id')
+        ->join('inbound_product','inbounds.id','=','inbound_product.inbound_id' )
+        ->join('inbound_product_lot','inbound_product.id','=','inbound_product_lot.inbound_product_id' )
+        ->where('inbounds.process_status', 'processing')
+        ->get();
+
+        foreach($processing_inbounds as $key => $processing_inbound){
+            $lot = Lot::where('id',$processing_inbound->lot_id)->first();
+            if($lot->products->where('id', $processing_inbound->product_id)->isEmpty()){
+                $lot->products()->attach($processing_inbound->product_id, ['incoming_quantity' => $processing_inbound->quantity_received]);
+            } else {
+                foreach($lot->products->where('id', $processing_inbound->product_id) as $product){
+                    $new_quantity = $product->pivot->incoming_quantity + $processing_inbound->quantity_received;
+                    $lot->products()->updateExistingPivot($processing_inbound->product_id, ["incoming_quantity" => $new_quantity]);
+                }
+            }
+        }
+
+        $pending_outbounds = DB::table('outbounds')
+        ->select('outbound_product.product_id', 'outbound_product.quantity', 'outbound_product.lot_id')
+        ->join('outbound_product','outbounds.id','=','outbound_product.outbound_id' )
+        ->where('outbounds.process_status', 'pending')
+        ->get();
+
+        foreach($pending_outbounds as $key => $pending_outbound){
+            $lot = Lot::where('id',$pending_outbound->lot_id)->first();                
+            foreach($lot->products->where('id', $pending_outbound->product_id) as $product){
+                    $new_quantity = $product->pivot->outgoing_product + $pending_outbound->quantity;
+                    $lot->products()->updateExistingPivot($pending_outbound->product_id, ["outgoing_product" => $new_quantity]);
+            }
+        }
+
+        $completed_outbounds = DB::table('outbounds')
+        ->select('outbound_product.product_id', 'outbound_product.quantity', 'outbound_product.lot_id')
+        ->join('outbound_product','outbounds.id','=','outbound_product.outbound_id' )
+        ->where('outbounds.process_status', 'completed')
+        ->get();
+
+        foreach($completed_outbounds as $key => $completed_outbound){
+            $lot = Lot::where('id',$completed_outbound->lot_id)->first();
+            foreach($lot->products->where('id', $completed_outbound->product_id) as $product){
+                $new_quantity = $product->pivot->quantity - $completed_outbound->quantity;
+                $lot->products()->updateExistingPivot($completed_outbound->product_id, ["quantity" => $new_quantity]);
+            }
+        }
+
+        $processing_outbounds = DB::table('outbounds')
+        ->select('outbound_product.product_id', 'outbound_product.quantity', 'outbound_product.lot_id')
+        ->join('outbound_product','outbounds.id','=','outbound_product.outbound_id' )
+        ->where('outbounds.process_status', 'processing')
+        ->get();
+
+        foreach($processing_outbounds as $key => $processing_outbound){
+            $lot = Lot::where('id',$processing_outbound->lot_id)->first();
+            foreach($lot->products->where('id', $processing_outbound->product_id) as $product){
+                $new_quantity = $product->pivot->outgoing_product + $processing_outbound->quantity;
+                $lot->products()->updateExistingPivot($processing_outbound->product_id, ["outgoing_product" => $new_quantity]);
+            }
+        }
+    }
 }
