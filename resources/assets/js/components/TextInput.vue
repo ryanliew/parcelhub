@@ -8,7 +8,9 @@
 					:value="value" 
 					@input="updateValue($event.target.value)"
 					v-if="editable"
-					ref="input" />
+					ref="input"
+					:min="dateMin"
+					:max="dateMax" />
 			<span class="input__field input__field--hoshi"
 					v-html="value"
 					v-else>	
@@ -30,7 +32,7 @@
 <script>
 	import moment from 'moment';
 	export default {
-		props: ['defaultValue', 'label', 'required', 'error', 'name', 'type', 'editable', 'focus', 'hideLabel'],
+		props: ['defaultValue', 'label', 'required', 'error', 'name', 'type', 'editable', 'focus', 'hideLabel', 'dateMin', 'dateMax'],
 		data() {
 			return {
 				localValue: ''

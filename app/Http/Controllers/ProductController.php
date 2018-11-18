@@ -115,7 +115,12 @@ class ProductController extends Controller
      */
     public function selector()
     {
-        return auth()->user()->products()->with(["inbounds", "lots", "outbounds"])->where('status', 'true')->get();
+        $query = Product::query();
+        if(!auth()->user()->hasRole('admin'))
+        {
+            $query = auth()->user()->products();
+        }
+        return $query->with(["inbounds", "lots", "outbounds"])->where('status', 'true')->get();
     }
 
     public function adminProduct($id)

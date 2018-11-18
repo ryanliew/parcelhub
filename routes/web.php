@@ -62,6 +62,11 @@ Route::get('outbounds/excel', 'OutboundController@page_excel')->name('outbounds.
 Route::get('inbounds/excel', 'InboundController@page_excel')->name('inbounds.excel');
 Route::post('lots/products/update', 'LotController@editStock');
 Route::get('subusers', 'SubuserController@page')->name('subusers');
+Route::get('reports', 'ReportController@page')->name('reports');
+
+Route::group(['prefix' => 'report'], function() {
+	Route::post("stock", 'ReportController@stock');
+});
 
 /* Route for Socialite authentication */
 Route::group(['prefix' => 'auth', 'as' => 'auth.social.'], function() {
