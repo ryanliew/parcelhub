@@ -72701,11 +72701,19 @@ var render = function() {
                             _c("thead", [
                               _c("th", [_vm._v("#")]),
                               _vm._v(" "),
-                              _c("th", [_vm._v("Product")]),
+                              _c(
+                                "th",
+                                { staticStyle: { "min-width": "320px" } },
+                                [_vm._v("Product")]
+                              ),
                               _vm._v(" "),
-                              _c("th", [_vm._v("Quantity")]),
+                              _c("th", { staticStyle: { width: "100px" } }, [
+                                _vm._v("Qty")
+                              ]),
                               _vm._v(" "),
-                              _c("th", [_vm._v("Volume(m³)")]),
+                              _c("th", { staticStyle: { width: "50px" } }, [
+                                _vm._v("Vol (m³)")
+                              ]),
                               _vm._v(" "),
                               _c("th", [_vm._v("Expiry date")]),
                               _vm._v(" "),
@@ -72770,6 +72778,7 @@ var render = function() {
                                   _vm._v(" "),
                                   _c(
                                     "td",
+                                    { staticClass: "small-input" },
                                     [
                                       _vm.productRows[index]
                                         ? _c("text-input", {
@@ -74405,7 +74414,7 @@ var render = function() {
                         },
                         [
                           _c("thead", [
-                            _c("th"),
+                            _c("th", { staticStyle: { width: "320px" } }),
                             _vm._v(" "),
                             _c("th"),
                             _vm._v(" "),
