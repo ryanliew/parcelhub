@@ -226,7 +226,7 @@
                 @if($details)
                     <tr>
                         <td colspan="4">
-                            @if($product->details->count() > 0)
+                            @if($product->details->filter(function($detail) use ($type){ return $type == 'all' || ($type == 'in' && $detail['in'] > 0) || ($type == 'out' && $detail['out'] > 0); })->count() > 0)
                                 <table class="subitem-table">
                                     <thead>
                                         <tr>
