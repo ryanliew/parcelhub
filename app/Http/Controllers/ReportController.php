@@ -16,6 +16,11 @@ class ReportController extends Controller
     	return view('report.page');
     }
 
+    public function stockPage()
+    {
+        return view('report.page-stock');
+    }
+
     public function stock()
     {
     	$this->validate(request(), [

@@ -18,14 +18,11 @@
 				<tbody>
 					<tr>
 						<td>Stock report</td> 
-						<td><button class="button is-primary" @click="showStockReport = true">Generate</button></td>
+						<td><a href="/report/stock" class="button is-primary">Generate</a></td>
 					</tr>
 				</tbody>
 			</table>
 		</div>
-
-		<stock-report :active="showStockReport" @close="showStockReport = false">
-		</stock-report>
 	</div>
 </template>
 

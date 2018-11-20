@@ -84,7 +84,7 @@ Vue.component('outbounds-excel-wizard', require('./pages/OutboundsExcelWizard.vu
 Vue.component('inbounds-excel-wizard', require('./pages/InboundsExcelWizard.vue'));
 Vue.component('subusers-page', require('./pages/Subusers.vue'));
 Vue.component('reports-page', require('./pages/Reports.vue'));
-
+Vue.component('stock-report', require('./objects/StockReport.vue'));
 
 // Single instance view components
 Vue.component('product', require('./objects/Product.vue'));

@@ -65,6 +65,7 @@ Route::get('subusers', 'SubuserController@page')->name('subusers');
 Route::get('reports', 'ReportController@page')->name('reports');
 
 Route::group(['prefix' => 'report'], function() {
+	Route::get('stock', 'ReportController@stockPage');
 	Route::post("stock", 'ReportController@stock');
 });
 

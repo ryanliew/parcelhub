@@ -1,10 +1,15 @@
 <template>
-	<div>
-		<modal :active="active" @close="close">
-			<h1 slot="header">
-				Generate stock report
-			</h1>
-			
+	<div class="card">
+		<div class="card-header">
+			<div class="card-header-title level">
+				<div class="level-left">
+					<div class="level-item">
+						Generate stock report
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="card-content">
 			<form @submit.prevent="submit" 
 				@keydown="form.errors.clear($event.target.name)" 
 				@input="form.errors.clear($event.target.name)">
@@ -45,8 +50,8 @@
 						<label class="is-pulled-left">Select products</label>
 						<button type="button" @click="selectAll" class="button is-primary is-pulled-right ml-5">Select all</button>
 						<button type="button" @click="deselectAll" class="button is-primary is-pulled-right">Deselect all</button>
-						<div class="select is-multiple is-fullwidth" :class="isLoadingClass">
-							<select v-model="form.products" multiple size="3">
+						<div class="select is-multiple is-fullwidth mt-5" :class="isLoadingClass">
+							<select v-model="form.products" multiple size="5">
 								<option v-for="product in sortedProducts" :value="product.id">{{ product.sku }} - {{ product.name }}</option>
 							</select>
 							<i class="has-text-grey-dark">Hold down the Ctrl button to select multiple products</i>
@@ -65,21 +70,24 @@
 					</div>
 				</div>
 
-				<label>Type</label>
-				<div class="select is-fullwidth">
-					<select v-model="form.type" @keyup.enter="submit">
-						<option value="all">All</option>
-						<option value="in">Inbounds only</option>
-						<option value="out">Outbounds only</option>
-					</select>
+				<div class="columns">
+					<div class="column">
+						<label>Type</label>
+						<div class="select is-fullwidth">
+							<select v-model="form.type" @keyup.enter="submit">
+								<option value="all">All</option>
+								<option value="in">Inbounds only</option>
+								<option value="out">Outbounds only</option>
+							</select>
+						</div>
+					</div>
 				</div>
-			</form>
 
-			<div slot="footer">
-				<button :title="submitTooltip" type="button" class="button is-success" @click="submit" :class="isSubmittingClass" :disabled="!canSubmit">Generate</button>
-				<button type="button" class="button">Cancel</button>
-			</div>
-		</modal>
+
+				<button :title="submitTooltip" type="button" class="button is-success mt-5" @click="submit" :class="isSubmittingClass" :disabled="!canSubmit">Generate</button>
+			</form>
+		</div>
+
 	</div>
 </template>
 
@@ -91,8 +99,8 @@
 		data() {
 			return {
 				form: new Form({
-					from: '',
-					to: '',
+					from: moment().startOf('month').format('YYYY-MM-DD'),
+					to: moment().format('YYYY-MM-DD'),
 					products: [],
 					type: 'all',
 					details: false
