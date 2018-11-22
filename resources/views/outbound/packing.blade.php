@@ -218,7 +218,7 @@
         @foreach ($outbound->products->unique('id') as $key => $product)
             <tr>
                 <td>{{ $key + 1 }}</td>
-                <td>{{ $product->sku }} - {{ $product->name }}</td>
+                <td>{{ $product->selector_name }}</td>
                 <td class="text-center">{{ $outbound->getTotalProductQuantityAttribute($product->id) }}</td>
                 <td></td>
                 <td>{{ $product->pivot->remark }}</td>

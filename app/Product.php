@@ -117,7 +117,7 @@ class Product extends Model
 
     public function getSelectorNameAttribute()
     {
-        return $this->sku . " - " . $this->name;
+        return $this->sku . " | " . $this->name;
     }
 
     public function getTotalIncomingQuantityAttribute() {

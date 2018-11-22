@@ -245,7 +245,7 @@
             @foreach ($inbound->products as $key => $product)
             <tr>
                 <td>{{ $key + 1 }}</td>
-                <td>{{ $product->sku }} - {{ $product->name }}</td>
+                <td>{{ $product->selector_name }}</td>
                 <td class="text-center">{{ $product->pivot->quantity }}</td>
                 <td></td>
                 <td></td>

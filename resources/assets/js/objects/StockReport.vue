@@ -52,7 +52,7 @@
 						<button type="button" @click="deselectAll" class="button is-primary is-pulled-right">Deselect all</button>
 						<div class="select is-multiple is-fullwidth mt-5" :class="isLoadingClass">
 							<select v-model="form.products" multiple size="5">
-								<option v-for="product in sortedProducts" :value="product.id">{{ product.sku }} - {{ product.name }}</option>
+								<option v-for="product in sortedProducts" :value="product.id">{{ product.selector_name }}</option>
 							</select>
 							<i class="has-text-grey-dark">Hold down the Ctrl button to select multiple products</i>
 						</div>

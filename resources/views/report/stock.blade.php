@@ -251,7 +251,7 @@
                                     @endforeach
                                 </table>
                             @else
-                                No transaction in the selected period
+                                <i style="font-size: 10px">No transaction in the selected period</i>
                             @endif
                         </td>
                     </tr>

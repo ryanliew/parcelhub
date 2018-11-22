@@ -89108,9 +89108,7 @@ var render = function() {
                     },
                     _vm._l(_vm.sortedProducts, function(product) {
                       return _c("option", { domProps: { value: product.id } }, [
-                        _vm._v(
-                          _vm._s(product.sku) + " - " + _vm._s(product.name)
-                        )
+                        _vm._v(_vm._s(product.selector_name))
                       ])
                     })
                   ),
