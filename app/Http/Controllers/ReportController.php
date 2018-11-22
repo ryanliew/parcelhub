@@ -116,7 +116,7 @@ class ReportController extends Controller
 								});
     	}
 
-    	// return view('report.stock', ['products' => $products, 'from' => request()->from, 'to' => request()->to, 'type' => request()->type]);
+    	// return view('report.stock', ['products' => $products, 'from' => request()->from, 'to' => request()->to, 'type' => request()->type, 'details' => request()->has('details')]);
     	$filename = "storage/reports/stock/Stock report_" . auth()->id() . "_" . $from->toDateString() . ' - ' . $to->toDateString() . ".pdf";
     	$pdf = PDF::loadView('report.stock', ['products' => $products, 'from' => request()->from, 'to' => request()->to, 'type' => request()->type, 'details' => request()->has('details')])->save($filename);
 

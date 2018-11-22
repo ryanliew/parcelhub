@@ -96,16 +96,23 @@
             border-radius: 15px;
         }
 
-        .subitem-table th, .item-table th  {
+        .item-table th  {
             text-align: center;
             font-size: 14px;
         }
-        .subitem-table th, td, .item-table th, {
+
+        .item-table td, .item-table th {
             border: 1px black solid;
         }
-        .subitem-table td, .table td, .item-table td, .table td  {
+
+        .table td, .item-table td, .table td  {
             padding: 5px;
         }
+
+        .subitem-table td {
+            padding-left: 0;
+        }
+
         .item-table th:nth-child(1) {
             width: 5%;
         }
@@ -142,6 +149,23 @@
         .more-details {
             position: absolute;
             left: 0;
+        }
+
+        .subitem-table .details, .subitem-table .details-header, .subitem-table th, .subitem-table td {
+            border: 0px solid transparent;
+        }
+
+        tr.bb-none, td.bb-none {
+            border-bottom: 0px solid transparent;
+        }
+
+        .subitem-table, .subitem-table th, .subitem-table thead {
+            border-top: 0px solid transparent;
+        }
+
+        .subitem-table th, .subitem-table td {
+            text-align: left;
+            font-weight: normal;
         }
 
         .details {
@@ -192,6 +216,10 @@
             font-size: 10px;
             display: block;
         }
+
+        .bt-none, .bt-none > td {
+            border-top: 0px solid transparent;
+        }
     </style>
 </head>
 <body>
@@ -217,24 +245,25 @@
         </thead>
         <tbody>
             @foreach($products as $key => $product)
-                <tr>
-                    <td>{{ $key + 1 }}</td>
-                    <td>{{ $product->sku }} - {{ $product->name }}</td>
-                    <td>{{ $product->opening ?: 0 }}</td>
-                    <td>{{ $product->closing ?: 0 }}</td>
+                <tr @if($details) class="bb-none" @endif>
+                    <td @if($details) rowspan="2" @endif>{{ $key + 1 }}</td>
+                    <td @if($details) class="bb-none" @endif>{{ $product->sku }} - {{ $product->name }}</td>
+                    <td @if($details) class="bb-none" @endif>{{ $product->opening ?: 0 }}</td>
+                    <td @if($details) class="bb-none" @endif>{{ $product->closing ?: 0 }}</td>
                 </tr>
                 @if($details)
-                    <tr>
-                        <td colspan="4">
-                            @if($product->details->filter(function($detail) use ($type){ return $type == 'all' || ($type == 'in' && $detail['in'] > 0) || ($type == 'out' && $detail['out'] > 0); })->count() > 0)
+                    <tr class="bt-none">
+                        
+                        @if($product->details->filter(function($detail) use ($type){ return $type == 'all' || ($type == 'in' && $detail['in'] > 0) || ($type == 'out' && $detail['out'] > 0); })->count() > 0)
+                            <td colspan="3">
                                 <table class="subitem-table">
                                     <thead>
                                         <tr>
-                                            <th>Date</th>
-                                            <th>Description</th>
-                                            @if($type == 'all' || $type == 'in' ) <th>In</th> @endif
-                                            @if($type == 'all' || $type == 'out' ) <th>Out</th> @endif
-                                            @if($type == 'all') <th>Balance</th> @endif
+                                            <th><i>Date</i></th>
+                                            <th><i>Description</i></th>
+                                            @if($type == 'all' || $type == 'in' ) <th><i>In</i></th> @endif
+                                            @if($type == 'all' || $type == 'out' ) <th><i>Out</i></th> @endif
+                                            @if($type == 'all') <th><i>Balance</i></th> @endif
                                         </tr>
                                     </thead>
 
@@ -250,8 +279,13 @@
                                         @endif
                                     @endforeach
                                 </table>
+                            </td>
                             @else
-                                <i style="font-size: 10px">No transaction in the selected period</i>
+                                <td>
+                                    <i style="font-size: 10px">No transaction in the selected period</i>
+                                </td>
+                                <td></td>
+                                <td></td>
                             @endif
                         </td>
                     </tr>
