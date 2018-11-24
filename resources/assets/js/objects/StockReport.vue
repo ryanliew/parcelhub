@@ -51,17 +51,25 @@
 						<button type="button" @click="selectAll" class="button is-primary is-pulled-right ml-5">Select all</button>
 						<button type="button" @click="deselectAll" class="button is-primary is-pulled-right">Deselect all</button>
 						<div class="select is-multiple is-fullwidth mt-5" :class="isLoadingClass">
-							<select v-model="form.products" multiple size="5">
+							<!-- <select v-model="form.products" multiple size="5">
 								<option v-for="product in sortedProducts" :value="product.id">{{ product.selector_name }}</option>
-							</select>
-							<div class="columns">
+							</select> -->
+							<multiselect v-model="selectedProducts" 
+								:options="sortedProducts" 
+								:close-on-select="false" 
+								:multiple="true" 
+								:clear-on-select="false"
+								:custom-label="customLabel">
+								<template slot="selection" slot-scope="{ values, search, isOpen }"><span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ values.length }} options selected</span></template>
+							</multiselect>
+							<!-- <div class="columns">
 								<div class="column">
 									<i class="has-text-grey-dark">Hold down the Ctrl button to select multiple products</i>
 								</div>
 								<div class="column is-narrow">
 									<i class="has-text-grey-dark">{{ this.form.products.length }} selected</i>
 								</div>
-							</div>
+							</div> -->
 						</div>
 					</div>
 				</div>
@@ -100,9 +108,13 @@
 
 <script>
 	import moment from 'moment';
+	import Multiselect from 'vue-multiselect'
 
 	export default {
 		props: ['active'],
+
+		components: { Multiselect },
+
 		data() {
 			return {
 				form: new Form({
@@ -113,6 +125,7 @@
 					details: false
 				}),
 				products: [],
+				selectedProducts: [],
 				isLoading: true
 			};
 		},
@@ -133,7 +146,15 @@
 			},
 
 			setProducts(response){
-				this.products = response.data;
+				this.products = response.data.map(product => {
+					let obj = {};
+
+					obj['label'] = product.selector_name;
+					obj['value'] = product.id;
+
+					return obj;
+				});
+
 				this.isLoading = false;
 			},
 
@@ -148,13 +169,15 @@
 			},
 
 			selectAll() {
-				this.form.products = this.products.map(function(product){
-					return product.id;
-				});
+				this.selectedProducts = this.products;
 			},
 
 			deselectAll() {
-				this.form.products = [];
+				this.selectedProducts = [];
+			},
+
+			customLabel({label, value}) {
+				return label;
 			}
 		},
 
@@ -182,6 +205,16 @@
 			submitTooltip() {
 				return this.canSubmit ? "" : "Please select at least 1 product";
 			}
+		},
+
+		watch: {
+			selectedProducts(newVal) {
+				this.form.products = newVal.map(product => {
+					return product.value;
+				});
+			}
 		}	
 	}
 </script>
+
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
