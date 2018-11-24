@@ -187,7 +187,7 @@
         <h1>Goods Received</h1>
     </div>
     <div class="pull-right width-half">
-        <p>GR No : <u>{{ $inbound->prefix() }}{{ sprintf("%05d", $inbound->id) }}</u></p>
+        <p>GR No : <u>{{ $inbound->display_no }}</u></p>
         <p>Date : <u>{{ $inbound->arrival_date->toDateString() }}</u></p>
     </div>
 

@@ -177,7 +177,7 @@
             </tr>
             <tr>
                 <td colspan="3" rowspan="3" class="no-top-border vertical-align-top">Address: {{$auth->address}}, @if($auth->address_2 !== null) <br> {{$auth->address_2}} @endif</td>
-                <td colspan="3">Invoice Number: PHO-{{ $outbound->id }}</td>
+                <td colspan="3">Invoice Number: {{ $outbound->display_no }}</td>
             </tr>
             <tr>
                 <td colspan="3">Shipment Ref: {{$courier->name}}</td>

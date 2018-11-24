@@ -170,7 +170,7 @@
     <div class="pull-right width-half">
         <div class="barcode text-center">
             {!! DNS1D::getBarcodeHTML( $outbound->PREFIX() . $outbound->id , "C128",2, 44,"black", true) !!}
-            <span>{{ $outbound->PREFIX() . sprintf("%05d", $outbound->id) }}</span>
+            <span>{{ $outbound->display_no }}</span>
         </div>
         <p>Date : <u>{{ $outbound->created_at->toDateString() }}</u></p>
     </div>

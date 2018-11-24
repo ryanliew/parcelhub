@@ -71801,7 +71801,9 @@ var render = function() {
               _c("div", { staticClass: "card-header-title level" }, [
                 _c("div", { staticClass: "level-left" }, [
                   _c("div", { staticClass: "level-item" }, [
-                    _c("span", [_vm._v("Inbound #" + _vm._s(_vm.inbound.id))])
+                    _c("span", [
+                      _vm._v("Inbound #" + _vm._s(_vm.inbound.display_no))
+                    ])
                   ])
                 ]),
                 _vm._v(" "),
@@ -89851,7 +89853,9 @@ var render = function() {
               _c("div", { staticClass: "card-header-title level" }, [
                 _c("div", { staticClass: "level-left" }, [
                   _c("div", { staticClass: "level-item" }, [
-                    _c("span", [_vm._v("Outbound #" + _vm._s(_vm.outbound.id))])
+                    _c("span", [
+                      _vm._v("Outbound #" + _vm._s(_vm.outbound.display_no))
+                    ])
                   ])
                 ]),
                 _vm._v(" "),
