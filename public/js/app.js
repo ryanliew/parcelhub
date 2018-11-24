@@ -88864,6 +88864,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -89113,10 +89120,14 @@ var render = function() {
                     })
                   ),
                   _vm._v(" "),
-                  _c("i", { staticClass: "has-text-grey-dark" }, [
-                    _vm._v(
-                      "Hold down the Ctrl button to select multiple products"
-                    )
+                  _c("div", { staticClass: "columns" }, [
+                    _vm._m(1),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "column is-narrow" }, [
+                      _c("i", { staticClass: "has-text-grey-dark" }, [
+                        _vm._v(_vm._s(this.form.products.length) + " selected")
+                      ])
+                    ])
                   ])
                 ]
               )
@@ -89171,67 +89182,6 @@ var render = function() {
             ])
           ]),
           _vm._v(" "),
-          _c("div", { staticClass: "columns" }, [
-            _c("div", { staticClass: "column" }, [
-              _c("label", [_vm._v("Type")]),
-              _vm._v(" "),
-              _c("div", { staticClass: "select is-fullwidth" }, [
-                _c(
-                  "select",
-                  {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.form.type,
-                        expression: "form.type"
-                      }
-                    ],
-                    on: {
-                      keyup: function($event) {
-                        if (
-                          !("button" in $event) &&
-                          _vm._k($event.keyCode, "enter", 13, $event.key)
-                        ) {
-                          return null
-                        }
-                        _vm.submit($event)
-                      },
-                      change: function($event) {
-                        var $$selectedVal = Array.prototype.filter
-                          .call($event.target.options, function(o) {
-                            return o.selected
-                          })
-                          .map(function(o) {
-                            var val = "_value" in o ? o._value : o.value
-                            return val
-                          })
-                        _vm.$set(
-                          _vm.form,
-                          "type",
-                          $event.target.multiple
-                            ? $$selectedVal
-                            : $$selectedVal[0]
-                        )
-                      }
-                    }
-                  },
-                  [
-                    _c("option", { attrs: { value: "all" } }, [_vm._v("All")]),
-                    _vm._v(" "),
-                    _c("option", { attrs: { value: "in" } }, [
-                      _vm._v("Inbounds only")
-                    ]),
-                    _vm._v(" "),
-                    _c("option", { attrs: { value: "out" } }, [
-                      _vm._v("Outbounds only")
-                    ])
-                  ]
-                )
-              ])
-            ])
-          ]),
-          _vm._v(" "),
           _c(
             "button",
             {
@@ -89263,6 +89213,16 @@ var staticRenderFns = [
             _vm._v("\n\t\t\t\t\tGenerate stock report\n\t\t\t\t")
           ])
         ])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "column" }, [
+      _c("i", { staticClass: "has-text-grey-dark" }, [
+        _vm._v("Hold down the Ctrl button to select multiple products")
       ])
     ])
   }

@@ -54,7 +54,14 @@
 							<select v-model="form.products" multiple size="5">
 								<option v-for="product in sortedProducts" :value="product.id">{{ product.selector_name }}</option>
 							</select>
-							<i class="has-text-grey-dark">Hold down the Ctrl button to select multiple products</i>
+							<div class="columns">
+								<div class="column">
+									<i class="has-text-grey-dark">Hold down the Ctrl button to select multiple products</i>
+								</div>
+								<div class="column is-narrow">
+									<i class="has-text-grey-dark">{{ this.form.products.length }} selected</i>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -70,7 +77,7 @@
 					</div>
 				</div>
 
-				<div class="columns">
+				<!-- <div class="columns">
 					<div class="column">
 						<label>Type</label>
 						<div class="select is-fullwidth">
@@ -81,7 +88,7 @@
 							</select>
 						</div>
 					</div>
-				</div>
+				</div> -->
 
 
 				<button :title="submitTooltip" type="button" class="button is-success mt-5" @click="submit" :class="isSubmittingClass" :disabled="!canSubmit">Generate</button>

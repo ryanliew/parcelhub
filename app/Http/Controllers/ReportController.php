@@ -34,7 +34,7 @@ class ReportController extends Controller
 
     	$product_id = json_decode(request()->products);
 
-    	$products = Product::with('inbounds_with_lots.lots', 'outbounds')->whereIn('id', $product_id)->get();
+    	$products = Product::with('inbounds_with_lots.lots', 'outbounds', 'adjustments')->whereIn('id', $product_id)->get();
 
     	$products_with_details = collect();
 
@@ -49,7 +49,7 @@ class ReportController extends Controller
 						$inbound->created_at, 
 						$inbound->lots->sum('pivot.quantity_received'), 
 						0, 
-						"Inbound - " . Inbound::PREFIX() . $inbound->inbound->id, 
+						"Inbound - " . $inbound->inbound->display_no, 
 						0
 					)
     			);
@@ -61,7 +61,7 @@ class ReportController extends Controller
     					$outbound->created_at, 
     					0, 
     					$outbound->pivot->quantity, 
-    					"Outbound - " . Outbound::PREFIX() . $outbound->id, 
+    					"Outbound - " . $outbound->display_no, 
     					0
     				)
     			);
@@ -73,8 +73,8 @@ class ReportController extends Controller
     					$adjustment->created_at, 
     					0, 
     					0, 
-    					$adjustment->remark, 
-    					"Adjustment - " . $adjustment->new_quantity
+    					"Adjustment - " . $adjustment->remark, 
+    					$adjustment->new_quantity
     				)
     			);
     		}

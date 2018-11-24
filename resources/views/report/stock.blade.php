@@ -224,8 +224,8 @@
 </head>
 <body>
     <div class="pull-left width-half">
-        <h1>Parcelhub stock report</h1>
-        <h3 style="margin-top: -15px;">@if($type == 'all') Balance report @elseif($type == 'in') Inbounds only @else Outbounds only @endif </h3>
+        <h1>Stock Level Preview</h1>
+        <span style="margin-top: -15px;">Customer: <u>{{ auth()->user()->name }}</u></span>
     </div>
     <div class="pull-right width-half pt-1">
         <p>From date : <u>{{ $from }}</u></p>
@@ -246,8 +246,8 @@
         <tbody>
             @foreach($products as $key => $product)
                 <tr @if($details) class="bb-none" @endif>
-                    <td @if($details) rowspan="2" @endif>{{ $key + 1 }}</td>
-                    <td @if($details) class="bb-none" @endif>{{ $product->sku }} - {{ $product->name }}</td>
+                    <td @if($details) class="bb-none" @endif>{{ $key + 1 }}</td>
+                    <td @if($details) class="bb-none" @endif>{{ $product->selector_name }}</td>
                     <td @if($details) class="bb-none" @endif>{{ $product->opening ?: 0 }}</td>
                     <td @if($details) class="bb-none" @endif>{{ $product->closing ?: 0 }}</td>
                 </tr>
@@ -255,6 +255,7 @@
                     <tr class="bt-none">
                         
                         @if($product->details->filter(function($detail) use ($type){ return $type == 'all' || ($type == 'in' && $detail['in'] > 0) || ($type == 'out' && $detail['out'] > 0); })->count() > 0)
+                            <td></td>
                             <td colspan="3">
                                 <table class="subitem-table">
                                     <thead>
@@ -280,13 +281,14 @@
                                     @endforeach
                                 </table>
                             </td>
-                            @else
-                                <td>
-                                    <i style="font-size: 10px">No transaction in the selected period</i>
-                                </td>
-                                <td></td>
-                                <td></td>
-                            @endif
+                        @else
+                            <td></td>
+                            <td>
+                                <i style="font-size: 10px">No transaction in the selected period</i>
+                            </td>
+                            <td></td>
+                            <td></td>
+                        @endif
                         </td>
                     </tr>
                 @endif
