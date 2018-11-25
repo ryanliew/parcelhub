@@ -8,7 +8,7 @@
 						<div class="card-header-title level">
 							<div class="level-left">
 								<div class="level-item">
-									<span>Outbound #{{ outbound.id }}</span>
+									<span>Outbound #{{ outbound.display_no }}</span>
 								</div>
 							</div>
 							<div class="level-right">

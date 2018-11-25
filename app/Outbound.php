@@ -65,6 +65,8 @@ class Outbound extends Model
 	protected $guarded = ['id', 'user_id', 'amount_insured', 'outbound_products', 'status', 'customer_id'];
     
     protected $with = ['tracking_numbers'];
+
+    protected $appends = ['display_no'];
     
     public function user() {
     	return $this->belongsTo('App\User');
@@ -102,6 +104,11 @@ class Outbound extends Model
             ->where('product_id', $product_id)
             ->select('lots.name', 'outbound_product.quantity')
             ->get();
+    }
+
+    public function getDisplayNoAttribute()
+    {
+        return $this->PREFIX() . sprintf("%07d", $this->id);
     }
 
     public function scopeProcessing($query) {

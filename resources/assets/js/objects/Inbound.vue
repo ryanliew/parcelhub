@@ -7,7 +7,7 @@
 						<div class="card-header-title level">
 							<div class="level-left">
 								<div class="level-item">
-									<span>Inbound #{{ inbound.id }}</span>
+									<span>Inbound #{{ inbound.display_no }}</span>
 								</div>
 							</div>
 							<div class="level-right">

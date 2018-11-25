@@ -12440,3 +12440,11 @@ li.notifiable.has-notification ul a:after {
   display: none;
 }
 
+.small-input .input__field--hoshi {
+  min-width: unset !important;
+}
+
+.small-input .text-input {
+  min-width: 70px !important;
+}
+

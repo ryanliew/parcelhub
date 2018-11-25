@@ -269,7 +269,7 @@
 						
 						<table class="table is-hoverable is-fullwidth is-responsive is-multirow">
 							<thead>
-								<th></th>
+								<th style="width: 320px;"></th>
 								<th></th>
 								<th></th>
 								<th></th>
