@@ -160,13 +160,18 @@
 
 			submit() {
 				this.form.post("/report/stock")
-					.then(response => this.onSuccess(response));
+					.then(response => this.onSuccess(response))
+					.catch(error => this.onError(error));
 			},
 
 			onSuccess(response) {
 				window.open("/" + response.url);
 				this.selectedProducts = [];
 				this.close();
+			},
+
+			onError(error) {
+				flash("Memory exhausted, please select lesser products and try again.", 'danger');
 			},
 
 			selectAll() {
