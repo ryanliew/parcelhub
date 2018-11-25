@@ -288,7 +288,7 @@
                             </td>
                         @else
                             <td></td>
-                            <td>
+                            <td colspan="2">
                                 <i style="font-size: 10px">No transaction in the selected period</i>
                             </td>
                             <td></td>
