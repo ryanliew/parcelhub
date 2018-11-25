@@ -88987,12 +88987,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 			this.form.post("/report/stock").then(function (response) {
 				return _this2.onSuccess(response);
+			}).catch(function (error) {
+				return _this2.onError(error);
 			});
 		},
 		onSuccess: function onSuccess(response) {
 			window.open("/" + response.url);
 			this.selectedProducts = [];
 			this.close();
+		},
+		onError: function onError(error) {
+			flash("Memory exhausted, please select lesser products and try again.", 'danger');
 		},
 		selectAll: function selectAll() {
 			this.selectedProducts = this.products;
