@@ -116,10 +116,13 @@
         .item-table th:nth-child(1) {
             width: 5%;
         }
-        .item-table th:nth-child(3) {
-            width: 9%;
+        .item-table th:nth-child(2) {
+            width: 15%;
         }
         .item-table th:nth-child(4) {
+            width: 9%;
+        }
+        .item-table th:nth-child(5) {
             width: 10%;
         }
 
@@ -129,13 +132,13 @@
         .subitem-table th:nth-child(2) {
             width: 50%;
         }
-        .subitem-table th:nth-child(3) {
-            width: unset;
-        }
         .subitem-table th:nth-child(4) {
             width: unset;
         }
         .subitem-table th:nth-child(5) {
+            width: unset;
+        }
+        .subitem-table th:nth-child(6) {
             width: unset;
         }
         .subitem-table, .item-table, .table {
@@ -238,6 +241,7 @@
          <thead>
             <tr>
                 <th>No</th>
+                <th>SKU</th>
                 <th>Item</th>
                 <th class="text-center">Opening Qty</th>
                 <th>Closing Qty</th>
@@ -247,7 +251,8 @@
             @foreach($products as $key => $product)
                 <tr @if($details) class="bb-none" @endif>
                     <td @if($details) class="bb-none" @endif>{{ $key + 1 }}</td>
-                    <td @if($details) class="bb-none" @endif>{{ $product->selector_name }}</td>
+                    <td @if($details) class="bb-none" @endif>{{ $product->sku }}</td>
+                    <td @if($details) class="bb-none" @endif>{{ $product->name }}</td>
                     <td @if($details) class="bb-none" @endif>{{ $product->opening ?: 0 }}</td>
                     <td @if($details) class="bb-none" @endif>{{ $product->closing ?: 0 }}</td>
                 </tr>
@@ -256,7 +261,7 @@
                         
                         @if($product->details->filter(function($detail) use ($type){ return $type == 'all' || ($type == 'in' && $detail['in'] > 0) || ($type == 'out' && $detail['out'] > 0); })->count() > 0)
                             <td></td>
-                            <td colspan="3">
+                            <td colspan="4">
                                 <table class="subitem-table">
                                     <thead>
                                         <tr>

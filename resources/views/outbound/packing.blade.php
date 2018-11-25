@@ -66,10 +66,13 @@
         .item-table th:nth-child(1) {
             width: 5%;
         }
-        .item-table th:nth-child(3) {
-            width: 9%;
+        .item-table th:nth-child(2) {
+            width: 15%;
         }
         .item-table th:nth-child(4) {
+            width: 9%;
+        }
+        .item-table th:nth-child(5) {
             width: 10%;
         }
 
@@ -208,7 +211,8 @@
         <thead>
         <tr>
             <th>No</th>
-            <th>Item / Description</th>
+            <th>SKU</th>
+            <th>Item</th>
             <th>Qty<br>(pcs / ctn / dozen)</th>
             <th>Total<br>Carton</th>
             <th>Remarks</th>
@@ -218,14 +222,15 @@
         @foreach ($outbound->products->unique('id') as $key => $product)
             <tr>
                 <td>{{ $key + 1 }}</td>
-                <td>{{ $product->selector_name }}</td>
+                <td>{{ $product->sku }}</td>
+                <td>{{ $product->name }}</td>
                 <td class="text-center">{{ $outbound->getTotalProductQuantityAttribute($product->id) }}</td>
                 <td></td>
                 <td>{{ $product->pivot->remark }}</td>
             </tr>
             <tr>
                 <td></td>
-                <td colspan="4">
+                <td colspan="5">
                     <ul>
                         @foreach ($outbound->getProductLocationInfoAttribute($product->id) as $info)
                             <li>{{ $info->name }} - Qty #{{ $info->quantity }}</li>
@@ -236,6 +241,7 @@
         @endforeach
         @for ($i = 0; $i <= 5 - $outbound->products->count(); $i++)
                 <tr class="extra-rows">
+                    <td></td>
                     <td></td>
                     <td></td>
                     <td></td>

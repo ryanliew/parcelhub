@@ -109,10 +109,13 @@
         .item-table th:nth-child(1) {
             width: 5%;
         }
-        .item-table th:nth-child(3) {
-            width: 9%;
+        .item-table th:nth-child(2) {
+            width: 15%;
         }
         .item-table th:nth-child(4) {
+            width: 9%;
+        }
+        .item-table th:nth-child(5) {
             width: 10%;
         }
         .item-table, .table {
@@ -235,7 +238,8 @@
          <thead>
             <tr>
                 <th>No</th>
-                <th>Item / Description</th>
+                <th>SKU</th>
+                <th>Item</th>
                 <th class="text-center">Qty</th>
                 <th>Total Carton</th>
                 <th>Total CBM</th>
@@ -245,7 +249,8 @@
             @foreach ($inbound->products as $key => $product)
             <tr>
                 <td>{{ $key + 1 }}</td>
-                <td>{{ $product->selector_name }}</td>
+                <td>{{ $product->sku }}</td>
+                <td>{{ $product->name }}</td>
                 <td class="text-center">{{ $product->pivot->quantity }}</td>
                 <td></td>
                 <td></td>
@@ -254,6 +259,7 @@
 
             @for ($i = 0; $i <= 11 - $inbound->products->count(); $i++)
                 <tr class="extra-rows">
+                    <td></td>
                     <td></td>
                     <td></td>
                     <td></td>

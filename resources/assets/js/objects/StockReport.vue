@@ -165,6 +165,7 @@
 
 			onSuccess(response) {
 				window.open("/" + response.url);
+				this.selectedProducts = [];
 				this.close();
 			},
 
