@@ -88927,6 +88927,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -88943,6 +88954,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 				to: __WEBPACK_IMPORTED_MODULE_0_moment___default()().format('YYYY-MM-DD'),
 				products: [],
 				type: 'all',
+				report_type: 'pdf',
 				details: false
 			}),
 			products: [],
@@ -89264,6 +89276,63 @@ var render = function() {
                 _c("span", { staticClass: "pl-5" }, [
                   _vm._v("With transaction details")
                 ])
+              ])
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "columns" }, [
+            _c("div", { staticClass: "column" }, [
+              _c("label", [_vm._v("Report type")]),
+              _vm._v(" "),
+              _c("div", { staticClass: "select is-fullwidth" }, [
+                _c(
+                  "select",
+                  {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.form.report_type,
+                        expression: "form.report_type"
+                      }
+                    ],
+                    on: {
+                      keyup: function($event) {
+                        if (
+                          !("button" in $event) &&
+                          _vm._k($event.keyCode, "enter", 13, $event.key)
+                        ) {
+                          return null
+                        }
+                        _vm.submit($event)
+                      },
+                      change: function($event) {
+                        var $$selectedVal = Array.prototype.filter
+                          .call($event.target.options, function(o) {
+                            return o.selected
+                          })
+                          .map(function(o) {
+                            var val = "_value" in o ? o._value : o.value
+                            return val
+                          })
+                        _vm.$set(
+                          _vm.form,
+                          "report_type",
+                          $event.target.multiple
+                            ? $$selectedVal
+                            : $$selectedVal[0]
+                        )
+                      }
+                    }
+                  },
+                  [
+                    _c("option", { attrs: { value: "pdf" } }, [_vm._v("PDF")]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "excel" } }, [
+                      _vm._v("Excel")
+                    ])
+                  ]
+                )
               ])
             ])
           ]),

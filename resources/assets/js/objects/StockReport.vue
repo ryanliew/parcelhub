@@ -85,6 +85,17 @@
 					</div>
 				</div>
 
+				<div class="columns">
+					<div class="column">
+						<label>Report type</label>
+						<div class="select is-fullwidth">
+							<select v-model="form.report_type" @keyup.enter="submit">
+								<option value="pdf">PDF</option>
+								<option value="excel">Excel</option>
+							</select>
+						</div>
+					</div>
+				</div>
 				<!-- <div class="columns">
 					<div class="column">
 						<label>Type</label>
@@ -122,6 +133,7 @@
 					to: moment().format('YYYY-MM-DD'),
 					products: [],
 					type: 'all',
+					report_type: 'pdf',
 					details: false
 				}),
 				products: [],

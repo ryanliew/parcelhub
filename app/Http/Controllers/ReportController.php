@@ -5,9 +5,10 @@ namespace App\Http\Controllers;
 use App\Inbound;
 use App\Outbound;
 use App\Product;
-use PDF;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+use PDF;
 
 class ReportController extends Controller
 {
@@ -116,8 +117,24 @@ class ReportController extends Controller
 								});
     	}
 
+        $filename = "Stock report_" . auth()->id() . "_" . $from->toDateString() . ' - ' . $to->toDateString();
+
+        if(request()->report_type == 'excel') {
+
+            // We need to format the excel filein array
+            
+            $information = Excel::create($filename, function($excel) use ($products) {
+                $excel->sheet('Sheet 1', function($sheet) use ($products) {
+                    $sheet->loadView('report.excel-stock', ['products' => $products, 'from' => request()->from, 'to' => request()->to, 'type' => request()->type, 'details' => request()->has('details')]);
+                });
+            })->store('xls', storage_path('app/public/reports/stock'), true);
+
+            return json_encode(['message' => "Success", 'url' => 'storage/reports/stock/' . $information['file']]);
+
+        }
+
     	// return view('report.stock', ['products' => $products, 'from' => request()->from, 'to' => request()->to, 'type' => request()->type, 'details' => request()->has('details')]);
-    	$filename = "storage/reports/stock/Stock report_" . auth()->id() . "_" . $from->toDateString() . ' - ' . $to->toDateString() . ".pdf";
+    	$filename = "storage/reports/stock/" . $filename . ".pdf";
     	$pdf = PDF::loadView('report.stock', ['products' => $products, 'from' => request()->from, 'to' => request()->to, 'type' => request()->type, 'details' => request()->has('details')])->save($filename);
 
     	return json_encode(['message' => "Success", 'url' => $filename]);
