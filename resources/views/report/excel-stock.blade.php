@@ -68,9 +68,10 @@
                     @else
                     <tr>
                         <td></td>
-                        <td colspan="2">
+                        <td>
                             <i style="font-size: 10px">No transaction in the selected period</i>
                         </td>
+                        <td></td>
                         <td></td>
                         <td></td>
                     </tr>
