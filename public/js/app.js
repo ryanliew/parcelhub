@@ -88938,6 +88938,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 
 
@@ -89192,7 +89193,8 @@ var render = function() {
                       "close-on-select": false,
                       multiple: true,
                       "clear-on-select": false,
-                      "custom-label": _vm.customLabel
+                      "custom-label": _vm.customLabel,
+                      "track-by": "value"
                     },
                     scopedSlots: _vm._u([
                       {

@@ -59,7 +59,8 @@
 								:close-on-select="false" 
 								:multiple="true" 
 								:clear-on-select="false"
-								:custom-label="customLabel">
+								:custom-label="customLabel"
+								track-by="value">
 								<template slot="selection" slot-scope="{ values, search, isOpen }"><span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ values.length }} options selected</span></template>
 							</multiselect>
 							<!-- <div class="columns">
