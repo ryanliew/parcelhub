@@ -45,27 +45,31 @@ class ReportController extends Controller
 
     		// We need to pull out all the records and insert them into array for processing
     		foreach($product->inbounds_with_lots as $inbound){
-    			$details->push(
-    				$this->formatStockDetails(
-						$inbound->created_at, 
-						$inbound->lots->sum('pivot.quantity_received'), 
-						0, 
-						"Inbound - " . $inbound->inbound->display_no, 
-						0
-					)
-    			);
+                if($inbound->inbound->process_status != 'canceled') {
+        			$details->push(
+        				$this->formatStockDetails(
+    						$inbound->created_at, 
+    						$inbound->lots->sum('pivot.quantity_received'), 
+    						0, 
+    						"Inbound - " . $inbound->inbound->display_no, 
+    						0
+    					)
+        			);
+                }
     		}
 
     		foreach($product->outbounds as $outbound) {
-    			$details->push(
-    				$this->formatStockDetails(
-    					$outbound->created_at, 
-    					0, 
-    					$outbound->pivot->quantity, 
-    					"Outbound - " . $outbound->display_no, 
-    					0
-    				)
-    			);
+                if($outbound->process_status !=='canceled') {
+        			$details->push(
+        				$this->formatStockDetails(
+        					$outbound->created_at, 
+        					0, 
+        					$outbound->pivot->quantity, 
+        					"Outbound - " . $outbound->display_no, 
+        					0
+        				)
+        			);
+                }
     		}
 
     		foreach($product->adjustments as $adjustment) {
