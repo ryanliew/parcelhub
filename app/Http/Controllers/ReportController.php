@@ -79,7 +79,8 @@ class ReportController extends Controller
     					0, 
     					0, 
     					"Adjustment - " . $adjustment->remark, 
-    					$adjustment->new_quantity
+    					$adjustment->new_quantity,
+                        true // Is adjustment
     				)
     			);
     		}
@@ -95,7 +96,7 @@ class ReportController extends Controller
     				$detail['in'],
     				$detail['out'],
     				$detail['description'],
-    				$balance = $detail['balance'] > 0 ? $detail['balance'] : $balance + $detail['in']  - $detail['out']
+    				$balance = $detail['is_adjustment'] ? $detail['balance'] : $balance + $detail['in']  - $detail['out']
     			);
 
     			$sorted->put($key, $array);
@@ -147,14 +148,15 @@ class ReportController extends Controller
 
     }
 
-    public function formatStockDetails($date, $in, $out, $description, $balance)
+    public function formatStockDetails($date, $in, $out, $description, $balance, $is_adjustment = false)
     {
     	return [
 			"date" => $date,
 			"balance" => $balance,
 			"in" => $in,
 			"out" => $out,
-			"description" => $description
+			"description" => $description,
+            "is_adjustment" => $is_adjustment
 		];
     }
 }
