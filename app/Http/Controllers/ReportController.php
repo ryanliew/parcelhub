@@ -95,7 +95,7 @@ class ReportController extends Controller
     				$detail['in'],
     				$detail['out'],
     				$detail['description'],
-    				$balance = $detail['balance'] > 0 ?: $balance + $detail['in']  - $detail['out']
+    				$balance = $detail['balance'] > 0 ? $detail['balance'] : $balance + $detail['in']  - $detail['out']
     			);
 
     			$sorted->put($key, $array);
