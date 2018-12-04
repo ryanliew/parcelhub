@@ -48,7 +48,7 @@ class ReportController extends Controller
                 if($inbound->inbound->process_status != 'canceled') {
         			$details->push(
         				$this->formatStockDetails(
-    						$inbound->created_at, 
+    						$inbound->updated_at, 
     						$inbound->lots->sum('pivot.quantity_received'), 
     						0, 
     						"Inbound - " . $inbound->inbound->display_no, 
@@ -62,7 +62,7 @@ class ReportController extends Controller
                 if($outbound->process_status !=='canceled') {
         			$details->push(
         				$this->formatStockDetails(
-        					$outbound->created_at, 
+        					$outbound->updated_at, 
         					0, 
         					$outbound->pivot->quantity, 
         					"Outbound - " . $outbound->display_no, 
