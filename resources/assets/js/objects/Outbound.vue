@@ -196,7 +196,7 @@
 							@keydown="form.errors.clear($event.target.name)" 
 							@input="form.errors.clear($event.target.name)"
 							@keyup.enter="submit"
-							v-if="canManage && outbound.process_status !== 'completed'">
+							v-if="canManage || outbound.process_status !== 'completed'">
 							
 							<div class="field">
 								<selector-input v-model="selectedStatus" :defaultData="selectedStatus"

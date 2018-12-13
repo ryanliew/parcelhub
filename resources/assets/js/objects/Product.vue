@@ -379,6 +379,7 @@
 			orderBack() {
 				this.isViewingInbound = false;
 				this.isViewingOutbound = false;
+				this.back();
 			},
 
 			back() {

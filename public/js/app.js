@@ -66596,6 +66596,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		orderBack: function orderBack() {
 			this.isViewingInbound = false;
 			this.isViewingOutbound = false;
+			this.back();
 		},
 		back: function back() {
 			this.$emit('back');
@@ -90382,7 +90383,7 @@ var render = function() {
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "card-content" }, [
-              _vm.canManage && _vm.outbound.process_status !== "completed"
+              _vm.canManage || _vm.outbound.process_status !== "completed"
                 ? _c(
                     "form",
                     {
