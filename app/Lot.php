@@ -94,6 +94,34 @@ class Lot extends Model
         $this->update([ 'left_volume' => $this->volume - $used_volume ]);
     }
 
+    public function check_can_deduct_product(Product $product, $quantity)
+    {
+        $lot_product = $this->products()->where('product_id', $product->id)->first();
+        $new_quantity = $lot_product->pivot->quantity - $quantity;   
+
+        if($new_quantity < 0) return false;
+
+        return true;
+    }
+
+    public function deduct_product(Product $product, $quantity)
+    {
+        $lot_product = $this->products()->where('product_id', $product->id)->first();
+        $new_quantity = $lot_product->pivot->quantity - $quantity;   
+
+        if($new_quantity <= 0 
+            && $lot_product->pivot->quantity <= 0 
+            && $lot_product->pivot->outgoing_product <= 0)
+        {
+            $this->products()->detach($lot_product);
+            Log::info("Lot detached: " . $this->id);
+        }
+        else
+        {
+            $this->products()->updateExistingPivot($product->id, ['quantity' => max($new_quantity, 0)]);
+        }
+    }
+
     public function deduct_incoming_product(Product $product, $quantity)
     {
         $lot_product = $this->products()->where('product_id', $product->id)->first();
