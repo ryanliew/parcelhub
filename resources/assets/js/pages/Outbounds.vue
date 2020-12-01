@@ -578,6 +578,8 @@
 			submit() {
 				this.processProduct();
 
+				this.form.is_malaysia = this.isMalaysiaData;
+
 				this.form.post(this.action)
 					.then(data => this.onSuccess())
 					.catch(error => this.onError(error));
