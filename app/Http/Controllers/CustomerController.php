@@ -29,7 +29,7 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        return Controller::VueTableListResult(auth()->user()->customers());
+        return Controller::VueTableListResult(auth()->user()->customers(), 1000);
     }
 
     public function adminCustomer($id)
