@@ -264,4 +264,9 @@ class ProductController extends Controller
 
         return redirect()->back()->withSuccess($product->name . ' deleted successfully.');
     }
+
+    public function reconcile(Product $product)
+    {
+        return $product->reconcile_quantity();
+    }
 }
