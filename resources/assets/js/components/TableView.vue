@@ -155,7 +155,7 @@
 			},
 
 			image(value) {
-				return '<figure class="image is-48x48"><img src="'+ value +'"></figure>';
+				return '<figure class="image is-48x48"><img src="http://parcelhub.my/'+ value +'"></figure>';
 			},
 
 			dangerousTag(value) {
