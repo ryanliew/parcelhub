@@ -115,12 +115,17 @@ class ProductController extends Controller
      */
     public function selector()
     {
-        return Controller::VueTableListResult(auth()->user()->products()->with(["inbounds", "lots", "outbounds"])->where('status', 'true'));
+        $query = Product::query();
+        if(!auth()->user()->hasRole('admin'))
+        {
+            $query = auth()->user()->products();
+        }
+        return $query->with(["inbounds", "lots", "outbounds"])->where('status', 'true')->get();
     }
 
     public function adminProduct($id)
     {
-        return Controller::VueTableListResult(User::find($id)->products()->with(["inbounds", "lots", "outbounds"])->where('status', 'true'));
+        return User::find($id)->products()->with(["inbounds", "lots", "outbounds"])->where('status', 'true')->get();
     }
 
     /**
@@ -258,5 +263,10 @@ class ProductController extends Controller
         return ['message' => "Product deleted"];
 
         return redirect()->back()->withSuccess($product->name . ' deleted successfully.');
+    }
+
+    public function reconcile(Product $product)
+    {
+        return $product->reconcile_quantity();
     }
 }

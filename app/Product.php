@@ -84,6 +84,86 @@ class Product extends Model
         return $this->hasMany('App\Adjustment');
     }
 
+    public function reconcile_quantity()
+    {
+        $this->load('inbounds_with_lots.lots', 'outbounds', 'adjustments');
+
+        $details = collect();
+
+        // We need to pull out all the records and insert them into array for processing
+        foreach($this->inbounds_with_lots as $inbound){
+            if($inbound->inbound->process_status != 'canceled') {
+                $details->push(
+                    $this->formatStockDetails(
+                        $inbound->updated_at, 
+                        $inbound->lots->sum('pivot.quantity_received'), 
+                        0, 
+                        "Inbound - " . $inbound->inbound->display_no, 
+                        0
+                    )
+                );
+            }
+        }
+
+        foreach($this->outbounds as $outbound) {
+            if($outbound->process_status !=='canceled') {
+                $details->push(
+                    $this->formatStockDetails(
+                        $outbound->updated_at, 
+                        0, 
+                        $outbound->pivot->quantity, 
+                        "Outbound - " . $outbound->display_no, 
+                        0
+                    )
+                );
+            }
+        }
+
+        foreach($this->adjustments as $adjustment) {
+            $details->push(
+                $this->formatStockDetails(
+                    $adjustment->created_at, 
+                    0, 
+                    0, 
+                    "Adjustment - " . $adjustment->remark, 
+                    $adjustment->new_quantity,
+                    true // Is adjustment
+                )
+            );
+        }
+
+        $sorted = $details->sortBy('date');
+
+        // Update balances
+        $balance = 0;
+        foreach($sorted as $key => $detail) {
+            
+            $array = $this->formatStockDetails(
+                $detail['date'],
+                $detail['in'],
+                $detail['out'],
+                $detail['description'],
+                $balance = $detail['is_adjustment'] ? $detail['balance'] : $balance + $detail['in']  - $detail['out']
+            );
+
+            $sorted->put($key, $array);
+        }
+
+        return $balance;
+    }
+
+    public function formatStockDetails($date, $in, $out, $description, $balance, $is_adjustment = false)
+    {
+        return [
+            "date" => $date,
+            "balance" => $balance,
+            "in" => $in,
+            "out" => $out,
+            "description" => $description,
+            "is_adjustment" => $is_adjustment
+        ];
+    }
+
     // Custom accessor
     public function getVolumeAttribute(){
         return $this->height * $this->width * $this->length;
@@ -117,7 +197,7 @@ class Product extends Model
 
     public function getSelectorNameAttribute()
     {
-        return $this->sku . " - " . $this->name;
+        return $this->sku . " | " . $this->name;
     }
 
     public function getTotalIncomingQuantityAttribute() {

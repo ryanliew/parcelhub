@@ -41,6 +41,8 @@ class Inbound extends Model
 	protected $guarded = [];
 
     protected $dates = ["arrival_date"];
+
+    protected $appends = ['display_no'];
 	
     public function user(){
     	return $this->belongsTo('App\User');
@@ -70,10 +72,15 @@ class Inbound extends Model
     	return $query->where('process_status', 'canceled');
     }
 
+    public function getDisplayNoAttribute()
+    {
+        return $this->PREFIX() . sprintf("%07d", $this->id);
+    }
+
 
     // Static methods
     public static function PREFIX()
     {
-        return 'GR-';
+        return 'GRA';
     }
 }

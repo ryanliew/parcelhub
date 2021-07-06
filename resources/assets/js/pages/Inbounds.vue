@@ -97,9 +97,9 @@
 			          		<table class="table is-fullwidth responsive">
 			          			<thead>
 			          				<th>#</th>
-			          				<th>Product</th>
-			          				<th>Quantity</th>
-			          				<th>Volume(m³)</th>
+			          				<th style="min-width: 320px">Product</th>
+			          				<th style="width: 100px">Qty</th>
+			          				<th style="width: 50px;">Vol (m³)</th>
 			          				<th>Expiry date</th>
 			          				<th>Remark</th>
 			          				<th>
@@ -124,7 +124,7 @@
 												@input="clearProductErrors">
 											</products-selector-input>
 										</td>
-										<td>
+										<td class="small-input">
 											<text-input v-if="productRows[index]" v-model="productRows[index].quantity" :defaultValue="productRows[index].quantity"
 				          						:label="'Quantity'"
 				          						:required="true"
@@ -232,7 +232,7 @@
 			},
 
 			setProducts(response) {
-				this.productsOptions = response.data.data;
+				this.productsOptions = response.data;
 			},
 
 			addRow() {

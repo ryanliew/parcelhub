@@ -64,7 +64,7 @@ class ExcelController extends Controller
         foreach($excelRows as $excelRow){
             if(!is_null($excelRow[0])) {
                 $product = Product::updateOrCreate(
-                     ['sku' => $excelRow[0], 'user_id' => auth()->id()],
+                     ['sku' => $excelRow[0], 'user_id' => auth()->id(), 'status' => 'true'],
                      ['sku' => $excelRow[0],
                     'name' => $excelRow[1],
                     'height' => $excelRow[2],
@@ -91,8 +91,6 @@ class ExcelController extends Controller
         $excelRows = Excel::load($request->file('file'))->noHeading()->skipRows(2)->toArray();
         $details = collect([]);
 
-
-
         // Save product and customer into processing queue
         foreach($excelRows as $excelRow) 
         {
@@ -117,11 +115,21 @@ class ExcelController extends Controller
                     return response(json_encode(array('overall' => ['Customer ' . $excelRow[3] . ' does not have a Malaysia address. We only support excel import for Malaysia outbound for now. Please manually create a foreign outbound from the "Outbounds" page.'])), 422);
                 }
 
-                $product = Product::where('sku', $excelRow[1])->first();
+                $product = Product::where('sku', $excelRow[1])
+                                ->where('status', 'true')
+                                ->where('user_id', auth()->id())
+                                ->first();
+
                 if(is_null($product))
                 {
                     return response(json_encode(array('overall' => ['Product ' . $excelRow[1] . ' not found. Please create your product at "My Products" page first.'])), 422);
                 }
+
+                if($product->lots()->count() == 0)
+                {
+                    return response(json_encode(array('overall' => ['Product ' . $excelRow[1] . ' cannot be found in any lot. Please create an inbound for the product or contact our administrator.'])), 422);
+                }
+
 
                 $courier = Courier::where('name', 'LIKE', '%' . $excelRow[4] . '%')->first();
                 if(is_null($courier))
@@ -243,7 +251,11 @@ class ExcelController extends Controller
                     return response(json_encode(array('overall' => ['Arrival date ' . $excelRow[1] . ' is a past date.'])), 422);
                 }
                 
-                $product = Product::where('sku', $excelRow[2])->first();
+                $product = Product::where('sku', $excelRow[2])
+                                ->where('status', 'true')
+                                ->where('user_id', auth()->id())
+                                ->first();
+                                
                 if(is_null($product))
                 {
                     return response(json_encode(array('overall' => ['Product ' . $excelRow[2] . ' not found. Please create your product at "My Products" page first.'])), 422);
@@ -266,7 +278,9 @@ class ExcelController extends Controller
         {
             $current = $details->filter(function ($value, $key) use ($arrival){ return $value['arrival'] == $arrival['arrival']; });
 
-            $current_carton = $current->first()['carton'];
+            // We should sum up total carton instead of getting the first one
+            // $current_carton = $current->first()['carton'];
+            $current_carton = $current->sum('carton');
 
 
             $inbound = new Inbound();
@@ -342,10 +356,18 @@ class ExcelController extends Controller
             } 
         }
 
-        User::admin()->first()->notify(new InboundCreatedNotification());
-        event(new EventTrigger('inbound'));
+        if($count > 0)
+        {
+            $message = $count . ' inbound orders created successfully';
+            User::admin()->first()->notify(new InboundCreatedNotification());
+            event(new EventTrigger('inbound'));
+        }
+        else
+        {
+            $message = "The system failed to read the data. Kindlt refer to the required example in the previous step and check the date format.";
+        }
 
-        return response()->json(['message' => $count . ' inbound orders created successfully']); 
+        return response()->json(['message' => $message]); 
 
     }
 
@@ -397,7 +419,10 @@ class ExcelController extends Controller
     public function uploadPhotos(Request $request)
     {
         $filename = explode('.', $request->file->getClientOriginalName())[0];
-        $product = Product::where('SKU', $filename)->first();         
+        $product = Product::where('sku', $filename)
+                        ->where('status', 'true')
+                        ->where('user_id', auth()->id())
+                        ->first();         
 
         if(!is_null($product)){
             $file = $request->file;

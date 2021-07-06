@@ -51,6 +51,7 @@
 				    	</image-input>
 				    </div>
 			    	<button class="button is-primary mt-5" @click="submit">Submit excel file</button>
+			    	<p><i>Make sure to follow the formats and fill all the columns</i></p>
 		  		</div>
 		  		<div class="step-content has-text-centered">
 		  			<p>Make sure that the photo name is identical with the product SKU (case sensitive).</p>

@@ -83,14 +83,41 @@ class InboundController extends Controller
             return response(json_encode(array('process_status' => ['Inbound has been canceled.'])), 422);
         }
        
-
-        if($request->process_status == 'canceled') {
+        // Usual cancel request
+        if($inbound->process_status !== 'completed' && $request->process_status == 'canceled') {
             // Remove the lot product and its quantity
             foreach($inbound->products_with_lots as $inboundproduct)
             {
                 foreach($inboundproduct->lots as $lot)
                 {
                     $lot->deduct_incoming_product($inboundproduct->product, $lot->pivot->quantity_original);
+                    $lot->propagate_left_volume();
+                }
+            }
+        }
+
+        // Cancel request for completed inbound
+        if($inbound->process_status == 'completed' && $request->process_status == 'canceled') {
+            // Remove the lot product and its quantity
+            $can_remove = true;
+
+            foreach($inbound->products_with_lots as $inboundproduct)
+            {
+                foreach($inboundproduct->lots as $lot)
+                {
+                    if($can_remove)
+                        $can_remove = $lot->check_can_deduct_product($inboundproduct->product, $lot->pivot->quantity_received);
+                }
+            }
+
+            if(!$can_remove)
+                return response(json_encode(array('process_status' => ['Stock has been used in confirmed outbounds, please cancel dependent outbounds first.'])), 422);
+
+            foreach($inbound->products_with_lots as $inboundproduct)
+            {
+                foreach($inboundproduct->lots as $lot)
+                {
+                    $lot->deduct_product($inboundproduct->product, $lot->pivot->quantity_received);
                     $lot->propagate_left_volume();
                 }
             }

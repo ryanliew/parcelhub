@@ -59,6 +59,7 @@
 										<p class="title" v-text="product.total_incoming_quantity"></p>
 										<p class="heading">Outgoing stocks</p>
 										<p class="title" v-text="product.total_outgoing_quantity"></p>
+										<button class="button is-primary" @click="reconcile">Reconcile</button>
 									</div>
 								</div>
 							
@@ -379,6 +380,7 @@
 			orderBack() {
 				this.isViewingInbound = false;
 				this.isViewingOutbound = false;
+				this.back();
 			},
 
 			back() {
@@ -470,6 +472,11 @@
 			setOutbound(response){
 				this.selectedOutbound = response.data;
 				this.isViewingOutbound = true;
+			},
+
+			reconcile() {
+				axios.get("/internal/products/" + this.product.id + "/reconcile")
+					.then(response => console.log(response));
 			}
 		},
 

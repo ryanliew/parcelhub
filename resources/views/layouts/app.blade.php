@@ -13,7 +13,7 @@
     @yield('css')
     
     <!-- Stylesheet -->
-    <link rel="stylesheet" href="{{ asset('css/app.css?v=0.0.9') }}">
+    <link rel="stylesheet" href="{{ asset('css/app.css?v=0.1') }}">
     <link rel="stylesheet" href="{{ asset('css/responsive-tables.css') }}">
 
     <script>
@@ -49,7 +49,7 @@
     </footer>
     @endif
     <script src="{{ asset('js/form.js?v=1.0.5') }}"></script>
-    <script src="{{ asset('js/app.js?v=1.1.2.2') }}"></script>
+    <script src="{{ asset('js/app.js?v=1.1.4') }}"></script>
     <script src="{{ asset('js/jquery-1.7.1.min.js') }}"></script>
     <script src="{{ asset('js/responsive-tables.js') }}"></script>
     <script src="{{ asset('js/broadcast.js') }}"></script>

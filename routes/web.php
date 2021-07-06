@@ -27,14 +27,20 @@ Route::get('testPDF', function(){
 
 Auth::routes();
 
-Route::get('phpinfo', function() {
-	return phpinfo();
-});
+// Route::get('phpinfo', function() {
+// 	return phpinfo();
+// });
 
 Route::group(['prefix' => 'user/account/'], function() {
     Route::get('verify/{token}', 'Auth\RegisterController@verify')->name('verify');
     Route::post('resend/{id}', 'Auth\RegisterController@resend')->name('resend');
 });
+
+// Route::get('/impersonate/{user}', function(App\User $user) {
+// 	Auth::login($user);
+
+// 	return redirect("/dashboard");
+// });
 
 // Pages route
 Route::get('couriers', 'CourierController@page')->name('couriers');
@@ -56,6 +62,12 @@ Route::get('outbounds/excel', 'OutboundController@page_excel')->name('outbounds.
 Route::get('inbounds/excel', 'InboundController@page_excel')->name('inbounds.excel');
 Route::post('lots/products/update', 'LotController@editStock');
 Route::get('subusers', 'SubuserController@page')->name('subusers');
+Route::get('reports', 'ReportController@page')->name('reports');
+
+Route::group(['prefix' => 'report'], function() {
+	Route::get('stock', 'ReportController@stockPage');
+	Route::post("stock", 'ReportController@stock');
+});
 
 /* Route for Socialite authentication */
 Route::group(['prefix' => 'auth', 'as' => 'auth.social.'], function() {
@@ -133,6 +145,7 @@ Route::group(['prefix' => 'internal'], function() {
 	Route::get('admin/customers/{id}', 'CustomerController@adminCustomer');
 	Route::get('return/user', 'ReturnOrderController@index');
 	Route::get('recall/user', 'RecallOrderController@index');
+	Route::get('products/{product}/reconcile', 'ProductController@reconcile');
 	Route::delete('products/{product}', 'ProductController@destroy');
 });
 
@@ -224,4 +237,4 @@ Route::group(['prefix' => 'user'], function(){
 	Route::post('update', 'UserController@update')->name('user.update');
 });
 
-Route::get('adjust', 'InboundController@adjustProduct');
+// Route::get('adjust', 'InboundController@adjustProduct');

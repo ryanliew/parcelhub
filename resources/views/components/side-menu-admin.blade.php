@@ -86,5 +86,10 @@
                 System settings
             </a>
         </li>
+        <li>
+            <a @if( url()->current() == route('reports') ) class="is-active" @endif href="{{ route('reports') }}">
+                Reports
+            </a>
+        </li>
     </ul>
 </aside>

@@ -269,7 +269,7 @@
 						
 						<table class="table is-hoverable is-fullwidth is-responsive is-multirow">
 							<thead>
-								<th></th>
+								<th style="width: 320px;"></th>
 								<th></th>
 								<th></th>
 								<th></th>
@@ -446,7 +446,8 @@
 					payment_term: '',
 					trade_term: '',
 					export_reason: '',
-					business: ''
+					business: '',
+					is_malaysia: false,
 				}),
 				isDeleting: false,
 				errorForProducts: '',
@@ -481,7 +482,7 @@
 			},
 
 			setProducts(response) {
-				this.productsOptions = response.data.data;
+				this.productsOptions = response.data;
 				this.getCouriers();
 			},
 
@@ -577,6 +578,8 @@
 			submit() {
 				this.processProduct();
 
+				this.form.is_malaysia = this.isMalaysiaData;
+
 				this.form.post(this.action)
 					.then(data => this.onSuccess())
 					.catch(error => this.onError(error));
@@ -657,6 +660,7 @@
 					this.form.recipient_country = data.recipient_country;
 					this.form.recipient_country.toLowerCase() == "malaysia"?
 					this.isMalaysiaData = true : this.isMalaysiaData = false;
+					this.form.is_malaysia = this.isMalaysiaData;
 				}
 			},
 
@@ -704,6 +708,6 @@
 
 				return searchables;
 			}
-		}
+		},
 	}
 </script>

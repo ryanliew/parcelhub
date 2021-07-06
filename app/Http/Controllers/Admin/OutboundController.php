@@ -87,12 +87,30 @@ class OutboundController extends Controller
             return response(json_encode(array('process_status' => ['Outbound has been canceled.'])), 422);
         }
 
-        if(($outbound->process_status !== "pending" && $outbound->process_status !== "processing") && $request->process_status == "canceled")
+        // Cancel request for completed outbound
+        if($outbound->process_status == "completed" && $request->process_status == "canceled")
         {
-            return response(json_encode(array('process_status' => ['Outbound has already been delivered.'])), 422);
-        }
+            
+            foreach($outbound->products as $product)
+            {
+                $lot = Lot::find($product->pivot->lot_id);
+                $lot_product = $lot->products()->where('product_id', $product->id)->first();
 
-        if($request->process_status == 'canceled') {
+                // There might be cases where the product has already left the lot completely
+                // Add back the lot product record
+                
+                if(!$lot_product) {
+                    $lot->products()->attach($product->id, ['quantity' => $product->pivot->quantity]);
+                } else {
+                    $new_quantity = $lot_product->pivot->quantity + $product->pivot->quantity;
+                    $lot->products()->updateExistingPivot($product->id, ['quantity' => $new_quantity]);
+
+                    $lot->left_volume = $lot->left_volume + ($product->volume * $product->pivot->quantity);
+                    $lot->save();
+                }
+            }
+        }
+        else if($request->process_status == 'canceled') { // Cancel request for other outbounds
             // Remove the lot product and its quantity
             foreach($outbound->products as $product)
             {
@@ -106,16 +124,16 @@ class OutboundController extends Controller
             }
         }
 
-        if($request->process_status == 'completed' || $request->process_status == 'delivered') {
-            // Remove the lot product and its quantity
-            foreach($outbound->products as $product)
-            {
-                if($product->total_quantity < $product->pivot->quantity)
-                {
-                    return response(json_encode(array('process_status' => ['We do not have enough ' . $product->name . ' in the warehouse.'])), 422);
-                }                
-            }
-        }
+        // if($request->process_status == 'completed' || $request->process_status == 'delivered') {
+        //     // Remove the lot product and its quantity
+        //     foreach($outbound->products as $product)
+        //     {
+        //         if($product->total_quantity < $product->pivot->quantity && $product->)
+        //         {
+        //             return response(json_encode(array('process_status' => ['We do not have enough ' . $product->name . ' in the warehouse.'])), 422);
+        //         }                
+        //     }
+        // }
         
         if($request->process_status == 'completed') {
             foreach($outbound->products as $product) {

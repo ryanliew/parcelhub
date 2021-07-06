@@ -8,7 +8,7 @@
 						<div class="card-header-title level">
 							<div class="level-left">
 								<div class="level-item">
-									<span>Outbound #{{ outbound.id }}</span>
+									<span>Outbound #{{ outbound.display_no }}</span>
 								</div>
 							</div>
 							<div class="level-right">
@@ -196,7 +196,7 @@
 							@keydown="form.errors.clear($event.target.name)" 
 							@input="form.errors.clear($event.target.name)"
 							@keyup.enter="submit"
-							v-if="canManage && outbound.process_status !== 'completed'">
+							v-if="canManage || outbound.process_status !== 'completed'">
 							
 							<div class="field">
 								<selector-input v-model="selectedStatus" :defaultData="selectedStatus"
@@ -230,7 +230,7 @@
 							</div>
 
 							<div class="field">
-								<button type="submit" class="button is-success is-pulled-right">Change status</button>
+								<button type="submit" :disabled="form.submitting" class="button is-success is-pulled-right">Change status</button>
 							</div>
 							<div class="is-clearfix"></div>
           				</form>
