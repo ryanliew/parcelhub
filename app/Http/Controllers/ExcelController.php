@@ -58,26 +58,26 @@ class ExcelController extends Controller
         $this->validate($request, [
             'file' => 'required'
         ]);
-        
-        $excelRows = Excel::load($request->file('file'))->noHeading()->skipRows(3)->toArray();
+        $excelRows = Excel::import($request);
+        // $excelRows = Excel::load($request->file('file'))->noHeading()->skipRows(3)->toArray();
         //dd($excelRows);
-        foreach($excelRows as $excelRow){
-            if(!is_null($excelRow[0])) {
-                $product = Product::updateOrCreate(
-                     ['sku' => $excelRow[0], 'user_id' => auth()->id(), 'status' => 'true'],
-                     ['sku' => $excelRow[0],
-                    'name' => $excelRow[1],
-                    'height' => $excelRow[2],
-                    'length' => $excelRow[3],
-                    'width' => $excelRow[4],
-                    'is_dangerous' => strtolower($excelRow[5]) == 'yes',
-                    'is_fragile' => strtolower($excelRow[6]) == 'yes',
-                    'trash_hole' => $excelRow[7],
-                    'user_id' => auth()->id(),
-                    'status' => 'true'
-                ]);
-            }
-        }
+        // foreach($excelRows as $excelRow){
+        //     if(!is_null($excelRow[0])) {
+        //         $product = Product::updateOrCreate(
+        //              ['sku' => $excelRow[0], 'user_id' => auth()->id(), 'status' => 'true'],
+        //              ['sku' => $excelRow[0],
+        //             'name' => $excelRow[1],
+        //             'height' => $excelRow[2],
+        //             'length' => $excelRow[3],
+        //             'width' => $excelRow[4],
+        //             'is_dangerous' => strtolower($excelRow[5]) == 'yes',
+        //             'is_fragile' => strtolower($excelRow[6]) == 'yes',
+        //             'trash_hole' => $excelRow[7],
+        //             'user_id' => auth()->id(),
+        //             'status' => 'true'
+        //         ]);
+        //     }
+        // }
 
         return ["message" => "Products uploaded successfully", "number" => sizeof($excelRows)];
     }

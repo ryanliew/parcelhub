@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use PDF;
+use App\Exports\ReportsExport;
 
 class ReportController extends Controller
 {
@@ -127,14 +128,11 @@ class ReportController extends Controller
         if(request()->report_type == 'excel') {
 
             // We need to format the excel filein array
-            
-            $information = Excel::create($filename, function($excel) use ($products) {
-                $excel->sheet('Sheet 1', function($sheet) use ($products) {
-                    $sheet->loadView('report.excel-stock', ['products' => $products, 'from' => request()->from, 'to' => request()->to, 'type' => request()->type, 'details' => request()->has('details')]);
-                });
-            })->store('xls', storage_path('app/public/reports/stock'), true);
 
-            return json_encode(['message' => "Success", 'url' => 'storage/reports/stock/' . $information['file']]);
+			$filename .= ".xlsx";
+			Excel::store(new ReportsExport($products, request()->from, request()->to, request()->type, request()->has('details')),'public/reports/stock/' . $filename, 'local');
+
+            return json_encode(['message' => "Success", 'url' => 'storage/reports/stock/' . $filename]);
 
         }
 
