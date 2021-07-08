@@ -16,6 +16,9 @@ use App\Utilities;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
+use App\Imports\ReportsImport;
+use App\Imports\OutboundImport;
+use App\Imports\InboundImport;
 use Intervention\Image\ImageManagerStatic as Image;
 use Maatwebsite\Excel\Facades\Excel;
 use Storage;
@@ -58,28 +61,11 @@ class ExcelController extends Controller
         $this->validate($request, [
             'file' => 'required'
         ]);
-        $excelRows = Excel::import($request);
-        // $excelRows = Excel::load($request->file('file'))->noHeading()->skipRows(3)->toArray();
-        //dd($excelRows);
-        // foreach($excelRows as $excelRow){
-        //     if(!is_null($excelRow[0])) {
-        //         $product = Product::updateOrCreate(
-        //              ['sku' => $excelRow[0], 'user_id' => auth()->id(), 'status' => 'true'],
-        //              ['sku' => $excelRow[0],
-        //             'name' => $excelRow[1],
-        //             'height' => $excelRow[2],
-        //             'length' => $excelRow[3],
-        //             'width' => $excelRow[4],
-        //             'is_dangerous' => strtolower($excelRow[5]) == 'yes',
-        //             'is_fragile' => strtolower($excelRow[6]) == 'yes',
-        //             'trash_hole' => $excelRow[7],
-        //             'user_id' => auth()->id(),
-        //             'status' => 'true'
-        //         ]);
-        //     }
-        // }
+        $excelRows = Excel::import(new ReportsImport, request()->file('file'));
 
-        return ["message" => "Products uploaded successfully", "number" => sizeof($excelRows)];
+        $count = Product::where("updated_at", '>=' , now()->subMinutes(3))->count();
+
+        return ["message" => "Products uploaded successfully", "number" => $count];
     }
 
     public function processOutbound(Request $request)
@@ -87,145 +73,21 @@ class ExcelController extends Controller
         $this->validate($request, [
             'file' => 'required'
         ]);
+        try{
+            Excel::import(new OutboundImport, request()->file('file'));
+        }
+        catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
+            $failures = collect($e->failures());
+            $error_message = $failures->first()->errors()[0];
+            $full_error_messages = $error_message . ' at row '. $failures->first()->row(). '.';
 
-        $excelRows = Excel::load($request->file('file'))->noHeading()->skipRows(2)->toArray();
-        $details = collect([]);
-
-        // Save product and customer into processing queue
-        foreach($excelRows as $excelRow) 
-        {
-            $detail = [];
-
-            if(!is_null($excelRow[3])) {
-                
-                $customer = auth()->user()->customers()->updateOrCreate(
-                ['customer_name' => $excelRow[3]],
-                [
-                    'customer_name' => $excelRow[3],
-                    'customer_address' => $excelRow[5],
-                    'customer_address_2' => $excelRow[6],
-                    'customer_phone' => $excelRow[10],
-                    'customer_postcode' => $excelRow[8],
-                    'customer_state' => $excelRow[7],
-                    'customer_country' => $excelRow[9],
-                ]);
-
-                if(strtolower($customer->customer_country) !== 'malaysia')
-                {
-                    return response(json_encode(array('overall' => ['Customer ' . $excelRow[3] . ' does not have a Malaysia address. We only support excel import for Malaysia outbound for now. Please manually create a foreign outbound from the "Outbounds" page.'])), 422);
-                }
-
-                $product = Product::where('sku', $excelRow[1])
-                                ->where('status', 'true')
-                                ->where('user_id', auth()->id())
-                                ->first();
-
-                if(is_null($product))
-                {
-                    return response(json_encode(array('overall' => ['Product ' . $excelRow[1] . ' not found. Please create your product at "My Products" page first.'])), 422);
-                }
-
-                if($product->lots()->count() == 0)
-                {
-                    return response(json_encode(array('overall' => ['Product ' . $excelRow[1] . ' cannot be found in any lot. Please create an inbound for the product or contact our administrator.'])), 422);
-                }
-
-
-                $courier = Courier::where('name', 'LIKE', '%' . $excelRow[4] . '%')->first();
-                if(is_null($courier))
-                {
-                    return response(json_encode(array('overall' => ['Courier ' . $excelRow[4] . ' not found. Please check with our administrator.'])), 422);
-                }
-
-                $detail['customer'] = $customer;
-                $detail['product'] = $product;
-                $detail['quantity'] = $excelRow[2];
-                $detail['courier'] = $excelRow[4];
-                $detail['no'] = $excelRow[0];
-                $detail['remark'] = $excelRow[11];
-                $detail['courier'] = $courier;
-                $details->push($detail);
-            }
+            return response(json_encode(array('overall' => [$full_error_messages])), 422);
         }
 
-        $numbers = $details->unique('no');
-        $count = 0;
-        foreach($numbers as $number)
-        {
-            $current = $details->filter(function ($value, $key) use ($number){ return $value['no'] == $number['no']; });
-            
-            $current_customer = $current->first()['customer'];
-            $current_courier = $current->first()['courier'];
-            $outbound = new Outbound();
-            $outbound->insurance = false;
-            $outbound->amount_insured = 0;
+        $count = Outbound::where("updated_at", '>=' , now()->subMinutes(3))->count();
 
-            $outbound->user_id = auth()->user()->id;
-            $outbound->is_business = false;
-            $outbound->status = 'true' ;
-            $outbound->process_status = 'pending';
-
-            $outbound->recipient_name = $current_customer->customer_name;
-            $outbound->recipient_address = $current_customer->customer_address;
-            $outbound->recipient_address_2 = $current_customer->customer_address_2;
-            $outbound->recipient_phone = $current_customer->customer_phone;
-            $outbound->recipient_postcode = $current_customer->customer_postcode;
-            $outbound->recipient_state = $current_customer->customer_state;
-            $outbound->recipient_country = $current_customer->customer_country;
-
-            $outbound->courier_id = $current_courier->id;
-
-            $outbound->save();
-
-            foreach($current->all() as $outbound_product)
-            {
-                $product = $outbound_product['product'];
-                $quantity = $outbound_product['quantity'];
-
-                foreach($product->lots as $lot)
-                {
-                    $available_quantity = $lot->pivot->quantity + $lot->pivot->incoming_quantity - $lot->pivot->outgoing_product;
-
-                    if($available_quantity >= $quantity)
-                    {
-                        // We are at a situation where we can get everything from this lot
-                        $new_lot_volume = $lot->left_volume + ($product->volume * $quantity);
-
-                        $lot->update(['left_volume' => $new_lot_volume]);
-
-                        $new_outgoing_quantity = $lot->pivot->outgoing_product + $quantity;
-
-                        $product->lots()->updateExistingPivot($lot->id, ['outgoing_product' => $new_outgoing_quantity]);
-
-                        $outbound->products()->attach($outbound_product['product']->id, ['quantity' => $outbound_product['quantity'], 'remark' => $outbound_product['remark'], 'lot_id' => $lot->id]);
-
-                        break;
-                    }
-                    else if($available_quantity > 0)
-                    {
-                        // We are at a situation where we need to get something from this lot but still need to move to next lot
-                        // Meaning, take everything out from this lot
-
-                        $new_lot_volume = $lot->left_volume + ($product->volume * $lot->pivot->quantity);
-
-                        $lot->update(['left_volume' => $new_lot_volume]);
-
-                        $new_outgoing_quantity = $lot->pivot->outgoing_product + $available_quantity;
-
-                        $product->lots()->updateExistingPivot($lot->id, ['outgoing_product' => $new_outgoing_quantity]);
-
-                        $outbound->products()->attach($outbound_product['product']->id, ['quantity' => $available_quantity, 'remark' => $outbound_product['remark'], 'lot_id' => $lot->id]);
-
-                        $quantity -= $available_quantity;
-                    }
-                }   
-            }
-
-            $count++;
-        }
-
-        User::admin()->first()->notify(new OutboundCreatedNotification());
-        event(new EventTrigger('outbound'));
+        // User::admin()->first()->notify(new OutboundCreatedNotification());
+        // event(new EventTrigger('outbound'));
         
         return response()->json(['message' => $count . ' outbound orders created successfully']); 
 
@@ -237,137 +99,30 @@ class ExcelController extends Controller
             'file' => 'required'
         ]);
 
-        $excelRows = Excel::load($request->file('file'))->noHeading()->skipRows(2)->toArray();
+        try{
+            Excel::import(new InboundImport, request()->file('file'));
+        }
+        catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
+            $failures = collect($e->failures());
 
-        $details = collect([]);
-        $count = 0;
-        foreach($excelRows as $excelRow) 
-        {
-            $detail = [];
-            if(!is_null($excelRow[1]))
-            {
-                if(Carbon::parse($excelRow[1])->lt(Carbon::now()))
-                {
-                    return response(json_encode(array('overall' => ['Arrival date ' . $excelRow[1] . ' is a past date.'])), 422);
-                }
-                
-                $product = Product::where('sku', $excelRow[2])
-                                ->where('status', 'true')
-                                ->where('user_id', auth()->id())
-                                ->first();
-                                
-                if(is_null($product))
-                {
-                    return response(json_encode(array('overall' => ['Product ' . $excelRow[2] . ' not found. Please create your product at "My Products" page first.'])), 422);
-                }
-
-                $detail['arrival'] = $excelRow[1];
-                $detail['carton'] = $excelRow[3];
-                $detail['product'] = $product; 
-                $detail['remark'] = $excelRow[6];
-                $detail['expiry'] = is_null($excelRow[5]) ? null : $excelRow[5];
-                $detail['quantity'] = $excelRow[4];
-
-                $details->push($detail);
-            }
+            return response(json_encode(array('overall' => [$failures->first()->errors()[0]])), 422);
         }
 
-        $arrivals = $details->unique('arrival');
-
-        foreach($arrivals as $arrival)
-        {
-            $current = $details->filter(function ($value, $key) use ($arrival){ return $value['arrival'] == $arrival['arrival']; });
-
-            // We should sum up total carton instead of getting the first one
-            // $current_carton = $current->first()['carton'];
-            $current_carton = $current->sum('carton');
-
-
-            $inbound = new Inbound();
-            $inbound->user_id = auth()->id();
-            $inbound->arrival_date = $arrival['arrival'];
-            $inbound->total_carton = $current_carton;
-            $inbound->status = "true";
-            $inbound->save(); 
-
-            $count++;
-            foreach($current->all() as $inboundProduct)
-            {
-                $product = $inboundProduct['product'];
-                $quantity = $inboundProduct['quantity'];
-
-                $inbound->products()->attach($product->id, [
-                                            'quantity' => $quantity, 
-                                            "expiry_date" => $inboundProduct['expiry'], 
-                                            "remark" => $inboundProduct['remark']
-                                        ]);
-
-                $lots = $product->lots()->get();
-                $single_volume = Utilities::convertCentimeterCubeToMeterCube($product->volume);
-                foreach($lots as $lot)
-                {
-                    if($quantity > 0) 
-                    {
-                        $total_volume = $quantity * $single_volume;
-                        $quantityIntoLot =  InboundController::CALCULATE_QUANTITY($total_volume, $single_volume, $quantity);
-
-                        if($quantityIntoLot > 0) 
-                        {
-                            $new_incoming_quantity = $lot->pivot->incoming_quantity + $quantityIntoLot;
-                            $quantity -= $quantityIntoLot;
-                            InboundController::ATTACH_LOT($inbound->id, $product->id, $lot, $inboundProduct['expiry'], $quantityIntoLot);
-                            $lot->products()->updateExistingPivot($product->id, ["incoming_quantity" => $new_incoming_quantity]);
-                        } 
-                    }
-                }
-
-
-                foreach(auth()->user()->lots()->get() as $lot_key => $lot)
-                {
-                    $lot_products = [];
-                    if($quantity > 0) 
-                    {
-                        $total_volume = $quantity * $single_volume;
-                        $quantityIntoLot = InboundController::CALCULATE_QUANTITY($total_volume, $single_volume, $quantity);
-
-                        if($lot_key + 1 == auth()->user()->lots()->count()) $quantityIntoLot = $quantity;
-
-                        if($quantityIntoLot > 0) 
-                        {
-                            $new_incoming_quantity = $quantityIntoLot;
-                            $existing_lot_product = $lot->products()->where('id', $product->id)->first();
-                            if($existing_lot_product)
-                            {
-                                $new_incoming_quantity += $existing_lot_product->pivot->incoming_quantity;
-                                $existing_lot_product->lots()->updateExistingPivot($lot->id, ["incoming_quantity" => $new_incoming_quantity]);
-                            }
-                            else
-                            {
-                                $lot->products()->attach($product->id, ["incoming_quantity" => $new_incoming_quantity]) ;
-                            }
-
-                            $quantity -= $quantityIntoLot;
-                            InboundController::ATTACH_LOT($inbound->id, $product->id, $lot, $inboundProduct['expiry'], $quantityIntoLot);
-                        } 
-
-                        $lot->propagate_left_volume();
-                    }
-                }
-            } 
-        }
+        $count = Inbound::where("updated_at", '>=' , now()->subMinutes(3))->count();
 
         if($count > 0)
         {
             $message = $count . ' inbound orders created successfully';
-            User::admin()->first()->notify(new InboundCreatedNotification());
-            event(new EventTrigger('inbound'));
+            // User::admin()->first()->notify(new InboundCreatedNotification());
+            // event(new EventTrigger('inbound'));
         }
         else
         {
-            $message = "The system failed to read the data. Kindlt refer to the required example in the previous step and check the date format.";
+            $message = "The system failed to read the data. Kindly refer to the required example in the previous step and check the date format.";
         }
 
         return response()->json(['message' => $message]); 
+
 
     }
 
