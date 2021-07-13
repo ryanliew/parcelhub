@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use PDF;
-use Settings;
+use App\Settings;
 use App\Events\EventTrigger;
 class InboundController extends Controller
 {
@@ -184,11 +184,13 @@ class InboundController extends Controller
         }
         */
         // Check for days before order
-        if( Settings::get('days_before_order') !== 0 && $compare->diffInDays($now) < Settings::get('days_before_order') ){
+        $settings = Settings::all();
+        $days_before_order = $settings->filter(function($value){ return $value->setting_key == 'days_before_order'; })->first()->setting_value;
+        if( $days_before_order != 0 && $compare->diffInDays($now) < $days_before_order ){
             if(request()->wantsJson()) {
-                return response(json_encode(array('arrival_date' => ['Inbound must be created '.Settings::get('days_before_order').' day(s) before.'])), 422);
+                return response(json_encode(array('arrival_date' => ['Inbound must be created '.$days_before_order.' day(s) before.'])), 422);
             }
-            return redirect()->back()->withErrors("Inbound must be created before ".Settings::get('days_before_order')." days.");
+            return redirect()->back()->withErrors("Inbound must be created before ".$days_before_order." days.");
         }
         // Everything is ok, create a new inbound
         $inbound = new Inbound();

@@ -1,9 +1,7 @@
 <?php
 
 namespace App;
-
-use Zizaco\Entrust\EntrustPermission;
-
+use Illuminate\Database\Eloquent\Model;
 /**
  * App\Permission
  *
@@ -22,7 +20,7 @@ use Zizaco\Entrust\EntrustPermission;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Permission whereUpdatedAt($value)
  * @mixin \Eloquent
  */
-class Permission extends EntrustPermission
+class Permission extends Model
 {
     //
 }

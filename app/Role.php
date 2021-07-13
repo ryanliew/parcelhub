@@ -2,7 +2,9 @@
 
 namespace App;
 
-use Zizaco\Entrust\EntrustRole;
+use Illuminate\Database\Eloquent\Model;
+use App\Traits\EntrustRoleTrait;
+use Illuminate\Support\Facades\Config;
 
 /**
  * App\Role
@@ -23,7 +25,12 @@ use Zizaco\Entrust\EntrustRole;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Role whereUpdatedAt($value)
  * @mixin \Eloquent
  */
-class Role extends EntrustRole
+class Role extends Model
 {
-    //
+    use EntrustRoleTrait;
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+        $this->table = Config::get('entrust.roles_table');
+    }
 }

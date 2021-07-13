@@ -91,10 +91,12 @@ class PaymentController extends Controller
     }
 
     public function purchase(Request $request) {
+        $settings = Settings::all();
+        $rental_duration = $settings->filter(function($value){return $value->setting_key == 'rental_duration';})->first()->setting_value;
 
         $this->validate($request, [
             'payment_slip' => 'required|image',
-            'rental_duration' => 'bail|required|integer|min:' . Settings::get('rental_duration')
+            'rental_duration' => 'bail|required|integer|min:' . $rental_duration
         ]);
 
         try {

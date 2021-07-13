@@ -137,11 +137,13 @@ class ReturnOrderController extends Controller
             return redirect()->back()->withErrors("You have exceeded your lot limit.");
         }
         // Check for days before order
-        if($compare->diffInDays($now) < Settings::get('days_before_order') ){
+        $settings = Settings::all();
+        $days_before_order = $settings->filter(function($value){ return $value->setting_key == 'days_before_order'; })->first()->setting_value;
+        if($compare->diffInDays($now) < $days_before_order ){
             if(request()->wantsJson()) {
-                return response(json_encode(array('arrival_date' => ['Inbound must be created '.Settings::get('days_before_order').' day(s) before.'])), 422);
+                return response(json_encode(array('arrival_date' => ['Inbound must be created '.$days_before_order.' day(s) before.'])), 422);
             }
-            return redirect()->back()->withErrors("Inbound must be created before ".Settings::get('days_before_order')." days.");
+            return redirect()->back()->withErrors("Inbound must be created before ".$days_before_order." days.");
         }
         // Everything is ok, create a new inbound
         $inbound = new Inbound();

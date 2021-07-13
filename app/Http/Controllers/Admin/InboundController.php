@@ -148,8 +148,7 @@ class InboundController extends Controller
         $inbound->process_status = $request->process_status;
         $inbound->save();
 
-        if(Entrust::hasRole('admin')) {
-
+    if(auth()->user()->hasRole('admin')) {
             $inbound->user->notify(new InboundStatusUpdateNotification($inbound));
 
         } else {

@@ -8,6 +8,7 @@ use App\Validation\ProductValidator;
 use Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -41,6 +42,10 @@ class AppServiceProvider extends ServiceProvider
         Validator::resolver(function($translator, $data, $rules, $messages, $attribute)
         {
             return new ProductValidator($translator, $data, $rules, $messages, $attribute);
+        });
+
+        Blade::if('role', function ($expression) {
+            return auth()->check() && auth()->user()->hasRole($expression);
         });
     }
 

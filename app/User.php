@@ -5,7 +5,7 @@ namespace App;
 use App\Notifications\AccountApprovalNotification;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Zizaco\Entrust\Traits\EntrustUserTrait;
+use App\Traits\EntrustUserTrait;
 
 /**
  * App\User

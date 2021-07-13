@@ -45,6 +45,6 @@ class ProductHasLot implements Rule
      */
     public function message()
     {
-        return 'Invalid product. Please check your products (:input) and lots.';
+        return 'Invalid product. Please check your products (:input) and lots';
     }
 }

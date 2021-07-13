@@ -20,7 +20,7 @@ class Controller extends BaseController
         $result = $query;
     	if(!empty(request()->sort))
     	{
-            $query->clearOrdersBy();
+            $query->{$query->unions ? 'unionOrders' : 'orders'} = null;
             // handle sorting
             $sorts = explode(",", request()->sort);
 

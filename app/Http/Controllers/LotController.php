@@ -9,7 +9,7 @@ use App\Product;
 use App\Utilities;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Settings;
+use App\Settings;
 
 class LotController extends Controller
 {
@@ -126,6 +126,8 @@ class LotController extends Controller
     {
         $this->validate($request, $this->rules, ['category.required' => 'The category field is required']);
 
+        $settings = Settings::all();
+        $rental_duration = $settings->filter(function($value){return $value->setting_key == 'rental_duration';})->first()->setting_value;
         $lot = new lot;
         $lot->name = $request->name;
         $lot->volume = $request->volume;
@@ -133,7 +135,7 @@ class LotController extends Controller
         $lot->category_id = $request->category;
         $lot->price = $request->price;
         $lot->status = "false";
-        $lot->rental_duration = Settings::get('rental_duration');
+        $lot->rental_duration = $rental_duration;
         $lot->save();
 
         if(request()->wantsJson())
