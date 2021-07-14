@@ -155,7 +155,7 @@ class OutboundController extends Controller
         $outbound->process_status = $request->process_status;
         $outbound->save();
 
-        if(Entrust::hasRole('admin')) {
+        if(auth()->user()->hasRole('admin')) {
 
             $outbound->user->notify(new OutboundStatusUpdateNotification($outbound));
 

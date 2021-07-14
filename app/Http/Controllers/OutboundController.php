@@ -111,7 +111,7 @@ class OutboundController extends Controller
 
         }
 
-        if(\Entrust::hasRole('admin')) {
+        if($user->hasRole('admin')) {
 
             $outbounds = Outbound::processing()->get();
             return view('outbound.admin')->with('outbounds', $outbounds);
@@ -424,7 +424,7 @@ class OutboundController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        
     }
 
     /**
