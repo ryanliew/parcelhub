@@ -83,13 +83,17 @@
 </template>
 
 <script>
-	import bulmaSteps from 'bulma-extensions/bulma-steps/dist/bulma-steps.min.js';
+  import "vue2-dropzone/dist/vue2Dropzone.min.css";
 	import vue2Dropzone from 'vue2-dropzone';
 
 	export default {
 		props: [''],
 
 		components: { vue2Dropzone },
+
+    mounted() {
+      bulmaSteps.attach();
+    },
 
 		data() {
 			return {
