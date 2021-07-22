@@ -53,6 +53,7 @@ Route::get('recalls', 'RecallOrderController@page')->name('recalls');
 Route::get('outbounds', 'OutboundController@page')->name('outbounds');
 Route::get('purchase', 'PaymentController@page')->name('payment');
 Route::get('users', 'UserController@page')->name('users');
+Route::get('branches', 'BranchController@page')->name('branches')->middleware('role:superadmin');
 Route::get('profile', 'UserController@page')->name('profile');
 Route::get('customers', 'CustomerController@page')->name('customers');
 Route::get('dashboard', 'AdminController@page')->name('dashboard');
@@ -118,6 +119,7 @@ Route::group(['prefix' => 'internal'], function() {
 	Route::get('categories', 'CategoryController@index');
 	Route::get('lots', 'LotController@index');
 	Route::get('couriers', 'CourierController@index');
+	Route::get('branches', 'BranchController@index');
 	Route::get('products/admin/selector/{id}', 'ProductController@adminProduct');
 	Route::get('products/selector', 'ProductController@selector');
 	Route::get('products', 'ProductController@index');
@@ -183,11 +185,21 @@ Route::group(['prefix' => 'admin'], function() {
 	});
 });
 
-Route::group(['middleware' => ['auth', 'role:admin']], function () {
+Route::group(['middleware' => ['role:admin']], function () {
     Route::group(['prefix' => 'setting'], function() {
         Route::get('index', 'SettingsController@index')->name('setting.index');
         Route::post('update', 'SettingsController@update')->name('setting.update');
     });
+});
+
+Route::group(['middleware' => ['role:superadmin']], function () {
+	Route::group(['prefix' => 'branches'], function(){
+		Route::post('store', 'BranchController@store');
+		Route::get('access/{branch}', 'BranchController@show');
+		Route::post('access/edit', 'BranchController@edit');
+		Route::post('update', 'BranchController@update');
+		Route::get('delete/{id}', 'BranchController@destroy');
+	});
 });
 
 Route::group(['prefix' => 'outbound'], function() {

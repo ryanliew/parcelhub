@@ -66,6 +66,10 @@ class Lot extends Model
         return $this->belongsToMany('App\Payment');
     }
 
+    public function branch() {
+        return $this->belongsTo('App\Branch');
+    }
+
     public function setVolumeAttribute($value)
     {
         return $this->attributes['volume'] = Utilities::convertMeterCubeToCentimeterCube($value);

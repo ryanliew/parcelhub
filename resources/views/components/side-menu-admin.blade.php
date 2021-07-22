@@ -36,6 +36,13 @@
                 Users
             </a>
         </li>
+        @role('superadmin')
+        <li>
+            <a @if( url()->current() == route('branches') ) class="is-active" @endif href="{{ route('branches') }}">
+                Branches
+            </a>
+        </li>
+        @endrole
     </ul>
 
     <p class="menu-label">

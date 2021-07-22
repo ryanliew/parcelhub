@@ -16,10 +16,12 @@ window.events = new Vue();
 import VueNoty from 'vuejs-noty';
 import VueEvents from 'vue-events';
 import VueAnimateNumber from 'vue-animate-number';
+import VueListPicker from "vue-list-picker";
 
 Vue.use(VueNoty);
 Vue.use(VueEvents);
 Vue.use(VueAnimateNumber);
+Vue.use(VueListPicker);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -48,6 +50,7 @@ Vue.component('ProductDetailRow', require('./details/ProductDetailRow.vue'));
 Vue.component('CategoriesActions', require('./actions/CategoriesActions.vue'));
 Vue.component('LotsActions', require('./actions/LotsActions.vue'));
 Vue.component('CouriersActions', require('./actions/CouriersActions.vue'));
+Vue.component('BranchesActions', require('./actions/BranchesActions.vue'));
 Vue.component('ProductsActions', require('./actions/ProductsActions.vue'));
 Vue.component('InboundsActions', require('./actions/InboundsActions.vue'));
 Vue.component('OutboundsActions', require('./actions/OutboundsActions.vue'));
@@ -75,6 +78,7 @@ Vue.component('returns-page', require('./pages/Returns.vue'));
 Vue.component('recalls-page', require('./pages/Recalls.vue'));
 Vue.component('payments-page', require('./pages/Payments.vue'));
 Vue.component('users-page', require('./pages/Users.vue'));
+Vue.component('branches-page', require('./pages/Branches.vue'));
 Vue.component('dashboard-page', require('./pages/Dashboard.vue'));
 Vue.component('settings-page', require('./pages/Settings.vue'));
 Vue.component('customers-page', require('./pages/Customers.vue'));

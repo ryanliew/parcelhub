@@ -118,6 +118,10 @@ class User extends Authenticatable
         return $this->belongsTo('App\User', 'parent_id');
     }
 
+    public function branches() {
+        return $this->hasMany('App\Branch', 'accessibilities')->withTimestamps();
+    }
+
     public function scopeAdmin($query) {
         return $query->whereHas('roles', function ($query) {
             $query->where('name', '=', 'admin');

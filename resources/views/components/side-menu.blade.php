@@ -1,4 +1,4 @@
-@role('admin')
+@role(['admin', 'superadmin'])
 	@include('components.side-menu-admin')
 @endrole
 

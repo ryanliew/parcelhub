@@ -42,7 +42,7 @@ class CourierController extends Controller
 
         $couriers = courier::where('status', 'true')->get();
 
-        return view('courier.index')->with('couriers', $couriers);
+        return view('index')->with('couriers', $couriers);
     }
 
     /**
