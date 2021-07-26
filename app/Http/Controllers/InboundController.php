@@ -63,11 +63,28 @@ class InboundController extends Controller
 
             $query = $user->inbounds()->with('products', 'products_with_lots.lots');
 
-            if($user->hasRole('admin'))
+            if($user->hasRole('superadmin') || $user->hasRole('admin'))
                 $query = Inbound::with('products', 'products_with_lots.lots');
             elseif($user->hasRole('subuser'))
                 $query = $user->parent->inbounds()->with('products', 'products_with_lots.lots');
+            
 
+            if($user->hasRole('admin')) {
+                return Controller::VueTableListResult($query->select('arrival_date',
+                                                                'total_carton',
+                                                                'type',
+                                                                'process_status',
+                                                                'inbounds.id as id',
+                                                                'users.name as customer',
+                                                                'inbounds.created_at as created_at'
+                                                                )
+                                                            ->where('inbounds.type', 'inbound')
+                                                            ->leftJoin('users', 'user_id', '=', 'users.id')
+                                                            ->join('branches', 'branches.id', '=', 'branch_id')
+                                                            ->join('accessibilities', 'accessibilities.branch_id', '=', 'branches.id')
+                                                            ->where('accessibilities.user_id', $user->id)
+                                                            ->orderBy('arrival_date', 'desc'));
+            }
             return Controller::VueTableListResult($query->select('arrival_date',
                                                                 'total_carton',
                                                                 'type',
@@ -192,13 +209,31 @@ class InboundController extends Controller
             }
             return redirect()->back()->withErrors("Inbound must be created before ".$days_before_order." days.");
         }
+
+        //Check whether selected a branch
+        if($request->selectedBranch == null) {
+            if(request()->wantsJson()) {
+                return response(json_encode(array('selectedBranch' => ['Inbound must have a branch'])), 422);
+            }
+            return redirect()->back()->withErrors("Inbound must have a branch.");
+        }
+        else {
+            $lots = lot::where('branch_id', $request->selectedBranch)->get();
+            if(!$lots) {
+                if(request()->wantsJson()) {
+                    return response(json_encode(array('selectedBranch' => ['Lot for this branch does not exist. Please select another branch.'])), 422);
+                }
+                return redirect()->back()->withErrors("Lot for this branch does not exist. Please select another branch.");
+            }
+        }
         // Everything is ok, create a new inbound
         $inbound = new Inbound();
         $inbound->user_id = $auth->id;
         $inbound->arrival_date = $request->arrival_date;
         $inbound->total_carton = $request->total_carton;
+        $inbound->branch_id = $request->selectedBranch;
         $inbound->status = "true";
-        $inbound->save();
+        // $inbound->save();
         // Insert products into many to many table
         foreach($products as $key => $product){
             $inbound->products()->attach($key, ['quantity' => $product["quantity"], 

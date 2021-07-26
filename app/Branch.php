@@ -13,4 +13,8 @@ class Branch extends Model
     public function users() {
         return $this->belongsToMany('App\User', 'accessibilities')->withTimestamps();
     }
+
+    public function inbounds() {
+        return $this->hasMany('App\Inbound');
+    }
 }

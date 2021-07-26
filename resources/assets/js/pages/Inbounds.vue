@@ -93,6 +93,17 @@
 								</text-input>
 							</div>
 				        </div>
+						<div class="col" style="margin-bottom:10px; width: 50%">
+								<selector-input
+								v-model="selected_branch"
+									label="Branch" 
+									:required="true"
+									:potentialData="branchesOptions"
+									name="branch"
+									:editable="true"
+									placeholder="Select a branch"
+									:error="form.errors.get('selectedBranch')">></selector-input>
+						</div>
 			          	<div class="products-list">
 			          		<table class="table is-fullwidth responsive">
 			          			<thead>
@@ -188,13 +199,14 @@
 
 <script>
 	import DateTimeInput from '../components/DateTimeInput.vue';
+import SelectorInput from '../components/SelectorInput.vue';
 	import TableView from '../components/TableView.vue';
 	import Inbound from '../objects/Inbound.vue';
 
 	export default {
 		props: ['can_manage', 'can_edit'],
 
-		components: { TableView, Inbound, DateTimeInput },
+		components: { TableView, Inbound, DateTimeInput, SelectorInput },
 
 		data() {
 			return {
@@ -205,10 +217,13 @@
 				form: new Form({
 					arrival_date: '',
 					total_carton: '',
+					selectedBranch: '',
 					products: []
 				}),
+				selected_branch: '',
 				isDeleting: false,
 				productsOptions: [],
+				branchesOptions: [],
 				isViewing: false,
 				errorForProducts: '',
 				productRows: []
@@ -223,6 +238,7 @@
 			}
 			this.getProducts();
 			this.$events.on('viewInbound', data => this.view(data));
+			this.getBranches();
 		},
 
 		methods: {
@@ -230,11 +246,21 @@
 				axios.get('internal/products/selector')
 					.then(response => this.setProducts(response));
 			},
-
+			getBranches() {
+				axios.get('internal/branches/selector')
+					.then(response => this.setBranches(response));
+			},
 			setProducts(response) {
 				this.productsOptions = response.data;
 			},
-
+			setBranches(response) {
+				this.branchesOptions = response.data.map(branches =>{
+					let obj = {};
+					obj['label'] = branches.branch_name;
+					obj['value'] = branches.id;
+					return obj;
+				});
+			},
 			addRow() {
 				this.productRows.push({ product: null, quantity: 0, expiry_date: '', remark: ''});
 				this.clearProductErrors();
@@ -246,9 +272,12 @@
 			},
 
 			submit() {
-				
 				this.processProduct();
-
+				if(!this.selectedInbound) {
+					if(this.selected_branch != null) {
+						this.form.selectedBranch = this.selected_branch.value;
+					}
+				}
 				this.form.post(this.action)
 					.then(data => this.onSuccess())
 					.catch(error => this.onError(error));

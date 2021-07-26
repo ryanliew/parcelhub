@@ -168,6 +168,17 @@
 													:error="form.errors.get('courier_id')">
 							</selector-input>
 			          	</div>
+						<div class="field">
+							<selector-input v-model="selected_branch" :defaultData="selected_branch"
+													label="Branch" 
+													:required="true"
+													:potentialData="branchesOptions"
+													name="branch"
+													:editable="true"
+													placeholder="Select a branch"
+													:error="form.errors.get('selectedBranch')">
+							</selector-input>
+			          	</div>
 						
 						<div class="columns">
 				          	<div class="column is-narrow">
@@ -439,6 +450,7 @@
 					insurance: '',
 					amount_insured: '0',
 					courier_id: '',
+					selectedBranch: '',
 					outbound_products: [],
 					invoice_slip: '',
 					payer_gst_vat: '',
@@ -450,6 +462,7 @@
 					is_malaysia: false,
 				}),
 				isDeleting: false,
+				selected_branch: '',
 				errorForProducts: '',
 				productRows: [],
 				selectedCourier: false,
@@ -457,6 +470,7 @@
 				couriersOptions: [],
 				productsOptions: [],
 				customersOptions: [],
+				branchesOptions: [],
 				isViewing: false,
 				isCreating: false,
 				isMalaysiaData: true,
@@ -468,6 +482,7 @@
 
 		mounted() {
 			this.getProducts();
+			this.getBranches();
 			this.$events.on('viewOutbound', data => this.view(data));
 		},
 
@@ -480,10 +495,23 @@
 				axios.get('internal/products/selector')
 					.then(response => this.setProducts(response));
 			},
+			getBranches() {
+				axios.get('internal/branches/selector')
+					.then(response => this.setBranches(response));
+			},
 
 			setProducts(response) {
 				this.productsOptions = response.data;
 				this.getCouriers();
+			},
+
+			setBranches(response) {
+				this.branchesOptions = response.data.map(branches =>{
+					let obj = {};
+					obj['label'] = branches.branch_name;
+					obj['value'] = branches.id;
+					return obj;
+				});
 			},
 
 			getCustomers() {
@@ -579,7 +607,11 @@
 				this.processProduct();
 
 				this.form.is_malaysia = this.isMalaysiaData;
-
+				if(!this.selectedoutbound) {
+					if(this.selected_branch != null) {
+						this.form.selectedBranch = this.selected_branch.value;
+					}
+				}
 				this.form.post(this.action)
 					.then(data => this.onSuccess())
 					.catch(error => this.onError(error));

@@ -65,7 +65,7 @@ class ProductController extends Controller
                 $user = $user->parent;
             }
 
-            if($user->hasRole('admin'))
+            if($user->hasRole('superadmin') || $user->hasRole('admin'))
                 return Controller::VueTableListResult(Product::with(["inbounds", "lots", "outbounds", "adjustments"])->select('products.picture as picture',
                                         'products.sku as sku',
                                         'products.id as id',

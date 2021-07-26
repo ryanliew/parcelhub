@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Branch;
 use App\Role;
+use App\Lot;
 use App\Accessibility;
 use Illuminate\Http\Request;
 
@@ -160,5 +161,15 @@ class BranchController extends Controller
         }
 
         return redirect()->back()->withSuccess($branch->branch_name . ' deleted successfully.');
+    }
+    public function selector() {
+        $user = auth()->user();
+
+        $branch = Branch::select('branches.id', 'branches.codename', 'branches.branch_name')
+                        ->leftJoin('lots' , 'lots.branch_id', '=', 'branches.id')
+                        ->where('lots.user_id', $user->id)
+                        ->get();
+
+       return $branch;
     }
 }

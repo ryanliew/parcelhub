@@ -120,6 +120,7 @@ Route::group(['prefix' => 'internal'], function() {
 	Route::get('lots', 'LotController@index');
 	Route::get('couriers', 'CourierController@index');
 	Route::get('branches', 'BranchController@index');
+	Route::get('branches/selector', 'BranchController@selector');
 	Route::get('products/admin/selector/{id}', 'ProductController@adminProduct');
 	Route::get('products/selector', 'ProductController@selector');
 	Route::get('products', 'ProductController@index');

@@ -48,6 +48,10 @@ class Inbound extends Model
     	return $this->belongsTo('App\User');
     }
 
+    public function branch(){
+        return $this->belongsTo('App\Branch');
+    }
+
     public function products(){
     	return $this->belongsToMany('App\Product')->withPivot('quantity', 'id', 'expiry_date', 'quantity_received', 'remark')->withTimestamps();
     }

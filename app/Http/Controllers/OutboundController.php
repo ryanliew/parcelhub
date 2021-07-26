@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\User;
 use App\Courier;
+use App\Lot;
 use App\Notifications\OutboundCreatedNotification;
 use App\Notifications\Admin\OutboundCreatedNotification as AdminOutboundCreatedNotification;
 use App\Outbound;
@@ -66,7 +67,7 @@ class OutboundController extends Controller
                 $user = $user->parent;
             }
 
-            if($user->hasRole('admin'))
+            if($user->hasRole('superadmin'))
                 
                 return Controller::VueTableListResult( Outbound::with('tracking_numbers')
                                                                 ->select('outbounds.id as id',
@@ -88,6 +89,30 @@ class OutboundController extends Controller
                                                                 ->leftJoin('couriers', 'courier_id', '=', 'couriers.id')
                                                                 ->leftJoin('users', 'user_id', '=', 'users.id')
                                                                 ->orderBy('outbounds.created_at', 'desc') );
+            elseif($user->hasRole('admin')) 
+                return Controller::VueTableListResult( Outbound::with('tracking_numbers')
+                    ->select('outbounds.id as id',
+                        'amount_insured',
+                        'process_status',
+                        'couriers.name as courier',
+                        'outbounds.created_at',
+                        'outbounds.recipient_name',
+                        'outbounds.recipient_address',
+                        'outbounds.recipient_address_2',
+                        'outbounds.recipient_phone',
+                        'outbounds.recipient_state',
+                        'outbounds.recipient_country',
+                        'outbounds.recipient_postcode',
+                        'users.name as customer',
+                        'outbounds.type as type'
+                        )
+                    ->where('outbounds.type', 'outbound')
+                    ->leftJoin('couriers', 'courier_id', '=', 'couriers.id')
+                    ->leftJoin('users', 'user_id', '=', 'users.id')
+                    ->join('branches', 'branches.id', '=', 'branch_id')
+                    ->join('accessibilities', 'accessibilities.branch_id', '=', 'branches.id')
+                    ->where('accessibilities.user_id', $user->id)
+                    ->orderBy('outbounds.created_at', 'desc') );
             else
                 return Controller::VueTableListResult( $user->outbounds()
                                                             ->with('tracking_numbers')
@@ -238,6 +263,7 @@ class OutboundController extends Controller
             'recipient_state' => 'required',
             'recipient_country' => 'required',
             'courier_id' => 'required',
+            'selectedBranch' => 'required',
             'amount_insured' => 'required_if:insurance,==,1|numeric|min:0',
             'outbound_products' => 'required',
             'invoice_slip' => 'nullable|mimes:jpeg,png,pdf',
@@ -255,7 +281,7 @@ class OutboundController extends Controller
 
         try {
             $outboundProducts = json_decode($request['outbound_products'], true);
-
+ 
             $json_validator = Validator::make(
                 ['outbound_products' => $outboundProducts],
                 ['outbound_products.*' => 'bail|product_exist|product_stock']
@@ -285,12 +311,37 @@ class OutboundController extends Controller
                 }
             }
             
+            //Check whether selected a branch
+            if($request->selectedBranch == null) {
+                if(request()->wantsJson()) {
+                    return response(json_encode(array('selectedBranch' => ['Inbound must have a branch'])), 422);
+                }
+                return redirect()->back()->withErrors("Inbound must have a branch.");
+            }
+            //Check lot products
+            // $lots = lot::where('branch_id', $request->selectedBranch)->get();
+            // foreach($lots as $lot){
+            //    foreach($outboundProducts as $outboundProduct) {
+            //        dd($outboundProduct);
+            //        $lot_product = $lot->products()->where('product_id' , $outboundProduct['id'])->get();
+            //        $product = product::find($outboundProduct['id']);
+            //        if($lot_product) {
+            //             $lots_product = $lot->check_can_deduct_product($product, $outboundProduct['quantity']);
+            //             if($lots_product == false) {
+            //                 if(request()->wantsJson()) {
+            //                     return response(json_encode(array('outbound_products' => ['Invalid outbounds quantity!'])), 422);
+            //                 }
+            //             }                
+            //        }
+            //    }
+            // }
 
             $outbound = new Outbound($request->except(['business', 'is_malaysia']));
             $outbound->insurance = request()->has('insurance');
             
             $outbound->amount_insured = $outbound->insurance ? request()->amount_insured : 0;
             $outbound->user_id = $user->id;
+            $outbound->branch_id = $request->selectedBranch;
             $outbound->is_business = $request->business == "true" ? true : false;
             $outbound->status = 'true';
             $outbound->process_status = 'pending';
@@ -316,7 +367,6 @@ class OutboundController extends Controller
                     $outbound->invoice_slip = $file->store('public');
                 }
             } 
-            $outbound->save();
 
             foreach ($outboundProducts as $outboundProduct) {
                 $product = $user->products()
@@ -361,6 +411,7 @@ class OutboundController extends Controller
                     }
                 }
             }
+            $outbound->save();
             User::admin()->first()->notify(new AdminOutboundCreatedNotification());
             $user->notify(new OutboundCreatedNotification($outbound));
 
