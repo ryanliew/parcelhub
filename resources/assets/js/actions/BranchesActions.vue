@@ -17,14 +17,14 @@
                     <span>Access</span>
                 </button>
             </p>
-            <p class="control">
+            <!-- <p class="control">
                 <button class="button is-danger" @click="itemAction('delete', rowData, rowIndex)">
                     <span class="icon">
                         <i class="fa fa-times-circle"></i>
                     </span>
                     <span>Delete</span>
                 </button>
-            </p>
+            </p> -->
         </div>
     </div>
 </template>

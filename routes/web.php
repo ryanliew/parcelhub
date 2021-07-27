@@ -41,29 +41,30 @@ Route::group(['prefix' => 'user/account/'], function() {
 
 // 	return redirect("/dashboard");
 // });
-
-// Pages route
-Route::get('couriers', 'CourierController@page')->name('couriers');
-Route::get('lots/categories', 'CategoryController@page')->name('lots.categories');
-Route::get('lots', 'LotController@page')->name('lots');
-Route::get('products', 'ProductController@page')->name('products');
-Route::get('inbounds', 'InboundController@page')->name('inbounds');
-Route::get('returns', 'ReturnOrderController@page')->name('returns');
-Route::get('recalls', 'RecallOrderController@page')->name('recalls');
-Route::get('outbounds', 'OutboundController@page')->name('outbounds');
-Route::get('purchase', 'PaymentController@page')->name('payment');
-Route::get('users', 'UserController@page')->name('users');
-Route::get('branches', 'BranchController@page')->name('branches')->middleware('role:superadmin');
-Route::get('profile', 'UserController@page')->name('profile');
-Route::get('customers', 'CustomerController@page')->name('customers');
-Route::get('dashboard', 'AdminController@page')->name('dashboard');
-Route::get('outbounds/bulk', 'OutboundController@page_bulk')->name('outbounds.bulk');
-Route::get('products/excel', 'ProductController@page_bulk')->name('products.excel');
-Route::get('outbounds/excel', 'OutboundController@page_excel')->name('outbounds.excel');
-Route::get('inbounds/excel', 'InboundController@page_excel')->name('inbounds.excel');
-Route::post('lots/products/update', 'LotController@editStock');
-Route::get('subusers', 'SubuserController@page')->name('subusers');
-Route::get('reports', 'ReportController@page')->name('reports');
+Route::group(['middleware' => 'auth'], function(){
+	// Pages route
+	Route::get('couriers', 'CourierController@page')->name('couriers');
+	Route::get('lots/categories', 'CategoryController@page')->name('lots.categories');
+	Route::get('lots', 'LotController@page')->name('lots');
+	Route::get('products', 'ProductController@page')->name('products');
+	Route::get('inbounds', 'InboundController@page')->name('inbounds');
+	Route::get('returns', 'ReturnOrderController@page')->name('returns');
+	Route::get('recalls', 'RecallOrderController@page')->name('recalls');
+	Route::get('outbounds', 'OutboundController@page')->name('outbounds');
+	Route::get('purchase', 'PaymentController@page')->name('payment');
+	Route::get('users', 'UserController@page')->name('users');
+	Route::get('branches', 'BranchController@page')->name('branches')->middleware('role:superadmin');
+	Route::get('profile', 'UserController@page')->name('profile');
+	Route::get('customers', 'CustomerController@page')->name('customers');
+	Route::get('dashboard', 'AdminController@page')->name('dashboard');
+	Route::get('outbounds/bulk', 'OutboundController@page_bulk')->name('outbounds.bulk');
+	Route::get('products/excel', 'ProductController@page_bulk')->name('products.excel');
+	Route::get('outbounds/excel', 'OutboundController@page_excel')->name('outbounds.excel');
+	Route::get('inbounds/excel', 'InboundController@page_excel')->name('inbounds.excel');
+	Route::post('lots/products/update', 'LotController@editStock');
+	Route::get('subusers', 'SubuserController@page')->name('subusers');
+	Route::get('reports', 'ReportController@page')->name('reports');
+});
 
 Route::group(['prefix' => 'report'], function() {
 	Route::get('stock', 'ReportController@stockPage');

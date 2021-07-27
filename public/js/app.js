@@ -73822,21 +73822,6 @@ var render = function() {
           },
           [_vm._m(1), _vm._v(" "), _c("span", [_vm._v("Access")])]
         )
-      ]),
-      _vm._v(" "),
-      _c("p", { staticClass: "control" }, [
-        _c(
-          "button",
-          {
-            staticClass: "button is-danger",
-            on: {
-              click: function($event) {
-                return _vm.itemAction("delete", _vm.rowData, _vm.rowIndex)
-              }
-            }
-          },
-          [_vm._m(2), _vm._v(" "), _c("span", [_vm._v("Delete")])]
-        )
       ])
     ])
   ])
@@ -73856,14 +73841,6 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("span", { staticClass: "icon" }, [
       _c("i", { staticClass: "fa fa-unlock" })
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("span", { staticClass: "icon" }, [
-      _c("i", { staticClass: "fa fa-times-circle" })
     ])
   }
 ]
@@ -92453,7 +92430,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 	data: function data() {
 		return {
-			fields: [{ name: 'codename', sortField: 'codename', title: 'Code Name' }, { name: 'branch_name', sortField: 'branch_name', title: 'Branch Name' }, { name: 'branch_phone', sortField: 'branch_phone', title: 'Phone' }, { name: 'branch_address', sortField: 'branch_address', title: 'Address' }, { name: 'branch_state', sortField: 'branch_state', title: 'State' }, { name: 'branch_postcode', sortField: 'branch_postcode', title: 'Postcode' }, { name: 'branch_country', sortField: 'branch_country', title: 'Country' }, { name: '__component:branches-actions', title: 'Actions' }],
+			fields: [{ name: 'codename', sortField: 'codename', title: 'Code Name' }, { name: 'branch_name', sortField: 'branch_name', title: 'Branch Name' }, { name: 'branch_address', sortField: 'branch_address', title: 'Address' }, { name: '__component:branches-actions', title: 'Actions' }],
 			selectedBranches: '',
 			dialogActive: false,
 			form: new Form({

@@ -139,11 +139,7 @@
                 fields:[
                     {name: 'codename', sortField: 'codename', title: 'Code Name'},
                     {name: 'branch_name', sortField: 'branch_name', title: 'Branch Name'},
-                    {name: 'branch_phone', sortField: 'branch_phone', title: 'Phone'},
                     {name: 'branch_address', sortField: 'branch_address', title: 'Address'},
-                    {name: 'branch_state', sortField: 'branch_state', title: 'State'},
-                    {name: 'branch_postcode', sortField: 'branch_postcode', title: 'Postcode'},
-                    {name: 'branch_country', sortField: 'branch_country', title: 'Country'},
                     {name: '__component:branches-actions', title: 'Actions'},
                 ],
                 selectedBranches: '',
