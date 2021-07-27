@@ -92420,6 +92420,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 
 
@@ -92607,6 +92608,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			} else if (this.type == 'Delete') {
 				return "Confirm delete this branch?";
 			}
+		},
+		searchables: function searchables() {
+			var searchable = "branches.codename,branch_name,branch_address";
+
+			return searchable;
 		}
 	}
 });
@@ -92624,28 +92630,30 @@ var render = function() {
     [
       _c("div", { staticClass: "card" }, [
         _c("div", { staticClass: "card-header" }, [
-          _vm._m(0),
-          _vm._v(" "),
-          _c("div", { staticClass: "level-right" }, [
-            _c("div", { staticClass: "level-item" }, [
-              _c(
-                "button",
-                {
-                  staticClass: "button is-primary",
-                  on: {
-                    click: function($event) {
-                      return _vm.modalOpen()
+          _c("div", { staticClass: "card-header-title level" }, [
+            _vm._m(0),
+            _vm._v(" "),
+            _c("div", { staticClass: "level-right" }, [
+              _c("div", { staticClass: "level-item" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "button is-primary",
+                    on: {
+                      click: function($event) {
+                        return _vm.modalOpen()
+                      }
                     }
-                  }
-                },
-                [
-                  _c("i", { staticClass: "fa fa-plus-circle" }),
-                  _vm._v(" "),
-                  _c("span", { staticClass: "pl-5" }, [
-                    _vm._v("Create new Branch")
-                  ])
-                ]
-              )
+                  },
+                  [
+                    _c("i", { staticClass: "fa fa-plus-circle" }),
+                    _vm._v(" "),
+                    _c("span", { staticClass: "pl-5" }, [
+                      _vm._v("Create new Branch")
+                    ])
+                  ]
+                )
+              ])
             ])
           ])
         ]),
@@ -92656,7 +92664,11 @@ var render = function() {
           [
             _c("table-view", {
               ref: "branches",
-              attrs: { fields: _vm.fields, url: "/internal/branches" }
+              attrs: {
+                fields: _vm.fields,
+                searchables: _vm.searchables,
+                url: "/internal/branches"
+              }
             })
           ],
           1
@@ -92935,11 +92947,9 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "card-header-title level" }, [
-      _c("div", { staticClass: "level-left" }, [
-        _c("div", { staticClass: "level-item" }, [
-          _vm._v("\n\t\t\t\t\t\t\tBranches\n\t\t\t\t\t\t")
-        ])
+    return _c("div", { staticClass: "level-left" }, [
+      _c("div", { staticClass: "level-item" }, [
+        _vm._v("\n\t\t\t\t\t\t\tBranches\n\t\t\t\t\t\t")
       ])
     ])
   }

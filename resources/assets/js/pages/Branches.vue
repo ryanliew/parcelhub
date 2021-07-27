@@ -8,19 +8,20 @@
 							Branches
 						</div>
 					</div>
-                </div>
-                <div class="level-right">
-					<div class="level-item">
-						<button class="button is-primary" @click="modalOpen()">
-							<i class="fa fa-plus-circle"></i>
-							    <span class="pl-5">Create new Branch</span>
-							</button>
+					<div class="level-right">
+						<div class="level-item">
+							<button class="button is-primary" @click="modalOpen()">
+								<i class="fa fa-plus-circle"></i>
+									<span class="pl-5">Create new Branch</span>
+								</button>
+						</div>
 					</div>
 				</div>
             </div>
             <div class="card-content">
 				<table-view ref="branches" 
-							:fields="fields" 
+							:fields="fields"
+							:searchables="searchables" 
 							url="/internal/branches">	
 				</table-view>
 			</div>
@@ -310,6 +311,11 @@
 				else if(this.type == 'Delete') {
 					return "Confirm delete this branch?";
 				}
+			},
+			searchables() {
+				let searchable = "branches.codename,branch_name,branch_address";
+
+				return searchable;
 			}
 
         }
