@@ -39,10 +39,6 @@ class BranchController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -100,7 +96,7 @@ class BranchController extends Controller
      */
     public function edit(Request $request)
     {
-        $branch = branch::find($request->branch_id);
+        $branch = Branch::find($request->branch_id);
         $user_id = json_decode($request->id);
 
         $branch->users()->sync($user_id);
@@ -123,7 +119,7 @@ class BranchController extends Controller
     public function update(Request $request)
     {
         $this->validate($request, $this->rules);
-        $branch = branch::find($request->id);
+        $branch = Branch::find($request->id);
         $branch->codename = $request->codename;
         $branch->branch_name = $request->name;
         $branch->branch_phone = $request->phone;
@@ -151,7 +147,7 @@ class BranchController extends Controller
      */
     public function destroy($id)
     {
-        $branch = branch::find($id);
+        $branch = Branch::find($id);
         $branch->delete();
         Accessibility::where('branch_id' , $id)->delete();
        

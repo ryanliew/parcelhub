@@ -119,7 +119,7 @@ class User extends Authenticatable
     }
 
     public function branches() {
-        return $this->hasMany('App\Branch', 'accessibilities')->withTimestamps();
+        return $this->belongsToMany('App\Branch', 'accessibilities')->withTimestamps();
     }
 
     public function scopeAdmin($query) {

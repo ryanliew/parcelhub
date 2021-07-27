@@ -86,8 +86,8 @@ class ExcelController extends Controller
 
         $count = Outbound::where("updated_at", '>=' , now()->subMinutes(3))->count();
 
-        // User::admin()->first()->notify(new OutboundCreatedNotification());
-        // event(new EventTrigger('outbound'));
+        User::admin()->first()->notify(new OutboundCreatedNotification());
+        event(new EventTrigger('outbound'));
         
         return response()->json(['message' => $count . ' outbound orders created successfully']); 
 
@@ -113,8 +113,8 @@ class ExcelController extends Controller
         if($count > 0)
         {
             $message = $count . ' inbound orders created successfully';
-            // User::admin()->first()->notify(new InboundCreatedNotification());
-            // event(new EventTrigger('inbound'));
+            User::admin()->first()->notify(new InboundCreatedNotification());
+            event(new EventTrigger('inbound'));
         }
         else
         {

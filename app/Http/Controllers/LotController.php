@@ -152,7 +152,7 @@ class LotController extends Controller
 
         $settings = Settings::all();
         $rental_duration = $settings->filter(function($value){return $value->setting_key == 'rental_duration';})->first()->setting_value;
-        $lot = new lot;
+        $lot = new Lot;
         $lot->name = $request->name;
         $lot->volume = $request->volume;
         $lot->left_volume = $lot->volume;

@@ -67039,7 +67039,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			return this.$options.filters.formatUserType(value);
 		},
 		image: function image(value) {
-			return '<figure class="image is-48x48"><img src="http://parcelhub.my/' + value + '"></figure>';
+			return '<figure class="image is-48x48"><img src="/' + value + '"></figure>';
 		},
 		dangerousTag: function dangerousTag(value) {
 			return value === 1 ? '<span class="tag is-danger">Dangerous</span>' : '';
