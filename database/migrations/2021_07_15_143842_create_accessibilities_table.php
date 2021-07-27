@@ -16,7 +16,7 @@ class CreateAccessibilitiesTable extends Migration
         Schema::create('accessibilities', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedInteger('user_id');
-            $table->string('branch_id');
+            $table->unsignedInteger('branch_id');
             $table->timestamps();
         });
     }
