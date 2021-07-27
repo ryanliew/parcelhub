@@ -218,7 +218,7 @@ class InboundController extends Controller
             return redirect()->back()->withErrors("Inbound must have a branch.");
         }
         else {
-            $lots = lot::where('branch_id', $request->selectedBranch)->get();
+            $lots = Lot::where('branch_id', $request->selectedBranch)->get();
             if(!$lots) {
                 if(request()->wantsJson()) {
                     return response(json_encode(array('selectedBranch' => ['Lot for this branch does not exist. Please select another branch.'])), 422);
@@ -233,7 +233,7 @@ class InboundController extends Controller
         $inbound->total_carton = $request->total_carton;
         $inbound->branch_id = $request->selectedBranch;
         $inbound->status = "true";
-        // $inbound->save();
+        $inbound->save();
         // Insert products into many to many table
         foreach($products as $key => $product){
             $inbound->products()->attach($key, ['quantity' => $product["quantity"], 
