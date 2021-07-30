@@ -142,25 +142,8 @@ class InboundImport implements ToCollection, WithStartRow, SkipsEmptyRows, WithV
                 }
             } 
         }
-        $admins = User::admin()->get();
-        $list_of_admin = [];
-        foreach($admins as $admin) {
-            foreach($collection_user as $user){
-                $access = $admin->branches()->where('user_id', $admin->id)->where('branch_id', $user)->get();
-                if($access->count() > 0) {
-                    array_push($list_of_admin, $admin);
-                }
-            }
-        }
-
-        if($list_of_admin != []) {
-            foreach($list_of_admin as $admin) {
-                $admin->notify(new InboundCreatedNotification());
-            }
-        }
-
-        User::superadmin()->first()->notify(new InboundCreatedNotification());
-        event(new EventTrigger('outbound')); 
+        $inbound->notify(new InboundCreatedNotification($inbound), new AdminInboundCreatedNotification());
+        event(new EventTrigger('inbound')); 
     }
 
     public function rules(): array {

@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\User;
 
 /**
  * App\Inbound
@@ -86,5 +87,18 @@ class Inbound extends Model
     public static function PREFIX()
     {
         return 'GRA';
+    }
+
+    public function notify($notification, $adminNotification) {
+
+        $admins = $this->branch->users;
+        
+        foreach($admins as $admin) {
+            $admin->notify($adminNotification);
+        }
+        
+        User::superadmin()->first()->notify($adminNotification);
+
+        auth()->user()->notify($notification);
     }
 }

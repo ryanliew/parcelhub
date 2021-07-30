@@ -423,24 +423,7 @@ class OutboundController extends Controller
                 }
             }
             $outbound->save();
-            $admins = User::admin()->get();
-            $list_of_admin = [];
-            foreach($admins as $admin) {
-                $access = $admin->branches()->where('user_id', $admin->id)->where('branch_id', $request->selectedBranch)->get();
-                if($access->count() > 0) {
-                    array_push($list_of_admin, $admin);
-                }
-            }
-            
-            if($list_of_admin != []) {
-                foreach($list_of_admin as $admin) {
-                    $admin->notify(new AdminOutboundCreatedNotification());
-                }
-            }
-
-            User::superadmin()->first()->notify(new AdminOutboundCreatedNotification());
- 
-            $user->notify(new OutboundCreatedNotification($outbound));
+            $outbound->notify(new OutboundStatusUpdateNotification($outbound));
 
         } catch (\Exception $exception) {
 

@@ -17,4 +17,8 @@ class Branch extends Model
     public function inbounds() {
         return $this->hasMany('App\Inbound');
     }
+
+    public function outbounds() {
+        return $this->hasMany('App\Inbound');
+    }
 }

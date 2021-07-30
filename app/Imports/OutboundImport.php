@@ -144,24 +144,7 @@ class OutboundImport implements ToCollection, WithStartRow, SkipsEmptyRows, With
                 }   
             }
         }
-        $admins = User::admin()->get();
-        $list_of_admin = [];
-        foreach($admins as $admin) {
-            foreach($collection_user as $user){
-                $access = $admin->branches()->where('user_id', $admin->id)->where('branch_id', $user)->get();
-                if($access->count() > 0) {
-                    array_push($list_of_admin, $admin);
-                }
-            }
-        }
-
-        if($list_of_admin != []) {
-            foreach($list_of_admin as $admin) {
-                $admin->notify(new AdminOutboundCreatedNotification());
-            }
-        }
-
-        User::superadmin()->first()->notify(new AdminOutboundCreatedNotification());
+        $outbound->notify(new OutboundStatusUpdateNotification($outbound));
         event(new EventTrigger('outbound'));    
     }
 

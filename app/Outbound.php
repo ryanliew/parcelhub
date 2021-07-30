@@ -3,6 +3,7 @@
 namespace App;
 
 use DB;
+use App\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 
@@ -74,6 +75,10 @@ class Outbound extends Model
 
     public function products() {
         return $this->belongsToMany('App\Product')->withPivot('quantity', 'lot_id', 'remark', 'unit_value', 'total_value', 'weight', 'manufacture_country');
+    }
+
+    public function branch(){
+        return $this->belongsTo('App\Branch');
     }
 
     public function courier() {
@@ -160,6 +165,19 @@ class Outbound extends Model
             $totalPrice += $outboundProduct->pivot->total_value;
         }
         return $totalPrice;
+    }
+
+    public function notify($outboundNotification) {
+
+        $admins = $this->branch->users;
+        
+        foreach($admins as $admin) {
+            $admin->notify($outboundNotification);
+        }
+        
+        User::superadmin()->first()->notify($outboundNotification);
+
+        auth()->user()->notify($outboundNotification);
     }
 
     // Static methods

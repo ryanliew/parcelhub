@@ -327,25 +327,7 @@ class InboundController extends Controller
             $lot->products()->attach($lot_products);
             $lot->propagate_left_volume();
         }
-
-        $admins = User::admin()->get();
-        $list_of_admin = [];
-        foreach($admins as $admin) {
-            $access = $admin->branches()->where('user_id', $admin->id)->where('branch_id', $request->selectedBranch)->get();
-            if($access->count() > 0) {
-                array_push($list_of_admin, $admin);
-            }
-        }
-            
-        if($list_of_admin != []) {
-            foreach($list_of_admin as $admin) {
-                $admin->notify(new AdminInboundCreatedNotification());
-            }
-        }
-
-        User::superadmin()->first()->notify(new AdminInboundCreatedNotification());
-
-        Auth::user()->notify(new InboundCreatedNotification($inbound));
+        $inbound->notify(new InboundCreatedNotification($inbound), new AdminInboundCreatedNotification());
 
         event(new EventTrigger('inbound'));
 
