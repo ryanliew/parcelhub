@@ -162,11 +162,11 @@ class OutboundController extends Controller
         } else {
 
             if($outbound->process_status == 'canceled') {
-
-                User::admin()->first()->notify(new OutboundStatusUpdateNotification($outbound));
+                $outbound->notify(new OutboundStatusUpdateNotification($outbound));
             }
-
-            $outbound->user->notify(new OutboundStatusUpdateNotification($outbound));
+            else{
+                $outbound->user->notify(new OutboundStatusUpdateNotification($outbound));
+            }
         }
 
         if(request()->wantsJson())

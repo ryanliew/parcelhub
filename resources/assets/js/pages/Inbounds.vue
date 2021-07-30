@@ -296,6 +296,7 @@ import SelectorInput from '../components/SelectorInput.vue';
 			},
 
 			view(data) {
+				console.log(data);
 				this.selectedInbound = data;
 				this.isViewing = true;
 			},

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\User;
 use App\Courier;
 use App\Lot;
+use App\Branch;
 use App\Notifications\OutboundCreatedNotification;
 use App\Notifications\Admin\OutboundCreatedNotification as AdminOutboundCreatedNotification;
 use App\Outbound;
@@ -74,6 +75,8 @@ class OutboundController extends Controller
                                                                     'amount_insured',
                                                                     'process_status',
                                                                     'couriers.name as courier',
+                                                                    'branches.codename',
+                                                                    'branches.branch_name',
                                                                     'outbounds.created_at',
                                                                     'outbounds.recipient_name',
                                                                     'outbounds.recipient_address',
@@ -87,6 +90,7 @@ class OutboundController extends Controller
                                                                     )
                                                                 ->where('outbounds.type', 'outbound')
                                                                 ->leftJoin('couriers', 'courier_id', '=', 'couriers.id')
+                                                                ->join('branches', 'outbounds.branch_id' , '=', 'branches.id')
                                                                 ->leftJoin('users', 'user_id', '=', 'users.id')
                                                                 ->orderBy('outbounds.created_at', 'desc') );
             elseif($user->hasRole('admin')) 
@@ -95,6 +99,8 @@ class OutboundController extends Controller
                         'amount_insured',
                         'process_status',
                         'couriers.name as courier',
+                        'branches.codename',
+                        'branches.branch_name',
                         'outbounds.created_at',
                         'outbounds.recipient_name',
                         'outbounds.recipient_address',
@@ -114,12 +120,23 @@ class OutboundController extends Controller
                     ->where('accessibilities.user_id', $user->id)
                     ->orderBy('outbounds.created_at', 'desc') );
             else
+
+                $branches = Branch::select('branches.id')
+                        ->leftJoin('lots' , 'lots.branch_id', '=', 'branches.id')
+                        ->where('lots.user_id', $user->id)
+                        ->get();
+                $array_branch = [];
+                foreach($branches as $branch) {
+                    array_push($array_branch, $branch->id);
+                }
                 return Controller::VueTableListResult( $user->outbounds()
                                                             ->with('tracking_numbers')
                                                             ->select('outbounds.id as id',
                                                                     'amount_insured',
                                                                     'process_status',
                                                                     'couriers.name as courier',
+                                                                    'branches.codename',
+                                                                    'branches.branch_name',
                                                                     'outbounds.created_at',
                                                                     'outbounds.recipient_name',
                                                                     'outbounds.recipient_address',
@@ -131,6 +148,8 @@ class OutboundController extends Controller
                                                                     'outbounds.type as type'
                                                                     )
                                                             ->where('outbounds.type', 'outbound')
+                                                            ->whereIn('outbounds.branch_id', $array_branch)
+                                                            ->join('branches', 'outbounds.branch_id' , '=', 'branches.id')
                                                             ->leftJoin('couriers', 'courier_id', '=', 'couriers.id')
                                                             ->orderBy('outbounds.created_at', 'desc') );
 
@@ -412,8 +431,7 @@ class OutboundController extends Controller
                 }
             }
             $outbound->save();
-            User::admin()->first()->notify(new AdminOutboundCreatedNotification());
-            $user->notify(new OutboundCreatedNotification($outbound));
+            $outbound->notify(new OutboundStatusUpdateNotification($outbound));
 
         } catch (\Exception $exception) {
 
@@ -429,7 +447,7 @@ class OutboundController extends Controller
     public function show($outbound)
     {
         $outbound = Outbound::with(['tracking_numbers', 'courier'])->where('id', $outbound)->first();
-
+        
         return $outbound;
     }
 

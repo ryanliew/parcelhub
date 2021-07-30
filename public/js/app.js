@@ -80412,6 +80412,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			this.$refs.inbounds.refreshTable();
 		},
 		view: function view(data) {
+			console.log(data);
 			this.selectedInbound = data;
 			this.isViewing = true;
 		},
@@ -83740,6 +83741,29 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	props: ['inbound', 'canManage', 'canEdit'],
@@ -84046,6 +84070,350 @@ var render = function() {
                 ])
               ])
             ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "card mt-10" }, [
+            _c("div", { staticClass: "card-header" }, [
+              _c("div", { staticClass: "card-header-title level" }, [
+                _vm._m(0),
+                _vm._v(" "),
+                _vm.canManage &&
+                _vm.inbound.process_status !== "completed" &&
+                _vm.inbound.process_status !== "canceled"
+                  ? _c("div", { staticClass: "level-right" }, [
+                      !_vm.isEditing
+                        ? _c(
+                            "button",
+                            {
+                              staticClass: "button is-primary",
+                              class: _vm.loadingClass,
+                              on: {
+                                click: function($event) {
+                                  return _vm.edit()
+                                }
+                              }
+                            },
+                            [
+                              _c("i", { staticClass: "fa fa-edit" }),
+                              _vm._v(" "),
+                              _c("span", { staticClass: "pl-5" }, [
+                                _vm._v("Edit inbound details")
+                              ])
+                            ]
+                          )
+                        : _c("div", [
+                            _c(
+                              "button",
+                              {
+                                staticClass: "button is-danger",
+                                on: {
+                                  click: function($event) {
+                                    return _vm.onCancel()
+                                  }
+                                }
+                              },
+                              [
+                                _c("i", { staticClass: "fa fa-times" }),
+                                _vm._v(" "),
+                                _c("span", { staticClass: "pl-5" }, [
+                                  _vm._v("Cancel")
+                                ])
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "button",
+                              {
+                                staticClass: "button is-success",
+                                on: {
+                                  click: function($event) {
+                                    return _vm.submitEdit()
+                                  }
+                                }
+                              },
+                              [
+                                _c("i", { staticClass: "fa fa-check" }),
+                                _vm._v(" "),
+                                _c("span", { staticClass: "pl-5" }, [
+                                  _vm._v("Confirm changes")
+                                ])
+                              ]
+                            )
+                          ])
+                    ])
+                  : _vm._e()
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "card-content" }, [
+              _c(
+                "table",
+                { staticClass: "table is-hoverable is-fullwidth responsive" },
+                [
+                  _vm._m(1),
+                  _vm._v(" "),
+                  _c(
+                    "tbody",
+                    [
+                      _vm._l(_vm.inbound.products_with_lots, function(
+                        product_with_lots,
+                        index
+                      ) {
+                        return [
+                          _c("tr", [
+                            _c("td", [
+                              _c("figure", { staticClass: "image is-48x48" }, [
+                                _c("img", {
+                                  attrs: {
+                                    src: _vm.inbound.products[index].picture
+                                  }
+                                })
+                              ])
+                            ]),
+                            _vm._v(" "),
+                            _c("td", {
+                              domProps: {
+                                textContent: _vm._s(
+                                  _vm.inbound.products[index].name
+                                )
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c("td", {
+                              domProps: {
+                                textContent: _vm._s(product_with_lots.quantity)
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c("td", [
+                              _c("div", { staticClass: "tags" }, [
+                                _vm.inbound.products[index].is_dangerous
+                                  ? _c(
+                                      "span",
+                                      { staticClass: "tag is-danger" },
+                                      [_vm._v("Dangerous")]
+                                    )
+                                  : _vm._e(),
+                                _vm._v(" "),
+                                _vm.inbound.products[index].is_fragile
+                                  ? _c(
+                                      "span",
+                                      { staticClass: "tag is-warning" },
+                                      [_vm._v("Fragile")]
+                                    )
+                                  : _vm._e()
+                              ])
+                            ]),
+                            _vm._v(" "),
+                            _c("td", [
+                              _vm._v(
+                                "\n\t\t\t\t\t\t\t\t\t\t\t" +
+                                  _vm._s(product_with_lots.remark) +
+                                  "\n\t\t\t\t\t\t\t\t\t\t"
+                              )
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          _c("tr", { staticClass: "subrow" }, [
+                            _c("th", [_vm._v("Lots")]),
+                            _vm._v(" "),
+                            _c("th", [_vm._v("Quantity")]),
+                            _vm._v(" "),
+                            _c("th", [_vm._v("Received")]),
+                            _vm._v(" "),
+                            _c("th", [_vm._v("Expiry date")]),
+                            _vm._v(" "),
+                            _c("th", [_vm._v("Admin remark")])
+                          ]),
+                          _vm._v(" "),
+                          _vm._l(product_with_lots.lots, function(
+                            lot,
+                            lotindex
+                          ) {
+                            return _c("tr", { staticClass: "subrow" }, [
+                              !_vm.isEditing
+                                ? _c("td", {
+                                    domProps: { textContent: _vm._s(lot.name) }
+                                  })
+                                : _c(
+                                    "td",
+                                    [
+                                      _vm.inboundForm.products[index] &&
+                                      _vm.inboundForm.products[index].lots[
+                                        lotindex
+                                      ]
+                                        ? _c("selector-input", {
+                                            attrs: {
+                                              defaultData:
+                                                _vm.inboundForm.products[index]
+                                                  .lots[lotindex].lot,
+                                              hideLabel: true,
+                                              potentialData: _vm.lotsOptions,
+                                              placeholder: "Select lot",
+                                              name: "products",
+                                              unclearable: true
+                                            },
+                                            model: {
+                                              value:
+                                                _vm.inboundForm.products[index]
+                                                  .lots[lotindex].lot,
+                                              callback: function($$v) {
+                                                _vm.$set(
+                                                  _vm.inboundForm.products[
+                                                    index
+                                                  ].lots[lotindex],
+                                                  "lot",
+                                                  $$v
+                                                )
+                                              },
+                                              expression:
+                                                "inboundForm.products[index].lots[lotindex].lot"
+                                            }
+                                          })
+                                        : _vm._e()
+                                    ],
+                                    1
+                                  ),
+                              _vm._v(" "),
+                              _c("td", [
+                                _vm._v(
+                                  "\n\t\t\t\t\t\t\t\t\t\t\t" +
+                                    _vm._s(lot.pivot.quantity_original) +
+                                    "\n\t\t\t\t\t\t\t\t\t\t"
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c(
+                                "td",
+                                [
+                                  _vm.inboundForm.products[index] &&
+                                  _vm.inboundForm.products[index].lots[lotindex]
+                                    ? _c("text-input", {
+                                        attrs: {
+                                          defaultValue:
+                                            _vm.inboundForm.products[index]
+                                              .lots[lotindex].quantity_received,
+                                          editable:
+                                            _vm.isEditing && _vm.canManage,
+                                          name: "products",
+                                          hideLabel: true,
+                                          required: true,
+                                          type: "number"
+                                        },
+                                        model: {
+                                          value:
+                                            _vm.inboundForm.products[index]
+                                              .lots[lotindex].quantity_received,
+                                          callback: function($$v) {
+                                            _vm.$set(
+                                              _vm.inboundForm.products[index]
+                                                .lots[lotindex],
+                                              "quantity_received",
+                                              $$v
+                                            )
+                                          },
+                                          expression:
+                                            "inboundForm.products[index].lots[lotindex].quantity_received"
+                                        }
+                                      })
+                                    : _vm._e()
+                                ],
+                                1
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "td",
+                                [
+                                  _vm.inboundForm.products[index] &&
+                                  _vm.inboundForm.products[index].lots[lotindex]
+                                    ? _c("text-input", {
+                                        attrs: {
+                                          defaultValue:
+                                            _vm.inboundForm.products[index]
+                                              .lots[lotindex].expiry_date,
+                                          editable: _vm.isEditing,
+                                          hideLabel: true,
+                                          required: false,
+                                          focus: true,
+                                          type: "date"
+                                        },
+                                        model: {
+                                          value:
+                                            _vm.inboundForm.products[index]
+                                              .lots[lotindex].expiry_date,
+                                          callback: function($$v) {
+                                            _vm.$set(
+                                              _vm.inboundForm.products[index]
+                                                .lots[lotindex],
+                                              "expiry_date",
+                                              $$v
+                                            )
+                                          },
+                                          expression:
+                                            "inboundForm.products[index].lots[lotindex].expiry_date"
+                                        }
+                                      })
+                                    : _vm._e()
+                                ],
+                                1
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "td",
+                                [
+                                  _vm.inboundForm.products[index] &&
+                                  _vm.inboundForm.products[index].lots[lotindex]
+                                    ? _c("textarea-input", {
+                                        attrs: {
+                                          defaultValue:
+                                            _vm.inboundForm.products[index]
+                                              .lots[lotindex].remark,
+                                          editable: _vm.isEditing,
+                                          label: "Remark",
+                                          name: "remark",
+                                          type: "text",
+                                          hideLabel: true,
+                                          required: false,
+                                          rows: "0.5",
+                                          cols: "4"
+                                        },
+                                        model: {
+                                          value:
+                                            _vm.inboundForm.products[index]
+                                              .lots[lotindex].remark,
+                                          callback: function($$v) {
+                                            _vm.$set(
+                                              _vm.inboundForm.products[index]
+                                                .lots[lotindex],
+                                              "remark",
+                                              $$v
+                                            )
+                                          },
+                                          expression:
+                                            "inboundForm.products[index].lots[lotindex].remark"
+                                        }
+                                      })
+                                    : _vm._e()
+                                ],
+                                1
+                              )
+                            ])
+                          })
+                        ]
+                      })
+                    ],
+                    2
+                  )
+                ]
+              ),
+              _vm._v(" "),
+              _c("p", {
+                staticClass: "has-text-danger",
+                domProps: {
+                  textContent: _vm._s(_vm.inboundForm.errors.get("products"))
+                }
+              })
+            ])
           ])
         ]),
         _vm._v(" "),
@@ -84053,7 +84421,7 @@ var render = function() {
           _c("div", { staticClass: "card" }, [
             _c("div", { staticClass: "card-header" }, [
               _c("div", { staticClass: "card-header-title level" }, [
-                _vm._m(0),
+                _vm._m(2),
                 _vm._v(" "),
                 _c("div", { staticClass: "level-right" }, [
                   _c("div", { staticClass: "level-item" }, [
@@ -84147,7 +84515,7 @@ var render = function() {
                         1
                       ),
                       _vm._v(" "),
-                      _vm._m(1),
+                      _vm._m(3),
                       _vm._v(" "),
                       _c("div", { staticClass: "is-clearfix" })
                     ]
@@ -84182,351 +84550,36 @@ var render = function() {
                       : _vm._e()
                   ])
             ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "card mt-10" }, [
+            _vm._m(4),
+            _vm._v(" "),
+            _c("div", { staticClass: "card-content" }, [
+              _c("p", { staticClass: "heading" }, [
+                _vm._v("\n\t\t\t\t\t\t\tBranch Code\n\t\t\t\t\t\t")
+              ]),
+              _vm._v(
+                "\n\t\t\t\t\t\t" +
+                  _vm._s(_vm.inbound.codename) +
+                  "\n\t\t\t\t\t\t\n\t\t\t\t\t\t"
+              ),
+              _c("hr"),
+              _vm._v(" "),
+              _c("p", { staticClass: "heading" }, [
+                _vm._v("\n\t\t\t\t\t\t\tBranch Name\n\t\t\t\t\t\t")
+              ]),
+              _vm._v(
+                "\n\t\t\t\t\t\t" +
+                  _vm._s(_vm.inbound.branch_name) +
+                  "\n\t\t\t\t\t"
+              )
+            ])
           ])
         ])
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "card" }, [
-        _c("div", { staticClass: "card-header" }, [
-          _c("div", { staticClass: "card-header-title level" }, [
-            _vm._m(2),
-            _vm._v(" "),
-            _vm.canManage &&
-            _vm.inbound.process_status !== "completed" &&
-            _vm.inbound.process_status !== "canceled"
-              ? _c("div", { staticClass: "level-right" }, [
-                  !_vm.isEditing
-                    ? _c(
-                        "button",
-                        {
-                          staticClass: "button is-primary",
-                          class: _vm.loadingClass,
-                          on: {
-                            click: function($event) {
-                              return _vm.edit()
-                            }
-                          }
-                        },
-                        [
-                          _c("i", { staticClass: "fa fa-edit" }),
-                          _vm._v(" "),
-                          _c("span", { staticClass: "pl-5" }, [
-                            _vm._v("Edit inbound details")
-                          ])
-                        ]
-                      )
-                    : _c("div", [
-                        _c(
-                          "button",
-                          {
-                            staticClass: "button is-danger",
-                            on: {
-                              click: function($event) {
-                                return _vm.onCancel()
-                              }
-                            }
-                          },
-                          [
-                            _c("i", { staticClass: "fa fa-times" }),
-                            _vm._v(" "),
-                            _c("span", { staticClass: "pl-5" }, [
-                              _vm._v("Cancel")
-                            ])
-                          ]
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "button",
-                          {
-                            staticClass: "button is-success",
-                            on: {
-                              click: function($event) {
-                                return _vm.submitEdit()
-                              }
-                            }
-                          },
-                          [
-                            _c("i", { staticClass: "fa fa-check" }),
-                            _vm._v(" "),
-                            _c("span", { staticClass: "pl-5" }, [
-                              _vm._v("Confirm changes")
-                            ])
-                          ]
-                        )
-                      ])
-                ])
-              : _vm._e()
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "card-content" }, [
-          _c(
-            "table",
-            { staticClass: "table is-hoverable is-fullwidth responsive" },
-            [
-              _vm._m(3),
-              _vm._v(" "),
-              _c(
-                "tbody",
-                [
-                  _vm._l(_vm.inbound.products_with_lots, function(
-                    product_with_lots,
-                    index
-                  ) {
-                    return [
-                      _c("tr", [
-                        _c("td", [
-                          _c("figure", { staticClass: "image is-48x48" }, [
-                            _c("img", {
-                              attrs: {
-                                src: _vm.inbound.products[index].picture
-                              }
-                            })
-                          ])
-                        ]),
-                        _vm._v(" "),
-                        _c("td", {
-                          domProps: {
-                            textContent: _vm._s(
-                              _vm.inbound.products[index].name
-                            )
-                          }
-                        }),
-                        _vm._v(" "),
-                        _c("td", {
-                          domProps: {
-                            textContent: _vm._s(product_with_lots.quantity)
-                          }
-                        }),
-                        _vm._v(" "),
-                        _c("td", [
-                          _c("div", { staticClass: "tags" }, [
-                            _vm.inbound.products[index].is_dangerous
-                              ? _c("span", { staticClass: "tag is-danger" }, [
-                                  _vm._v("Dangerous")
-                                ])
-                              : _vm._e(),
-                            _vm._v(" "),
-                            _vm.inbound.products[index].is_fragile
-                              ? _c("span", { staticClass: "tag is-warning" }, [
-                                  _vm._v("Fragile")
-                                ])
-                              : _vm._e()
-                          ])
-                        ]),
-                        _vm._v(" "),
-                        _c("td", [
-                          _vm._v(
-                            "\n\t\t\t\t\t\t\t\t\t" +
-                              _vm._s(product_with_lots.remark) +
-                              "\n\t\t\t\t\t\t\t\t"
-                          )
-                        ])
-                      ]),
-                      _vm._v(" "),
-                      _c("tr", { staticClass: "subrow" }, [
-                        _c("th", [_vm._v("Lots")]),
-                        _vm._v(" "),
-                        _c("th", [_vm._v("Quantity")]),
-                        _vm._v(" "),
-                        _c("th", [_vm._v("Received")]),
-                        _vm._v(" "),
-                        _c("th", [_vm._v("Expiry date")]),
-                        _vm._v(" "),
-                        _c("th", [_vm._v("Admin remark")])
-                      ]),
-                      _vm._v(" "),
-                      _vm._l(product_with_lots.lots, function(lot, lotindex) {
-                        return _c("tr", { staticClass: "subrow" }, [
-                          !_vm.isEditing
-                            ? _c("td", {
-                                domProps: { textContent: _vm._s(lot.name) }
-                              })
-                            : _c(
-                                "td",
-                                [
-                                  _vm.inboundForm.products[index] &&
-                                  _vm.inboundForm.products[index].lots[lotindex]
-                                    ? _c("selector-input", {
-                                        attrs: {
-                                          defaultData:
-                                            _vm.inboundForm.products[index]
-                                              .lots[lotindex].lot,
-                                          hideLabel: true,
-                                          potentialData: _vm.lotsOptions,
-                                          placeholder: "Select lot",
-                                          name: "products",
-                                          unclearable: true
-                                        },
-                                        model: {
-                                          value:
-                                            _vm.inboundForm.products[index]
-                                              .lots[lotindex].lot,
-                                          callback: function($$v) {
-                                            _vm.$set(
-                                              _vm.inboundForm.products[index]
-                                                .lots[lotindex],
-                                              "lot",
-                                              $$v
-                                            )
-                                          },
-                                          expression:
-                                            "inboundForm.products[index].lots[lotindex].lot"
-                                        }
-                                      })
-                                    : _vm._e()
-                                ],
-                                1
-                              ),
-                          _vm._v(" "),
-                          _c("td", [
-                            _vm._v(
-                              "\n\t\t\t\t\t\t\t\t\t" +
-                                _vm._s(lot.pivot.quantity_original) +
-                                "\n\t\t\t\t\t\t\t\t"
-                            )
-                          ]),
-                          _vm._v(" "),
-                          _c(
-                            "td",
-                            [
-                              _vm.inboundForm.products[index] &&
-                              _vm.inboundForm.products[index].lots[lotindex]
-                                ? _c("text-input", {
-                                    attrs: {
-                                      defaultValue:
-                                        _vm.inboundForm.products[index].lots[
-                                          lotindex
-                                        ].quantity_received,
-                                      editable: _vm.isEditing && _vm.canManage,
-                                      name: "products",
-                                      hideLabel: true,
-                                      required: true,
-                                      type: "number"
-                                    },
-                                    model: {
-                                      value:
-                                        _vm.inboundForm.products[index].lots[
-                                          lotindex
-                                        ].quantity_received,
-                                      callback: function($$v) {
-                                        _vm.$set(
-                                          _vm.inboundForm.products[index].lots[
-                                            lotindex
-                                          ],
-                                          "quantity_received",
-                                          $$v
-                                        )
-                                      },
-                                      expression:
-                                        "inboundForm.products[index].lots[lotindex].quantity_received"
-                                    }
-                                  })
-                                : _vm._e()
-                            ],
-                            1
-                          ),
-                          _vm._v(" "),
-                          _c(
-                            "td",
-                            [
-                              _vm.inboundForm.products[index] &&
-                              _vm.inboundForm.products[index].lots[lotindex]
-                                ? _c("text-input", {
-                                    attrs: {
-                                      defaultValue:
-                                        _vm.inboundForm.products[index].lots[
-                                          lotindex
-                                        ].expiry_date,
-                                      editable: _vm.isEditing,
-                                      hideLabel: true,
-                                      required: false,
-                                      focus: true,
-                                      type: "date"
-                                    },
-                                    model: {
-                                      value:
-                                        _vm.inboundForm.products[index].lots[
-                                          lotindex
-                                        ].expiry_date,
-                                      callback: function($$v) {
-                                        _vm.$set(
-                                          _vm.inboundForm.products[index].lots[
-                                            lotindex
-                                          ],
-                                          "expiry_date",
-                                          $$v
-                                        )
-                                      },
-                                      expression:
-                                        "inboundForm.products[index].lots[lotindex].expiry_date"
-                                    }
-                                  })
-                                : _vm._e()
-                            ],
-                            1
-                          ),
-                          _vm._v(" "),
-                          _c(
-                            "td",
-                            [
-                              _vm.inboundForm.products[index] &&
-                              _vm.inboundForm.products[index].lots[lotindex]
-                                ? _c("textarea-input", {
-                                    attrs: {
-                                      defaultValue:
-                                        _vm.inboundForm.products[index].lots[
-                                          lotindex
-                                        ].remark,
-                                      editable: _vm.isEditing,
-                                      label: "Remark",
-                                      name: "remark",
-                                      type: "text",
-                                      hideLabel: true,
-                                      required: false,
-                                      rows: "0.5",
-                                      cols: "4"
-                                    },
-                                    model: {
-                                      value:
-                                        _vm.inboundForm.products[index].lots[
-                                          lotindex
-                                        ].remark,
-                                      callback: function($$v) {
-                                        _vm.$set(
-                                          _vm.inboundForm.products[index].lots[
-                                            lotindex
-                                          ],
-                                          "remark",
-                                          $$v
-                                        )
-                                      },
-                                      expression:
-                                        "inboundForm.products[index].lots[lotindex].remark"
-                                    }
-                                  })
-                                : _vm._e()
-                            ],
-                            1
-                          )
-                        ])
-                      })
-                    ]
-                  })
-                ],
-                2
-              )
-            ]
-          ),
-          _vm._v(" "),
-          _c("p", {
-            staticClass: "has-text-danger",
-            domProps: {
-              textContent: _vm._s(_vm.inboundForm.errors.get("products"))
-            }
-          })
-        ])
-      ]),
+      _c("div"),
       _vm._v(" "),
       _c(
         "modal",
@@ -84596,6 +84649,34 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "level-left" }, [
       _c("div", { staticClass: "level-item" }, [
+        _vm._v("\n\t\t\t\t\t\t\t\t\tInbound products\n\t\t\t\t\t\t\t\t")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", [_vm._v("Image")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Name")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Quantity")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Attributes")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("User remark")])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "level-left" }, [
+      _c("div", { staticClass: "level-item" }, [
         _vm._v("\n\t\t\t\t\t\t\t\t\tOrder status\n\t\t\t\t\t\t\t\t")
       ])
     ])
@@ -84619,27 +84700,13 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "level-left" }, [
-      _c("div", { staticClass: "level-item" }, [
-        _vm._v("\n\t\t\t\t\t\t\tInbound products\n\t\t\t\t\t\t")
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("thead", [
-      _c("tr", [
-        _c("th", [_vm._v("Image")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Name")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Quantity")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Attributes")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("User remark")])
+    return _c("div", { staticClass: "card-header" }, [
+      _c("div", { staticClass: "card-header-title level" }, [
+        _c("div", { staticClass: "level-left" }, [
+          _c("div", { staticClass: "level-item" }, [
+            _vm._v("\n\t\t\t\t\t\t\t\t\tBranch details\n\t\t\t\t\t\t\t\t")
+          ])
+        ])
       ])
     ])
   }
@@ -98432,6 +98499,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -98449,15 +98527,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 				products: [],
 				type: 'all',
 				report_type: 'pdf',
+				selectedBranch: '',
 				details: false
 			}),
+			selected_branch: '',
 			products: [],
 			selectedProducts: [],
+			branchesOptions: [],
 			isLoading: true
 		};
 	},
 	mounted: function mounted() {
 		this.getProducts();
+		this.getBranches();
 	},
 
 
@@ -98476,6 +98558,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 				return _this.getProducts(e);
 			});
 		},
+		getBranches: function getBranches() {
+			var _this2 = this;
+
+			axios.get('/internal/branches/selector').then(function (response) {
+				return _this2.setBranches(response);
+			});
+		},
 		setProducts: function setProducts(response) {
 			this.products = response.data.map(function (product) {
 				var obj = {};
@@ -98488,13 +98577,24 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 			this.isLoading = false;
 		},
+		setBranches: function setBranches(response) {
+			this.branchesOptions = response.data.map(function (branches) {
+				var obj = {};
+				obj['label'] = branches.branch_name;
+				obj['value'] = branches.id;
+				return obj;
+			});
+		},
 		submit: function submit() {
-			var _this2 = this;
+			var _this3 = this;
 
+			if (this.selected_branch != null) {
+				this.form.selectedBranch = this.selected_branch.value;
+			}
 			this.form.post("/report/stock").then(function (response) {
-				return _this2.onSuccess(response);
+				return _this3.onSuccess(response);
 			}).catch(function (error) {
-				return _this2.onError(error);
+				return _this3.onError(error);
 			});
 		},
 		onSuccess: function onSuccess(response) {
@@ -98725,6 +98825,37 @@ var render = function() {
                 1
               )
             ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "columns" }, [
+            _c(
+              "div",
+              { staticClass: "column" },
+              [
+                _c(
+                  "selector-input",
+                  {
+                    attrs: {
+                      label: "Branch",
+                      potentialData: _vm.branchesOptions,
+                      name: "branch",
+                      editable: true,
+                      placeholder: "Select a branch",
+                      error: _vm.form.errors.get("selectedBranch")
+                    },
+                    model: {
+                      value: _vm.selected_branch,
+                      callback: function($$v) {
+                        _vm.selected_branch = $$v
+                      },
+                      expression: "selected_branch"
+                    }
+                  },
+                  [_vm._v(">")]
+                )
+              ],
+              1
+            )
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "columns" }, [
@@ -99002,6 +99133,29 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -100090,6 +100244,31 @@ var render = function() {
                   "\n\t\t\t\t\t\t\t\n\n\n\t\t\t\t\t"
               )
             ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "card mt-10" }, [
+            _vm._m(6),
+            _vm._v(" "),
+            _c("div", { staticClass: "card-content" }, [
+              _c("p", { staticClass: "heading" }, [
+                _vm._v("\n\t\t\t\t\t\t\tBranch Code\n\t\t\t\t\t\t")
+              ]),
+              _vm._v(
+                "\n\t\t\t\t\t\t" +
+                  _vm._s(_vm.outbound.codename) +
+                  "\n\t\t\t\t\t\t\n\t\t\t\t\t\t"
+              ),
+              _c("hr"),
+              _vm._v(" "),
+              _c("p", { staticClass: "heading" }, [
+                _vm._v("\n\t\t\t\t\t\t\tBranch Name\n\t\t\t\t\t\t")
+              ]),
+              _vm._v(
+                "\n\t\t\t\t\t\t" +
+                  _vm._s(_vm.outbound.branch_name) +
+                  "\n\t\t\t\t\t"
+              )
+            ])
           ])
         ])
       ]),
@@ -100246,6 +100425,20 @@ var staticRenderFns = [
         _c("div", { staticClass: "level-left" }, [
           _c("div", { staticClass: "level-item" }, [
             _vm._v("\n\t\t\t\t\t\t\t\t\tRecipient details\n\t\t\t\t\t\t\t\t")
+          ])
+        ])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "card-header" }, [
+      _c("div", { staticClass: "card-header-title level" }, [
+        _c("div", { staticClass: "level-left" }, [
+          _c("div", { staticClass: "level-item" }, [
+            _vm._v("\n\t\t\t\t\t\t\t\t\tBranch details\n\t\t\t\t\t\t\t\t")
           ])
         ])
       ])
