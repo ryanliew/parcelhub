@@ -75,6 +75,8 @@ class OutboundController extends Controller
                                                                     'amount_insured',
                                                                     'process_status',
                                                                     'couriers.name as courier',
+                                                                    'branches.codename',
+                                                                    'branches.branch_name',
                                                                     'outbounds.created_at',
                                                                     'outbounds.recipient_name',
                                                                     'outbounds.recipient_address',
@@ -88,6 +90,7 @@ class OutboundController extends Controller
                                                                     )
                                                                 ->where('outbounds.type', 'outbound')
                                                                 ->leftJoin('couriers', 'courier_id', '=', 'couriers.id')
+                                                                ->join('branches', 'outbounds.branch_id' , '=', 'branches.id')
                                                                 ->leftJoin('users', 'user_id', '=', 'users.id')
                                                                 ->orderBy('outbounds.created_at', 'desc') );
             elseif($user->hasRole('admin')) 
@@ -96,6 +99,8 @@ class OutboundController extends Controller
                         'amount_insured',
                         'process_status',
                         'couriers.name as courier',
+                        'branches.codename',
+                        'branches.branch_name',
                         'outbounds.created_at',
                         'outbounds.recipient_name',
                         'outbounds.recipient_address',
@@ -130,6 +135,8 @@ class OutboundController extends Controller
                                                                     'amount_insured',
                                                                     'process_status',
                                                                     'couriers.name as courier',
+                                                                    'branches.codename',
+                                                                    'branches.branch_name',
                                                                     'outbounds.created_at',
                                                                     'outbounds.recipient_name',
                                                                     'outbounds.recipient_address',
@@ -142,6 +149,7 @@ class OutboundController extends Controller
                                                                     )
                                                             ->where('outbounds.type', 'outbound')
                                                             ->whereIn('outbounds.branch_id', $array_branch)
+                                                            ->join('branches', 'outbounds.branch_id' , '=', 'branches.id')
                                                             ->leftJoin('couriers', 'courier_id', '=', 'couriers.id')
                                                             ->orderBy('outbounds.created_at', 'desc') );
 
@@ -439,7 +447,7 @@ class OutboundController extends Controller
     public function show($outbound)
     {
         $outbound = Outbound::with(['tracking_numbers', 'courier'])->where('id', $outbound)->first();
-
+        
         return $outbound;
     }
 

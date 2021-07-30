@@ -76,6 +76,8 @@ class InboundController extends Controller
                                                                 'type',
                                                                 'process_status',
                                                                 'inbounds.id as id',
+                                                                'branches.codename',
+                                                                'branches.branch_name',
                                                                 'users.name as customer',
                                                                 'inbounds.created_at as created_at'
                                                                 )
@@ -101,11 +103,14 @@ class InboundController extends Controller
                                                                 'type',
                                                                 'process_status',
                                                                 'inbounds.id as id',
+                                                                'branches.codename',
+                                                                'branches.branch_name',
                                                                 'users.name as customer',
                                                                 'inbounds.created_at as created_at'
                                                                 )
                                                             ->where('inbounds.type', 'inbound')
                                                             ->whereIn('inbounds.branch_id', $array_branch)
+                                                            ->join('branches', 'branches.id', '=', 'branch_id')
                                                             ->leftJoin('users', 'user_id', '=', 'users.id')
                                                             ->orderBy('arrival_date', 'desc'));
             }
@@ -114,10 +119,13 @@ class InboundController extends Controller
                                                                 'type',
                                                                 'process_status',
                                                                 'inbounds.id as id',
+                                                                'branches.codename',
+                                                                'branches.branch_name',
                                                                 'users.name as customer',
                                                                 'inbounds.created_at as created_at'
                                                                 )
                                                             ->where('inbounds.type', 'inbound')
+                                                            ->join('branches', 'branches.id', '=', 'branch_id')
                                                             ->leftJoin('users', 'user_id', '=', 'users.id')
                                                             ->orderBy('arrival_date', 'desc'));
         }
