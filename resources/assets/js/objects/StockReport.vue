@@ -74,7 +74,18 @@
 						</div>
 					</div>
 				</div>
-
+				<div class= "columns">
+					<div class="column">
+						<selector-input
+								v-model="selected_branch"
+								label="Branch" 
+								:potentialData="branchesOptions"
+								name="branch"
+								:editable="true"
+								placeholder="Select a branch"
+								:error="form.errors.get('selectedBranch')">></selector-input>
+					</div>
+				</div>
 				
 
 				<div class="columns">
@@ -135,16 +146,20 @@
 					products: [],
 					type: 'all',
 					report_type: 'pdf',
+					selectedBranch: '',
 					details: false
 				}),
+				selected_branch: '',
 				products: [],
 				selectedProducts: [],
+				branchesOptions: [],
 				isLoading: true
 			};
 		},
 
 		mounted() {
 			this.getProducts();
+			this.getBranches();
 		},
 
 		methods: {
@@ -156,6 +171,11 @@
 				axios.get('/internal/products/selector')
 					.then(response => this.setProducts(response))
 					.catch(error => this.getProducts(e));
+			},
+
+			getBranches() {
+				axios.get('/internal/branches/selector')
+					.then(response => this.setBranches(response));
 			},
 
 			setProducts(response){
@@ -171,7 +191,19 @@
 				this.isLoading = false;
 			},
 
+			setBranches(response) {
+				this.branchesOptions = response.data.map(branches =>{
+					let obj = {};
+					obj['label'] = branches.branch_name;
+					obj['value'] = branches.id;
+					return obj;
+				});
+			},
+
 			submit() {
+				if(this.selected_branch != null) {
+					this.form.selectedBranch = this.selected_branch.value;
+				}
 				this.form.post("/report/stock")
 					.then(response => this.onSuccess(response))
 					.catch(error => this.onError(error));

@@ -98432,6 +98432,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -98449,15 +98460,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 				products: [],
 				type: 'all',
 				report_type: 'pdf',
+				selectedBranch: '',
 				details: false
 			}),
+			selected_branch: '',
 			products: [],
 			selectedProducts: [],
+			branchesOptions: [],
 			isLoading: true
 		};
 	},
 	mounted: function mounted() {
 		this.getProducts();
+		this.getBranches();
 	},
 
 
@@ -98476,6 +98491,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 				return _this.getProducts(e);
 			});
 		},
+		getBranches: function getBranches() {
+			var _this2 = this;
+
+			axios.get('/internal/branches/selector').then(function (response) {
+				return _this2.setBranches(response);
+			});
+		},
 		setProducts: function setProducts(response) {
 			this.products = response.data.map(function (product) {
 				var obj = {};
@@ -98488,13 +98510,24 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 			this.isLoading = false;
 		},
+		setBranches: function setBranches(response) {
+			this.branchesOptions = response.data.map(function (branches) {
+				var obj = {};
+				obj['label'] = branches.branch_name;
+				obj['value'] = branches.id;
+				return obj;
+			});
+		},
 		submit: function submit() {
-			var _this2 = this;
+			var _this3 = this;
 
+			if (this.selected_branch != null) {
+				this.form.selectedBranch = this.selected_branch.value;
+			}
 			this.form.post("/report/stock").then(function (response) {
-				return _this2.onSuccess(response);
+				return _this3.onSuccess(response);
 			}).catch(function (error) {
-				return _this2.onError(error);
+				return _this3.onError(error);
 			});
 		},
 		onSuccess: function onSuccess(response) {
@@ -98725,6 +98758,37 @@ var render = function() {
                 1
               )
             ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "columns" }, [
+            _c(
+              "div",
+              { staticClass: "column" },
+              [
+                _c(
+                  "selector-input",
+                  {
+                    attrs: {
+                      label: "Branch",
+                      potentialData: _vm.branchesOptions,
+                      name: "branch",
+                      editable: true,
+                      placeholder: "Select a branch",
+                      error: _vm.form.errors.get("selectedBranch")
+                    },
+                    model: {
+                      value: _vm.selected_branch,
+                      callback: function($$v) {
+                        _vm.selected_branch = $$v
+                      },
+                      expression: "selected_branch"
+                    }
+                  },
+                  [_vm._v(">")]
+                )
+              ],
+              1
+            )
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "columns" }, [

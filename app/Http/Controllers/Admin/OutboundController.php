@@ -162,8 +162,22 @@ class OutboundController extends Controller
         } else {
 
             if($outbound->process_status == 'canceled') {
+                $admins = User::admin()->get();
+                $list_of_admin = [];
+                foreach($admins as $admin) {
+                    $access = $admin->branches()->where('user_id', $admin->id)->where('branch_id', $request->selectedBranch)->get();
+                    if($access->count() > 0) {
+                        array_push($list_of_admin, $admin);
+                    }
+                }
+                
+                if($list_of_admin != []) {
+                    foreach($list_of_admin as $admin) {
+                        $admin->notify(new OutboundStatusUpdateNotification($outbound));
+                    }
+                }
 
-                User::admin()->first()->notify(new OutboundStatusUpdateNotification($outbound));
+                User::superadmin()->first()->notify(new OutboundStatusUpdateNotification($outbound));
             }
 
             $outbound->user->notify(new OutboundStatusUpdateNotification($outbound));

@@ -86,7 +86,7 @@ class ExcelController extends Controller
 
         $count = Outbound::where("updated_at", '>=' , now()->subMinutes(3))->count();
 
-        User::admin()->first()->notify(new OutboundCreatedNotification());
+        User::superadmin()->first()->notify(new OutboundCreatedNotification());
         event(new EventTrigger('outbound'));
         
         return response()->json(['message' => $count . ' outbound orders created successfully']); 
@@ -113,7 +113,7 @@ class ExcelController extends Controller
         if($count > 0)
         {
             $message = $count . ' inbound orders created successfully';
-            User::admin()->first()->notify(new InboundCreatedNotification());
+            User::superadmin()->first()->notify(new InboundCreatedNotification());
             event(new EventTrigger('inbound'));
         }
         else
@@ -211,7 +211,7 @@ class ExcelController extends Controller
 
     public function downloadInbound()
     {
-        $path = storage_path('app/public/parcelhub_inbounds_import.xlsx');
+        $path = storage_path('app/public/parcelhub_inbound_import.xlsx');
 
         return response()->download($path);
     }

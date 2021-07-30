@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\User;
 use App\Courier;
 use App\Lot;
+use App\Branch;
 use App\Notifications\OutboundCreatedNotification;
 use App\Notifications\Admin\OutboundCreatedNotification as AdminOutboundCreatedNotification;
 use App\Outbound;
@@ -114,6 +115,15 @@ class OutboundController extends Controller
                     ->where('accessibilities.user_id', $user->id)
                     ->orderBy('outbounds.created_at', 'desc') );
             else
+
+                $branches = Branch::select('branches.id')
+                        ->leftJoin('lots' , 'lots.branch_id', '=', 'branches.id')
+                        ->where('lots.user_id', $user->id)
+                        ->get();
+                $array_branch = [];
+                foreach($branches as $branch) {
+                    array_push($array_branch, $branch->id);
+                }
                 return Controller::VueTableListResult( $user->outbounds()
                                                             ->with('tracking_numbers')
                                                             ->select('outbounds.id as id',
@@ -131,6 +141,7 @@ class OutboundController extends Controller
                                                                     'outbounds.type as type'
                                                                     )
                                                             ->where('outbounds.type', 'outbound')
+                                                            ->whereIn('outbounds.branch_id', $array_branch)
                                                             ->leftJoin('couriers', 'courier_id', '=', 'couriers.id')
                                                             ->orderBy('outbounds.created_at', 'desc') );
 
@@ -412,7 +423,23 @@ class OutboundController extends Controller
                 }
             }
             $outbound->save();
-            User::admin()->first()->notify(new AdminOutboundCreatedNotification());
+            $admins = User::admin()->get();
+            $list_of_admin = [];
+            foreach($admins as $admin) {
+                $access = $admin->branches()->where('user_id', $admin->id)->where('branch_id', $request->selectedBranch)->get();
+                if($access->count() > 0) {
+                    array_push($list_of_admin, $admin);
+                }
+            }
+            
+            if($list_of_admin != []) {
+                foreach($list_of_admin as $admin) {
+                    $admin->notify(new AdminOutboundCreatedNotification());
+                }
+            }
+
+            User::superadmin()->first()->notify(new AdminOutboundCreatedNotification());
+ 
             $user->notify(new OutboundCreatedNotification($outbound));
 
         } catch (\Exception $exception) {

@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 use App\Inbound;
 use App\InboundProduct;
 use App\Lot;
+use App\Branch;
 use App\Notifications\Admin\InboundCreatedNotification as AdminInboundCreatedNotification;
 use App\Notifications\InboundCreatedNotification;
 use App\Product;
@@ -63,13 +64,13 @@ class InboundController extends Controller
 
             $query = $user->inbounds()->with('products', 'products_with_lots.lots');
 
-            if($user->hasRole('superadmin') || $user->hasRole('admin'))
+            if($user->hasRole('superadmin') || $user->hasRole('admin')) {
                 $query = Inbound::with('products', 'products_with_lots.lots');
-            elseif($user->hasRole('subuser'))
+            }
+            elseif($user->hasRole('subuser')) {
                 $query = $user->parent->inbounds()->with('products', 'products_with_lots.lots');
-            
-
-            if($user->hasRole('admin')) {
+            }
+            elseif($user->hasRole('admin')) {
                 return Controller::VueTableListResult($query->select('arrival_date',
                                                                 'total_carton',
                                                                 'type',
@@ -83,6 +84,29 @@ class InboundController extends Controller
                                                             ->join('branches', 'branches.id', '=', 'branch_id')
                                                             ->join('accessibilities', 'accessibilities.branch_id', '=', 'branches.id')
                                                             ->where('accessibilities.user_id', $user->id)
+                                                            ->orderBy('arrival_date', 'desc'));
+            }
+            else {
+                $branches = Branch::select('branches.id')
+                        ->leftJoin('lots' , 'lots.branch_id', '=', 'branches.id')
+                        ->where('lots.user_id', $user->id)
+                        ->get();
+                $array_branch = [];
+                foreach($branches as $branch) {
+                    array_push($array_branch, $branch->id);
+                }
+
+                return Controller::VueTableListResult($query->select('arrival_date',
+                                                                'total_carton',
+                                                                'type',
+                                                                'process_status',
+                                                                'inbounds.id as id',
+                                                                'users.name as customer',
+                                                                'inbounds.created_at as created_at'
+                                                                )
+                                                            ->where('inbounds.type', 'inbound')
+                                                            ->whereIn('inbounds.branch_id', $array_branch)
+                                                            ->leftJoin('users', 'user_id', '=', 'users.id')
                                                             ->orderBy('arrival_date', 'desc'));
             }
             return Controller::VueTableListResult($query->select('arrival_date',
@@ -304,7 +328,23 @@ class InboundController extends Controller
             $lot->propagate_left_volume();
         }
 
-        User::admin()->first()->notify(new AdminInboundCreatedNotification());
+        $admins = User::admin()->get();
+        $list_of_admin = [];
+        foreach($admins as $admin) {
+            $access = $admin->branches()->where('user_id', $admin->id)->where('branch_id', $request->selectedBranch)->get();
+            if($access->count() > 0) {
+                array_push($list_of_admin, $admin);
+            }
+        }
+            
+        if($list_of_admin != []) {
+            foreach($list_of_admin as $admin) {
+                $admin->notify(new AdminInboundCreatedNotification());
+            }
+        }
+
+        User::superadmin()->first()->notify(new AdminInboundCreatedNotification());
+
         Auth::user()->notify(new InboundCreatedNotification($inbound));
 
         event(new EventTrigger('inbound'));

@@ -128,6 +128,12 @@ class User extends Authenticatable
         });
     }
 
+    public function scopeSuperadmin($query) {
+        return $query->whereHas('roles', function ($query) {
+            $query->where('name', '=', 'superadmin');
+        });
+    }
+
     public function getRoleNameAttribute()
     {
         return $this->roles()->first()->name;

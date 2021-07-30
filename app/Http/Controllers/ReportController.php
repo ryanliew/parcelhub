@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Inbound;
 use App\Outbound;
 use App\Product;
+use App\Branch;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
@@ -25,10 +26,11 @@ class ReportController extends Controller
 
     public function stock()
     {
-    	$this->validate(request(), [
-    		'from' => 'required',
+		$this->validate(request(), [
+			'from' => 'required',
     		'to' => 'required',
-    		'type' => 'required'
+    		'type' => 'required',
+			'selectedBranch' => 'required'
     	]);
 
     	$to = Carbon::parse(request()->to)->addDay();
@@ -46,31 +48,39 @@ class ReportController extends Controller
 
     		// We need to pull out all the records and insert them into array for processing
     		foreach($product->inbounds_with_lots as $inbound){
-                if($inbound->inbound->process_status != 'canceled') {
-        			$details->push(
-        				$this->formatStockDetails(
-    						$inbound->updated_at, 
-    						$inbound->lots->sum('pivot.quantity_received'), 
-    						0, 
-    						"Inbound - " . $inbound->inbound->display_no, 
-    						0
-    					)
-        			);
-                }
+				if($inbound->inbound->branch_id) {
+					if($inbound->inbound->branch_id == request()->selectedBranch){
+						if($inbound->inbound->process_status != 'canceled') {
+							$details->push(
+								$this->formatStockDetails(
+									$inbound->updated_at, 
+									$inbound->lots->sum('pivot.quantity_received'), 
+									0, 
+									"Inbound - " . $inbound->inbound->display_no, 
+									0
+								)
+							);
+						}
+					}
+				}
     		}
 
     		foreach($product->outbounds as $outbound) {
-                if($outbound->process_status !=='canceled') {
-        			$details->push(
-        				$this->formatStockDetails(
-        					$outbound->updated_at, 
-        					0, 
-        					$outbound->pivot->quantity, 
-        					"Outbound - " . $outbound->display_no, 
-        					0
-        				)
-        			);
-                }
+				if($outbound->branch_id) {
+					if($outbound->branch_id == request()->selectedBranch){
+						if($outbound->process_status !=='canceled') {
+							$details->push(
+								$this->formatStockDetails(
+									$outbound->updated_at, 
+									0, 
+									$outbound->pivot->quantity, 
+									"Outbound - " . $outbound->display_no, 
+									0
+								)
+							);
+						}
+					}  
+				}		
     		}
 
     		foreach($product->adjustments as $adjustment) {
@@ -125,12 +135,15 @@ class ReportController extends Controller
 
         $filename = "Stock report_" . auth()->id() . "_" . $from->toDateString() . ' - ' . $to->toDateString();
 
+		$selectedBranch = Branch::where('id', request()->selectedBranch)->get();
+
         if(request()->report_type == 'excel') {
 
             // We need to format the excel filein array
 
 			$filename .= ".xlsx";
-			Excel::store(new ReportsExport($products, request()->from, request()->to, request()->type, request()->has('details')),'public/reports/stock/' . $filename, 'local');
+
+			Excel::store(new ReportsExport($products, $selectedBranch[0]->codename, request()->from, request()->to, request()->type, request()->has('details')),'public/reports/stock/' . $filename, 'local');
 
             return json_encode(['message' => "Success", 'url' => 'storage/reports/stock/' . $filename]);
 
@@ -138,7 +151,8 @@ class ReportController extends Controller
 
     	// return view('report.stock', ['products' => $products, 'from' => request()->from, 'to' => request()->to, 'type' => request()->type, 'details' => request()->has('details')]);
     	$filename = "storage/reports/stock/" . $filename . ".pdf";
-    	$pdf = PDF::loadView('report.stock', ['products' => $products, 'from' => request()->from, 'to' => request()->to, 'type' => request()->type, 'details' => request()->has('details')])->save($filename);
+
+    	$pdf = PDF::loadView('report.stock', ['products' => $products, 'from' => request()->from, 'branch'=> $selectedBranch[0]->codename, 'to' => request()->to, 'type' => request()->type, 'details' => request()->has('details')])->save($filename);
 
     	return json_encode(['message' => "Success", 'url' => $filename]);
     	// return $pdf->download("Stock report_" . $from->toDateString() . ' - ' . $to->toDateString() . ".pdf");
