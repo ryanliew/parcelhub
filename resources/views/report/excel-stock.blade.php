@@ -8,6 +8,7 @@
     <div class="pull-left width-half">
         <h1>Stock Level Preview</h1>
         <span style="margin-top: -15px;">Customer: <u>{{ auth()->user()->name }}</u></span>
+        <p style="margin-top: 12px">Branch: <u>{{ $branch }}</u></p>
     </div>
     <div class="pull-right width-half pt-1">
         <p>From date : <u>{{ $from }}</u></p>

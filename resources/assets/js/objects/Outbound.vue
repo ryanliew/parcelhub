@@ -276,6 +276,29 @@
 
 					</div>
 				</div>
+				<div class="card mt-10">
+					<div class="card-header">
+						<div class="card-header-title level">
+							<div class="level-left">
+								<div class="level-item">
+									Branch details
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="card-content">
+						<p class="heading">
+							Branch Code
+						</p>
+						{{ outbound.codename }}
+						
+						<hr>
+						<p class="heading">
+							Branch Name
+						</p>
+						{{ outbound.branch_name }}
+					</div>
+				</div>
 			</div>
 		</div>
 

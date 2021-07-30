@@ -8,10 +8,11 @@ use Maatwebsite\Excel\Concerns\FromView;
 
 class ReportsExport implements FromView
 {
-    public $products, $to, $from, $type, $details;
+    public $products, $branch, $to, $from, $type, $details;
 
-    function __construct($products, $to, $from, $type, $details) {
+    function __construct($products, $branch, $to, $from, $type, $details) {
         $this->products = $products;
+        $this->branch = $branch;
         $this->to = $to;
         $this->from = $from;
         $this->type = $type;
@@ -19,6 +20,6 @@ class ReportsExport implements FromView
     }
 
     public function view(): View{
-        return view('report.excel-stock', ['products' => $this->products, 'from' => $this->from, 'to' => $this->to, 'type' => $this->type, 'details' => $this->details]);
+        return view('report.excel-stock', ['products' => $this->products, 'branch' => $this->branch, 'from' => $this->from, 'to' => $this->to, 'type' => $this->type, 'details' => $this->details]);
     }
 }

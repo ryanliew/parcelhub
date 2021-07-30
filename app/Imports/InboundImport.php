@@ -5,9 +5,14 @@ namespace App\Imports;
 use App\Inbound;
 use App\Product;
 use App\Courier;
+use App\Branch;
+use App\User;
+use App\Accessibility;
 use App\Rules\PresentDate;
 use Carbon\Carbon;
 use App\Utilities;
+use App\Events\EventTrigger;
+use App\Notifications\Admin\InboundCreatedNotification;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithStartRow;
 use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
@@ -24,29 +29,38 @@ class InboundImport implements ToCollection, WithStartRow, SkipsEmptyRows, WithV
     public function collection(Collection $rows)
     {
         $details = collect([]);
+        $array = [];
 
         foreach($rows as $excelRow) 
         {
             $detail = [];
+            
             if(!is_null($excelRow[1]))
             {
                 
-                $product = Product::where('sku', $excelRow[2])
+                $product = Product::where('sku', $excelRow[3])
                                 ->where('status', 'true')
                                 ->where('user_id', auth()->id())
                                 ->first();
+                $branch = Branch::select('branches.id', 'branches.codename', 'branches.branch_name')
+                                ->leftJoin('lots' , 'lots.branch_id', '=', 'branches.id')
+                                ->where('lots.user_id', auth()->id())
+                                ->where('branches.codename', $excelRow[2])
+                                ->first();
 
                 $detail['arrival'] = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($excelRow[1]);
-                $detail['carton'] = $excelRow[3];
+                $detail['branchCode'] = $branch->id;
+                $detail['carton'] = $excelRow[4];
                 $detail['product'] = $product; 
-                $detail['remark'] = $excelRow[6];
-                $detail['expiry'] = is_null($excelRow[5]) ? null : \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($excelRow[5]);
-                $detail['quantity'] = $excelRow[4];
+                $detail['remark'] = $excelRow[7];
+                $detail['expiry'] = is_null($excelRow[6]) ? null : \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($excelRow[5]);
+                $detail['quantity'] = $excelRow[5];
 
                 $details->push($detail);
+                array_push($array, $branch->id);
             }
         }
-
+        $collection_user = collect($array)->unique();
         $arrivals = $details->unique('arrival');
 
         foreach($arrivals as $arrival)
@@ -61,6 +75,7 @@ class InboundImport implements ToCollection, WithStartRow, SkipsEmptyRows, WithV
             $inbound->user_id = auth()->id();
             $inbound->arrival_date = $arrival['arrival'];
             $inbound->total_carton = $current_carton;
+            $inbound->branch_id = $arrival['branchCode'];
             $inbound->status = "true";
             $inbound->save(); 
 
@@ -127,19 +142,23 @@ class InboundImport implements ToCollection, WithStartRow, SkipsEmptyRows, WithV
                 }
             } 
         }
+        $inbound->notify(new InboundCreatedNotification($inbound), new AdminInboundCreatedNotification());
+        event(new EventTrigger('inbound')); 
     }
 
     public function rules(): array {
         return[
             '1' => new PresentDate,
-            '2' => "exists:products,sku"
+            '2' => "exists:branches,codename",
+            '3' => "exists:products,sku"
         ];
     }
 
     public function customValidationMessages()
     {
         return [
-            '2.exists' => 'Product :input not found. Please create your product at "My Products" page first.'
+            '2.exists' => 'Branch :input not found. Please put a valid branches',
+            '3.exists' => 'Product :input not found. Please create your product at "My Products" page first.'
         ];
     }
 

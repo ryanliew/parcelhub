@@ -65,6 +65,134 @@
 						</div>
 					</div>
 				</div>
+				<div class="card mt-10">
+					<div class="card-header">
+						<div class="card-header-title level">
+							<div class="level-left">
+								<div class="level-item">
+									Inbound products
+								</div>
+							</div>
+							<div class="level-right" v-if="canManage && inbound.process_status !== 'completed' && inbound.process_status !== 'canceled'">
+								<button class="button is-primary" :class="loadingClass" v-if="!isEditing" @click="edit()">
+									<i class="fa fa-edit"></i>
+									<span class="pl-5">Edit inbound details</span>
+								</button>
+								<div v-else>
+									<button class="button is-danger" @click="onCancel()">
+										<i class="fa fa-times"></i>
+										<span class="pl-5">Cancel</span>
+									</button>
+									<button class="button is-success" @click="submitEdit()">
+										<i class="fa fa-check"></i>
+										<span class="pl-5">Confirm changes</span>
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="card-content">
+						<table class="table is-hoverable is-fullwidth responsive">
+							<thead>
+								<tr>
+									<th>Image</th>
+									<th>Name</th>
+									<th>Quantity</th>
+									<th>Attributes</th>
+									<th>User remark</th>
+								</tr>
+							</thead>
+							<tbody>
+								<template v-for="(product_with_lots, index) in inbound.products_with_lots">
+									<tr>
+										<td><figure class="image is-48x48"><img :src="inbound.products[index].picture"></figure></td>
+										<td v-text="inbound.products[index].name"></td>
+										<td v-text="product_with_lots.quantity"></td>
+										<td>
+											<div class="tags">
+												<span class="tag is-danger" v-if="inbound.products[index].is_dangerous">Dangerous</span>
+												<span class="tag is-warning" v-if="inbound.products[index].is_fragile">Fragile</span>
+											</div>
+										</td>
+										
+										<td>
+											{{ product_with_lots.remark }}
+										</td>
+									</tr>
+										
+									<tr class="subrow">
+										<th>Lots</th>
+										<th>Quantity</th>
+										<th>Received</th>
+										<th>Expiry date</th>
+										<th>Admin remark</th>
+									</tr>
+									<tr class="subrow" v-for="(lot, lotindex) in product_with_lots.lots">
+										<td v-text="lot.name" v-if="!isEditing">
+									
+										</td>
+										<td v-else>
+											<selector-input v-model="inboundForm.products[index].lots[lotindex].lot"
+												:defaultData="inboundForm.products[index].lots[lotindex].lot"
+												:hideLabel="true"
+												:potentialData="lotsOptions"
+												placeholder="Select lot"
+												name="products"
+												:unclearable="true"
+												v-if="inboundForm.products[index] && inboundForm.products[index].lots[lotindex]">
+											</selector-input>
+										</td>
+										<td>
+											{{ lot.pivot.quantity_original }}
+										</td>
+										<td>
+											<text-input
+												v-model="inboundForm.products[index].lots[lotindex].quantity_received"
+												:defaultValue="inboundForm.products[index].lots[lotindex].quantity_received" 
+												:editable="isEditing && canManage"
+												name="products"
+												:hideLabel="true"
+												:required="true"
+												type="number"
+												v-if="inboundForm.products[index] && inboundForm.products[index].lots[lotindex]"
+											>
+											</text-input>
+										</td>
+										<td>
+											<text-input
+												v-model="inboundForm.products[index].lots[lotindex].expiry_date"
+												:defaultValue="inboundForm.products[index].lots[lotindex].expiry_date" 
+												:editable="isEditing"
+												:hideLabel="true"
+												:required="false"
+												:focus="true"
+												type="date"
+												v-if="inboundForm.products[index] && inboundForm.products[index].lots[lotindex]"
+											>
+											</text-input>
+										</td>
+										<td>
+											<textarea-input
+												v-if="inboundForm.products[index] && inboundForm.products[index].lots[lotindex]"
+												v-model="inboundForm.products[index].lots[lotindex].remark"
+												:defaultValue="inboundForm.products[index].lots[lotindex].remark" 
+												:editable="isEditing"
+												label="Remark"
+												name="remark"
+												type="text"
+												:hideLabel="true"
+												:required="false"
+												rows="0.5"
+												cols="4">
+											</textarea-input>
+										</td>
+									</tr>
+								</template>
+							</tbody>
+						</table>
+						<p class="has-text-danger" v-text="inboundForm.errors.get('products')"></p>
+					</div>
+				</div>
 			</div>
 			<div class="column is-one-third">
 				<div class="card">
@@ -119,138 +247,33 @@
 
 					</div>
 				</div>
-			</div>
-		</div>
-
-
-		<div class="card">
-			<div class="card-header">
-				<div class="card-header-title level">
-					<div class="level-left">
-						<div class="level-item">
-							Inbound products
+				<div class="card mt-10">
+					<div class="card-header">
+						<div class="card-header-title level">
+							<div class="level-left">
+								<div class="level-item">
+									Branch details
+								</div>
+							</div>
 						</div>
 					</div>
-					<div class="level-right" v-if="canManage && inbound.process_status !== 'completed' && inbound.process_status !== 'canceled'">
-						<button class="button is-primary" :class="loadingClass" v-if="!isEditing" @click="edit()">
-							<i class="fa fa-edit"></i>
-							<span class="pl-5">Edit inbound details</span>
-						</button>
-						<div v-else>
-							<button class="button is-danger" @click="onCancel()">
-								<i class="fa fa-times"></i>
-								<span class="pl-5">Cancel</span>
-							</button>
-							<button class="button is-success" @click="submitEdit()">
-								<i class="fa fa-check"></i>
-								<span class="pl-5">Confirm changes</span>
-							</button>
-						</div>
+					<div class="card-content">
+						<p class="heading">
+							Branch Code
+						</p>
+						{{ inbound.codename }}
+						
+						<hr>
+						<p class="heading">
+							Branch Name
+						</p>
+						{{ inbound.branch_name }}
 					</div>
 				</div>
-			</div>
-			<div class="card-content">
-				<table class="table is-hoverable is-fullwidth responsive">
-					<thead>
-						<tr>
-							<th>Image</th>
-							<th>Name</th>
-							<th>Quantity</th>
-							<th>Attributes</th>
-							<th>User remark</th>
-						</tr>
-					</thead>
-					<tbody>
-						<template v-for="(product_with_lots, index) in inbound.products_with_lots">
-							<tr>
-								<td><figure class="image is-48x48"><img :src="inbound.products[index].picture"></figure></td>
-								<td v-text="inbound.products[index].name"></td>
-								<td v-text="product_with_lots.quantity"></td>
-								<td>
-									<div class="tags">
-										<span class="tag is-danger" v-if="inbound.products[index].is_dangerous">Dangerous</span>
-										<span class="tag is-warning" v-if="inbound.products[index].is_fragile">Fragile</span>
-									</div>
-								</td>
-								
-								<td>
-									{{ product_with_lots.remark }}
-								</td>
-							</tr>
-								
-							<tr class="subrow">
-								<th>Lots</th>
-								<th>Quantity</th>
-								<th>Received</th>
-								<th>Expiry date</th>
-								<th>Admin remark</th>
-							</tr>
-							<tr class="subrow" v-for="(lot, lotindex) in product_with_lots.lots">
-								<td v-text="lot.name" v-if="!isEditing">
-							
-								</td>
-								<td v-else>
-									<selector-input v-model="inboundForm.products[index].lots[lotindex].lot"
-										:defaultData="inboundForm.products[index].lots[lotindex].lot"
-										:hideLabel="true"
-										:potentialData="lotsOptions"
-										placeholder="Select lot"
-										name="products"
-										:unclearable="true"
-										v-if="inboundForm.products[index] && inboundForm.products[index].lots[lotindex]">
-									</selector-input>
-								</td>
-								<td>
-									{{ lot.pivot.quantity_original }}
-								</td>
-								<td>
-									<text-input
-										v-model="inboundForm.products[index].lots[lotindex].quantity_received"
-										:defaultValue="inboundForm.products[index].lots[lotindex].quantity_received" 
-										:editable="isEditing && canManage"
-										name="products"
-										:hideLabel="true"
-										:required="true"
-										type="number"
-										v-if="inboundForm.products[index] && inboundForm.products[index].lots[lotindex]"
-									>
-									</text-input>
-								</td>
-								<td>
-									<text-input
-										v-model="inboundForm.products[index].lots[lotindex].expiry_date"
-										:defaultValue="inboundForm.products[index].lots[lotindex].expiry_date" 
-										:editable="isEditing"
-										:hideLabel="true"
-										:required="false"
-										:focus="true"
-										type="date"
-										v-if="inboundForm.products[index] && inboundForm.products[index].lots[lotindex]"
-									>
-									</text-input>
-								</td>
-								<td>
-									<textarea-input
-										v-if="inboundForm.products[index] && inboundForm.products[index].lots[lotindex]"
-										v-model="inboundForm.products[index].lots[lotindex].remark"
-										:defaultValue="inboundForm.products[index].lots[lotindex].remark" 
-										:editable="isEditing"
-										label="Remark"
-										name="remark"
-										type="text"
-										:hideLabel="true"
-										:required="false"
-										rows="0.5"
-										cols="4">
-									</textarea-input>
-								</td>
-							</tr>
-						</template>
-					</tbody>
-				</table>
-				<p class="has-text-danger" v-text="inboundForm.errors.get('products')"></p>
-			</div>
+			</div>	
 		</div>
+	<div>	
+	</div>
 
 		<modal :active="confirmation" @close="confirmation = false">
 			<template slot="header">Cancel order</template>

@@ -116,7 +116,7 @@ class ProductController extends Controller
     public function selector()
     {
         $query = Product::query();
-        if(!auth()->user()->hasRole('admin'))
+        if(!auth()->user()->hasRole('superadmin'))
         {
             $query = auth()->user()->products();
         }

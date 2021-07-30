@@ -154,8 +154,7 @@ class InboundController extends Controller
         } else {
 
             if($inbound->process_status == 'canceled') {
-
-                User::admin()->first()->notify(new InboundStatusUpdateNotification($inbound));
+                $inbound->notify(new InboundCreatedNotification($inbound), new AdminInboundCreatedNotification());
             }
 
             $inbound->user->notify(new InboundStatusUpdateNotification($inbound));

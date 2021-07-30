@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 use App\Inbound;
 use App\InboundProduct;
 use App\Lot;
+use App\Branch;
 use App\Notifications\Admin\InboundCreatedNotification as AdminInboundCreatedNotification;
 use App\Notifications\InboundCreatedNotification;
 use App\Product;
@@ -63,18 +64,20 @@ class InboundController extends Controller
 
             $query = $user->inbounds()->with('products', 'products_with_lots.lots');
 
-            if($user->hasRole('superadmin') || $user->hasRole('admin'))
+            if($user->hasRole('superadmin') || $user->hasRole('admin')) {
                 $query = Inbound::with('products', 'products_with_lots.lots');
-            elseif($user->hasRole('subuser'))
+            }
+            elseif($user->hasRole('subuser')) {
                 $query = $user->parent->inbounds()->with('products', 'products_with_lots.lots');
-            
-
-            if($user->hasRole('admin')) {
+            }
+            elseif($user->hasRole('admin')) {
                 return Controller::VueTableListResult($query->select('arrival_date',
                                                                 'total_carton',
                                                                 'type',
                                                                 'process_status',
                                                                 'inbounds.id as id',
+                                                                'branches.codename',
+                                                                'branches.branch_name',
                                                                 'users.name as customer',
                                                                 'inbounds.created_at as created_at'
                                                                 )
@@ -85,15 +88,44 @@ class InboundController extends Controller
                                                             ->where('accessibilities.user_id', $user->id)
                                                             ->orderBy('arrival_date', 'desc'));
             }
+            else {
+                $branches = Branch::select('branches.id')
+                        ->leftJoin('lots' , 'lots.branch_id', '=', 'branches.id')
+                        ->where('lots.user_id', $user->id)
+                        ->get();
+                $array_branch = [];
+                foreach($branches as $branch) {
+                    array_push($array_branch, $branch->id);
+                }
+
+                return Controller::VueTableListResult($query->select('arrival_date',
+                                                                'total_carton',
+                                                                'type',
+                                                                'process_status',
+                                                                'inbounds.id as id',
+                                                                'branches.codename',
+                                                                'branches.branch_name',
+                                                                'users.name as customer',
+                                                                'inbounds.created_at as created_at'
+                                                                )
+                                                            ->where('inbounds.type', 'inbound')
+                                                            ->whereIn('inbounds.branch_id', $array_branch)
+                                                            ->join('branches', 'branches.id', '=', 'branch_id')
+                                                            ->leftJoin('users', 'user_id', '=', 'users.id')
+                                                            ->orderBy('arrival_date', 'desc'));
+            }
             return Controller::VueTableListResult($query->select('arrival_date',
                                                                 'total_carton',
                                                                 'type',
                                                                 'process_status',
                                                                 'inbounds.id as id',
+                                                                'branches.codename',
+                                                                'branches.branch_name',
                                                                 'users.name as customer',
                                                                 'inbounds.created_at as created_at'
                                                                 )
                                                             ->where('inbounds.type', 'inbound')
+                                                            ->join('branches', 'branches.id', '=', 'branch_id')
                                                             ->leftJoin('users', 'user_id', '=', 'users.id')
                                                             ->orderBy('arrival_date', 'desc'));
         }
@@ -303,9 +335,7 @@ class InboundController extends Controller
             $lot->products()->attach($lot_products);
             $lot->propagate_left_volume();
         }
-
-        User::admin()->first()->notify(new AdminInboundCreatedNotification());
-        Auth::user()->notify(new InboundCreatedNotification($inbound));
+        $inbound->notify(new InboundCreatedNotification($inbound), new AdminInboundCreatedNotification());
 
         event(new EventTrigger('inbound'));
 
