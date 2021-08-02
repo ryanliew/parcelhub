@@ -27,6 +27,6 @@ class HomeController extends Controller
         {
             return redirect(route('dashboard'));
         }
-        return redirect(route('lots'));
+        return redirect(route('branches'));
     }
 }
