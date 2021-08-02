@@ -172,28 +172,56 @@ class OutboundController extends Controller
 
     public function indexPending()
     {
-       return Controller::VueTableListResult( Outbound::with('tracking_numbers')
-                                                        ->select('outbounds.id as id',
-                                                                    'amount_insured',
-                                                                    'process_status',
-                                                                    'couriers.name as courier',
-                                                                    'outbounds.created_at',
-                                                                    'outbounds.recipient_name',
-                                                                    'outbounds.recipient_address',
-                                                                    'outbounds.recipient_address_2',
-                                                                    'outbounds.recipient_phone',
-                                                                    'outbounds.recipient_state',
-                                                                    'outbounds.recipient_country',
-                                                                    'outbounds.recipient_postcode',
-                                                                    'users.name as customer',
-                                                                    'outbounds.type as type'
-                                                                    )
-                                                                ->leftJoin('couriers', 'courier_id', '=', 'couriers.id')
-                                                                ->leftJoin('users', 'user_id', '=', 'users.id')
-                                                                ->where('outbounds.type', 'outbound')
-                                                                ->where('outbounds.process_status', '<>', 'completed')
-                                                                ->where('outbounds.process_status', '<>', 'canceled')
-                                                                ->orderBy('outbounds.created_at', 'desc'));
+        if(auth()->user()->hasRole('superadmin')) {
+            return Controller::VueTableListResult( Outbound::with('tracking_numbers')
+                                                             ->select('outbounds.id as id',
+                                                                         'amount_insured',
+                                                                         'process_status',
+                                                                         'couriers.name as courier',
+                                                                         'outbounds.created_at',
+                                                                         'outbounds.recipient_name',
+                                                                         'outbounds.recipient_address',
+                                                                         'outbounds.recipient_address_2',
+                                                                         'outbounds.recipient_phone',
+                                                                         'outbounds.recipient_state',
+                                                                         'outbounds.recipient_country',
+                                                                         'outbounds.recipient_postcode',
+                                                                         'users.name as customer',
+                                                                         'outbounds.type as type'
+                                                                         )
+                                                                     ->leftJoin('couriers', 'courier_id', '=', 'couriers.id')
+                                                                     ->leftJoin('users', 'user_id', '=', 'users.id')
+                                                                     ->where('outbounds.type', 'outbound')
+                                                                     ->where('outbounds.process_status', '<>', 'completed')
+                                                                     ->where('outbounds.process_status', '<>', 'canceled')
+                                                                     ->orderBy('outbounds.created_at', 'desc'));
+        }
+        else{
+            return Controller::VueTableListResult( Outbound::with('tracking_numbers')
+                                                             ->select('outbounds.id as id',
+                                                                         'amount_insured',
+                                                                         'process_status',
+                                                                         'couriers.name as courier',
+                                                                         'outbounds.created_at',
+                                                                         'outbounds.recipient_name',
+                                                                         'outbounds.recipient_address',
+                                                                         'outbounds.recipient_address_2',
+                                                                         'outbounds.recipient_phone',
+                                                                         'outbounds.recipient_state',
+                                                                         'outbounds.recipient_country',
+                                                                         'outbounds.recipient_postcode',
+                                                                         'users.name as customer',
+                                                                         'outbounds.type as type'
+                                                                         )
+                                                                     ->leftJoin('couriers', 'courier_id', '=', 'couriers.id')
+                                                                     ->leftJoin('users', 'user_id', '=', 'users.id')
+                                                                     ->leftJoin('accessibilities', 'outbounds.branch_id', '=' , 'accessibilities.branch_id')
+                                                                     ->where('accessibilities.user_id', auth()->user()->id)
+                                                                     ->where('outbounds.type', 'outbound')
+                                                                     ->where('outbounds.process_status', '<>', 'completed')
+                                                                     ->where('outbounds.process_status', '<>', 'canceled')
+                                                                     ->orderBy('outbounds.created_at', 'desc'));
+        }
     } 
 
     /**

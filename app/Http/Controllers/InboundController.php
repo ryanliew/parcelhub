@@ -136,19 +136,38 @@ class InboundController extends Controller
 
     public function indexToday()
     {
-        return Controller::VueTableListResult(Inbound::with('products', 'products_with_lots.lots')
-                                                                ->select('arrival_date',
-                                                                        'total_carton',
-                                                                        'type',
-                                                                        'process_status',
-                                                                        'inbounds.id as id',
-                                                                        'users.name as customer',
-                                                                        'inbounds.created_at as created_at'
-                                                                        )
-                                                                ->where('inbounds.type', 'inbound')
-                                                                ->where('process_status', 'awaiting_arrival')
-                                                                ->leftJoin('users', 'user_id', '=', 'users.id')
-                                                                ->orderBy('arrival_date', 'desc'));
+        if(auth()->user()->hasRole('superadmin')) {
+            return Controller::VueTableListResult(Inbound::with('products', 'products_with_lots.lots')
+                                                                    ->select('arrival_date',
+                                                                            'total_carton',
+                                                                            'type',
+                                                                            'process_status',
+                                                                            'inbounds.id as id',
+                                                                            'users.name as customer',
+                                                                            'inbounds.created_at as created_at'
+                                                                            )
+                                                                    ->where('inbounds.type', 'inbound')
+                                                                    ->where('process_status', 'awaiting_arrival')
+                                                                    ->leftJoin('users', 'user_id', '=', 'users.id')
+                                                                    ->orderBy('arrival_date', 'desc'));
+        }
+        elseif(auth()->user()->hasRole('admin')) {
+            return Controller::VueTableListResult(Inbound::with('products', 'products_with_lots.lots')
+                                                                    ->select('arrival_date',
+                                                                            'total_carton',
+                                                                            'type',
+                                                                            'process_status',
+                                                                            'inbounds.id as id',
+                                                                            'users.name as customer',
+                                                                            'inbounds.created_at as created_at'
+                                                                            )
+                                                                    ->where('inbounds.type', 'inbound')
+                                                                    ->where('process_status', 'awaiting_arrival')
+                                                                    ->leftJoin('users', 'user_id', '=', 'users.id')
+                                                                    ->leftJoin('accessibilities', 'inbounds.branch_id', '=' , 'accessibilities.branch_id')
+                                                                    ->where('accessibilities.user_id', auth()->user()->id)
+                                                                    ->orderBy('arrival_date', 'desc'));
+        }
     }
     /**
      * Show the form for creating a new resource.
