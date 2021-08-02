@@ -27,6 +27,11 @@ class HomeController extends Controller
         {
             return redirect(route('dashboard'));
         }
-        return redirect(route('branches'));
+        else if(auth()->user()->hasRole('superadmin')){
+            return redirect(route('branches'));
+        }
+        else {
+            return redirect(route('lots'));
+        }
     }
 }
