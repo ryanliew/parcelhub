@@ -88,11 +88,11 @@
         Misc
     </p>
     <ul class="menu-list">
-        <li>
+        {{-- <li>
             <a @if( url()->current() == route('setting.index') ) class="is-active" @endif href="{{ route('setting.index') }}">
                 System settings
             </a>
-        </li>
+        </li> --}}
         <li>
             <a @if( url()->current() == route('reports') ) class="is-active" @endif href="{{ route('reports') }}">
                 Reports
