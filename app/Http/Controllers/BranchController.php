@@ -161,10 +161,18 @@ class BranchController extends Controller
     public function selector() {
         $user = auth()->user();
 
-        $branch = Branch::select('branches.id', 'branches.codename', 'branches.branch_name')
-                        ->leftJoin('lots' , 'lots.branch_id', '=', 'branches.id')
-                        ->where('lots.user_id', $user->id)
-                        ->get();
+        if($user->hasRole('superadmin')) {
+            $branch = Branch::all();
+        }
+        elseif($user->hasRole('admin')) {
+            $branch = $user->branches;
+        }
+        else {
+            $branch = Branch::select('branches.id', 'branches.codename', 'branches.branch_name')
+                            ->leftJoin('lots' , 'lots.branch_id', '=', 'branches.id')
+                            ->where('lots.user_id', $user->id)
+                            ->get();
+        }
 
        return $branch;
     }

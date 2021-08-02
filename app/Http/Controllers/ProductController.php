@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Product;
 use App\User;
+use App\Inbound;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Storage;
@@ -116,6 +117,13 @@ class ProductController extends Controller
     public function selector()
     {
         $query = Product::query();
+        if(auth()->user()->hasRole('admin')) {
+            $branches = auth()->user()->branches->pluck("id");
+
+            $products = Inbound::with("products")->whereIn("branch_id", $branches)->where("status", 'true')->get()->pluck("products")->flatten()->unique("id");
+ 
+            return $products;
+        }
         if(!auth()->user()->hasRole('superadmin'))
         {
             $query = auth()->user()->products();
