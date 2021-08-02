@@ -38,7 +38,7 @@ class PaymentController extends Controller
     public function index()
     {
         if(request()->wantsJson()) {
-            if(auth()->user()->hasRole('admin'))
+            if(auth()->user()->hasRole('superadmin')) {
                 return Controller::VueTableListResult(Payment::with('lots')
                                                                 ->select('users.name as name',
                                                                         'picture as picture',
@@ -47,7 +47,21 @@ class PaymentController extends Controller
                                                                         'payments.price as price',
                                                                         'payments.id as id')
                                                                 ->leftJoin('users', 'user_id', '=', 'users.id'));
+            }
 
+            elseif(auth()->user()->hasRole('admin')){
+                $branches = auth()->user()->branches->pluck("id");
+                $lots = Lot::whereIn('branch_id', $branches)->get()->pluck('user_id');
+                $users = User::whereIn('id', $lots)->get()->pluck('id');
+                return Controller::VueTableListResult(Payment::select('users.name as name',
+                                                'picture as picture',
+                                                'payments.status as status',
+                                                'payments.created_at as created_at',
+                                                'payments.price as price',
+                                                'payments.id as id')
+                                                ->whereIn('user_id', $users)
+                                                ->leftJoin('users', 'user_id', 'users.id'));
+            }
             return Controller::VueTableListResult(auth()->user()->payments()->with('lots')
                                                                 ->select('users.name as name',
                                                                         'picture as picture',
