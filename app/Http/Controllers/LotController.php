@@ -68,10 +68,12 @@ class LotController extends Controller
                                 'lots.volume as volume', 
                                 'lots.price as price',
                                 'lots.left_volume as left_volume',
+                                'branches.branch_name',
                                 'users.name as user_name',
                                 'lots.expired_at as expired_at',
                                 'users.id as user_id')
                         ->selectRaw('lots.volume - lots.left_volume as lot_usage')
+                        ->join('branches', 'branches.id', '=', 'branch_id')
                         ->join('categories', 'categories.id', '=', 'category_id')
                         ->leftJoin('users', 'users.id', '=', 'user_id')
                     );
@@ -89,6 +91,7 @@ class LotController extends Controller
                         'lots.volume as volume', 
                         'lots.price as price',
                         'lots.left_volume as left_volume',
+                        'branches.branch_name',
                         'users.name as user_name',
                         'lots.expired_at as expired_at',
                         'users.id as user_id')
@@ -113,11 +116,13 @@ class LotController extends Controller
                                         'lots.volume as volume', 
                                         'lots.left_volume as left_volume',
                                         'lots.price as price',
+                                        'branches.branch_name',
                                         'users.name as user_name',
                                         'lots.expired_at as expired_at',
                                         'users.id as user_id')
                                 ->selectRaw('lots.volume - lots.left_volume as lot_usage')
                                 ->join('categories', 'categories.id', '=', 'category_id')
+                                ->join('branches', 'branches.id', '=', 'branch_id')
                                 ->leftJoin('users', 'users.id', '=', 'user_id')
                     );
             }

@@ -76856,7 +76856,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		fields: function fields() {
 			var displayFields = [{ name: 'name', sortField: 'name' }, { name: 'category_name', sortField: 'category_name', title: 'Category' }, { name: 'usage', title: 'Usage (m³)' },
 			// {name: 'price', sortField: 'price', title: 'Price (RM)'},
-			{ name: 'products.length', title: 'No. item' }, { name: 'expired_at', sortField: 'expired_at', title: 'Rental expire', callback: 'date' }];
+			{ name: 'products.length', title: 'No. item' }, { name: 'expired_at', sortField: 'expired_at', title: 'Rental expire', callback: 'date' }, { name: 'branch_name', sortFiled: 'branch_name', title: 'Branch' }];
 
 			if (this.can_manage) {
 				displayFields.push({ name: 'user_name', sortField: 'user_name', title: 'Customer', callback: 'customer' });

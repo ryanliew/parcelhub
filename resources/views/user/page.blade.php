@@ -8,7 +8,7 @@
 					@include('components.side-menu')
 				</div>
 				<div class="column">
-					<users-page can_manage="{{ auth()->user()->hasRole('admin') && url()->current() == route('users') }}"></users-page>
+					<users-page can_manage="{{  (auth()->user()->hasRole('admin') || auth()->user()->hasRole('superadmin')) && url()->current() == route('users') }}"></users-page>
 				</div>	
 			</div>
 		</section>

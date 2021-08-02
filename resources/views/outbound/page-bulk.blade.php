@@ -9,7 +9,7 @@
 				</div>
 				<div class="column">
 					<outbounds-tracking-page 
-						can_manage="{{ auth()->user()->hasRole('admin') }}" >
+						can_manage="{{ auth()->user()->hasRole('admin') || auth()->user()->hasRole('superadmin')}}" >
 					</outbounds-tracking-page>
 				</div>	
 			</div>

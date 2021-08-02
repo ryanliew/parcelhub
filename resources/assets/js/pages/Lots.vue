@@ -458,7 +458,7 @@
 					// {name: 'price', sortField: 'price', title: 'Price (RM)'},
 					{name: 'products.length', title: 'No. item'},
 					{name: 'expired_at', sortField: 'expired_at', title: 'Rental expire', callback: 'date'},
-					
+					{name: 'branch_name', sortFiled: 'branch_name', title: 'Branch'}
 				];
 
 				if(this.can_manage)
