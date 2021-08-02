@@ -18,7 +18,7 @@ class AdminController extends Controller
 
     public function page()
     {
-    	if(auth()->user()->hasRole('admin'))
+    	if(auth()->user()->hasRole('admin') || auth()->user()->hasRole('superadmin'))
     		return view('dashboard');
     }
 }
