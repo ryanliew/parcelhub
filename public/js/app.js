@@ -76624,6 +76624,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -76641,6 +76654,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			searchables: "users.name,lots.name,categories.name,lots.volume",
 			selectedLot: '',
 			selectedCategory: '',
+			selected_branch: '',
 			dialogActive: false,
 			dialogUserActive: false,
 			dialogPaymentActive: false,
@@ -76650,7 +76664,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 				name: '',
 				volume: '',
 				category: '',
-				price: ''
+				price: '',
+				selectedBranch: ''
 			}),
 			ownerForm: new Form({
 				user_id: '',
@@ -76660,6 +76675,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 				id: ''
 			}),
 			userOptions: [],
+			branchesOptions: [],
 			selectedUser: '',
 			selectedPayment: '',
 			isPaymentLoading: false,
@@ -76674,6 +76690,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		var _this = this;
 
 		this.fetchCategories();
+		this.getBranches();
 
 		this.$events.on('edit', function (data) {
 			return _this.edit(data);
@@ -76695,6 +76712,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 				return _this2.setCategories(response);
 			});
 		},
+		getBranches: function getBranches() {
+			var _this3 = this;
+
+			axios.get('internal/branches/selector').then(function (response) {
+				return _this3.setBranches(response);
+			});
+		},
+		setBranches: function setBranches(response) {
+			this.branchesOptions = response.data.map(function (branches) {
+				var obj = {};
+				obj['label'] = branches.branch_name;
+				obj['value'] = branches.id;
+				return obj;
+			});
+		},
 		setCategories: function setCategories(response) {
 			this.categories = response.data.data;
 			this.categoriesOptions = this.categories.map(function (category) {
@@ -76709,19 +76741,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			this.fetchUsers();
 		},
 		fetchUsers: function fetchUsers() {
-			var _this3 = this;
+			var _this4 = this;
 
 			axios.get('/internal/users').then(function (response) {
-				return _this3.setUsers(response);
+				return _this4.setUsers(response);
 			});
 		},
 		approveOwner: function approveOwner(data) {
-			var _this4 = this;
+			var _this5 = this;
 
 			this.dialogPaymentActive = true;
 			this.isPaymentLoading = true;
 			axios.get('/internal/payment/' + data.id).then(function (response) {
-				return _this4.setPayment(response);
+				return _this5.setPayment(response);
 			});
 		},
 		setPayment: function setPayment(response) {
@@ -76732,13 +76764,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			this.confirmSubmitPayment = true;
 		},
 		onSubmitPayment: function onSubmitPayment() {
-			var _this5 = this;
+			var _this6 = this;
 
 			this.confirmSubmitPayment = false;
 			this.submitting = true;
 			this.approveForm.id = this.selectedPayment.id;
 			this.approveForm.post('/payment/approve').then(function (response) {
-				return _this5.onSuccess();
+				return _this6.onSuccess();
 			});
 		},
 		setUsers: function setUsers(response) {
@@ -76753,39 +76785,42 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			this.confirmSubmit = true;
 		},
 		onSubmit: function onSubmit() {
-			var _this6 = this;
+			var _this7 = this;
 
+			if (this.selected_branch != null) {
+				this.form.selectedBranch = this.selected_branch.value;
+			}
 			this.confirmSubmit = false;
 			this.form.post(this.action).then(function (data) {
-				return _this6.onSuccess();
+				return _this7.onSuccess();
 			}).catch(function (error) {
-				return _this6.onFail(error);
+				return _this7.onFail(error);
 			});
 		},
 		submitOwner: function submitOwner() {
 			this.confirmSubmitUser = true;
 		},
 		onSubmitOwner: function onSubmitOwner() {
-			var _this7 = this;
+			var _this8 = this;
 
 			this.confirmSubmitUser = false;
 			this.ownerForm.post('/lot/assign/' + this.selectedLot.id).then(function (data) {
-				return _this7.onSuccess();
+				return _this8.onSuccess();
 			}).catch(function (error) {
-				return _this7.onFail(error);
+				return _this8.onFail(error);
 			});
 		},
 		unassignOwner: function unassignOwner() {
 			this.confirmUnassignOwner = true;
 		},
 		onUnassignOwner: function onUnassignOwner() {
-			var _this8 = this;
+			var _this9 = this;
 
 			this.confirmUnassignOwner = false;
 			this.ownerForm.post('/lot/unassign/' + this.selectedLot.id).then(function (data) {
-				return _this8.onSuccess();
+				return _this9.onSuccess();
 			}).catch(function (error) {
-				return _this8.onFail(error);
+				return _this9.onFail(error);
 			});
 		},
 		onSuccess: function onSuccess() {
@@ -76808,6 +76843,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 				value: data.category_id,
 				volume: data.category_volume,
 				price: data.category_price
+			};
+			this.selected_branch = {
+				label: data.branch_name,
+				value: data.branch_id
 			};
 			this.dialogActive = true;
 			//this.override = data.category_volume !== data.volume || data.category_price !== data.price;
@@ -76839,6 +76878,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		modalOpen: function modalOpen() {
 			this.form.reset();
 			this.selectedCategory = '';
+			this.selected_branch = '';
 			this.selectedLot = '';
 			this.dialogActive = true;
 			this.override = false;
@@ -77035,6 +77075,37 @@ var render = function() {
                       expression: "selectedCategory"
                     }
                   })
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "field mt-30" },
+                [
+                  _c(
+                    "selector-input",
+                    {
+                      attrs: {
+                        defaultData: _vm.selected_branch,
+                        label: "Branch",
+                        required: true,
+                        potentialData: _vm.branchesOptions,
+                        name: "branch",
+                        editable: true,
+                        placeholder: "Select a branch",
+                        error: _vm.form.errors.get("selectedBranch")
+                      },
+                      model: {
+                        value: _vm.selected_branch,
+                        callback: function($$v) {
+                          _vm.selected_branch = $$v
+                        },
+                        expression: "selected_branch"
+                      }
+                    },
+                    [_vm._v(">\n\t\t\t\t\t")]
+                  )
                 ],
                 1
               ),

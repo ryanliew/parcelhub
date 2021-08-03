@@ -69,6 +69,7 @@ class LotController extends Controller
                                 'lots.price as price',
                                 'lots.left_volume as left_volume',
                                 'branches.branch_name',
+                                'branches.id as branch_id',
                                 'users.name as user_name',
                                 'lots.expired_at as expired_at',
                                 'users.id as user_id')
@@ -92,6 +93,7 @@ class LotController extends Controller
                         'lots.price as price',
                         'lots.left_volume as left_volume',
                         'branches.branch_name',
+                        'branches.id as branch_id',
                         'users.name as user_name',
                         'lots.expired_at as expired_at',
                         'users.id as user_id')
@@ -153,8 +155,26 @@ class LotController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, $this->rules, ['category.required' => 'The category field is required']);
+        if($request->category == null) {
+            if(request()->wantsJson()) {
+                return response(json_encode(array('name' => ['Please fill in the lot\'s name'])), 422);
+            }
+            return redirect()->back()->withErrors("Please fill in the lot\'s name");
+        }
+        if($request->category == null) {
+            if(request()->wantsJson()) {
+                return response(json_encode(array('category' => ['Please select a category!'])), 422);
+            }
+            return redirect()->back()->withErrors("Please select a category!");
+        }
 
+        if($request->selectedBranch == null) {
+            if(request()->wantsJson()) {
+                return response(json_encode(array('selectedBranch' => ['Please select a branch'])), 422);
+            }
+            return redirect()->back()->withErrors("Please select a branch!");
+        }
+        
         $settings = Settings::all();
         $rental_duration = $settings->filter(function($value){return $value->setting_key == 'rental_duration';})->first()->setting_value;
         $lot = new Lot;
@@ -162,6 +182,7 @@ class LotController extends Controller
         $lot->volume = $request->volume;
         $lot->left_volume = $lot->volume;
         $lot->category_id = $request->category;
+        $lot->branch_id = $request->selectedBranch;
         $lot->price = $request->price;
         $lot->status = "false";
         $lot->rental_duration = $rental_duration;
@@ -208,9 +229,10 @@ class LotController extends Controller
     {
         $this->validate($request, $this->rules, ['category.required' => 'The category field is required']);
         
-        $lot = lot::find($request->id);
+        $lot = Lot::find($request->id);
         $lot->name = $request->name;
         $lot->category_id = $request->category;
+        $lot->branch_id = $request->selectedBranch;
         $lot->volume = $request->volume;
         $lot->left_volume = Utilities::convertMeterCubeToCentimeterCube($request->volume);
         $lot->price = $request->price;
