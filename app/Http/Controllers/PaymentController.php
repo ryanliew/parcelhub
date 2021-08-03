@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Notifications\PaymentCreatedNotification;
 use App\Payment;
 use App\Lot;
-use Settings;
+use App\Settings;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -105,11 +105,13 @@ class PaymentController extends Controller
     }
 
     public function purchase(Request $request) {
+
         $settings = Settings::all();
         $rental_duration = $settings->filter(function($value){return $value->setting_key == 'rental_duration';})->first()->setting_value;
 
         $this->validate($request, [
             'payment_slip' => 'required|image',
+            'selectedBranch' => 'required',
             'rental_duration' => 'bail|required|integer|min:' . $rental_duration
         ]);
 
@@ -137,12 +139,12 @@ class PaymentController extends Controller
                 $lot = Lot::find($lot_purchase['id']);
 
                 $lot->rental_duration = $lot_purchase['rental_duration'];
+                $lot->branch_id = $request['selectedBranch'];
                 $lot->user()->associate($user);
                 $lot->save();
 
                 $lot->payments()->save($payment);
             }
-
             $user->notify(new PaymentCreatedNotification($payment->load('user', 'lots')));
 
         } catch (\Exception $exception) {

@@ -103,7 +103,16 @@
 						<div class="is-divider" data-content="PURCHASE DETAILS"></div>
 						<div class="columns">
 							<div class="column">
-								<table class="table is-hoverable is-fullwidth">
+								<selector-input
+								v-model="selected_branch"
+									label="Branch" 
+									:required="true"
+									:potentialData="branchesOptions"
+									name="branch"
+									:editable="true"
+									placeholder="Select a branch"
+									:error="form.errors.get('selectedBranch')">></selector-input>
+								<table class="table is-hoverable is-fullwidth" v-if="showLots">
 									<thead>
 										<th>Lot type</th>
 										<th>Price (RM)</th>
@@ -318,8 +327,10 @@
 				isPurchasing: false,
 				dialogActive: false,
 				override: false,
+				showLots: false,
 				form: new Form({
 					payment_slip: '',
+					selectedBranch: '',
 					lot_purchases: '',
 					price: '',
 					rental_duration: ''
@@ -328,6 +339,8 @@
 					id: ''
 				}),
 				categories: '',
+				selected_branch: '',
+				branchesOptions: [],
 				selectableLots: [],
 				rental_duration: '',
 				totalLots: 0,
@@ -350,6 +363,8 @@
 
 			this.$events.on('viewPayment', data => this.view(data));
 
+			this.getBranches();
+
 			this.getLotCategories();
 		},
 
@@ -358,7 +373,18 @@
 				axios.get('/internal/categories')
 					.then(response => this.setLotCategories(response.data));
 			},
-
+			getBranches() {
+				axios.get('internal/branches/selector')
+					.then(response => this.setBranches(response));
+			},
+			setBranches(response) {
+				this.branchesOptions = response.data.map(branches =>{
+					let obj = {};
+					obj['label'] = branches.branch_name;
+					obj['value'] = branches.id;
+					return obj;
+				});
+			},
 			setLotCategories(data) {
 				//this.categories = data.data;
 				this.selectableLots = [];
@@ -426,6 +452,9 @@
 			onSubmit() {
 				this.confirmPayment = false;
 				let selectedLots = [];
+				if(this.selected_branch != null) {
+					this.form.selectedBranch = this.selected_branch.value;
+				}
 				this.categories.forEach(function(category){
 					let lots = [];
 					let availableLots = this.availableLots(category);
@@ -517,6 +546,13 @@
 			}
 		},
 
+		watch: {
+			selected_branch() {
+				console.log(this.selected_branch);
+				this.showLots = true;
+			},
+		},
+
 		computed: {
 			dialogTitle() {
 				return "Purchase lot";
@@ -549,7 +585,11 @@
 			submitTooltipText() {
 				let text = '';
 
-				if(!this.totalLots > 0){
+				if(this.selected_branch == '' && !this.totalLots > 0) {
+					text= 'Please select a branch';
+				}
+
+				if(!this.totalLots > 0 && this.selected_branch != ''){
 					text = 'Please select at least one lot';
 				}
 

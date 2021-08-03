@@ -90315,6 +90315,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -90331,8 +90340,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 			isPurchasing: false,
 			dialogActive: false,
 			override: false,
+			showLots: false,
 			form: new Form({
 				payment_slip: '',
+				selectedBranch: '',
 				lot_purchases: '',
 				price: '',
 				rental_duration: ''
@@ -90341,6 +90352,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 				id: ''
 			}),
 			categories: '',
+			selected_branch: '',
+			branchesOptions: [],
 			selectableLots: [],
 			rental_duration: '',
 			totalLots: 0,
@@ -90360,6 +90373,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 			return _this.view(data);
 		});
 
+		this.getBranches();
+
 		this.getLotCategories();
 	},
 
@@ -90370,6 +90385,21 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 			axios.get('/internal/categories').then(function (response) {
 				return _this2.setLotCategories(response.data);
+			});
+		},
+		getBranches: function getBranches() {
+			var _this3 = this;
+
+			axios.get('internal/branches/selector').then(function (response) {
+				return _this3.setBranches(response);
+			});
+		},
+		setBranches: function setBranches(response) {
+			this.branchesOptions = response.data.map(function (branches) {
+				var obj = {};
+				obj['label'] = branches.branch_name;
+				obj['value'] = branches.id;
+				return obj;
 			});
 		},
 		setLotCategories: function setLotCategories(data) {
@@ -90406,13 +90436,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 			this.confirmSubmit = true;
 		},
 		onApprove: function onApprove() {
-			var _this3 = this;
+			var _this4 = this;
 
 			this.confirmSubmit = false;
 			this.submitting = true;
 			this.approveForm.id = this.selectedPayment.id;
 			this.approveForm.post('/payment/approve').then(function (response) {
-				return _this3.onSuccess();
+				return _this4.onSuccess();
 			});
 		},
 		back: function back() {
@@ -90431,10 +90461,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 			this.confirmPayment = true;
 		},
 		onSubmit: function onSubmit() {
-			var _this4 = this;
+			var _this5 = this;
 
 			this.confirmPayment = false;
 			var selectedLots = [];
+			if (this.selected_branch != null) {
+				this.form.selectedBranch = this.selected_branch.value;
+			}
 			this.categories.forEach(function (category) {
 				var lots = [];
 				var availableLots = this.availableLots(category);
@@ -90455,9 +90488,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 			this.form.price = this.totalPrice;
 
 			this.form.post(this.action).then(function (data) {
-				return _this4.onSuccess();
+				return _this5.onSuccess();
 			}).catch(function (error) {
-				return _this4.onFail(error);
+				return _this5.onFail(error);
 			});
 		},
 		onSuccess: function onSuccess() {
@@ -90522,6 +90555,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 		}
 	},
 
+	watch: {
+		selected_branch: function selected_branch() {
+			console.log(this.selected_branch);
+			this.showLots = true;
+		}
+	},
+
 	computed: (_computed = {
 		dialogTitle: function dialogTitle() {
 			return "Purchase lot";
@@ -90547,7 +90587,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 		submitTooltipText: function submitTooltipText() {
 			var text = '';
 
-			if (!this.totalLots > 0) {
+			if (this.selected_branch == '' && !this.totalLots > 0) {
+				text = 'Please select a branch';
+			}
+
+			if (!this.totalLots > 0 && this.selected_branch != '') {
 				text = 'Please select at least one lot';
 			}
 
@@ -90945,99 +90989,142 @@ var render = function() {
                         }),
                         _vm._v(" "),
                         _c("div", { staticClass: "columns" }, [
-                          _c("div", { staticClass: "column" }, [
-                            _c(
-                              "table",
-                              {
-                                staticClass: "table is-hoverable is-fullwidth"
-                              },
-                              [
-                                _c("thead", [
-                                  _c("th", [_vm._v("Lot type")]),
-                                  _vm._v(" "),
-                                  _c("th", [_vm._v("Price (RM)")]),
-                                  _vm._v(" "),
-                                  _c("th", [_vm._v("Volume (m³)")]),
-                                  _vm._v(" "),
-                                  _c("th", [_vm._v("Quantity")])
-                                ]),
-                                _vm._v(" "),
-                                _c(
-                                  "tbody",
-                                  _vm._l(_vm.categories, function(
-                                    category,
-                                    index
-                                  ) {
-                                    return _c("tr", [
-                                      _c("td", [_vm._v(_vm._s(category.name))]),
-                                      _vm._v(" "),
-                                      _c("td", [
-                                        _vm._v(_vm._s(category.price))
+                          _c(
+                            "div",
+                            { staticClass: "column" },
+                            [
+                              _c(
+                                "selector-input",
+                                {
+                                  attrs: {
+                                    label: "Branch",
+                                    required: true,
+                                    potentialData: _vm.branchesOptions,
+                                    name: "branch",
+                                    editable: true,
+                                    placeholder: "Select a branch",
+                                    error: _vm.form.errors.get("selectedBranch")
+                                  },
+                                  model: {
+                                    value: _vm.selected_branch,
+                                    callback: function($$v) {
+                                      _vm.selected_branch = $$v
+                                    },
+                                    expression: "selected_branch"
+                                  }
+                                },
+                                [_vm._v(">")]
+                              ),
+                              _vm._v(" "),
+                              _vm.showLots
+                                ? _c(
+                                    "table",
+                                    {
+                                      staticClass:
+                                        "table is-hoverable is-fullwidth"
+                                    },
+                                    [
+                                      _c("thead", [
+                                        _c("th", [_vm._v("Lot type")]),
+                                        _vm._v(" "),
+                                        _c("th", [_vm._v("Price (RM)")]),
+                                        _vm._v(" "),
+                                        _c("th", [_vm._v("Volume (m³)")]),
+                                        _vm._v(" "),
+                                        _c("th", [_vm._v("Quantity")])
                                       ]),
                                       _vm._v(" "),
-                                      _c("td", [
-                                        _vm._v(
-                                          _vm._s(
-                                            _vm._f("convertToMeterCube")(
-                                              category.volume
-                                            )
-                                          )
-                                        )
-                                      ]),
-                                      _vm._v(" "),
-                                      _vm.availableLots(category).length > 0
-                                        ? _c(
-                                            "td",
-                                            [
-                                              _c("text-input", {
-                                                ref: "category-" + category.id,
-                                                refInFor: true,
-                                                attrs: {
-                                                  defaultValue:
-                                                    _vm.categories[index]
-                                                      .quantity,
-                                                  label: "Quantity",
-                                                  required: true,
-                                                  type: "number",
-                                                  editable: true,
-                                                  hideLabel: true,
-                                                  name: "quantity",
-                                                  error:
-                                                    _vm.categories[index].error
-                                                },
-                                                on: {
-                                                  input: function($event) {
-                                                    return _vm.updateTotals(
-                                                      category
-                                                    )
-                                                  }
-                                                },
-                                                model: {
-                                                  value:
-                                                    _vm.categories[index]
-                                                      .quantity,
-                                                  callback: function($$v) {
-                                                    _vm.$set(
-                                                      _vm.categories[index],
-                                                      "quantity",
-                                                      $$v
-                                                    )
-                                                  },
-                                                  expression:
-                                                    "categories[index].quantity"
-                                                }
-                                              })
-                                            ],
-                                            1
-                                          )
-                                        : _c("td", [_vm._v("Sold out")])
-                                    ])
-                                  }),
-                                  0
-                                )
-                              ]
-                            )
-                          ]),
+                                      _c(
+                                        "tbody",
+                                        _vm._l(_vm.categories, function(
+                                          category,
+                                          index
+                                        ) {
+                                          return _c("tr", [
+                                            _c("td", [
+                                              _vm._v(_vm._s(category.name))
+                                            ]),
+                                            _vm._v(" "),
+                                            _c("td", [
+                                              _vm._v(_vm._s(category.price))
+                                            ]),
+                                            _vm._v(" "),
+                                            _c("td", [
+                                              _vm._v(
+                                                _vm._s(
+                                                  _vm._f("convertToMeterCube")(
+                                                    category.volume
+                                                  )
+                                                )
+                                              )
+                                            ]),
+                                            _vm._v(" "),
+                                            _vm.availableLots(category).length >
+                                            0
+                                              ? _c(
+                                                  "td",
+                                                  [
+                                                    _c("text-input", {
+                                                      ref:
+                                                        "category-" +
+                                                        category.id,
+                                                      refInFor: true,
+                                                      attrs: {
+                                                        defaultValue:
+                                                          _vm.categories[index]
+                                                            .quantity,
+                                                        label: "Quantity",
+                                                        required: true,
+                                                        type: "number",
+                                                        editable: true,
+                                                        hideLabel: true,
+                                                        name: "quantity",
+                                                        error:
+                                                          _vm.categories[index]
+                                                            .error
+                                                      },
+                                                      on: {
+                                                        input: function(
+                                                          $event
+                                                        ) {
+                                                          return _vm.updateTotals(
+                                                            category
+                                                          )
+                                                        }
+                                                      },
+                                                      model: {
+                                                        value:
+                                                          _vm.categories[index]
+                                                            .quantity,
+                                                        callback: function(
+                                                          $$v
+                                                        ) {
+                                                          _vm.$set(
+                                                            _vm.categories[
+                                                              index
+                                                            ],
+                                                            "quantity",
+                                                            $$v
+                                                          )
+                                                        },
+                                                        expression:
+                                                          "categories[index].quantity"
+                                                      }
+                                                    })
+                                                  ],
+                                                  1
+                                                )
+                                              : _c("td", [_vm._v("Sold out")])
+                                          ])
+                                        }),
+                                        0
+                                      )
+                                    ]
+                                  )
+                                : _vm._e()
+                            ],
+                            1
+                          ),
                           _vm._v(" "),
                           _c("div", { staticClass: "is-divider-vertical" }),
                           _vm._v(" "),
