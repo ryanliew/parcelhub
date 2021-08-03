@@ -491,7 +491,6 @@
 			},
 
 			changePaymentSlipImage(e) {
-				//console.log(e);
 				this.paymentSlip = { src: e.src, file: e.file };
 				this.form.payment_slip = e.file;
 				this.form.errors.clear('payment_slip');
@@ -548,7 +547,6 @@
 
 		watch: {
 			selected_branch() {
-				console.log(this.selected_branch);
 				this.showLots = true;
 			},
 		},
