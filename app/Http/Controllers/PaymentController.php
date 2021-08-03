@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Notifications\PaymentCreatedNotification;
 use App\Payment;
 use App\Lot;
-use Settings;
+use App\Settings;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -38,7 +38,7 @@ class PaymentController extends Controller
     public function index()
     {
         if(request()->wantsJson()) {
-            if(auth()->user()->hasRole('admin'))
+            if(auth()->user()->hasRole('superadmin')) {
                 return Controller::VueTableListResult(Payment::with('lots')
                                                                 ->select('users.name as name',
                                                                         'picture as picture',
@@ -47,7 +47,21 @@ class PaymentController extends Controller
                                                                         'payments.price as price',
                                                                         'payments.id as id')
                                                                 ->leftJoin('users', 'user_id', '=', 'users.id'));
+            }
 
+            elseif(auth()->user()->hasRole('admin')){
+                $branches = auth()->user()->branches->pluck("id");
+                $lots = Lot::whereIn('branch_id', $branches)->get()->pluck('user_id');
+                $users = User::whereIn('id', $lots)->get()->pluck('id');
+                return Controller::VueTableListResult(Payment::select('users.name as name',
+                                                'picture as picture',
+                                                'payments.status as status',
+                                                'payments.created_at as created_at',
+                                                'payments.price as price',
+                                                'payments.id as id')
+                                                ->whereIn('user_id', $users)
+                                                ->leftJoin('users', 'user_id', 'users.id'));
+            }
             return Controller::VueTableListResult(auth()->user()->payments()->with('lots')
                                                                 ->select('users.name as name',
                                                                         'picture as picture',
@@ -91,11 +105,13 @@ class PaymentController extends Controller
     }
 
     public function purchase(Request $request) {
+
         $settings = Settings::all();
         $rental_duration = $settings->filter(function($value){return $value->setting_key == 'rental_duration';})->first()->setting_value;
 
         $this->validate($request, [
             'payment_slip' => 'required|image',
+            'selectedBranch' => 'required',
             'rental_duration' => 'bail|required|integer|min:' . $rental_duration
         ]);
 
@@ -123,12 +139,12 @@ class PaymentController extends Controller
                 $lot = Lot::find($lot_purchase['id']);
 
                 $lot->rental_duration = $lot_purchase['rental_duration'];
+                $lot->branch_id = $request['selectedBranch'];
                 $lot->user()->associate($user);
                 $lot->save();
 
                 $lot->payments()->save($payment);
             }
-
             $user->notify(new PaymentCreatedNotification($payment->load('user', 'lots')));
 
         } catch (\Exception $exception) {

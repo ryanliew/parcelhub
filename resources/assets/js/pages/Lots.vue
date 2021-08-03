@@ -62,6 +62,19 @@
 					</selector-input>
 	          	</div>
 
+				  <div class="field mt-30">
+	          		<selector-input
+								v-model="selected_branch" :defaultData="selected_branch"
+								label="Branch" 
+								:required="true"
+								:potentialData="branchesOptions"
+								name="branch"
+								:editable="true"
+								placeholder="Select a branch"
+								:error="form.errors.get('selectedBranch')">>
+					</selector-input>
+	          	</div>
+
 	          	<!-- <div class="field">
 					<checkbox-input v-model="override" :defaultChecked="override"
 								label="Overwrite volume" 
@@ -239,6 +252,7 @@
 				searchables: "users.name,lots.name,categories.name,lots.volume",
 				selectedLot: '',
 				selectedCategory: '',
+				selected_branch: '',
 				dialogActive: false,
 				dialogUserActive: false,
 				dialogPaymentActive: false,
@@ -248,16 +262,18 @@
 					name: '',
 					volume: '',
 					category: '',
-					price: ''
+					price: '',
+					selectedBranch: '',
 				}),
 				ownerForm: new Form({
 					user_id: '',
-					id: ''
+					id: '',
 				}),
 				approveForm: new Form({
 					id: ''
 				}),
 				userOptions: [],
+				branchesOptions: [],
 				selectedUser: '',
 				selectedPayment: '',
 				isPaymentLoading: false,
@@ -271,6 +287,7 @@
 
 		mounted() {
 			this.fetchCategories();
+			this.getBranches();
 
 			this.$events.on('edit', data => this.edit(data));
 			this.$events.on('assign', data => this.editOwner(data));
@@ -281,6 +298,19 @@
 			fetchCategories() {
 				axios.get('/internal/categories')
 					.then(response => this.setCategories(response));
+			},
+
+			getBranches() {
+				axios.get('internal/branches/selector')
+					.then(response => this.setBranches(response));
+			},
+			setBranches(response) {
+				this.branchesOptions = response.data.map(branches =>{
+					let obj = {};
+					obj['label'] = branches.branch_name;
+					obj['value'] = branches.id;
+					return obj;
+				});
 			},
 
 			setCategories(response) {
@@ -340,6 +370,9 @@
 			},
 
 			onSubmit() {
+				if(this.selected_branch != null) {
+					this.form.selectedBranch = this.selected_branch.value;
+				}
 				this.confirmSubmit = false;
 				this.form.post(this.action)
 					.then(data => this.onSuccess())
@@ -393,6 +426,10 @@
 					volume: data.category_volume,
 					price: data.category_price
 				};
+				this.selected_branch = {
+					label: data.branch_name,
+					value: data.branch_id
+				}
 				this.dialogActive = true;
 				//this.override = data.category_volume !== data.volume || data.category_price !== data.price;
 
@@ -431,6 +468,7 @@
 			modalOpen() {
 				this.form.reset();
 				this.selectedCategory = '';
+				this.selected_branch = '';
 				this.selectedLot = '';
 				this.dialogActive = true;
 				this.override = false;
