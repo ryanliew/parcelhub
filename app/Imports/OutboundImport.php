@@ -11,7 +11,7 @@ use App\Courier;
 use App\Branch;
 use App\Events\EventTrigger;
 use App\Notifications\Admin\OutboundCreatedNotification as AdminOutboundCreatedNotification;
-use App\Notification\OutboundCreatedNotification;
+use App\Notifications\OutboundCreatedNotification;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
