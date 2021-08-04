@@ -12,7 +12,8 @@ use App\Rules\PresentDate;
 use Carbon\Carbon;
 use App\Utilities;
 use App\Events\EventTrigger;
-use App\Notifications\Admin\InboundCreatedNotification;
+use App\Notifications\Admin\InboundCreatedNotification as AdminInboundCreatedNotification;
+use App\Notifications\InboundCreatedNotification;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithStartRow;
 use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
@@ -142,7 +143,7 @@ class InboundImport implements ToCollection, WithStartRow, SkipsEmptyRows, WithV
                 }
             } 
         }
-        $inbound->notify(new InboundCreatedNotification($inbound), new AdminInboundCreatedNotification());
+        $inbound->notify(new InboundCreatedNotification($inbound), new AdminInboundCreatedNotification($inbound));
         event(new EventTrigger('inbound')); 
     }
 

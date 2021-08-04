@@ -167,15 +167,15 @@ class Outbound extends Model
         return $totalPrice;
     }
 
-    public function notify($outboundNotification) {
+    public function notify($outboundNotification, $adminoutboundNotification) {
 
         $admins = $this->branch->users;
         
         foreach($admins as $admin) {
-            $admin->notify($outboundNotification);
+            $admin->notify($adminoutboundNotification);
         }
         
-        User::superadmin()->first()->notify($outboundNotification);
+        User::superadmin()->first()->notify($adminoutboundNotification);
 
         auth()->user()->notify($outboundNotification);
     }

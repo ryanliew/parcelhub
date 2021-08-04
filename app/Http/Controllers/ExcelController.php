@@ -85,7 +85,6 @@ class ExcelController extends Controller
         }
 
         $count = Outbound::where("updated_at", '>=' , now()->subMinutes(3))->count();
-
         User::superadmin()->first()->notify(new OutboundCreatedNotification());
         event(new EventTrigger('outbound'));
         
