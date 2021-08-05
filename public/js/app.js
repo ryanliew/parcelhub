@@ -76912,6 +76912,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		},
 		confirmationMessage: function confirmationMessage() {
 			return this.selectedLot ? "Confirm editing lot information?" : "Confirm adding new lot?";
+		},
+		buttonClass: function buttonClass() {
+			return this.form.submitting ? 'is-loading' : '';
 		}
 	}
 });
@@ -77176,6 +77179,7 @@ var render = function() {
               "button",
               {
                 staticClass: "button is-primary",
+                class: _vm.buttonClass,
                 attrs: { disabled: _vm.form.errors.any() },
                 on: { click: _vm.submit }
               },
@@ -90572,7 +90576,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 		},
 		onFail: function onFail() {},
 		changePaymentSlipImage: function changePaymentSlipImage(e) {
-			//console.log(e);
 			this.paymentSlip = { src: e.src, file: e.file };
 			this.form.payment_slip = e.file;
 			this.form.errors.clear('payment_slip');
@@ -90628,7 +90631,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 	watch: {
 		selected_branch: function selected_branch() {
-			console.log(this.selected_branch);
 			this.showLots = true;
 		}
 	},

@@ -111,7 +111,7 @@
           	</form>
 
           	<template slot="footer">
-				<button class="button is-primary" :disabled="form.errors.any()" @click="submit">Submit</button>
+				<button class="button is-primary" :disabled="form.errors.any()" @click="submit" :class="buttonClass">Submit</button>
           	</template>
 		</modal>
 
@@ -520,6 +520,10 @@
 				return this.selectedLot 
 						? "Confirm editing lot information?"
 						: "Confirm adding new lot?";
+			},
+
+			buttonClass() {
+				return this.form.submitting ? 'is-loading' : '';
 			}
 		}
 	}
