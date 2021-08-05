@@ -1,7 +1,7 @@
 /storage/framework/laravel-excel
 /node_modules
 /public/hot
-/public/storage
+/public/storage/reports
 /storage/*.key
 /vendor
 /.idea
