@@ -155,7 +155,7 @@ class LotController extends Controller
      */
     public function store(Request $request)
     {
-        if($request->category == null) {
+        if($request->name == null) {
             if(request()->wantsJson()) {
                 return response(json_encode(array('name' => ['Please fill in the lot\'s name'])), 422);
             }
@@ -174,7 +174,6 @@ class LotController extends Controller
             }
             return redirect()->back()->withErrors("Please select a branch!");
         }
-        
         $settings = Settings::all();
         $rental_duration = $settings->filter(function($value){return $value->setting_key == 'rental_duration';})->first()->setting_value;
         $lot = new Lot;
@@ -185,7 +184,7 @@ class LotController extends Controller
         $lot->branch_id = $request->selectedBranch;
         $lot->price = $request->price;
         $lot->status = "false";
-        $lot->rental_duration = $rental_duration;
+        $lot->rental_duration = (int)$rental_duration;
         $lot->save();
 
         if(request()->wantsJson())
