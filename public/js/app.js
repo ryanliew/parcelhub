@@ -76062,7 +76062,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 				price: '',
 				volume: ''
 			}),
-			confirmSubmit: false
+			confirmSubmit: false,
+			roles: false
 		};
 	},
 	mounted: function mounted() {
@@ -76071,21 +76072,34 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		this.$events.on('edit', function (data) {
 			return _this.edit(data);
 		});
+		this.getRole();
 	},
 
 
 	methods: {
+		getRole: function getRole() {
+			var _this2 = this;
+
+			axios.get('/internal/user').then(function (data) {
+				return _this2.setRole(data);
+			});
+		},
+		setRole: function setRole(data) {
+			if (data.data.role_name == 'superadmin') {
+				this.roles = true;
+			};
+		},
 		submit: function submit() {
 			this.confirmSubmit = true;
 		},
 		onSubmit: function onSubmit() {
-			var _this2 = this;
+			var _this3 = this;
 
 			this.confirmSubmit = false;
 			this.form.post(this.action).then(function (data) {
-				return _this2.onSuccess();
+				return _this3.onSuccess();
 			}).catch(function (error) {
-				return _this2.onFail(error);
+				return _this3.onFail(error);
 			});
 		},
 		onSuccess: function onSuccess() {
@@ -76143,6 +76157,14 @@ var render = function() {
                 _c(
                   "button",
                   {
+                    directives: [
+                      {
+                        name: "show",
+                        rawName: "v-show",
+                        value: _vm.roles,
+                        expression: "roles"
+                      }
+                    ],
                     staticClass: "button is-primary",
                     on: {
                       click: function($event) {

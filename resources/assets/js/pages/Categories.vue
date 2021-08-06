@@ -10,7 +10,7 @@
 					</div>
 					<div class="level-right">
 						<div class="level-item">
-							<button class="button is-primary" @click="modalOpen()">
+							<button class="button is-primary" @click="modalOpen()" v-show="roles">
 								<i class="fa fa-plus-circle"></i>
 								<span class="pl-5">Create new category</span>
 							</button>
@@ -105,15 +105,25 @@
 					price: '',
 					volume: ''
 				}),
-				confirmSubmit: false
+				confirmSubmit: false,
+				roles: false
 			};
 		},
 
 		mounted() {
 			this.$events.on('edit', data => this.edit(data));
+			this.getRole();
 		},
 
 		methods: {
+			getRole() {
+				axios.get('/internal/user' ).then(data => this.setRole(data));
+			},
+			setRole(data) {
+				if(data.data.role_name == 'superadmin') {
+					this.roles = true;
+				};
+			},
 			submit() {
 				this.confirmSubmit = true;
 			},

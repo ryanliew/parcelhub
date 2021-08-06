@@ -64,7 +64,7 @@ class InboundController extends Controller
 
             $query = $user->inbounds()->with('products', 'products_with_lots.lots');
 
-            if($user->hasRole('superadmin') || $user->hasRole('admin')) {
+            if($user->hasRole('superadmin')) {
                 $query = Inbound::with('products', 'products_with_lots.lots');
             }
             elseif($user->hasRole('subuser')) {
