@@ -10,7 +10,7 @@
 					</div>
 					<div class="level-right">
 						<div class="level-item">
-							<button class="button is-primary" @click="modalOpen()" v-show="roles">
+							<button class="button is-primary" @click="modalOpen()" v-if="roles">
 								<i class="fa fa-plus-circle"></i>
 								<span class="pl-5">Create new category</span>
 							</button>
