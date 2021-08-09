@@ -7,7 +7,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class UserRegisteredNotification extends Notification
+class UserAccessBranchNotification extends Notification
 {
     use Queueable;
 
@@ -18,9 +18,10 @@ class UserRegisteredNotification extends Notification
      *
      * @return void
      */
-    public function __construct($user)
+    public function __construct($user, $branches)
     {
         $this->user = $user;
+        $this->branches = $branches;
     }
 
     /**
@@ -43,10 +44,9 @@ class UserRegisteredNotification extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->subject('User ' . $this->user->email . ' has just registered.')
-                    ->line('A new user ' . $this->user->name . '(' . $this->user->email . ') has just registered.')
-                    ->action('Verify', url('/users?name=' . $this->user->name))
-                    ->line('Click the button above to verify the user.');
+                    ->greeting('Hello! ' . $this->user->name)
+                    ->subject($this->user->email . ' has access to the branch.')
+                    ->line('You has been granted to access branch: '. $this->branches);
     }
 
     /**

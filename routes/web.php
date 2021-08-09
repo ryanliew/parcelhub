@@ -141,6 +141,7 @@ Route::group(['prefix' => 'internal'], function() {
 	Route::get('payment/{lot}', 'PaymentController@show');
 	Route::get('users/list', 'UserController@page');
 	Route::get('users/selector', 'UserController@selector');
+	Route::post('users/store', 'UserController@store');
 	Route::get('users', 'UserController@index');
 	Route::get('user', 'UserController@show');
 	Route::post('user/{user}/approval', 'UserController@approval');

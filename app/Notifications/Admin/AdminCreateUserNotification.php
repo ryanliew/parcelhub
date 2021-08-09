@@ -1,17 +1,15 @@
 <?php
 
-namespace App\Notifications;
+namespace App\Notifications\Admin;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class UserRegisteredNotification extends Notification
+class AdminCreateUserNotification extends Notification
 {
     use Queueable;
-
-    protected $user;
 
     /**
      * Create a new notification instance.
@@ -34,7 +32,7 @@ class UserRegisteredNotification extends Notification
         return ['mail'];
     }
 
-    /**
+     /**
      * Get the mail representation of the notification.
      *
      * @param  mixed  $notifiable
@@ -45,11 +43,12 @@ class UserRegisteredNotification extends Notification
         return (new MailMessage)
                     ->subject('User ' . $this->user->email . ' has just registered.')
                     ->line('A new user ' . $this->user->name . '(' . $this->user->email . ') has just registered.')
-                    ->action('Verify', url('/users?name=' . $this->user->name))
-                    ->line('Click the button above to verify the user.');
+                    ->line('Temporary password is ' . $this->user->password)
+                    ->line('Please change the password once you verify in the link below')
+                    ->action('Verify', url('/users?name=' . $this->user->name));
     }
 
-    /**
+     /**
      * Get the array representation of the notification.
      *
      * @param  mixed  $notifiable
