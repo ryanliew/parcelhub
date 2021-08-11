@@ -76760,12 +76760,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 				return obj;
 			});
 
-			this.fetchUsers();
+			// this.fetchUsers();
 		},
-		fetchUsers: function fetchUsers() {
+		fetchUsers: function fetchUsers(branch_id) {
 			var _this4 = this;
 
-			axios.get('/internal/users').then(function (response) {
+			axios.get('/internal/users/' + branch_id).then(function (response) {
 				return _this4.setUsers(response);
 			});
 		},
@@ -76874,6 +76874,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			//this.override = data.category_volume !== data.volume || data.category_price !== data.price;
 		},
 		editOwner: function editOwner(data) {
+			this.fetchUsers(data.branch_id);
 			this.ownerForm.reset();
 			this.selectedLot = data;
 			if (data.user_name) this.selectedUser = {
@@ -90487,7 +90488,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 		getBranches: function getBranches() {
 			var _this3 = this;
 
-			axios.get('internal/branches/selector').then(function (response) {
+			axios.get('internal/branches/allselector').then(function (response) {
 				return _this3.setBranches(response);
 			});
 		},
@@ -90596,7 +90597,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 			this.submitting = false;
 			this.$refs.payments.refreshTable();
 		},
-		onFail: function onFail() {},
+		onFail: function onFail(error) {},
 		changePaymentSlipImage: function changePaymentSlipImage(e) {
 			this.paymentSlip = { src: e.src, file: e.file };
 			this.form.payment_slip = e.file;
@@ -90677,7 +90678,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 			return this.canPurchase ? '' : 'tooltip';
 		},
 		submitTooltipClass: function submitTooltipClass() {
-			return this.canSubmit ? '' : 'tooltip';
+			if (this.canSubmit && !this.form.errors.any()) {
+				return '';
+			}
+			return 'tooltip';
 		},
 		submitTooltipText: function submitTooltipText() {
 			var text = '';
@@ -90690,7 +90694,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 				text = 'Please select at least one lot';
 			}
 
-			if (this.form.errors.any()) text = 'There are errors in the form';
+			if (this.form.errors.any()) {
+				text = 'There are errors in the form';
+			}
 
 			return text;
 		}

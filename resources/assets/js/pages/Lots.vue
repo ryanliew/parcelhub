@@ -323,8 +323,7 @@
 					obj['price'] = category.price;
 					return obj;
 				});
-
-				// this.fetchUsers();
+;
 			},
 
 			fetchUsers(branch_id) {
