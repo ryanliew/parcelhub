@@ -374,7 +374,7 @@
 					.then(response => this.setLotCategories(response.data));
 			},
 			getBranches() {
-				axios.get('internal/branches/selector')
+				axios.get('internal/branches/allselector')
 					.then(response => this.setBranches(response));
 			},
 			setBranches(response) {
@@ -486,8 +486,8 @@
 				this.$refs.payments.refreshTable();
 			},
 
-			onFail() {
-
+			onFail(error) {
+				
 			},
 
 			changePaymentSlipImage(e) {
@@ -577,7 +577,11 @@
 			},
 
 			submitTooltipClass() {
-				return this.canSubmit ? '' : 'tooltip';
+				if(this.canSubmit && !(this.form.errors.any())) {
+					return '';
+				}
+				return 'tooltip';
+				
 			},
 
 			submitTooltipText() {
@@ -591,8 +595,9 @@
 					text = 'Please select at least one lot';
 				}
 
-				if(this.form.errors.any())
-					text = 'There are errors in the form';
+				if(this.form.errors.any()) {
+					text = 'There are errors in the form';	
+				}
 
 				return text;
 			},
