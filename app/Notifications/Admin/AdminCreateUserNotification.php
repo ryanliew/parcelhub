@@ -41,10 +41,9 @@ class AdminCreateUserNotification extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->subject('User ' . $this->user->email . ' has just registered.')
-                    ->line('A new user ' . $this->user->name . '(' . $this->user->email . ') has just registered.')
-                    ->line('Temporary password is ' . $this->user->password)
-                    ->line('Please change the password once you verify in the link below')
+                    ->subject('Welcome to PARCELHUB Warehouse system! '. $this->user->name)
+                    ->line('Your temporary password is ' . $this->user->password)
+                    ->line('Please click the button below to verify your account, we also recommend changing your password after you verify.')
                     ->action('Verify', url('/users?name=' . $this->user->name));
     }
 
