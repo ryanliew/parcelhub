@@ -324,11 +324,11 @@
 					return obj;
 				});
 
-				this.fetchUsers();
+				// this.fetchUsers();
 			},
 
-			fetchUsers() {
-				axios.get('/internal/users')
+			fetchUsers(branch_id) {
+				axios.get('/internal/users/' + branch_id)
 					.then(response => this.setUsers(response));
 			},
 
@@ -436,6 +436,7 @@
 			},
 
 			editOwner(data) {
+				this.fetchUsers(data.branch_id);
 				this.ownerForm.reset();
 				this.selectedLot = data;
 				if(data.user_name)

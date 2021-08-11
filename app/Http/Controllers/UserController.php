@@ -32,9 +32,13 @@ class UserController extends Controller
 		return view('user.page');
 	}
 
-    public function index()
+    public function index(Branch $branch)
     {
-    	return User::all();
+        $user = $branch->users()->select('*')
+                                ->join('role_user' , 'role_user.user_id' , '=' , 'users.id')
+                                ->where('role_user.role_id', '2')
+                                ->get();
+        return $user;
     }
 
     public function selector()
@@ -161,7 +165,7 @@ class UserController extends Controller
                 $access->user_id = $check_email[0]->id;
                 $access->branch_id = $branch;
                 
-                // $access->save();
+                $access->save();
             }
             if(count($branches) > 1){
                 $array_branch = [];
