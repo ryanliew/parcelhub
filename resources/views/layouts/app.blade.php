@@ -51,7 +51,7 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bulma-steps@2.2.1/dist/js/bulma-steps.min.js">
     </script>
     <script src="{{ asset('js/form.js?v=1.0.5') }}"></script>
-    <script src="{{ asset('js/app.js?v=' . config("2.0.0.2")) }}"></script>
+    <script src="{{ asset('js/app.js?v=' . config("app.version")) }}"></script>
     <script src="{{ asset('js/jquery-1.7.1.min.js') }}"></script>
     <script src="{{ asset('js/responsive-tables.js') }}"></script>
     <script src="{{ asset('js/broadcast.js') }}"></script>

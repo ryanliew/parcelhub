@@ -146,10 +146,7 @@ class PaymentController extends Controller
                 $lot->payments()->save($payment);
             }
 
-            $access = new Accessibility();
-            $access->user_id = $user->id;
-            $access->branch_id = $request['selectedBranch'];
-            $access->save();
+            $user->accessibilities()->attach($request['selectedBranch']);
 
             $user->notify(new PaymentCreatedNotification($payment->load('user', 'lots')));
 

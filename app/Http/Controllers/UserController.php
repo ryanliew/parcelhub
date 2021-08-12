@@ -99,37 +99,13 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $branches = json_decode($request->branches);
-        $error_message = [];
-        $error_count = 0;
-       
-        if($request->name == null)
-        {
-            $error_message['name'] = ['Please fill in the name input!'];
-            $error_count++;
-        }
-        
-        if($request->email == null)
-        {
-            $error_message['email'] = ['Please fill in the email input!'];
-            $error_count++;
-        }
 
-        if($request->address == null)
-        {
-            $error_message['address'] = ['Please fill in the address input!'];
-            $error_count++;
-        }
-
-        if($request->phone == null)
-        {
-            $error_message['phone'] = ['Please fill in the phone input!'];
-            $error_count++;
-        }
-        if($error_count != 0) {
-            if(request()->wantsJson()) {
-                return response(json_encode($error_message), 422);
-            } 
-        }
+        $this->validate($request, [
+            'name' => 'required',
+            'email' => 'required',
+            'address' => 'required',
+            'phone' => 'required'
+        ]);
 
         $check_email = User::where('email' , $request->email)->get();
         if($check_email->isEmpty()) {
@@ -147,41 +123,32 @@ class UserController extends Controller
             $user->save();
 
             foreach($branches as $branch) {
-                $access = new Accessibility;
-                $access->user_id = $user['id'];
-                $access->branch_id = $branch;
-    
-                $access->save();
+                $branch->accessibilities()->attach($user['id']);
             }
 
             $user->password = $password;
             $user->notify(new AdminCreateUserNotification($user));
 
-            return ['message' => "User $request->name has been created"];
         }
         else {
             foreach($branches as $branch) {
-                $access = new Accessibility;
-                $access->user_id = $check_email[0]->id;
-                $access->branch_id = $branch;
-                
-                $access->save();
+                $branch->accessibilities()->attach($check_email[0]->id);
             }
             if(count($branches) > 1){
                 $array_branch = [];
                 $full_branch = Branch::select('branch_name')->whereIn('id', $branches)->get();
-                foreach($full_branch as $branch) {
-                    array_push($array_branch, $branch->branch_name);
-                }
-                $full_branch = implode(",", $array_branch);
+                
+                $full_branch = $full_branch->implode('branch_name', ',');
+                dd($full_branch);
             }else {
                 $full_branch = Branch::select('branch_name')->where('id', $branches)->get();
                 $full_branch = $full_branch[0]->branch_name;
             }
             
             $check_email[0]->notify(new UserAccessBranchNotification($check_email[0], $full_branch));
-            return ['message' => "User $request->name exist and have been added to the selected branches."];
         }
+
+        return ['message' => "User $request->name has been created"];
 
     }
 }
