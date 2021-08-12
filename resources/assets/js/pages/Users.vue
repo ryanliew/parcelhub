@@ -126,8 +126,10 @@
 				</div>
 				<div class="columns">
 					<div class="column">
-						<label>Select branches</label>
-						<multiselect v-model="selectedBranches" :options="branchesOptions" 
+						<label style="font-weight:bold">Select branches</label>
+						<multiselect v-model="selectedBranches" 
+									v-if="!singleBranch"
+									:options="branchesOptions" 
 									:close-on-select="false" 
 									:multiple="true" 
 									:clear-on-select="false"
@@ -135,6 +137,14 @@
 									track-by="value">
 							<template slot="selection" slot-scope="{ values, search, isOpen }"><span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ values.length }} branches selected</span></template>
 						</multiselect>
+						<input style="width:100%;"
+									label="Branch"
+									v-if="singleBranch"
+									v-model="branch"
+									name="branch"
+									:editable="false"
+									type="text"
+									disabled></input>
 					</div>
 				</div>
 				
@@ -164,12 +174,13 @@
 	import TableView from '../components/TableView.vue';
 	import Profile from '../objects/Profile.vue';
 	import Multiselect from 'vue-multiselect'
+import TextInput from '../components/TextInput.vue';
 
 	Vue.component('multiselect', Multiselect)
 	export default {
 		props: ['can_manage'],
 
-		components: { TableView, Profile },
+		components: { TableView, Profile, TextInput },
 
 		data() {
 			return {
@@ -202,6 +213,9 @@
 				selectedUser: '',
 				selectedBranches: [],
 				branchesOptions: [],
+				singleBranch: true,
+				singlebranchid: '',
+				branch: []
 			};
 		},
 
@@ -220,17 +234,25 @@
 		},
 		methods: {
 			getBranches() {
+				this.singleBranch = false;
 				axios.get('/internal/branches/selector')
 					.then(response => this.setBranches(response));
 			},
 
 			setBranches(response) {
-				this.branchesOptions = response.data.map(branches =>{
-					let obj = {};
-					obj['label'] = branches.branch_name;
-					obj['value'] = branches.id;
-					return obj;
-				});
+				if(response.data.length == 1) {
+					this.branch = response.data[0].branch_name;
+					this.singlebranchid = response.data[0].id;
+					this.singleBranch = true;
+				}
+				else {
+					this.branchesOptions = response.data.map(branches =>{
+						let obj = {};
+						obj['label'] = branches.branch_name;
+						obj['value'] = branches.id;
+						return obj;
+					});
+				}
 			},
 			getParameterByName(name, url) {
 			    if (!url) url = window.location.href;
@@ -259,11 +281,16 @@
 			},
 
 			createSubmit() {
-				if(this.selectedBranches != []) {
+				if(this.selectedBranches.length > 0) {
 					this.form.branches = this.selectedBranches.map(branch => {
 						return branch.value;
 					});
 				}
+				else {
+					this.form.branches.push(this.singlebranchid);
+					console.log(this.form);
+				}
+				console.log(this.form);
 				this.form.post("/internal/users/store")	
 					.then(data => this.onCreateSuccess(data));
 			},
@@ -315,7 +342,11 @@
 				return this.form.submitting ? "is-loading" : "";
 			},
 			canSubmit() {
-				return this.selectedBranches.length > 0;
+				return this.selectedBranches.length > 0 || this.singlebranchid != '';
+			},
+
+			tooltipClass() {
+				return this.canSubmit ? '' : 'tooltip';
 			},
 
 			submitTooltip() {
