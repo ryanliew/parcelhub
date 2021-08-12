@@ -288,9 +288,7 @@ import TextInput from '../components/TextInput.vue';
 				}
 				else {
 					this.form.branches.push(this.singlebranchid);
-					console.log(this.form);
 				}
-				console.log(this.form);
 				this.form.post("/internal/users/store")	
 					.then(data => this.onCreateSuccess(data));
 			},
@@ -301,7 +299,6 @@ import TextInput from '../components/TextInput.vue';
 			},
 
 			onCreateSuccess(response) {
-				flash(response.message);
 				this.dialogActive = false;
 				this.$refs.users.refreshTable();
 			},
