@@ -16,9 +16,10 @@ class AdminCreateUserNotification extends Notification
      *
      * @return void
      */
-    public function __construct($user)
+    public function __construct($user, $password)
     {
         $this->user = $user;
+        $this->password = $password;
     }
 
     /**
@@ -42,7 +43,7 @@ class AdminCreateUserNotification extends Notification
     {
         return (new MailMessage)
                     ->subject('Welcome to PARCELHUB Warehouse system! '. $this->user->name)
-                    ->line('Your temporary password is ' . $this->user->password)
+                    ->line('Your temporary password is ' . $this->password)
                     ->line('Please click the button below to verify your account, we also recommend changing your password after you verify.')
                     ->action('Verify', url('/users?name=' . $this->user->name));
     }

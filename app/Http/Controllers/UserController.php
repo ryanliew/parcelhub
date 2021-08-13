@@ -97,18 +97,17 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        $branches = json_decode($request->branches);
-        $obj_branches = Branch::whereIn('id' , $branches)->get();
+        $obj_branches = Branch::whereIn('id' , json_decode($request->branches))->get();
 
         $this->validate($request, [
             'name' => 'required',
-            'email' => 'required',
+            'email' => 'required|email',
             'address' => 'required',
             'phone' => 'required'
         ]);
 
-        $check_email = User::where('email' , $request->email)->get();
-        if($check_email->isEmpty()) {
+        $user = User::where('email' , $request->email)->first();
+        if(!$user) {
             $password = Str::random(8);
             $user = new User;
             $user->name = $request->name;
@@ -122,32 +121,16 @@ class UserController extends Controller
             $user->country = $request->country;
             $user->save();
 
-            foreach($obj_branches as $branch) {
-                $branch->users()->attach($user['id']);
-            }
-
-            $user->password = $password;
-            $user->notify(new AdminCreateUserNotification($user));
+            $user->notify(new AdminCreateUserNotification($user, $password));
 
         }
         else {
             
-            foreach($obj_branches as $branch) {
-                $branch->users()->attach($check_email[0]->id);
-            }
-            if(count($branches) > 1){
-                $array_branch = [];
-                $full_branch = Branch::select('branch_name')->whereIn('id', $branches)->get();
-                
-                $full_branch = $full_branch->implode('branch_name', ',');
-            }else {
-                $full_branch = Branch::select('branch_name')->where('id', $branches)->get();
-                $full_branch = $full_branch[0]->branch_name;
-            }
+            $full_branch = $obj_branches->implode('branch_name', ',');
             
-            $check_email[0]->notify(new UserAccessBranchNotification($check_email[0], $full_branch));
+            $user->notify(new UserAccessBranchNotification($user, $full_branch));
         }
-
+        $user->branches()->attach($obj_branches);
         return ['message' => "User $request->name has been created"];
 
     }
