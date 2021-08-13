@@ -100,6 +100,9 @@ return [
     */
 
     'custom' => [
+        'selectedBranch' => [
+            'required' => 'Please select a branch'
+        ],
         'name' => [
             'required' => 'Please fill in the name input',
         ],
