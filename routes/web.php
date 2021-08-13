@@ -122,6 +122,7 @@ Route::group(['prefix' => 'internal'], function() {
 	Route::get('couriers', 'CourierController@index');
 	Route::get('branches', 'BranchController@index');
 	Route::get('branches/selector', 'BranchController@selector');
+	Route::get('branches/allselector', 'BranchController@all_selector');
 	Route::get('products/admin/selector/{id}', 'ProductController@adminProduct');
 	Route::get('products/selector', 'ProductController@selector');
 	Route::get('products', 'ProductController@index');
@@ -141,7 +142,8 @@ Route::group(['prefix' => 'internal'], function() {
 	Route::get('payment/{lot}', 'PaymentController@show');
 	Route::get('users/list', 'UserController@page');
 	Route::get('users/selector', 'UserController@selector');
-	Route::get('users', 'UserController@index');
+	Route::post('users/store', 'UserController@store');
+	Route::get('users/{branch}', 'UserController@index');
 	Route::get('user', 'UserController@show');
 	Route::post('user/{user}/approval', 'UserController@approval');
 	Route::get('user/{user}/lots', 'UserController@lotSelector');

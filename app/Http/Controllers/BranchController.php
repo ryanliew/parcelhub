@@ -176,4 +176,8 @@ class BranchController extends Controller
 
        return $branch;
     }
+
+    public function all_selector() {
+        return Branch::all();
+    }
 }

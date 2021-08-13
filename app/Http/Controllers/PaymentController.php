@@ -7,6 +7,7 @@ use App\Payment;
 use App\Lot;
 use App\Settings;
 use App\User;
+use App\Accessibility;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
@@ -145,12 +146,15 @@ class PaymentController extends Controller
 
                 $lot->payments()->save($payment);
             }
+
+            $user->accessibilities()->attach($request['selectedBranch']);
+
             $user->notify(new PaymentCreatedNotification($payment->load('user', 'lots')));
 
         } catch (\Exception $exception) {
             return response()->json($exception->getMessage(), 422);
         }
-
+        
         return response()->json(['message' => 'Purchase order created']);
      }
 

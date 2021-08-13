@@ -3,7 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use App\Accessibility;
+use App\Branch;
+use App\Notifications\Admin\AdminCreateUserNotification;
+use App\Notifications\UserRegisteredNotification;
+use App\Notifications\UserAccessBranchNotification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -25,9 +32,12 @@ class UserController extends Controller
 		return view('user.page');
 	}
 
-    public function index()
+    public function index(Branch $branch)
     {
-    	return User::all();
+        $user = $branch->users()->join('role_user' , 'role_user.user_id' , '=' , 'users.id')
+                                ->where('role_user.role_id', '2')
+                                ->get();
+        return $user;
     }
 
     public function selector()
@@ -83,5 +93,45 @@ class UserController extends Controller
         $message = $user->is_approved ? "approved" : "banned";
         
         return ['message' => "User has been " . $message];
+    }
+
+    public function store(Request $request)
+    {
+        $obj_branches = Branch::whereIn('id' , json_decode($request->branches))->get();
+
+        $this->validate($request, [
+            'name' => 'required',
+            'email' => 'required|email',
+            'address' => 'required',
+            'phone' => 'required'
+        ]);
+
+        $user = User::where('email' , $request->email)->first();
+        if(!$user) {
+            $password = Str::random(8);
+            $user = new User;
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->password = Hash::make($password);
+            $user->address = $request->address;
+            $user->address_2 = $request->address_2;
+            $user->phone = $request->phone;
+            $user->state = $request->state;
+            $user->postcode = $request->postcode;
+            $user->country = $request->country;
+            $user->save();
+
+            $user->notify(new AdminCreateUserNotification($user, $password));
+
+        }
+        else {
+            
+            $full_branch = $obj_branches->implode('branch_name', ',');
+            
+            $user->notify(new UserAccessBranchNotification($user, $full_branch));
+        }
+        $user->branches()->attach($obj_branches);
+        return ['message' => "User $request->name has been created"];
+
     }
 }

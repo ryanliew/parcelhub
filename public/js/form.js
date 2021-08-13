@@ -43,7 +43,12 @@ class Errors {
      * @param {object} errors
      */
     record(errors) {
-        this.errors = errors;
+        if(!errors.errors) {
+            this.errors = errors;
+        }
+        else {
+            this.errors = errors.errors;
+        }
     }
 
 
@@ -213,7 +218,7 @@ class Form {
 
         if(errors.status == 500) { error = 'Something went wrong, please try again'; }
         else {
-            if(errors.data.message) error = errors.message;
+            if(errors.data.message) error = errors.data.message;
             
             //console.log(errors);
             this.errors.record(errors.data);

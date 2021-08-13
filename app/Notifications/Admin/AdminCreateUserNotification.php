@@ -1,26 +1,25 @@
 <?php
 
-namespace App\Notifications;
+namespace App\Notifications\Admin;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class UserRegisteredNotification extends Notification
+class AdminCreateUserNotification extends Notification
 {
     use Queueable;
-
-    protected $user;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($user)
+    public function __construct($user, $password)
     {
         $this->user = $user;
+        $this->password = $password;
     }
 
     /**
@@ -34,7 +33,7 @@ class UserRegisteredNotification extends Notification
         return ['mail'];
     }
 
-    /**
+     /**
      * Get the mail representation of the notification.
      *
      * @param  mixed  $notifiable
@@ -43,13 +42,13 @@ class UserRegisteredNotification extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->subject('User ' . $this->user->email . ' has just registered.')
-                    ->line('A new user ' . $this->user->name . '(' . $this->user->email . ') has just registered.')
-                    ->action('Verify', url('/users?name=' . $this->user->name))
-                    ->line('Click the button above to verify the user.');
+                    ->subject('Welcome to PARCELHUB Warehouse system! '. $this->user->name)
+                    ->line('Your temporary password is ' . $this->password)
+                    ->line('Please click the button below to verify your account, we also recommend changing your password after you verify.')
+                    ->action('Verify', url('/users?name=' . $this->user->name));
     }
 
-    /**
+     /**
      * Get the array representation of the notification.
      *
      * @param  mixed  $notifiable

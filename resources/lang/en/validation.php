@@ -100,6 +100,21 @@ return [
     */
 
     'custom' => [
+        'selectedBranch' => [
+            'required' => 'Please select a branch'
+        ],
+        'name' => [
+            'required' => 'Please fill in the name input',
+        ],
+        'email' => [
+            'required' => 'Please fill in the email input',
+        ],
+        'phone' => [
+            'required' => 'Please fill in the phone input',
+        ],
+        'address' => [
+            'required' => 'Please fill in the address input',
+        ],
         'payment_slip' => [
             'required' => 'Please upload bank transfer slip',
         ],
