@@ -112,6 +112,7 @@ class PaymentController extends Controller
 
         $this->validate($request, [
             'payment_slip' => 'required|image',
+            'selectedBranch' => 'required',
             'rental_duration' => 'bail|required|integer|min:' . $rental_duration
         ]);
 

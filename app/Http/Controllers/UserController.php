@@ -34,8 +34,7 @@ class UserController extends Controller
 
     public function index(Branch $branch)
     {
-        $user = $branch->users()->select('*')
-                                ->join('role_user' , 'role_user.user_id' , '=' , 'users.id')
+        $user = $branch->users()->join('role_user' , 'role_user.user_id' , '=' , 'users.id')
                                 ->where('role_user.role_id', '2')
                                 ->get();
         return $user;
@@ -99,6 +98,7 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $branches = json_decode($request->branches);
+        $obj_branches = Branch::whereIn('id' , $branches)->get();
 
         $this->validate($request, [
             'name' => 'required',
@@ -122,8 +122,8 @@ class UserController extends Controller
             $user->country = $request->country;
             $user->save();
 
-            foreach($branches as $branch) {
-                $branch->accessibilities()->attach($user['id']);
+            foreach($obj_branches as $branch) {
+                $branch->users()->attach($user['id']);
             }
 
             $user->password = $password;
@@ -131,15 +131,15 @@ class UserController extends Controller
 
         }
         else {
-            foreach($branches as $branch) {
-                $branch->accessibilities()->attach($check_email[0]->id);
+            
+            foreach($obj_branches as $branch) {
+                $branch->users()->attach($check_email[0]->id);
             }
             if(count($branches) > 1){
                 $array_branch = [];
                 $full_branch = Branch::select('branch_name')->whereIn('id', $branches)->get();
                 
                 $full_branch = $full_branch->implode('branch_name', ',');
-                dd($full_branch);
             }else {
                 $full_branch = Branch::select('branch_name')->where('id', $branches)->get();
                 $full_branch = $full_branch[0]->branch_name;

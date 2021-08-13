@@ -46,7 +46,7 @@ class UserAccessBranchNotification extends Notification
         return (new MailMessage)
                     ->greeting('Hello! ' . '('. $this->user->name . ')')
                     ->subject('Access to branch update')
-                    ->line($this->branches. 'has granted access to your account '. $this->user->email. '.');
+                    ->line($this->branches. ' has granted access to your account '. $this->user->email. '.');
     }
 
     /**
