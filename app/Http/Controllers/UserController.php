@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Country;
 use App\User;
 use App\Accessibility;
 use App\Branch;
@@ -29,7 +30,8 @@ class UserController extends Controller
 		if(request()->wantsJson())
 			return Controller::VueTableListResult(User::with('inbounds')->with('outbounds')->with('roles'));
 
-		return view('user.page');
+		return view('user.page')
+                ->with("countries", Country::with("states")->active()->get());
 	}
 
     public function index(Branch $branch)

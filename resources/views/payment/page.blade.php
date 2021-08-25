@@ -8,7 +8,7 @@
 					@include('components.side-menu')
 				</div>
 				<div class="column">
-					<payments-page can_manage="{{ auth()->user()->hasRole('admin') || auth()->user()->hasRole('superadmin') }}"></payments-page>
+					<payments-page can_manage="{{ auth()->user()->hasRole('admin') || auth()->user()->hasRole('superadmin') }}" can_purchase="{{ auth()->user()->can_purchase }}"></payments-page>
 				</div>	
 			</div>
 		</section>

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Notifications\PaymentCreatedNotification;
 use App\Payment;
 use App\Lot;
+use App\PaymentGatewayDefinition;
+use App\Services\BillplzService;
 use App\Settings;
 use App\User;
 use App\Accessibility;
@@ -111,9 +113,11 @@ class PaymentController extends Controller
         $rental_duration = $settings->filter(function($value){return $value->setting_key == 'rental_duration';})->first()->setting_value;
 
         $this->validate($request, [
-            'payment_slip' => 'required|image',
+            'payment_definition_id' => 'required|exists:payment_gateway_definitions,id',
             'selectedBranch' => 'required',
             'rental_duration' => 'bail|required|integer|min:' . $rental_duration
+        ], [
+            "payment_definition_id:exists" => "Invalid payment method selected",
         ]);
 
         try {
@@ -127,12 +131,20 @@ class PaymentController extends Controller
             }
 
             $user = \Auth::user();
+            // Create a payment and associate lots here
+            // Send user to payment gateway
+            $definition = PaymentGatewayDefinition::find($request->payment_definition_id);
+            $payment = Payment::create([
+                "price" => $request->price,
+                "user_id" => auth()->id(),
+                "status" => Payment::STATUS_PENDING,
+                "payment_gateway_definition_id" => $request->payment_definition_id,
+                "payment_type" => $definition->category,
+            ]);
 
-            $payment = new Payment();
-            $payment->picture = $request->file('payment_slip')->store('public');
-            $payment->price = $request->price;
-            $payment->status = 'pending';
-            $payment->user()->associate($user);
+            $billplz = new BillplzService($payment);
+            $payment = $billplz->initialize();
+
             $payment->save();
 
             foreach($lot_purchases as $lot_purchase) {
@@ -147,25 +159,15 @@ class PaymentController extends Controller
                 $lot->payments()->save($payment);
             }
 
-            $user->accessibilities()->attach($request['selectedBranch']);
+            $user->branches()->attach($request['selectedBranch']);
 
-            $user->notify(new PaymentCreatedNotification($payment->load('user', 'lots')));
+//            $user->notify(new PaymentCreatedNotification($payment->load('user', 'lots')));
 
         } catch (\Exception $exception) {
             return response()->json($exception->getMessage(), 422);
         }
         
-        return response()->json(['message' => 'Purchase order created']);
-     }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
+        return response()->json(['message' => 'Purchase order created', 'payment' => $payment]);
     }
 
     /**
@@ -179,40 +181,6 @@ class PaymentController extends Controller
         return $lot->payments()->with('user')->with('lots')->latest()->where('user_id', $lot->user_id)->first();
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
-
     public function approve(Request $request)
     {
         $payment = Payment::find($request->id);
@@ -224,9 +192,13 @@ class PaymentController extends Controller
 
             $lot = Lot::find($_value);
             $lot->update(['status' => 'approved', 'expired_at' => Carbon::now()->addMonths($lot->rental_duration)]);
-
         }
 
         return response()->json(['message' => 'Payment approved']);
+    }
+
+    public function billplzresponse()
+    {
+        
     }
 }

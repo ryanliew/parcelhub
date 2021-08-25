@@ -64,7 +64,7 @@ class User extends Authenticatable
      */
     protected $guarded = [];
 
-    protected $appends = ['role_name'];
+    protected $appends = ['role_name', 'can_purchase'];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -137,6 +137,11 @@ class User extends Authenticatable
     public function getRoleNameAttribute()
     {
         return $this->roles()->first()->name;
+    }
+
+    public function getCanPurchaseAttribute()
+    {
+        return $this->address && $this->address_2 && $this->postcode && $this->phone && $this->state && $this->country;
     }
 
     public function getTotalLotLeftVolumeAttribute() {

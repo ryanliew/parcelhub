@@ -33,8 +33,12 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Payment extends Model
 {
-	protected $guarded = ['id', 'user_id'];
+	protected $guarded = [];
     protected $appends = ['total_price'];
+
+    const STATUS_PENDING = 'pending';
+    const STATUS_PAID = 'paid';
+    const STATUS_CANCELLED = "cancelled";
 
     public function user() {
     	return $this->belongsTo('App\User');
@@ -42,6 +46,11 @@ class Payment extends Model
 
     public function lots() {
         return $this->belongsToMany('App\Lot');
+    }
+
+    public function gateway()
+    {
+        return $this->belongsTo("App\PaymentGatewayDefinition");
     }
 
     public function getPictureAttribute($value)

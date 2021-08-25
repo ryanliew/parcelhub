@@ -13,7 +13,7 @@
     @yield('css')
     
     <!-- Stylesheet -->
-    <link rel="stylesheet" href="{{ asset('css/app.css?v=0.1') }}">
+    <link rel="stylesheet" href="{{ asset('css/app.css?v=' . config("app.version")) }}">
     <link rel="stylesheet" href="{{ asset('css/responsive-tables.css') }}">
 
     <script>
@@ -39,9 +39,7 @@
         <div class="container">
             <div class="content has-text-centered">
                 <p>
-                    <strong>{{ config('app.name', 'Laravel') }}</strong> by <a>Ryan Liew</a>. The source code is licensed
-                    <a href="http://opensource.org/licenses/mit-license.php">MIT</a>. The website content
-                    is licensed <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY NC SA 4.0</a>.
+                    <strong>{{ config('app.name', 'Laravel') }}</strong> by <a href="https://welory.com.my">WELORY INNOVATION SDN BHD</a>. &copy; {{ now()->year }} <a href="https://parcelhub.com.my">PPS GLOBAL NETWORK SDN BHD</a>.
                 </p>
             </div>
         </div>
@@ -50,7 +48,7 @@
     @endif
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bulma-steps@2.2.1/dist/js/bulma-steps.min.js">
     </script>
-    <script src="{{ asset('js/form.js?v=1.0.5') }}"></script>
+    <script src="{{ asset('js/form.js?v=' . config("app.version")) }}"></script>
     <script src="{{ asset('js/app.js?v=' . config("app.version")) }}"></script>
     <script src="{{ asset('js/jquery-1.7.1.min.js') }}"></script>
     <script src="{{ asset('js/responsive-tables.js') }}"></script>

@@ -25,6 +25,13 @@
 			};
 		},
 
+    mounted() {
+      if(this.potentialData.length == 1) {
+        // Auto select if there's only one data
+        this.updateValue(this.potentialData[0]);
+      }
+    },
+
 		methods: {
 			updateValue(value) {
 				this.$emit('input', value);

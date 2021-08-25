@@ -72280,6 +72280,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 	data: function data() {
 		return {};
 	},
+	mounted: function mounted() {
+		if (this.potentialData.length == 1) {
+			// Auto select if there's only one data
+			this.updateValue(this.potentialData[0]);
+		}
+	},
 
 
 	methods: {
@@ -90102,618 +90108,647 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_TableView_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__components_TableView_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_Accordion_vue__ = __webpack_require__(458);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_Accordion_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__components_Accordion_vue__);
-var _computed;
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-	props: ['can_manage'],
+  props: ['can_manage', 'can_purchase'],
 
-	components: { TableView: __WEBPACK_IMPORTED_MODULE_0__components_TableView_vue___default.a, Accordion: __WEBPACK_IMPORTED_MODULE_1__components_Accordion_vue___default.a },
+  components: { TableView: __WEBPACK_IMPORTED_MODULE_0__components_TableView_vue___default.a, Accordion: __WEBPACK_IMPORTED_MODULE_1__components_Accordion_vue___default.a },
 
-	data: function data() {
-		var _ref;
+  data: function data() {
+    return {
+      definitions: [],
+      isPurchasing: false,
+      dialogActive: false,
+      override: false,
+      showLots: false,
+      form: new Form({
+        payment_slip: '',
+        selectedBranch: '',
+        lot_purchases: '',
+        price: '',
+        rental_duration: '',
+        payment_definition_id: ''
+      }),
+      approveForm: new Form({
+        id: ''
+      }),
+      categories: '',
+      selected_branch: '',
+      branchesOptions: [],
+      selectableLots: [],
+      rental_duration: '',
+      totalLots: 0,
+      totalVolume: 0,
+      subPrice: 0,
+      paymentSlip: { name: 'No file selected' },
+      selectedPayment: '',
+      isViewing: false,
+      submitting: false,
+      confirmSubmit: false,
+      confirmPayment: false,
+      searchable: 'payments.status',
+      confirmCompleteProfile: false
+    };
+  },
+  mounted: function mounted() {
+    var _this = this;
 
-		return _ref = {
-			selectedPayment: '',
-			isPurchasing: false,
-			dialogActive: false,
-			override: false,
-			showLots: false,
-			form: new Form({
-				payment_slip: '',
-				selectedBranch: '',
-				lot_purchases: '',
-				price: '',
-				rental_duration: ''
-			}),
-			approveForm: new Form({
-				id: ''
-			}),
-			categories: '',
-			selected_branch: '',
-			branchesOptions: [],
-			selectableLots: [],
-			rental_duration: '',
-			totalLots: 0,
-			totalVolume: 0,
-			subPrice: 0,
-			paymentSlip: { name: 'No file selected' }
-		}, _defineProperty(_ref, 'selectedPayment', ''), _defineProperty(_ref, 'isViewing', false), _defineProperty(_ref, 'submitting', false), _defineProperty(_ref, 'confirmSubmit', false), _defineProperty(_ref, 'confirmPayment', false), _defineProperty(_ref, 'searchable', 'payments.status'), _ref;
-	},
-	mounted: function mounted() {
-		var _this = this;
+    if (this.can_manage) {
+      this.searchable += ',users.name';
+    }
 
-		if (this.can_manage) {
-			this.searchable += ',users.name';
-		}
+    this.$events.on('viewPayment', function (data) {
+      return _this.view(data);
+    });
 
-		this.$events.on('viewPayment', function (data) {
-			return _this.view(data);
-		});
+    this.getBranches();
 
-		this.getBranches();
-
-		this.getLotCategories();
-	},
+    this.getLotCategories();
+  },
 
 
-	methods: {
-		getLotCategories: function getLotCategories() {
-			var _this2 = this;
+  methods: {
+    getLotCategories: function getLotCategories() {
+      var _this2 = this;
 
-			axios.get('/internal/categories').then(function (response) {
-				return _this2.setLotCategories(response.data);
-			});
-		},
-		getBranches: function getBranches() {
-			var _this3 = this;
+      axios.get('/internal/categories').then(function (response) {
+        return _this2.setLotCategories(response.data);
+      });
+    },
+    getBranches: function getBranches() {
+      var _this3 = this;
 
-			axios.get('internal/branches/allselector').then(function (response) {
-				return _this3.setBranches(response);
-			});
-		},
-		setBranches: function setBranches(response) {
-			this.branchesOptions = response.data.map(function (branches) {
-				var obj = {};
-				obj['label'] = branches.branch_name;
-				obj['value'] = branches.id;
-				return obj;
-			});
-		},
-		setLotCategories: function setLotCategories(data) {
-			//this.categories = data.data;
-			this.selectableLots = [];
-			data.data.forEach(function (category) {
-				category.quantity = 0;
-				category.error = '';
-				category.lots.forEach(function (lot) {
-					if (lot.user_id == null) {
-						lot.selected = false;
-						this.selectableLots.push(lot);
-					}
-				}.bind(this));
-			}.bind(this));
-			this.categories = data.data;
+      axios.get('/internal/branches/allselector').then(function (response) {
+        return _this3.setBranches(response);
+      });
 
-			this.isPurchasing = this.getParameterByName('new') == 'true';
-		},
-		getParameterByName: function getParameterByName(name, url) {
-			if (!url) url = window.location.href;
-			name = name.replace(/[\[\]]/g, "\\$&");
-			var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-			    results = regex.exec(url);
-			if (!results) return null;
-			if (!results[2]) return '';
-			return decodeURIComponent(results[2].replace(/\+/g, " "));
-		},
-		view: function view(data) {
-			this.selectedPayment = data;
-			this.isViewing = true;
-		},
-		approve: function approve() {
-			this.confirmSubmit = true;
-		},
-		onApprove: function onApprove() {
-			var _this4 = this;
+      this.getPaymentGatewayDefinitions();
+    },
+    getPaymentGatewayDefinitions: function getPaymentGatewayDefinitions() {
+      var _this4 = this;
 
-			this.confirmSubmit = false;
-			this.submitting = true;
-			this.approveForm.id = this.selectedPayment.id;
-			this.approveForm.post('/payment/approve').then(function (response) {
-				return _this4.onSuccess();
-			});
-		},
-		back: function back() {
-			this.isPurchasing = false;
-		},
-		reset: function reset() {
-			this.selectableLots.forEach(function (lot) {
-				lot.selected = false;
-			});
-			this.totalLots = 0;
-			this.totalVolume = 0;
-			this.subPrice = 0;
-			this.rental_duration = '';
-		},
-		submit: function submit() {
-			this.confirmPayment = true;
-		},
-		onSubmit: function onSubmit() {
-			var _this5 = this;
+      axios.get("/internal/payments/definitions").then(function (response) {
+        return _this4.setDefinitions(response);
+      });
+    },
+    setDefinitions: function setDefinitions(response) {
+      this.definitions = response.data;
+    },
+    setBranches: function setBranches(response) {
+      this.branchesOptions = response.data.map(function (branches) {
+        var obj = {};
+        obj['label'] = branches.branch_name;
+        obj['value'] = branches.id;
+        return obj;
+      });
+    },
+    setLotCategories: function setLotCategories(data) {
+      //this.categories = data.data;
+      this.selectableLots = [];
+      data.data.forEach(function (category) {
+        category.quantity = 0;
+        category.error = '';
+        category.lots.forEach(function (lot) {
+          if (lot.user_id == null) {
+            lot.selected = false;
+            this.selectableLots.push(lot);
+          }
+        }.bind(this));
+      }.bind(this));
+      this.categories = data.data;
 
-			this.confirmPayment = false;
-			var selectedLots = [];
-			if (this.selected_branch != null) {
-				this.form.selectedBranch = this.selected_branch.value;
-			}
-			this.categories.forEach(function (category) {
-				var lots = [];
-				var availableLots = this.availableLots(category);
-				lots = _.take(availableLots, category.quantity);
-				lots.forEach(function (lot) {
-					selectedLots.push(lot.lot);
-				});
-			}.bind(this));
+      this.isPurchasing = this.getParameterByName('new') == 'true';
+    },
+    setPaymentDefinition: function setPaymentDefinition(selected) {
+      this.form.payment_definition_id = selected.id;
+    },
+    getParameterByName: function getParameterByName(name, url) {
+      if (!url) url = window.location.href;
+      name = name.replace(/[\[\]]/g, "\\$&");
+      var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+          results = regex.exec(url);
+      if (!results) return null;
+      if (!results[2]) return '';
+      return decodeURIComponent(results[2].replace(/\+/g, " "));
+    },
+    view: function view(data) {
+      this.selectedPayment = data;
+      this.isViewing = true;
+    },
+    approve: function approve() {
+      this.confirmSubmit = true;
+    },
+    onApprove: function onApprove() {
+      var _this5 = this;
 
-			//let selectedLots = _.filter(this.selectableLots, function(lot){ return lot.selected; });
-			this.form.lot_purchases = selectedLots.map(function (lot) {
-				var obj = {};
-				obj['id'] = lot.id;
-				obj['rental_duration'] = this.form.rental_duration;
-				return obj;
-			}.bind(this));
+      this.confirmSubmit = false;
+      this.submitting = true;
+      this.approveForm.id = this.selectedPayment.id;
+      this.approveForm.post('/payment/approve').then(function (response) {
+        return _this5.onSuccess();
+      });
+    },
+    back: function back() {
+      this.confirmCompleteProfile = false;
+      this.isPurchasing = false;
+    },
+    redirectToProfile: function redirectToProfile() {
+      window.location.href = "/profile";
+    },
+    reset: function reset() {
+      this.selectableLots.forEach(function (lot) {
+        lot.selected = false;
+      });
+      this.totalLots = 0;
+      this.totalVolume = 0;
+      this.subPrice = 0;
+      this.rental_duration = '';
+    },
+    submit: function submit() {
+      this.confirmPayment = true;
+    },
+    onSubmit: function onSubmit() {
+      var _this6 = this;
 
-			this.form.price = this.totalPrice;
+      this.confirmPayment = false;
+      var selectedLots = [];
+      if (this.selected_branch != null) {
+        this.form.selectedBranch = this.selected_branch.value;
+      }
+      this.categories.forEach(function (category) {
+        var lots = [];
+        var availableLots = this.availableLots(category);
+        lots = _.take(availableLots, category.quantity);
+        lots.forEach(function (lot) {
+          selectedLots.push(lot.lot);
+        });
+      }.bind(this));
 
-			this.form.post(this.action).then(function (data) {
-				return _this5.onSuccess();
-			}).catch(function (error) {
-				return _this5.onFail(error);
-			});
-		},
-		onSuccess: function onSuccess() {
-			this.isPurchasing = false;
-			this.isViewing = false;
-			this.submitting = false;
-			this.$refs.payments.refreshTable();
-		},
-		onFail: function onFail(error) {},
-		changePaymentSlipImage: function changePaymentSlipImage(e) {
-			this.paymentSlip = { src: e.src, file: e.file };
-			this.form.payment_slip = e.file;
-			this.form.errors.clear('payment_slip');
-		},
-		toggleCheck: function toggleCheck(lot) {
-			if (lot.selected) {
-				this.totalVolume = this.totalVolume + parseInt(lot.volume);
-				this.subPrice += lot.price;
-				this.totalLots++;
-			} else {
-				this.totalVolume = this.totalVolume - parseInt(lot.volume);
-				this.subPrice -= lot.price;
-				this.totalLots--;
-			}
-		},
-		updateTotals: function updateTotals(category) {
-			category.error = "";
-			var quantity = parseInt(category.quantity);
-			var availableLotCount = this.availableLots(category).length;
+      //let selectedLots = _.filter(this.selectableLots, function(lot){ return lot.selected; });
+      this.form.lot_purchases = selectedLots.map(function (lot) {
+        var obj = {};
+        obj['id'] = lot.id;
+        obj['rental_duration'] = this.form.rental_duration;
+        return obj;
+      }.bind(this));
 
-			if (availableLotCount < quantity) {
-				category.quantity = 0;
-				category.error = "We only have " + availableLotCount + " of " + category.name + " lots left";
-			}
+      this.form.price = this.totalPrice;
 
-			if (category.quantity) {
-				this.subPrice = _.sumBy(this.categories, function (category) {
-					return parseInt(category.quantity) * category.price;
-				});
-				this.totalVolume = _.sumBy(this.categories, function (category) {
-					return this.$options.filters.convertToMeterCube(parseInt(category.quantity) * category.volume);
-				}.bind(this));
-				this.totalLots = _.sumBy(this.categories, function (category) {
-					return parseInt(category.quantity);
-				});
-			}
-		},
-		availableLots: function availableLots(category) {
-			var availableLots = [];
-			this.selectableLots.forEach(function (lot, key) {
-				if (lot.category_id == category.id && lot.user_id == null) {
-					availableLots.push({ 'lot': lot, 'index': key });
-				}
-			}.bind(category));
-			return availableLots;
-		},
-		modalOpen: function modalOpen() {
-			this.form.reset();
-			this.reset();
-			this.isPurchasing = true;
-		}
-	},
+      this.form.post(this.action).then(function (data) {
+        return _this6.onSuccess(data);
+      }).catch(function (error) {
+        return _this6.onFail(error);
+      });
+    },
+    onSuccess: function onSuccess(data) {
+      flash("Redirecting to payment gateway", "success");
+      console.log(data);
+      window.location.href = data.payment.payment_response;
+      // this.isPurchasing = false;
+      // this.isViewing = false;
+      // this.submitting = false;
+      //
+      //
+      // this.$refs.payments.refreshTable();
+    },
+    onFail: function onFail(error) {},
+    changePaymentSlipImage: function changePaymentSlipImage(e) {
+      this.paymentSlip = { src: e.src, file: e.file };
+      this.form.payment_slip = e.file;
+      this.form.errors.clear('payment_slip');
+    },
+    toggleCheck: function toggleCheck(lot) {
+      if (lot.selected) {
+        this.totalVolume = this.totalVolume + parseInt(lot.volume);
+        this.subPrice += lot.price;
+        this.totalLots++;
+      } else {
+        this.totalVolume = this.totalVolume - parseInt(lot.volume);
+        this.subPrice -= lot.price;
+        this.totalLots--;
+      }
+    },
+    updateTotals: function updateTotals(category) {
+      category.error = "";
+      var quantity = parseInt(category.quantity);
+      var availableLotCount = this.availableLots(category).length;
 
-	watch: {
-		selected_branch: function selected_branch() {
-			this.showLots = true;
-		}
-	},
+      if (availableLotCount < quantity) {
+        category.quantity = 0;
+        category.error = "We only have " + availableLotCount + " of " + category.name + " lots left";
+      }
 
-	computed: (_computed = {
-		dialogTitle: function dialogTitle() {
-			return "Purchase lot";
-		},
-		action: function action() {
-			return "/payment/purchase";
-		},
-		totalPrice: function totalPrice() {
-			return this.subPrice * this.form.rental_duration;
-		},
-		canSubmit: function canSubmit() {
-			return this.totalLots > 0;
-		},
-		canPurchase: function canPurchase() {
-			return !this.selectableLots.length == 0;
-		},
-		tooltipClass: function tooltipClass() {
-			return this.canPurchase ? '' : 'tooltip';
-		},
-		submitTooltipClass: function submitTooltipClass() {
-			if (this.canSubmit && !this.form.errors.any()) {
-				return '';
-			}
-			return 'tooltip';
-		},
-		submitTooltipText: function submitTooltipText() {
-			var text = '';
+      if (category.quantity) {
+        this.subPrice = _.sumBy(this.categories, function (category) {
+          return parseInt(category.quantity) * category.price;
+        });
+        this.totalVolume = _.sumBy(this.categories, function (category) {
+          return this.$options.filters.convertToMeterCube(parseInt(category.quantity) * category.volume);
+        }.bind(this));
+        this.totalLots = _.sumBy(this.categories, function (category) {
+          return parseInt(category.quantity);
+        });
+      }
+    },
+    availableLots: function availableLots(category) {
+      var availableLots = [];
+      this.selectableLots.forEach(function (lot, key) {
+        if (lot.category_id == category.id && lot.user_id == null) {
+          availableLots.push({ 'lot': lot, 'index': key });
+        }
+      }.bind(category));
+      return availableLots;
+    },
+    modalOpen: function modalOpen() {
+      this.form.reset();
+      this.reset();
+      this.isPurchasing = true;
+    }
+  },
 
-			if (this.selected_branch == '' && !this.totalLots > 0) {
-				text = 'Please select a branch';
-			}
+  watch: {
+    selected_branch: function selected_branch(newVal) {
+      if (newVal) this.showLots = true;
+    },
+    isPurchasing: function isPurchasing(newVal) {
+      if (newVal && !this.can_purchase) {
+        this.confirmCompleteProfile = true;
+      }
+    }
+  },
 
-			if (!this.totalLots > 0 && this.selected_branch != '') {
-				text = 'Please select at least one lot';
-			}
+  computed: {
+    dialogTitle: function dialogTitle() {
+      return this.isPurchasing ? "Purchase lot" : 'View payment #' + this.selectedPayment.id;
+    },
+    action: function action() {
+      return "/payment/purchase";
+    },
+    totalPrice: function totalPrice() {
+      return this.subPrice * this.form.rental_duration;
+    },
+    canSubmit: function canSubmit() {
+      return this.totalLots > 0 && this.form.payment_definition_id && this.form.rental_duration;
+    },
+    canPurchase: function canPurchase() {
+      return !this.selectableLots.length == 0;
+    },
+    tooltipClass: function tooltipClass() {
+      return this.canPurchase ? '' : 'tooltip';
+    },
+    submitButtonClass: function submitButtonClass() {
+      var classes = [];
 
-			if (this.form.errors.any()) {
-				text = 'There are errors in the form';
-			}
+      if (!this.canSubmit || this.form.errors.any()) {
+        classes.push("tooltip");
+      }
+      if (this.form.submitting) {
+        classes.push("is-loading");
+      }
+      return classes;
+    },
+    submitTooltipText: function submitTooltipText() {
+      var text = '';
 
-			return text;
-		}
-	}, _defineProperty(_computed, 'dialogTitle', function dialogTitle() {
-		return 'View payment #' + this.selectedPayment.id;
-	}), _defineProperty(_computed, 'approveLoadingClass', function approveLoadingClass() {
-		return this.submitting ? 'is-loading' : '';
-	}), _defineProperty(_computed, 'mainTitle', function mainTitle() {
-		return this.can_manage ? 'Purchases' : 'Purchase history';
-	}), _defineProperty(_computed, 'fields', function fields() {
-		var displayFields = [{ name: 'name', title: 'Made by' }, { name: 'created_at', sortField: 'payments.created_at', title: 'Purchase date', callback: 'date' }, { name: 'price', sortField: 'price', title: 'Amount payable(RM)' }, { name: 'status', sortField: 'status', title: 'Status', callback: 'purchaseStatusLabel' }, { name: '__component:payments-actions', title: 'Actions' }];
+      if (this.selected_branch == '' && !this.totalLots > 0) {
+        text = 'Please select a branch';
+      }
 
-		if (!this.can_manage) {
-			displayFields = _.drop(displayFields);
-		}
+      if (!this.totalLots > 0 && this.selected_branch != '') {
+        text = 'Please select at least one lot';
+      }
 
-		return displayFields;
-	}), _computed)
+      if (this.form.errors.any()) {
+        text = 'There are errors in the form';
+      }
+
+      if (!this.form.payment_definition_id) {
+        text = 'Please select payment method';
+      }
+
+      return text;
+    },
+    approveLoadingClass: function approveLoadingClass() {
+      return this.submitting ? 'is-loading' : '';
+    },
+    mainTitle: function mainTitle() {
+      return this.can_manage ? 'Purchases' : 'Purchase history';
+    },
+    fields: function fields() {
+      var displayFields = [{ name: 'name', title: 'Made by' }, { name: 'created_at', sortField: 'payments.created_at', title: 'Purchase date', callback: 'date' }, { name: 'price', sortField: 'price', title: 'Amount payable(RM)' }, { name: 'status', sortField: 'status', title: 'Status', callback: 'purchaseStatusLabel' }, { name: '__component:payments-actions', title: 'Actions' }];
+
+      if (!this.can_manage) {
+        displayFields = _.drop(displayFields);
+      }
+
+      return displayFields;
+    }
+  }
 });
 
 /***/ }),
@@ -90866,9 +90901,9 @@ var render = function() {
                   _c("div", { staticClass: "level-left" }, [
                     _c("div", { staticClass: "level-item" }, [
                       _vm._v(
-                        "\n\t\t\t\t\t\t\t\t" +
+                        "\n              " +
                           _vm._s(_vm.mainTitle) +
-                          "\n\t\t\t\t\t\t\t"
+                          "\n            "
                       )
                     ])
                   ]),
@@ -90930,7 +90965,7 @@ var render = function() {
                 _c("div", { staticClass: "card-header-title level" }, [
                   _c("div", { staticClass: "level-left" }, [
                     _c("div", { staticClass: "level-item" }, [
-                      _vm._v("\n\t\t\t\t\t\t\t\tPurchase lots\n\t\t\t\t\t\t\t")
+                      _vm._v("\n              Purchase lots\n            ")
                     ])
                   ]),
                   _vm._v(" "),
@@ -91001,15 +91036,15 @@ var render = function() {
                               _c("div", [
                                 _c("p", { staticClass: "heading" }, [
                                   _vm._v(
-                                    "\n\t\t\t\t\t\t\t\t\t\tLots count\n\t\t\t\t\t\t\t\t\t"
+                                    "\n                  Lots count\n                "
                                   )
                                 ]),
                                 _vm._v(" "),
                                 _c("p", { staticClass: "title" }, [
                                   _vm._v(
-                                    "\n\t\t\t\t\t\t\t\t\t\t" +
+                                    "\n                  " +
                                       _vm._s(_vm.totalLots) +
-                                      "\n\t\t\t\t\t\t\t\t\t"
+                                      "\n                "
                                   )
                                 ])
                               ])
@@ -91023,15 +91058,15 @@ var render = function() {
                               _c("div", [
                                 _c("p", { staticClass: "heading" }, [
                                   _vm._v(
-                                    "\n\t\t\t\t\t\t\t\t\t\tTotal volume (m³)\n\t\t\t\t\t\t\t\t\t"
+                                    "\n                  Total volume (m³)\n                "
                                   )
                                 ]),
                                 _vm._v(" "),
                                 _c("p", { staticClass: "title" }, [
                                   _vm._v(
-                                    "\n\t\t\t\t\t\t\t\t\t\t" +
+                                    "\n                  " +
                                       _vm._s(_vm.totalVolume) +
-                                      "\n\t\t\t\t\t\t\t\t\t"
+                                      "\n                "
                                   )
                                 ])
                               ])
@@ -91045,15 +91080,15 @@ var render = function() {
                               _c("div", [
                                 _c("p", { staticClass: "heading" }, [
                                   _vm._v(
-                                    "\n\t\t\t\t\t\t\t\t\t\tPrice (RM)\n\t\t\t\t\t\t\t\t\t"
+                                    "\n                  Price (RM)\n                "
                                   )
                                 ]),
                                 _vm._v(" "),
                                 _c("p", { staticClass: "title" }, [
                                   _vm._v(
-                                    "\n\t\t\t\t\t\t\t\t\t\t" +
+                                    "\n                  " +
                                       _vm._s(_vm.subPrice) +
-                                      "\n\t\t\t\t\t\t\t\t\t"
+                                      "\n                "
                                   )
                                 ])
                               ])
@@ -91067,15 +91102,15 @@ var render = function() {
                               _c("div", [
                                 _c("p", { staticClass: "heading" }, [
                                   _vm._v(
-                                    "\n\t\t\t\t\t\t\t\t\t\tTotal Price (RM)\n\t\t\t\t\t\t\t\t\t"
+                                    "\n                  Total Price (RM)\n                "
                                   )
                                 ]),
                                 _vm._v(" "),
                                 _c("p", { staticClass: "title" }, [
                                   _vm._v(
-                                    "\n\t\t\t\t\t\t\t\t\t\t" +
+                                    "\n                  " +
                                       _vm._s(_vm.totalPrice) +
-                                      "\n\t\t\t\t\t\t\t\t\t"
+                                      "\n                "
                                   )
                                 ])
                               ])
@@ -91113,176 +91148,270 @@ var render = function() {
                                     expression: "selected_branch"
                                   }
                                 },
-                                [_vm._v(">")]
+                                [_vm._v(">\n              ")]
                               ),
                               _vm._v(" "),
-                              _vm.showLots
-                                ? _c(
-                                    "table",
-                                    {
-                                      staticClass:
-                                        "table is-hoverable is-fullwidth"
-                                    },
-                                    [
-                                      _c("thead", [
-                                        _c("th", [_vm._v("Lot type")]),
-                                        _vm._v(" "),
-                                        _c("th", [_vm._v("Price (RM)")]),
-                                        _vm._v(" "),
-                                        _c("th", [_vm._v("Volume (m³)")]),
-                                        _vm._v(" "),
-                                        _c("th", [_vm._v("Quantity")])
-                                      ]),
-                                      _vm._v(" "),
-                                      _c(
-                                        "tbody",
-                                        _vm._l(_vm.categories, function(
-                                          category,
-                                          index
-                                        ) {
-                                          return _c("tr", [
-                                            _c("td", [
-                                              _vm._v(_vm._s(category.name))
-                                            ]),
+                              _c(
+                                "transition",
+                                {
+                                  attrs: {
+                                    name: "custom-classes-transition",
+                                    "enter-active-class":
+                                      "fadeUp-enter-active fadeUp-enter-to",
+                                    "leave-active-class":
+                                      "fadeDown-leave-active fadeDown-leave-to"
+                                  }
+                                },
+                                [
+                                  _vm.showLots
+                                    ? _c(
+                                        "table",
+                                        {
+                                          staticClass:
+                                            "table is-hoverable is-fullwidth"
+                                        },
+                                        [
+                                          _c("thead", [
+                                            _c("th", [_vm._v("Lot type")]),
                                             _vm._v(" "),
-                                            _c("td", [
-                                              _vm._v(_vm._s(category.price))
-                                            ]),
+                                            _c("th", [_vm._v("Price (RM)")]),
                                             _vm._v(" "),
-                                            _c("td", [
-                                              _vm._v(
-                                                _vm._s(
-                                                  _vm._f("convertToMeterCube")(
-                                                    category.volume
+                                            _c("th", [_vm._v("Volume (m³)")]),
+                                            _vm._v(" "),
+                                            _c("th", [_vm._v("Quantity")])
+                                          ]),
+                                          _vm._v(" "),
+                                          _c(
+                                            "tbody",
+                                            _vm._l(_vm.categories, function(
+                                              category,
+                                              index
+                                            ) {
+                                              return _c("tr", [
+                                                _c("td", [
+                                                  _vm._v(_vm._s(category.name))
+                                                ]),
+                                                _vm._v(" "),
+                                                _c("td", [
+                                                  _vm._v(_vm._s(category.price))
+                                                ]),
+                                                _vm._v(" "),
+                                                _c("td", [
+                                                  _vm._v(
+                                                    _vm._s(
+                                                      _vm._f(
+                                                        "convertToMeterCube"
+                                                      )(category.volume)
+                                                    )
                                                   )
-                                                )
-                                              )
-                                            ]),
-                                            _vm._v(" "),
-                                            _vm.availableLots(category).length >
+                                                ]),
+                                                _vm._v(" "),
+                                                _vm.availableLots(category)
+                                                  .length > 0
+                                                  ? _c(
+                                                      "td",
+                                                      [
+                                                        _c("text-input", {
+                                                          ref:
+                                                            "category-" +
+                                                            category.id,
+                                                          refInFor: true,
+                                                          attrs: {
+                                                            defaultValue:
+                                                              _vm.categories[
+                                                                index
+                                                              ].quantity,
+                                                            label: "Quantity",
+                                                            required: true,
+                                                            type: "number",
+                                                            editable: true,
+                                                            hideLabel: true,
+                                                            name: "quantity",
+                                                            error:
+                                                              _vm.categories[
+                                                                index
+                                                              ].error
+                                                          },
+                                                          on: {
+                                                            input: function(
+                                                              $event
+                                                            ) {
+                                                              return _vm.updateTotals(
+                                                                category
+                                                              )
+                                                            }
+                                                          },
+                                                          model: {
+                                                            value:
+                                                              _vm.categories[
+                                                                index
+                                                              ].quantity,
+                                                            callback: function(
+                                                              $$v
+                                                            ) {
+                                                              _vm.$set(
+                                                                _vm.categories[
+                                                                  index
+                                                                ],
+                                                                "quantity",
+                                                                $$v
+                                                              )
+                                                            },
+                                                            expression:
+                                                              "categories[index].quantity"
+                                                          }
+                                                        })
+                                                      ],
+                                                      1
+                                                    )
+                                                  : _c("td", [
+                                                      _vm._v("Sold out")
+                                                    ])
+                                              ])
+                                            }),
                                             0
-                                              ? _c(
-                                                  "td",
-                                                  [
-                                                    _c("text-input", {
-                                                      ref:
-                                                        "category-" +
-                                                        category.id,
-                                                      refInFor: true,
-                                                      attrs: {
-                                                        defaultValue:
-                                                          _vm.categories[index]
-                                                            .quantity,
-                                                        label: "Quantity",
-                                                        required: true,
-                                                        type: "number",
-                                                        editable: true,
-                                                        hideLabel: true,
-                                                        name: "quantity",
-                                                        error:
-                                                          _vm.categories[index]
-                                                            .error
-                                                      },
-                                                      on: {
-                                                        input: function(
-                                                          $event
-                                                        ) {
-                                                          return _vm.updateTotals(
-                                                            category
-                                                          )
-                                                        }
-                                                      },
-                                                      model: {
-                                                        value:
-                                                          _vm.categories[index]
-                                                            .quantity,
-                                                        callback: function(
-                                                          $$v
-                                                        ) {
-                                                          _vm.$set(
-                                                            _vm.categories[
-                                                              index
-                                                            ],
-                                                            "quantity",
-                                                            $$v
-                                                          )
-                                                        },
-                                                        expression:
-                                                          "categories[index].quantity"
-                                                      }
-                                                    })
-                                                  ],
-                                                  1
-                                                )
-                                              : _c("td", [_vm._v("Sold out")])
-                                          ])
-                                        }),
-                                        0
+                                          )
+                                        ]
                                       )
-                                    ]
-                                  )
-                                : _vm._e()
+                                    : _vm._e()
+                                ]
+                              )
                             ],
                             1
                           ),
                           _vm._v(" "),
                           _c("div", { staticClass: "is-divider-vertical" }),
                           _vm._v(" "),
-                          _c("div", { staticClass: "column" }, [
-                            _c(
-                              "div",
-                              { staticClass: "field" },
-                              [
-                                _c("text-input", {
-                                  attrs: {
-                                    defaultValue: _vm.form.rental_duration,
-                                    required: true,
-                                    label: "Rental duration (months)",
-                                    name: "rental_duration",
-                                    type: "number",
-                                    editable: true,
-                                    error: _vm.form.errors.get(
-                                      "rental_duration"
-                                    )
-                                  },
-                                  model: {
-                                    value: _vm.form.rental_duration,
-                                    callback: function($$v) {
-                                      _vm.$set(_vm.form, "rental_duration", $$v)
+                          _c(
+                            "div",
+                            { staticClass: "column" },
+                            [
+                              _c(
+                                "div",
+                                { staticClass: "field" },
+                                [
+                                  _c("text-input", {
+                                    attrs: {
+                                      defaultValue: _vm.form.rental_duration,
+                                      required: true,
+                                      label: "Rental duration (months)",
+                                      name: "rental_duration",
+                                      type: "number",
+                                      editable: true,
+                                      error: _vm.form.errors.get(
+                                        "rental_duration"
+                                      )
                                     },
-                                    expression: "form.rental_duration"
-                                  }
-                                })
-                              ],
-                              1
-                            ),
-                            _vm._v(" "),
-                            _c(
-                              "div",
-                              { staticClass: "field mt-10" },
-                              [
-                                _c("image-input", {
+                                    model: {
+                                      value: _vm.form.rental_duration,
+                                      callback: function($$v) {
+                                        _vm.$set(
+                                          _vm.form,
+                                          "rental_duration",
+                                          $$v
+                                        )
+                                      },
+                                      expression: "form.rental_duration"
+                                    }
+                                  })
+                                ],
+                                1
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "transition",
+                                {
                                   attrs: {
-                                    defaultImage: _vm.paymentSlip,
-                                    label: "payment slip",
-                                    name: "payment_slip",
-                                    required: true,
-                                    accept: "image/*,.pdf",
-                                    error: _vm.form.errors.get("payment_slip")
-                                  },
-                                  on: { loaded: _vm.changePaymentSlipImage },
-                                  model: {
-                                    value: _vm.paymentSlip,
-                                    callback: function($$v) {
-                                      _vm.paymentSlip = $$v
-                                    },
-                                    expression: "paymentSlip"
+                                    name: "custom-classes-transition",
+                                    "enter-active-class":
+                                      "fadeUp-enter-active fadeUp-enter-to",
+                                    "leave-active-class":
+                                      "fadeDown-leave-active fadeDown-leave-to"
                                   }
-                                })
-                              ],
-                              1
-                            )
-                          ])
+                                },
+                                [
+                                  _vm.totalPrice > 0
+                                    ? _c(
+                                        "div",
+                                        { staticClass: "field mt-10" },
+                                        [
+                                          _c(
+                                            "p",
+                                            { staticClass: "is-size-6" },
+                                            [
+                                              _c("b", [
+                                                _vm._v("Select payment method")
+                                              ])
+                                            ]
+                                          ),
+                                          _vm._v(" "),
+                                          _c(
+                                            "div",
+                                            { staticClass: "buttons" },
+                                            _vm._l(_vm.definitions, function(
+                                              definition
+                                            ) {
+                                              return _c(
+                                                "button",
+                                                {
+                                                  key: definition.id,
+                                                  staticClass: "button",
+                                                  class:
+                                                    _vm.form
+                                                      .payment_definition_id ==
+                                                    definition.id
+                                                      ? "is-info"
+                                                      : "",
+                                                  attrs: { type: "button" },
+                                                  on: {
+                                                    click: function($event) {
+                                                      return _vm.setPaymentDefinition(
+                                                        definition
+                                                      )
+                                                    }
+                                                  }
+                                                },
+                                                [
+                                                  _c(
+                                                    "figure",
+                                                    {
+                                                      staticClass:
+                                                        "image is-32x32"
+                                                    },
+                                                    [
+                                                      _c("img", {
+                                                        staticClass:
+                                                          "is-rounded",
+                                                        attrs: {
+                                                          src:
+                                                            definition.image_path_display
+                                                        }
+                                                      })
+                                                    ]
+                                                  ),
+                                                  _vm._v(" "),
+                                                  _c(
+                                                    "span",
+                                                    { staticClass: "pl-2" },
+                                                    [
+                                                      _vm._v(
+                                                        _vm._s(definition.name)
+                                                      )
+                                                    ]
+                                                  )
+                                                ]
+                                              )
+                                            }),
+                                            0
+                                          )
+                                        ]
+                                      )
+                                    : _vm._e()
+                                ]
+                              )
+                            ],
+                            1
+                          )
                         ]),
                         _vm._v(" "),
                         _c(
@@ -91290,21 +91419,21 @@ var render = function() {
                           {
                             staticClass:
                               "button is-primary is-tooltip-danger is-tooltip-right",
-                            class: _vm.submitTooltipClass,
+                            class: _vm.submitButtonClass,
                             attrs: {
                               type: "submit",
-                              disabled: !_vm.canSubmit || _vm.form.errors.any(),
+                              disabled: !_vm.canSubmit || _vm.form.submitting,
                               "data-tooltip": _vm.submitTooltipText
                             }
                           },
-                          [_vm._v("Submit")]
+                          [_vm._v("Submit\n          ")]
                         )
                       ]
                     )
                   : _c("article", { staticClass: "message" }, [
                       _c("div", { staticClass: "message-body" }, [
                         _vm._v(
-                          "\n\t\t\t\t\t\t\tWe are currently fully occupied. Please try again later or contact our support team.\n\t\t\t\t\t\t"
+                          "\n            We are currently fully occupied. Please try again later or contact our support team.\n          "
                         )
                       ])
                     ])
@@ -91473,7 +91602,7 @@ var render = function() {
                             class: _vm.approveLoadingClass,
                             on: { click: _vm.approve }
                           },
-                          [_vm._v("Approve")]
+                          [_vm._v("Approve\n      ")]
                         )
                       : _vm._e()
                   ])
@@ -91508,6 +91637,23 @@ var render = function() {
             _vm.confirmPayment = false
           },
           confirm: _vm.onSubmit
+        }
+      }),
+      _vm._v(" "),
+      _c("confirmation", {
+        attrs: {
+          isConfirming: _vm.confirmCompleteProfile,
+          title: "Profile incomplete",
+          message:
+            "You need to complete your profile before you can complete your purchase"
+        },
+        on: {
+          close: function($event) {
+            return _vm.back()
+          },
+          confirm: function($event) {
+            return _vm.redirectToProfile()
+          }
         }
       })
     ],
@@ -91801,6 +91947,25 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -91809,169 +91974,197 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 Vue.component('multiselect', __WEBPACK_IMPORTED_MODULE_2_vue_multiselect___default.a);
 /* harmony default export */ __webpack_exports__["default"] = ({
-	props: ['can_manage'],
+  props: ['can_manage', 'countries'],
 
-	components: { TableView: __WEBPACK_IMPORTED_MODULE_0__components_TableView_vue___default.a, Profile: __WEBPACK_IMPORTED_MODULE_1__objects_Profile_vue___default.a, TextInput: __WEBPACK_IMPORTED_MODULE_3__components_TextInput_vue___default.a },
+  components: { TableView: __WEBPACK_IMPORTED_MODULE_0__components_TableView_vue___default.a, Profile: __WEBPACK_IMPORTED_MODULE_1__objects_Profile_vue___default.a, TextInput: __WEBPACK_IMPORTED_MODULE_3__components_TextInput_vue___default.a },
 
-	data: function data() {
-		return {
-			fields: [{ name: 'name', sortField: 'name', title: 'Name' }, { name: 'created_at', sortField: 'created_at', title: 'Member since', callback: 'date' }, { name: 'email', sortField: 'email' }, { name: 'phone', sortField: 'phone' }, { name: 'role_name', title: 'Type', callback: 'userTypeFormat' }, { name: '__component:users-actions', title: 'Actions' }],
-			dialogActive: false,
-			form: new Form({
-				email: '',
-				name: '',
-				phone: '',
-				address: '',
-				address_2: '',
-				state: '',
-				postcode: '',
-				country: '',
-				branches: []
-			}),
-			searchables: "name,email",
-			selectedInbound: '',
-			isViewing: false,
-			message: '',
-			confirmApproval: false,
-			confirmSubmit: false,
-			selectedUser: '',
-			selectedBranches: [],
-			branchesOptions: [],
-			singleBranch: true,
-			singlebranchid: '',
-			branch: []
-		};
-	},
-	mounted: function mounted() {
-		var _this = this;
+  data: function data() {
+    return {
+      fields: [{ name: 'name', sortField: 'name', title: 'Name' }, { name: 'created_at', sortField: 'created_at', title: 'Member since', callback: 'date' }, { name: 'email', sortField: 'email' }, { name: 'phone', sortField: 'phone' }, { name: 'role_name', title: 'Type', callback: 'userTypeFormat' }, { name: '__component:users-actions', title: 'Actions' }],
+      dialogActive: false,
+      form: new Form({
+        email: '',
+        name: '',
+        phone: '',
+        address: '',
+        address_2: '',
+        state: '',
+        postcode: '',
+        country: '',
+        branches: []
+      }),
+      searchables: "name,email",
+      selectedInbound: '',
+      isViewing: false,
+      message: '',
+      confirmApproval: false,
+      confirmSubmit: false,
+      selectedUser: '',
+      selectedBranches: [],
+      branchesOptions: [],
+      singleBranch: true,
+      singlebranchid: '',
+      selectedCountry: '',
+      branch: [],
+      potentialCountries: [],
+      selectedState: ""
+    };
+  },
+  mounted: function mounted() {
+    var _this = this;
 
-		this.$events.on('view', function (data) {
-			return _this.view(data);
-		});
-		this.$events.on('approve', function (data) {
-			return _this.approve(data);
-		});
-		this.getBranches();
-		if (!this.can_manage) {
-			this.view(null);
-		}
+    this.$events.on('view', function (data) {
+      return _this.view(data);
+    });
+    this.$events.on('approve', function (data) {
+      return _this.approve(data);
+    });
+    this.getBranches();
+    this.processCountries();
+    if (!this.can_manage) {
+      this.view(null);
+    }
 
-		if (this.getParameterByName('name')) {
-			this.searchName(this.getParameterByName("name"));
-		}
-	},
+    if (this.getParameterByName('name')) {
+      this.searchName(this.getParameterByName("name"));
+    }
+  },
 
-	methods: {
-		getBranches: function getBranches() {
-			var _this2 = this;
+  methods: {
+    processCountries: function processCountries() {
+      this.potentialCountries = this.countries.map(function (country) {
+        var obj = {};
+        obj['label'] = country.name;
+        obj['value'] = country.name;
+        obj['states'] = country.states.map(function (state) {
+          state['label'] = state.name;
+          state['value'] = state.name;
 
-			this.singleBranch = false;
-			axios.get('/internal/branches/selector').then(function (response) {
-				return _this2.setBranches(response);
-			});
-		},
-		setBranches: function setBranches(response) {
-			if (response.data.length == 1) {
-				this.branch = response.data[0].branch_name;
-				this.singlebranchid = response.data[0].id;
-				this.singleBranch = true;
-			} else {
-				this.branchesOptions = response.data.map(function (branches) {
-					var obj = {};
-					obj['label'] = branches.branch_name;
-					obj['value'] = branches.id;
-					return obj;
-				});
-			}
-		},
-		getParameterByName: function getParameterByName(name, url) {
-			if (!url) url = window.location.href;
-			name = name.replace(/[\[\]]/g, "\\$&");
-			var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-			    results = regex.exec(url);
-			if (!results) return null;
-			if (!results[2]) return '';
-			return decodeURIComponent(results[2].replace(/\+/g, " "));
-		},
-		view: function view(data) {
-			this.selectedUser = data;
-			this.isViewing = true;
-		},
-		back: function back() {
-			this.isViewing = false;
-			this.selectedUser = '';
-		},
-		approve: function approve(data) {
-			this.selectedUser = data;
-			this.message = data.is_approved == false ? "Approving user " + data.name + " to access the system. Continue?" : "Banning user " + data.name + " to access the system. Continue?";
-			this.confirmApproval = true;
-		},
-		createSubmit: function createSubmit() {
-			var _this3 = this;
+          return state;
+        });
 
-			if (this.selectedBranches.length > 0) {
-				this.form.branches = this.selectedBranches.map(function (branch) {
-					return branch.value;
-				});
-			} else {
-				this.form.branches.push(this.singlebranchid);
-			}
-			this.form.post("/internal/users/store").then(function (data) {
-				return _this3.onCreateSuccess(data);
-			});
-		},
-		onSubmit: function onSubmit() {
-			var _this4 = this;
+        return obj;
+      });
+    },
+    getBranches: function getBranches() {
+      var _this2 = this;
 
-			axios.post("/internal/user/" + this.selectedUser.id + "/approval").then(function (response) {
-				return _this4.onSuccess(response);
-			});
-		},
-		onCreateSuccess: function onCreateSuccess(response) {
-			this.dialogActive = false;
-			this.$refs.users.refreshTable();
-		},
-		onSuccess: function onSuccess(response) {
-			flash(response.data.message);
-			this.confirmApproval = false;
-			this.dialogActive = false;
-		},
-		searchName: function searchName(name) {
-			var filters = {};
-			filters.text = name;
-			filters.fromParam = true;
-			this.$events.fire("filter-param", filters);
-		},
-		modalOpen: function modalOpen() {
-			this.form.reset();
-			this.selectedBranches = [];
-			this.dialogActive = true;
-		},
-		submit: function submit() {
-			this.confirmSubmit = true;
-		},
-		onFail: function onFail() {},
-		customLabel: function customLabel(_ref) {
-			var label = _ref.label,
-			    value = _ref.value;
+      this.singleBranch = false;
+      axios.get('/internal/branches/selector').then(function (response) {
+        return _this2.setBranches(response);
+      });
+    },
+    setBranches: function setBranches(response) {
+      if (response.data.length == 1) {
+        this.branch = response.data[0].branch_name;
+        this.singlebranchid = response.data[0].id;
+        this.singleBranch = true;
+      } else {
+        this.branchesOptions = response.data.map(function (branches) {
+          var obj = {};
+          obj['label'] = branches.branch_name;
+          obj['value'] = branches.id;
+          return obj;
+        });
+      }
+    },
+    getParameterByName: function getParameterByName(name, url) {
+      if (!url) url = window.location.href;
+      name = name.replace(/[\[\]]/g, "\\$&");
+      var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+          results = regex.exec(url);
+      if (!results) return null;
+      if (!results[2]) return '';
+      return decodeURIComponent(results[2].replace(/\+/g, " "));
+    },
+    view: function view(data) {
+      this.selectedUser = data;
+      this.isViewing = true;
+    },
+    back: function back() {
+      this.isViewing = false;
+      this.selectedUser = '';
+    },
+    approve: function approve(data) {
+      this.selectedUser = data;
+      this.message = data.is_approved == false ? "Approving user " + data.name + " to access the system. Continue?" : "Banning user " + data.name + " to access the system. Continue?";
+      this.confirmApproval = true;
+    },
+    createSubmit: function createSubmit() {
+      var _this3 = this;
 
-			return label;
-		}
-	},
-	computed: {
-		isSubmittingClass: function isSubmittingClass() {
-			return this.form.submitting ? "is-loading" : "";
-		},
-		canSubmit: function canSubmit() {
-			return this.selectedBranches.length > 0 || this.singlebranchid != '';
-		},
-		tooltipClass: function tooltipClass() {
-			return this.canSubmit ? '' : 'tooltip';
-		},
-		submitTooltip: function submitTooltip() {
-			return this.canSubmit ? "" : "Please select at least 1 branch";
-		}
-	}
+      if (this.selectedBranches.length > 0) {
+        this.form.branches = this.selectedBranches.map(function (branch) {
+          return branch.value;
+        });
+      } else {
+        this.form.branches.push(this.singlebranchid);
+      }
+      this.form.post("/internal/users/store").then(function (data) {
+        return _this3.onCreateSuccess(data);
+      });
+    },
+    onSubmit: function onSubmit() {
+      var _this4 = this;
+
+      axios.post("/internal/user/" + this.selectedUser.id + "/approval").then(function (response) {
+        return _this4.onSuccess(response);
+      });
+    },
+    onCreateSuccess: function onCreateSuccess(response) {
+      this.dialogActive = false;
+      this.$refs.users.refreshTable();
+    },
+    onSuccess: function onSuccess(response) {
+      flash(response.data.message);
+      this.confirmApproval = false;
+      this.dialogActive = false;
+    },
+    searchName: function searchName(name) {
+      var filters = {};
+      filters.text = name;
+      filters.fromParam = true;
+      this.$events.fire("filter-param", filters);
+    },
+    modalOpen: function modalOpen() {
+      this.form.reset();
+      this.selectedBranches = [];
+      this.dialogActive = true;
+    },
+    submit: function submit() {
+      this.confirmSubmit = true;
+    },
+    onFail: function onFail() {},
+    customLabel: function customLabel(_ref) {
+      var label = _ref.label,
+          value = _ref.value;
+
+      return label;
+    }
+  },
+  computed: {
+    isSubmittingClass: function isSubmittingClass() {
+      return this.form.submitting ? "is-loading" : "";
+    },
+    canSubmit: function canSubmit() {
+      return this.selectedBranches.length > 0 || this.singlebranchid != '';
+    },
+    tooltipClass: function tooltipClass() {
+      return this.canSubmit ? '' : 'tooltip';
+    },
+    submitTooltip: function submitTooltip() {
+      return this.canSubmit ? "" : "Please select at least 1 branch";
+    },
+
+    watch: {
+      selectedCountry: function selectedCountry(newVal) {
+        this.form.country = newVal.value;
+      },
+      selectedState: function selectedState(newVal) {
+        this.form.state = newVal.value;
+      }
+    }
+  }
 });
 
 /***/ }),
@@ -92174,108 +92367,135 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-	props: ['canManage', 'user'],
-	data: function data() {
-		return {
-			loading: true,
-			form: new Form({
-				name: '',
-				phone: '',
-				address: '',
-				address_2: '',
-				state: '',
-				postcode: '',
-				country: '',
-				id: '',
-				password: '',
-				password_confirmation: '',
-				change_password: false
-			}),
-			profile: '',
-			confirmSubmit: false
-		};
-	},
-	mounted: function mounted() {
-		this.getUser();
-	},
+  props: ['canManage', 'user', 'countries'],
+  data: function data() {
+    return {
+      loading: true,
+      countries: [],
+      form: new Form({
+        name: '',
+        phone: '',
+        address: '',
+        address_2: '',
+        state: '',
+        postcode: '',
+        country: '',
+        id: '',
+        password: '',
+        password_confirmation: '',
+        change_password: false
+      }),
+      profile: '',
+      confirmSubmit: false,
+      selectedCountry: '',
+      selectedState: ""
+    };
+  },
+  mounted: function mounted() {
+    this.getUser();
+  },
 
 
-	methods: {
-		getUser: function getUser() {
-			var _this = this;
+  methods: {
+    getUser: function getUser() {
+      var _this = this;
 
-			if (!this.user) {
-				this.loading = true;
-				axios.get('/internal/user').then(function (response) {
-					return _this.setUser(response.data);
-				});
-			} else {
-				this.setUser(this.user);
-			}
-		},
-		setUser: function setUser(user) {
-			this.profile = user;
+      if (!this.user) {
+        this.loading = true;
+        axios.get('/internal/user').then(function (response) {
+          return _this.setUser(response.data);
+        });
+      } else {
+        this.setUser(this.user);
+      }
+    },
+    setUser: function setUser(user) {
+      this.profile = user;
 
-			this.form.id = this.profile.id;
+      this.form.id = this.profile.id;
 
-			this.form.name = this.profile.name;
-			this.form.phone = this.profile.phone;
-			this.form.address = this.profile.address;
-			this.form.address_2 = this.profile.address_2;
-			this.form.state = this.profile.state;
-			this.form.postcode = this.profile.postcode;
-			this.form.country = this.profile.country;
+      this.form.name = this.profile.name;
+      this.form.phone = this.profile.phone;
+      this.form.address = this.profile.address;
+      this.form.address_2 = this.profile.address_2;
+      this.form.state = this.profile.state;
+      this.form.postcode = this.profile.postcode;
+      this.form.country = this.profile.country;
 
-			this.loading = false;
-		},
-		back: function back() {
-			this.$emit('back');
-		},
-		submit: function submit() {
-			this.confirmSubmit = true;
-		},
-		onSubmit: function onSubmit() {
-			var _this2 = this;
+      this.loading = false;
+    },
+    back: function back() {
+      this.$emit('back');
+    },
+    submit: function submit() {
+      this.confirmSubmit = true;
+    },
+    onSubmit: function onSubmit() {
+      var _this2 = this;
 
-			this.confirmSubmit = false;
-			this.form.post(this.action).then(function (response) {
-				return _this2.onSuccess(response);
-			}).catch(function (response) {
-				return _this2.onError(response);
-			});
-		},
-		onSuccess: function onSuccess() {
-			this.form.submitting = false;
-			if (this.user) {
-				this.back();
-			} else {
-				this.getUser();
-			}
-		},
-		onError: function onError() {
-			this.form.submitting = false;
-		},
-		changePassword: function changePassword() {
-			this.form.change_password = true;
-		},
-		unchangePassword: function unchangePassword() {
-			this.form.password = '';
-			this.form.password_confirmation = '';
-			this.form.change_password = false;
-		}
-	},
+      this.confirmSubmit = false;
+      this.form.post(this.action).then(function (response) {
+        return _this2.onSuccess(response);
+      }).catch(function (response) {
+        return _this2.onError(response);
+      });
+    },
+    onSuccess: function onSuccess() {
+      this.form.submitting = false;
+      if (this.user) {
+        this.back();
+      } else {
+        this.getUser();
+      }
+    },
+    onError: function onError() {
+      this.form.submitting = false;
+    },
+    changePassword: function changePassword() {
+      this.form.change_password = true;
+    },
+    unchangePassword: function unchangePassword() {
+      this.form.password = '';
+      this.form.password_confirmation = '';
+      this.form.change_password = false;
+    }
+  },
 
-	computed: {
-		action: function action() {
-			var action = '/user/update';
-			return action;
-		},
-		buttonClass: function buttonClass() {
-			return this.form.submitting ? 'is-loading' : '';
-		}
-	}
+  computed: {
+    action: function action() {
+      var action = '/user/update';
+      return action;
+    },
+    buttonClass: function buttonClass() {
+      return this.form.submitting ? 'is-loading' : '';
+    }
+  },
+
+  watch: {
+    selectedCountry: function selectedCountry(newVal) {
+      this.form.country = newVal.value;
+    },
+    selectedState: function selectedState(newVal) {
+      this.form.state = newVal.value;
+    }
+  }
 });
 
 /***/ }),
@@ -92412,7 +92632,7 @@ var render = function() {
                   _c("text-input", {
                     attrs: {
                       defaultValue: _vm.form.address,
-                      label: "Address line 1",
+                      label: "Address",
                       required: true,
                       name: "address",
                       type: "text",
@@ -92438,8 +92658,8 @@ var render = function() {
                   _c("text-input", {
                     attrs: {
                       defaultValue: _vm.form.address_2,
-                      label: "Address line 2",
-                      required: false,
+                      label: "City",
+                      required: true,
                       name: "address_2",
                       type: "text",
                       editable: true,
@@ -92488,22 +92708,23 @@ var render = function() {
                   "div",
                   { staticClass: "column" },
                   [
-                    _c("text-input", {
+                    _c("selector-input", {
                       attrs: {
-                        defaultValue: _vm.form.state,
-                        label: "State",
+                        defaultData: _vm.selectedCountry,
+                        label: "Country",
+                        hideLabel: false,
                         required: true,
-                        name: "state",
-                        type: "text",
-                        editable: true,
-                        error: _vm.form.errors.get("state")
+                        potentialData: _vm.countries,
+                        placeholder: "Select country",
+                        name: "countries",
+                        unclearable: true
                       },
                       model: {
-                        value: _vm.form.state,
+                        value: _vm.selectedCountry,
                         callback: function($$v) {
-                          _vm.$set(_vm.form, "state", $$v)
+                          _vm.selectedCountry = $$v
                         },
-                        expression: "form.state"
+                        expression: "selectedCountry"
                       }
                     })
                   ],
@@ -92514,24 +92735,45 @@ var render = function() {
                   "div",
                   { staticClass: "column" },
                   [
-                    _c("text-input", {
-                      attrs: {
-                        defaultValue: _vm.form.country,
-                        label: "Country",
-                        required: true,
-                        name: "country",
-                        type: "text",
-                        editable: true,
-                        error: _vm.form.errors.get("country")
-                      },
-                      model: {
-                        value: _vm.form.country,
-                        callback: function($$v) {
-                          _vm.$set(_vm.form, "country", $$v)
-                        },
-                        expression: "form.country"
-                      }
-                    })
+                    !_vm.selectedCountry ||
+                    !_vm.selectedCountry.states.length > 0
+                      ? _c("text-input", {
+                          attrs: {
+                            defaultValue: _vm.form.state,
+                            label: "State",
+                            required: true,
+                            name: "state",
+                            type: "text",
+                            editable: true,
+                            error: _vm.form.errors.get("state")
+                          },
+                          model: {
+                            value: _vm.form.state,
+                            callback: function($$v) {
+                              _vm.$set(_vm.form, "state", $$v)
+                            },
+                            expression: "form.state"
+                          }
+                        })
+                      : _c("selector-input", {
+                          attrs: {
+                            defaultData: _vm.selectedState,
+                            hideLabel: false,
+                            label: "State",
+                            required: true,
+                            potentialData: _vm.selectedCountry.states,
+                            placeholder: "Select state",
+                            name: "states",
+                            unclearable: true
+                          },
+                          model: {
+                            value: _vm.selectedState,
+                            callback: function($$v) {
+                              _vm.selectedState = $$v
+                            },
+                            expression: "selectedState"
+                          }
+                        })
                   ],
                   1
                 )
@@ -92631,7 +92873,7 @@ var render = function() {
                   class: _vm.buttonClass,
                   attrs: { disabled: this.form.errors.any() }
                 },
-                [_vm._v("Update")]
+                [_vm._v("Update\n        ")]
               )
             ]
           )
@@ -92662,7 +92904,7 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "level-left" }, [
       _c("div", { staticClass: "level-item" }, [
-        _vm._v("\n\t\t\t\t\t\t\tProfile\n\t\t\t\t\t\t")
+        _vm._v("\n            Profile\n          ")
       ])
     ])
   }
@@ -92860,8 +93102,8 @@ var render = function() {
                   _c("text-input", {
                     attrs: {
                       defaultValue: _vm.form.address_2,
-                      label: "Address 2",
-                      required: false,
+                      label: "City",
+                      required: true,
                       name: "address_2",
                       type: "text",
                       editable: true,
@@ -92913,37 +93155,9 @@ var render = function() {
                     [
                       _c("text-input", {
                         attrs: {
-                          defaultValue: _vm.form.state,
-                          label: "State",
-                          required: false,
-                          name: "state",
-                          type: "text",
-                          editable: true,
-                          error: _vm.form.errors.get("state")
-                        },
-                        model: {
-                          value: _vm.form.state,
-                          callback: function($$v) {
-                            _vm.$set(_vm.form, "state", $$v)
-                          },
-                          expression: "form.state"
-                        }
-                      })
-                    ],
-                    1
-                  )
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "column" }, [
-                  _c(
-                    "div",
-                    { staticClass: "field" },
-                    [
-                      _c("text-input", {
-                        attrs: {
                           defaultValue: _vm.form.postcode,
                           label: "Postcode",
-                          required: false,
+                          required: true,
                           name: "postcode",
                           type: "text",
                           editable: true,
@@ -92967,24 +93181,74 @@ var render = function() {
                     "div",
                     { staticClass: "field" },
                     [
-                      _c("text-input", {
+                      _c("selector-input", {
                         attrs: {
-                          defaultValue: _vm.form.country,
+                          defaultData: _vm.selectedCountry,
+                          hideLabel: false,
+                          potentialData: _vm.potentialCountries,
+                          placeholder: "Select country",
                           label: "Country",
-                          required: false,
-                          name: "country",
-                          type: "text",
-                          editable: true,
-                          error: _vm.form.errors.get("country")
+                          name: "countries",
+                          required: true,
+                          unclearable: true
                         },
                         model: {
-                          value: _vm.form.country,
+                          value: _vm.selectedCountry,
                           callback: function($$v) {
-                            _vm.$set(_vm.form, "country", $$v)
+                            _vm.selectedCountry = $$v
                           },
-                          expression: "form.country"
+                          expression: "selectedCountry"
                         }
                       })
+                    ],
+                    1
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "column" }, [
+                  _c(
+                    "div",
+                    { staticClass: "field" },
+                    [
+                      !_vm.selectedCountry ||
+                      !_vm.selectedCountry.states.length > 0
+                        ? _c("text-input", {
+                            attrs: {
+                              defaultValue: _vm.form.state,
+                              label: "State",
+                              required: true,
+                              name: "state",
+                              type: "text",
+                              editable: true,
+                              error: _vm.form.errors.get("state")
+                            },
+                            model: {
+                              value: _vm.form.state,
+                              callback: function($$v) {
+                                _vm.$set(_vm.form, "state", $$v)
+                              },
+                              expression: "form.state"
+                            }
+                          })
+                        : _c("selector-input", {
+                            attrs: {
+                              defaultData: _vm.selectedState,
+                              hideLabel: false,
+                              potentialData: _vm.selectedCountry.states,
+                              placeholder: "Select state",
+                              label: "State",
+                              name: "states",
+                              required: true,
+                              unclearable: true
+                            },
+                            model: {
+                              value: _vm.selectedState,
+                              callback: function($$v) {
+                                _vm.selectedState = $$v
+                              },
+                              expression: "selectedState"
+                            }
+                          })
                     ],
                     1
                   )
@@ -93052,31 +93316,19 @@ var render = function() {
                       : _vm._e(),
                     _vm._v(" "),
                     _vm.singleBranch
-                      ? _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.branch,
-                              expression: "branch"
-                            }
-                          ],
-                          staticStyle: { width: "100%" },
+                      ? _c("text-input", {
                           attrs: {
                             label: "Branch",
                             name: "branch",
                             editable: false,
-                            type: "text",
-                            disabled: ""
+                            type: "text"
                           },
-                          domProps: { value: _vm.branch },
-                          on: {
-                            input: function($event) {
-                              if ($event.target.composing) {
-                                return
-                              }
-                              _vm.branch = $event.target.value
-                            }
+                          model: {
+                            value: _vm.branch,
+                            callback: function($$v) {
+                              _vm.branch = $$v
+                            },
+                            expression: "branch"
                           }
                         })
                       : _vm._e()
@@ -93100,7 +93352,7 @@ var render = function() {
                 },
                 on: { click: _vm.createSubmit }
               },
-              [_vm._v("Submit")]
+              [_vm._v("Submit\n      ")]
             )
           ])
         ],
@@ -93109,7 +93361,11 @@ var render = function() {
       _vm._v(" "),
       _vm.isViewing
         ? _c("profile", {
-            attrs: { user: _vm.selectedUser, canManage: _vm.can_manage },
+            attrs: {
+              user: _vm.selectedUser,
+              canManage: _vm.can_manage,
+              countries: _vm.potentialCountries
+            },
             on: {
               back: function($event) {
                 return _vm.back()
@@ -93142,7 +93398,7 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "level-left" }, [
       _c("div", { staticClass: "level-item" }, [
-        _vm._v("\n\t\t\t\t\t\t\t\tUsers\n\t\t\t\t\t\t\t")
+        _vm._v("\n            Users\n          ")
       ])
     ])
   }

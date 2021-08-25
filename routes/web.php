@@ -27,9 +27,9 @@ Route::get('testPDF', function(){
 
 Auth::routes();
 
-// Route::get('phpinfo', function() {
-// 	return phpinfo();
-// });
+ Route::get('phpinfo', function() {
+ 	phpinfo();
+ });
 
 Route::group(['prefix' => 'user/account/'], function() {
     Route::get('verify/{token}', 'Auth\RegisterController@verify')->name('verify');
@@ -153,6 +153,7 @@ Route::group(['prefix' => 'internal'], function() {
 	Route::get('recall/user', 'RecallOrderController@index');
 	Route::get('products/{product}/reconcile', 'ProductController@reconcile');
 	Route::delete('products/{product}', 'ProductController@destroy');
+	Route::get("payments/definitions", "PaymentGatewayDefinitionController@index");
 });
 
 Route::group(['prefix' => 'subuser'], function() {
@@ -246,6 +247,7 @@ Route::group(['prefix' => 'payment'], function() {
     Route::post('store', 'PaymentController@store')->name('payment.store');
     Route::post('approve', 'PaymentController@approve')->name('payment.approve');
     Route::post('purchase', 'PaymentController@purchase')->name('payment.purchase');
+    Route::get('billplzResponse', 'PaymentController@billplzresponse')->name("payment.billplz.response");
 });
 
 
