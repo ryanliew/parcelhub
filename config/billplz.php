@@ -20,7 +20,7 @@ return [
     | Redirect path when billplz send result back to server from their portal (POST Request)
     |
     */
-    'callback_path' => '/payment/billplzResponse',
+    'callback_path' => '/payment/callback/billplz',
 
     /*
     |--------------------------------------------------------------------------
@@ -31,5 +31,5 @@ return [
     | Will overwrite the callback path
     |
     */
-    'redirect_path' => '/payment/billplzResponse',
+    'redirect_path' => '/payment/redirect/billplz',
 ];

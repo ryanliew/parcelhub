@@ -199,6 +199,6 @@ class PaymentController extends Controller
 
     public function billplzresponse()
     {
-        
+        info(request()->all());
     }
 }

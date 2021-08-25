@@ -247,7 +247,8 @@ Route::group(['prefix' => 'payment'], function() {
     Route::post('store', 'PaymentController@store')->name('payment.store');
     Route::post('approve', 'PaymentController@approve')->name('payment.approve');
     Route::post('purchase', 'PaymentController@purchase')->name('payment.purchase');
-    Route::get('billplzResponse', 'PaymentController@billplzresponse')->name("payment.billplz.response");
+    Route::get('redirect/billplz', 'PaymentController@billplzresponse')->name("payment.billplz.response");
+    Route::post("callback/billplz", "PaymentController@billplzresponse")->name("payment.billplz.callback");
 });
 
 

@@ -285,7 +285,7 @@
 
     <confirmation :isConfirming="confirmPayment"
                   title="Confirmation"
-                  message="Confirm payment approval?"
+                  message="Proceed to payment?"
                   @close="confirmPayment = false"
                   @confirm="onSubmit">
     </confirmation>

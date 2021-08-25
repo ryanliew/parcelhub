@@ -9,10 +9,15 @@ class BillplzService {
 
     private $payment, $billplz;
 
-    public function __construct($payment)
+    public function __construct($payment = null)
     {
         $this->billplz = Client::make(config("billplz.secret"));
-        $this->payment = $payment;
+
+        if(App::environment(['local', 'staging']))
+            $this->billplz->useSandbox();
+
+        if($payment)
+            $this->payment = $payment;
     }
 
     public function initialize()
@@ -30,8 +35,6 @@ class BillplzService {
 
     public function createCollection()
     {
-        if(App::environment(['local', 'staging']))
-            $this->billplz->useSandbox();
         $name =  "Collection for Payment #" . $this->payment->id;
 
         $collection = $this->billplz->collection();
@@ -56,11 +59,20 @@ class BillplzService {
             [
                 'redirect_url' => url(config("billplz.redirect_path")),
                 'reference_1_label' => "Bank Code",
-                "reference_1" => App::environment(['local', 'staging']) ? "TEST0023" : $this->payment->gateway->code,
+                "reference_1" => App::environment(['local', 'staging']) ? "TEST0021" : $this->payment->gateway->code,
             ]
         );
 
-        dd($response->toArray());
         return $response->toArray();
+    }
+
+    public function getFPXBanks()
+    {
+        $bank = $this->billplz->bank();
+        $fpx = $bank->supportedForFpx();
+
+        $fpx = collect($fpx->toArray()['banks'])->filter(function($fpx){ return $fpx['active'] == true; });
+
+        dd($fpx->toArray());
     }
 }
