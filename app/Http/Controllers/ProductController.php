@@ -120,7 +120,7 @@ class ProductController extends Controller
         if(auth()->user()->hasRole('admin')) {
             $branches = auth()->user()->branches->pluck("id");
 
-            $products = Inbound::with("products")->whereIn("branch_id", $branches)->where("status", 'true')->get()->pluck("products")->flatten()->unique("id");
+            $products = Inbound::with("products")->whereIn("branch_code", $branches)->where("status", 'true')->get()->pluck("products")->flatten()->unique("id");
  
             return $products;
         }

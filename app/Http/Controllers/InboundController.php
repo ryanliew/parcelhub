@@ -83,14 +83,14 @@ class InboundController extends Controller
                                                                 )
                                                             ->where('inbounds.type', 'inbound')
                                                             ->leftJoin('users', 'user_id', '=', 'users.id')
-                                                            ->join('branches', 'branches.id', '=', 'branch_id')
-                                                            ->join('accessibilities', 'accessibilities.branch_id', '=', 'branches.id')
+                                                            ->join('branches', 'branches.code', '=', 'branch_code')
+                                                            ->join('accessibilities', 'accessibilities.branch_code', '=', 'branches.code')
                                                             ->where('accessibilities.user_id', $user->id)
                                                             ->orderBy('arrival_date', 'desc'));
             }
             else {
-                $branches = Branch::select('branches.id')
-                        ->leftJoin('lots' , 'lots.branch_id', '=', 'branches.id')
+                $branches = Branch::select('branches.code')
+                        ->leftJoin('lots' , 'lots.branch_code', '=', 'branches.code')
                         ->where('lots.user_id', $user->id)
                         ->get();
                 $array_branch = [];
@@ -109,8 +109,8 @@ class InboundController extends Controller
                                                                 'inbounds.created_at as created_at'
                                                                 )
                                                             ->where('inbounds.type', 'inbound')
-                                                            ->whereIn('inbounds.branch_id', $array_branch)
-                                                            ->join('branches', 'branches.id', '=', 'branch_id')
+                                                            ->whereIn('inbounds.branch_code', $array_branch)
+                                                            ->join('branches', 'branches.code', '=', 'branch_code')
                                                             ->leftJoin('users', 'user_id', '=', 'users.id')
                                                             ->orderBy('arrival_date', 'desc'));
             }
@@ -125,7 +125,7 @@ class InboundController extends Controller
                                                                 'inbounds.created_at as created_at'
                                                                 )
                                                             ->where('inbounds.type', 'inbound')
-                                                            ->join('branches', 'branches.id', '=', 'branch_id')
+                                                            ->join('branches', 'branches.code', '=', 'branch_code')
                                                             ->leftJoin('users', 'user_id', '=', 'users.id')
                                                             ->orderBy('arrival_date', 'desc'));
         }
@@ -164,7 +164,7 @@ class InboundController extends Controller
                                                                     ->where('inbounds.type', 'inbound')
                                                                     ->where('process_status', 'awaiting_arrival')
                                                                     ->leftJoin('users', 'user_id', '=', 'users.id')
-                                                                    ->leftJoin('accessibilities', 'inbounds.branch_id', '=' , 'accessibilities.branch_id')
+                                                                    ->leftJoin('accessibilities', 'inbounds.branch_code', '=' , 'accessibilities.branch_code')
                                                                     ->where('accessibilities.user_id', auth()->user()->id)
                                                                     ->orderBy('arrival_date', 'desc'));
         }
@@ -269,7 +269,7 @@ class InboundController extends Controller
             return redirect()->back()->withErrors("Inbound must have a branch.");
         }
         else {
-            $lots = Lot::where('branch_id', $request->selectedBranch)->get();
+            $lots = Lot::where('branch_code', $request->selectedBranch)->get();
             if(!$lots) {
                 if(request()->wantsJson()) {
                     return response(json_encode(array('selectedBranch' => ['Lot for this branch does not exist. Please select another branch.'])), 422);
@@ -282,7 +282,7 @@ class InboundController extends Controller
         $inbound->user_id = $auth->id;
         $inbound->arrival_date = $request->arrival_date;
         $inbound->total_carton = $request->total_carton;
-        $inbound->branch_id = $request->selectedBranch;
+        $inbound->branch_code = $request->selectedBranch;
         $inbound->status = "true";
         $inbound->save();
         // Insert products into many to many table

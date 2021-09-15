@@ -68,13 +68,13 @@ class LotController extends Controller
                                 'lots.volume as volume', 
                                 'lots.price as price',
                                 'lots.left_volume as left_volume',
-                                'branches.branch_name',
-                                'branches.id as branch_id',
+                                'branches.name as branch_name',
+                                'branches.code as branch_code',
                                 'users.name as user_name',
                                 'lots.expired_at as expired_at',
                                 'users.id as user_id')
                         ->selectRaw('lots.volume - lots.left_volume as lot_usage')
-                        ->join('branches', 'branches.id', '=', 'branch_id')
+                        ->join('parcelhub_center.branches as branches', 'branches.code', '=', 'branch_code')
                         ->join('categories', 'categories.id', '=', 'category_id')
                         ->leftJoin('users', 'users.id', '=', 'user_id')
                     );
@@ -92,16 +92,16 @@ class LotController extends Controller
                         'lots.volume as volume', 
                         'lots.price as price',
                         'lots.left_volume as left_volume',
-                        'branches.branch_name',
-                        'branches.id as branch_id',
+                        'branches.name as branch_name',
+                        'branches.code as branch_code',
                         'users.name as user_name',
                         'lots.expired_at as expired_at',
                         'users.id as user_id')
                         ->selectRaw('lots.volume - lots.left_volume as lot_usage')
                         ->leftJoin('users', 'users.id', '=', 'user_id')
                         ->join('categories', 'categories.id', '=', 'category_id')
-                        ->join('branches', 'branches.id', '=', 'branch_id')
-                        ->join('accessibilities', 'accessibilities.branch_id', '=', 'branches.id')
+                        ->join('parcelhub_center.branches', 'branches.code', '=', 'branch_code')
+                        ->join('accessibilities', 'accessibilities.branch_code', '=', 'branches.code')
                         ->where('accessibilities.user_id', $user->id)
                 );
             }
@@ -118,13 +118,13 @@ class LotController extends Controller
                                         'lots.volume as volume', 
                                         'lots.left_volume as left_volume',
                                         'lots.price as price',
-                                        'branches.branch_name',
+                                        'branches.name as branch_name',
                                         'users.name as user_name',
                                         'lots.expired_at as expired_at',
                                         'users.id as user_id')
                                 ->selectRaw('lots.volume - lots.left_volume as lot_usage')
                                 ->join('categories', 'categories.id', '=', 'category_id')
-                                ->join('branches', 'branches.id', '=', 'branch_id')
+                                ->join('parcelhub_center.branches as branches', 'branches.code', '=', 'branch_code')
                                 ->leftJoin('users', 'users.id', '=', 'user_id')
                     );
             }
@@ -181,7 +181,7 @@ class LotController extends Controller
         $lot->volume = $request->volume;
         $lot->left_volume = $lot->volume;
         $lot->category_id = $request->category;
-        $lot->branch_id = $request->selectedBranch;
+        $lot->branch_code = $request->selectedBranch;
         $lot->price = $request->price;
         $lot->status = "false";
         $lot->rental_duration = (int)$rental_duration;
@@ -231,7 +231,7 @@ class LotController extends Controller
         $lot = Lot::find($request->id);
         $lot->name = $request->name;
         $lot->category_id = $request->category;
-        $lot->branch_id = $request->selectedBranch;
+        $lot->branch_code = $request->selectedBranch;
         $lot->volume = $request->volume;
         $lot->left_volume = Utilities::convertMeterCubeToCentimeterCube($request->volume);
         $lot->price = $request->price;

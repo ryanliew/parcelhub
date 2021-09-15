@@ -36,7 +36,7 @@
 					@keyup.enter="submit" v-if="type == 'Edit' || type == ''">
 
 	          	<div class="field">
-	          		<text-input v-model="form.codename" :defaultValue="form.codename" 
+	          		<text-input v-model="form.code" :defaultValue="form.code" 
 								label="Code Name" 
 								:required="true"
 								name="codename"
@@ -138,16 +138,16 @@
         data() {
             return {
                 fields:[
-                    {name: 'codename', sortField: 'codename', title: 'Code Name'},
-                    {name: 'branch_name', sortField: 'branch_name', title: 'Branch Name'},
-                    {name: 'branch_address', sortField: 'branch_address', title: 'Address'},
+                    {name: 'code', sortField: 'code', title: 'Code Name'},
+                    {name: 'name', sortField: 'name', title: 'Branch Name'},
+                    {name: 'address', sortField: 'address', title: 'Address'},
                     {name: '__component:branches-actions', title: 'Actions'},
                 ],
                 selectedBranches: '',
                 dialogActive: false,
                 form: new Form({
 					id: '',
-					codename: '',
+					code: '',
 					name: '',
 					phone: '',
 					address: '',
@@ -156,7 +156,7 @@
                     country: ''
 				}),
 				forms: new Form({
-					branch_id: '',
+					branch_code: '',
 					id: []
 				}),
                 confirmSubmit: false,
@@ -183,14 +183,14 @@
 					});
 
 					this.forms.id = store;
-					this.forms.branch_id = this.selectedBranches.id;
+					this.forms.branch_code = this.selectedBranches.code;
 
 					this.forms.post(this.action)	
 						.then(data => this.onSuccess())
 						.catch(error => this.onFail(error));
 				}
 				else if(this.type == 'Delete') {
-					axios.get('/branches/delete/' + this.selectedBranches.id)
+					axios.get('/branches/delete/' + this.selectedBranches.code)
 					.then(response => this.onDeleteSuccess(response));
 				}
 				else {
@@ -210,22 +210,22 @@
 				this.$refs.branches.refreshTable();
 			},
             edit(data) {
-                this.selectedBranches = data;
+				this.selectedBranches = data;
 				this.type = 'Edit';
                 this.form.id = data.id;
-				this.form.codename = data.codename;
-				this.form.name = data.branch_name;
-				this.form.phone = data.branch_phone;
-				this.form.address = data.branch_address;
-				this.form.state = data.branch_state;
-				this.form.postcode = data.branch_postcode;
-				this.form.country = data.branch_country;
+				this.form.code = data.code;
+				this.form.name = data.name;
+				this.form.phone = data.contact;
+				this.form.address = data.address;
+				this.form.state = data.state;
+				this.form.postcode = data.postcode;
+				this.form.country = data.country_code;
                 this.dialogActive = true;
             },
 			access(data){
 				this.selectedBranches = data;
 				this.type = 'Access';
-				this.getAccess(data.id);
+				this.getAccess(data.code);
 				this.dialogActive = true;
 			},
 			delete(data) {
@@ -253,7 +253,6 @@
 
 					return obj;
 				});
-
 				this.leftItems = response.data[0].map(function(user) {
 					let obj = {};
 
@@ -273,13 +272,13 @@
             dialogTitle() {
 				if(this.selectedBranches) {
 					if(this.type == 'Edit') {
-						return "Edit " + this.selectedBranches.branch_name;
+						return "Edit " + this.selectedBranches.name;
 					}
 					else if(this.type == 'Delete') {
 
 					}
 					else if(this.type == 'Access') {
-						return "Access " + this.selectedBranches.branch_name + '\'s branch';
+						return "Access " + this.selectedBranches.name + '\'s branch';
 					}
 				}
 				return "Create new Branch";

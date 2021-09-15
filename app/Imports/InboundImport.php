@@ -44,7 +44,7 @@ class InboundImport implements ToCollection, WithStartRow, SkipsEmptyRows, WithV
                                 ->where('user_id', auth()->id())
                                 ->first();
                 $branch = Branch::select('branches.id', 'branches.codename', 'branches.branch_name')
-                                ->leftJoin('lots' , 'lots.branch_id', '=', 'branches.id')
+                                ->leftJoin('lots' , 'lots.branch_code', '=', 'branches.code')
                                 ->where('lots.user_id', auth()->id())
                                 ->where('branches.codename', $excelRow[2])
                                 ->first();
@@ -76,7 +76,7 @@ class InboundImport implements ToCollection, WithStartRow, SkipsEmptyRows, WithV
             $inbound->user_id = auth()->id();
             $inbound->arrival_date = $arrival['arrival'];
             $inbound->total_carton = $current_carton;
-            $inbound->branch_id = $arrival['branchCode'];
+            $inbound->branch_copde = $arrival['branchCode'];
             $inbound->status = "true";
             $inbound->save(); 
 

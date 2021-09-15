@@ -44,6 +44,8 @@ class Inbound extends Model
     protected $dates = ["arrival_date"];
 
     protected $appends = ['display_no'];
+
+    protected $connection = 'mysql';
 	
     public function user(){
     	return $this->belongsTo('App\User');

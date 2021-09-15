@@ -51,7 +51,7 @@ class OutboundImport implements ToCollection, WithStartRow, SkipsEmptyRows, With
                             ->where('user_id', auth()->id())
                             ->first();
                 $branch = Branch::select('branches.id')
-                            ->leftJoin('lots' , 'lots.branch_id', '=', 'branches.id')
+                            ->leftJoin('lots' , 'lots.branch_code', '=', 'branches.code')
                             ->where('lots.user_id', auth()->id())
                             ->where('branches.codename', $excelRow[3])
                             ->first();
@@ -90,7 +90,7 @@ class OutboundImport implements ToCollection, WithStartRow, SkipsEmptyRows, With
             $outbound->process_status = 'pending';
 
             $outbound->recipient_name = $current_customer->customer_name;
-            $outbound->branch_id = $number['branchCode'];
+            $outbound->branch_code = $number['branchCode'];
             $outbound->recipient_address = $current_customer->customer_address;
             $outbound->recipient_address_2 = $current_customer->customer_address_2;
             $outbound->recipient_phone = $current_customer->customer_phone;

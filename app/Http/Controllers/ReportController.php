@@ -48,7 +48,7 @@ class ReportController extends Controller
 
     		// We need to pull out all the records and insert them into array for processing
     		foreach($product->inbounds_with_lots as $inbound){
-				if($inbound->inbound->branch_id == request()->selectedBranch && $inbound->inbound->process_status != 'canceled'){
+				if($inbound->inbound->branch_code == request()->selectedBranch && $inbound->inbound->process_status != 'canceled'){
 					$details->push(
 						$this->formatStockDetails(
 							$inbound->updated_at, 
@@ -62,7 +62,7 @@ class ReportController extends Controller
     		}
 
     		foreach($product->outbounds as $outbound) {
-				if($outbound->branch_id == request()->selectedBranch && $outbound->process_status !=='canceled'){
+				if($outbound->branch_code == request()->selectedBranch && $outbound->process_status !=='canceled'){
 					$details->push(
 						$this->formatStockDetails(
 							$outbound->updated_at, 

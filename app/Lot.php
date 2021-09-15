@@ -47,6 +47,8 @@ class Lot extends Model
 {
 	protected $guarded = [];
 
+    protected $connection = 'mysql';
+
     protected $appends = ['usage'];
 	
     public function user(){
@@ -67,7 +69,7 @@ class Lot extends Model
     }
 
     public function branch() {
-        return $this->belongsTo('App\Branch');
+        return $this->belongsTo('App\Branch', 'branch_code', 'code');
     }
 
     public function setVolumeAttribute($value)

@@ -68,6 +68,8 @@ class Outbound extends Model
     protected $with = ['tracking_numbers'];
 
     protected $appends = ['display_no'];
+
+    protected $connection = 'mysql';
     
     public function user() {
     	return $this->belongsTo('App\User');

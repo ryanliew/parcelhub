@@ -54,7 +54,7 @@ class PaymentController extends Controller
 
             elseif(auth()->user()->hasRole('admin')){
                 $branches = auth()->user()->branches->pluck("id");
-                $lots = Lot::whereIn('branch_id', $branches)->get()->pluck('user_id');
+                $lots = Lot::whereIn('branch_code', $branches)->get()->pluck('user_id');
                 $users = User::whereIn('id', $lots)->get()->pluck('id');
                 return Controller::VueTableListResult(Payment::select('users.name as name',
                                                 'picture as picture',
@@ -152,7 +152,7 @@ class PaymentController extends Controller
                 $lot = Lot::find($lot_purchase['id']);
 
                 $lot->rental_duration = $lot_purchase['rental_duration'];
-                $lot->branch_id = $request['selectedBranch'];
+                $lot->branch_code = $request['selectedBranch'];
                 $lot->user()->associate($user);
                 $lot->save();
 

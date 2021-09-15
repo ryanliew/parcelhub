@@ -65497,7 +65497,7 @@ var content = __webpack_require__(241);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(6)("70e46e89", content, false, {});
+var update = __webpack_require__(6)("4bb07703", content, false, {});
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
@@ -66415,7 +66415,7 @@ var content = __webpack_require__(257);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(6)("ae79d41c", content, false, {});
+var update = __webpack_require__(6)("227d9a52", content, false, {});
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
@@ -66439,7 +66439,7 @@ exports = module.exports = __webpack_require__(5)(false);
 
 
 // module
-exports.push([module.i, "\n.loader-container[data-v-8e36f8ec] {\n\twidth: 100%;\n\tposition: absolute;\n\theight: 100%;\n\tdisplay: -webkit-box;\n\tdisplay: -ms-flexbox;\n\tdisplay: flex;\n\ttop: 0;\n\tleft: 0;\n\tbackground: rgba(0,0,0,0.8);\n\tz-index: 5;\n}\n.custom-loader[data-v-8e36f8ec] {\n  \tmargin: 0 auto;\n  \twidth: 60px;\n  \theight: 50px;\n  \ttext-align: center;\n  \tfont-size: 10px;\n  \tposition: absolute;\n  \ttop: 50%;\n  \tleft: 50%;\n  \t-webkit-transform: translateY(-50%) translateX(-50%);\n}\n.custom-loader div[data-v-8e36f8ec] {\n    height: 100%;\n    width: 8px;\n    display: inline-block;\n    float: left;\n    margin-left: 2px;\n    -webkit-animation: delay-data-v-8e36f8ec 0.8s infinite ease-in-out;\n    animation: delay-data-v-8e36f8ec 0.8s infinite ease-in-out;\n}\n.custom-loader .bar1[data-v-8e36f8ec]{\n    background-color: #754fa0 ;\n    -webkit-animation-delay: 0.2s;\n    animation-delay: 0.2s;\n}\n.custom-loader .bar2[data-v-8e36f8ec]{\n    background-color: #09b7bf;\n    -webkit-animation-delay: 0.3s;\n    animation-delay: 0.3s;\n}\n.custom-loader .bar3[data-v-8e36f8ec]{\n    background-color: #90d36b;\n    -webkit-animation-delay: 0.4s;\n    animation-delay: 0.4s;\n}\n.custom-loader .bar4[data-v-8e36f8ec]{\n    background-color: #f2d40d;\n    -webkit-animation-delay: 0.5s;\n    animation-delay: 0.5s;\n}\n.custom-loader .bar5[data-v-8e36f8ec]{\n    background-color: #fcb12b;\n    -webkit-animation-delay: 0.6s;\n    animation-delay: 0.6s;\n}\n.custom-loader .bar6[data-v-8e36f8ec]{\n    background-color: #ed1b72;\n    -webkit-animation-delay: 0.7s;\n    animation-delay: 0.7s;\n}\n.loading-text[data-v-8e36f8ec] {\n\tcolor: white;\n\ttext-align: center;\n\twidth: 100%;\n\tposition: absolute;\n\tbottom: 40%;\n}\n@-webkit-keyframes delay-data-v-8e36f8ec {\n0%, 40%, 100% { -webkit-transform: scaleY(0.05)\n}\n20% { -webkit-transform: scaleY(1.0)\n}\n}\n@keyframes delay-data-v-8e36f8ec {\n0%, 40%, 100% { \n    transform: scaleY(0.05);\n    -webkit-transform: scaleY(0.05);\n}\n20% { \n    transform: scaleY(1.0);\n    -webkit-transform: scaleY(1.0);\n}\n}\n", ""]);
+exports.push([module.i, "\n.loader-container[data-v-8e36f8ec] {\r\n\twidth: 100%;\r\n\tposition: absolute;\r\n\theight: 100%;\r\n\tdisplay: -webkit-box;\r\n\tdisplay: -ms-flexbox;\r\n\tdisplay: flex;\r\n\ttop: 0;\r\n\tleft: 0;\r\n\tbackground: rgba(0,0,0,0.8);\r\n\tz-index: 5;\n}\n.custom-loader[data-v-8e36f8ec] {\r\n  \tmargin: 0 auto;\r\n  \twidth: 60px;\r\n  \theight: 50px;\r\n  \ttext-align: center;\r\n  \tfont-size: 10px;\r\n  \tposition: absolute;\r\n  \ttop: 50%;\r\n  \tleft: 50%;\r\n  \t-webkit-transform: translateY(-50%) translateX(-50%);\n}\n.custom-loader div[data-v-8e36f8ec] {\r\n    height: 100%;\r\n    width: 8px;\r\n    display: inline-block;\r\n    float: left;\r\n    margin-left: 2px;\r\n    -webkit-animation: delay-data-v-8e36f8ec 0.8s infinite ease-in-out;\r\n    animation: delay-data-v-8e36f8ec 0.8s infinite ease-in-out;\n}\n.custom-loader .bar1[data-v-8e36f8ec]{\r\n    background-color: #754fa0 ;\r\n    -webkit-animation-delay: 0.2s;\r\n    animation-delay: 0.2s;\n}\n.custom-loader .bar2[data-v-8e36f8ec]{\r\n    background-color: #09b7bf;\r\n    -webkit-animation-delay: 0.3s;\r\n    animation-delay: 0.3s;\n}\n.custom-loader .bar3[data-v-8e36f8ec]{\r\n    background-color: #90d36b;\r\n    -webkit-animation-delay: 0.4s;\r\n    animation-delay: 0.4s;\n}\n.custom-loader .bar4[data-v-8e36f8ec]{\r\n    background-color: #f2d40d;\r\n    -webkit-animation-delay: 0.5s;\r\n    animation-delay: 0.5s;\n}\n.custom-loader .bar5[data-v-8e36f8ec]{\r\n    background-color: #fcb12b;\r\n    -webkit-animation-delay: 0.6s;\r\n    animation-delay: 0.6s;\n}\n.custom-loader .bar6[data-v-8e36f8ec]{\r\n    background-color: #ed1b72;\r\n    -webkit-animation-delay: 0.7s;\r\n    animation-delay: 0.7s;\n}\n.loading-text[data-v-8e36f8ec] {\r\n\tcolor: white;\r\n\ttext-align: center;\r\n\twidth: 100%;\r\n\tposition: absolute;\r\n\tbottom: 40%;\n}\n@-webkit-keyframes delay-data-v-8e36f8ec {\n0%, 40%, 100% { -webkit-transform: scaleY(0.05)\n}\n20% { -webkit-transform: scaleY(1.0)\n}\n}\n@keyframes delay-data-v-8e36f8ec {\n0%, 40%, 100% { \r\n    transform: scaleY(0.05);\r\n    -webkit-transform: scaleY(0.05);\n}\n20% { \r\n    transform: scaleY(1.0);\r\n    -webkit-transform: scaleY(1.0);\n}\n}\r\n", ""]);
 
 // exports
 
@@ -67178,7 +67178,7 @@ var content = __webpack_require__(269);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(6)("c96b1a10", content, false, {});
+var update = __webpack_require__(6)("7e8276f8", content, false, {});
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
@@ -71630,7 +71630,7 @@ var content = __webpack_require__(335);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(6)("27fb0af1", content, false, {});
+var update = __webpack_require__(6)("4fa4aade", content, false, {});
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
@@ -71654,7 +71654,7 @@ exports = module.exports = __webpack_require__(5)(false);
 
 
 // module
-exports.push([module.i, "\n.text-input[data-v-819b0014] {\n\tposition: relative;\n\tz-index: 1;\n\tdisplay: inline-block;\n\twidth: 100%;\n\tvertical-align: top;\n\tfont-size: 1em;\n\tmin-width: 80px;\n}\n.input__field[data-v-819b0014], .input__disabled[data-v-819b0014] {\n\tposition: relative;\n\tdisplay: block;\n\tfloat: right;\n\tpadding: 0.8em;\n\twidth: 100%;\n\tborder: none;\n\tborder-radius: 0;\n\tbackground: #f0f0f0;\n\t-webkit-appearance: none; /* for box shadows to show on iOS */\n\tfont-size: 1em;\n}\n.input__field[data-v-819b0014]:focus {\n\toutline: none;\n}\n.input__label[data-v-819b0014] {\n\tdisplay: inline-block;\n\tfloat: right;\n\tpadding: 0 1em;\n\twidth: 40%;\n\tfont-weight: bold;\n\tfont-size: 90.25%;\n\t-webkit-font-smoothing: antialiased;\n    -moz-osx-font-smoothing: grayscale;\n\t-webkit-touch-callout: none;\n\t-webkit-user-select: none;\n\t-moz-user-select: none;\n\t-ms-user-select: none;\n\tuser-select: none;\n}\n.input__label-content[data-v-819b0014] {\n\tposition: relative;\n\tdisplay: block;\n\tpadding: 0.4em 0;\n\twidth: 100%;\n}\n.input--hoshi[data-v-819b0014] {\n\toverflow: hidden;\n}\n.input__field--hoshi[data-v-819b0014], .input__disabled[data-v-819b0014] {\n\tpadding: 1em 0.15em;\n\twidth: 100%;\n\tbackground: transparent;\n\tmin-width: 120px;\n}\n.input--nolabel .input__field--hoshi[data-v-819b0014] {\n\tpadding: 0 1em 1em 0.15em;\n}\n.input__label--hoshi[data-v-819b0014] {\n\tposition: absolute;\n\tbottom: 0;\n\tleft: 0;\n\tpadding: 0 0.25em;\n\twidth: 100%;\n\theight: calc(100% - 1em);\n\ttext-align: left;\n\tpointer-events: none;\n}\n.input__label-content--hoshi[data-v-819b0014] {\n\tposition: absolute;\n\tleft: 2px;\n}\n.input__label--hoshi[data-v-819b0014]::before,\n.input__label--hoshi[data-v-819b0014]::after {\n\tcontent: '';\n\tposition: absolute;\n\ttop: 2px;\n\tleft: 0;\n\twidth: 100%;\n\theight: calc(100% - 10px);\n\tborder-bottom: 1px solid #B9C1CA;\n}\nspan.input__label--hoshi[data-v-819b0014]::after {\n\tborder-bottom: none;\n}\n.input__label--hoshi[data-v-819b0014]::after {\n\tmargin-top: 2px;\n\tborder-bottom: 4px solid red;\n\t-webkit-transform: translate3d(-100%, 0, 0);\n\ttransform: translate3d(-100%, 0, 0);\n\t-webkit-transition: -webkit-transform 0.3s;\n\ttransition: -webkit-transform 0.3s;\n\ttransition: transform 0.3s;\n\ttransition: transform 0.3s, -webkit-transform 0.3s;\n}\n.input__label--hoshi-color-1[data-v-819b0014]::after {\n\tborder-color: hsl(200, 100%, 50%);\n}\n.input__label--hoshi-color-2[data-v-819b0014]::after {\n\tborder-color: hsl(160, 100%, 50%);\n}\n.input__label--hoshi-color-3[data-v-819b0014]::after {\n\tborder-color: hsl(20, 100%, 50%);\n}\n.input__label--hoshi-color-transparent[data-v-819b0014]::before, .input__label--hoshi-color-transparent[data-v-819b0014]::after {\n\tborder-color: transparent;\n\tborder-bottom: 0px solid transparent;\n}\n.input__field--hoshi:focus + .input__label--hoshi[data-v-819b0014]::after,\n.input--filled .input__label--hoshi[data-v-819b0014]::after {\n\t-webkit-transform: translate3d(0, 0, 0);\n\ttransform: translate3d(0, 0, 0);\n}\n.input__field--hoshi:focus + .input__label--hoshi .input__label-content--hoshi[data-v-819b0014],\n.input--filled .input__label-content--hoshi[data-v-819b0014] {\n\t-webkit-animation: anim-1-data-v-819b0014 0.3s forwards;\n\tanimation: anim-1-data-v-819b0014 0.3s forwards;\n}\n@-webkit-keyframes anim-1-data-v-819b0014 {\n50% {\n\t\topacity: 0;\n\t\t-webkit-transform: translate3d(1em, 0, 0);\n\t\ttransform: translate3d(1em, 0, 0);\n\t\tfont-size: 100%;\n}\n51% {\n\t\topacity: 0;\n\t\t-webkit-transform: translate3d(-1em, -40%, 0);\n\t\ttransform: translate3d(-1em, -40%, 0);\n\t\tfont-size: 90%;\n}\n100% {\n\t\topacity: 1;\n\t\t-webkit-transform: translate3d(0, -70%, 0);\n\t\ttransform: translate3d(0, -70%, 0);\n\t\tfont-size: 85%;\n}\n}\n@keyframes anim-1-data-v-819b0014 {\n50% {\n\t\topacity: 0;\n\t\t-webkit-transform: translate3d(1em, 0, 0);\n\t\ttransform: translate3d(1em, 0, 0);\n\t\tfont-size: 100%;\n}\n51% {\n\t\topacity: 0;\n\t\t-webkit-transform: translate3d(-1em, -40%, 0);\n\t\ttransform: translate3d(-1em, -40%, 0);\n\t\tfont-size: 90%;\n}\n100% {\n\t\topacity: 1;\n\t\t-webkit-transform: translate3d(0, -70%, 0);\n\t\ttransform: translate3d(0, -70%, 0);\n\t\tfont-size: 85%;\n}\n}\n", ""]);
+exports.push([module.i, "\n.text-input[data-v-819b0014] {\r\n\tposition: relative;\r\n\tz-index: 1;\r\n\tdisplay: inline-block;\r\n\twidth: 100%;\r\n\tvertical-align: top;\r\n\tfont-size: 1em;\r\n\tmin-width: 80px;\n}\n.input__field[data-v-819b0014], .input__disabled[data-v-819b0014] {\r\n\tposition: relative;\r\n\tdisplay: block;\r\n\tfloat: right;\r\n\tpadding: 0.8em;\r\n\twidth: 100%;\r\n\tborder: none;\r\n\tborder-radius: 0;\r\n\tbackground: #f0f0f0;\r\n\t-webkit-appearance: none; /* for box shadows to show on iOS */\r\n\tfont-size: 1em;\n}\n.input__field[data-v-819b0014]:focus {\r\n\toutline: none;\n}\n.input__label[data-v-819b0014] {\r\n\tdisplay: inline-block;\r\n\tfloat: right;\r\n\tpadding: 0 1em;\r\n\twidth: 40%;\r\n\tfont-weight: bold;\r\n\tfont-size: 90.25%;\r\n\t-webkit-font-smoothing: antialiased;\r\n    -moz-osx-font-smoothing: grayscale;\r\n\t-webkit-touch-callout: none;\r\n\t-webkit-user-select: none;\r\n\t-moz-user-select: none;\r\n\t-ms-user-select: none;\r\n\tuser-select: none;\n}\n.input__label-content[data-v-819b0014] {\r\n\tposition: relative;\r\n\tdisplay: block;\r\n\tpadding: 0.4em 0;\r\n\twidth: 100%;\n}\n.input--hoshi[data-v-819b0014] {\r\n\toverflow: hidden;\n}\n.input__field--hoshi[data-v-819b0014], .input__disabled[data-v-819b0014] {\r\n\tpadding: 1em 0.15em;\r\n\twidth: 100%;\r\n\tbackground: transparent;\r\n\tmin-width: 120px;\n}\n.input--nolabel .input__field--hoshi[data-v-819b0014] {\r\n\tpadding: 0 1em 1em 0.15em;\n}\n.input__label--hoshi[data-v-819b0014] {\r\n\tposition: absolute;\r\n\tbottom: 0;\r\n\tleft: 0;\r\n\tpadding: 0 0.25em;\r\n\twidth: 100%;\r\n\theight: calc(100% - 1em);\r\n\ttext-align: left;\r\n\tpointer-events: none;\n}\n.input__label-content--hoshi[data-v-819b0014] {\r\n\tposition: absolute;\r\n\tleft: 2px;\n}\n.input__label--hoshi[data-v-819b0014]::before,\r\n.input__label--hoshi[data-v-819b0014]::after {\r\n\tcontent: '';\r\n\tposition: absolute;\r\n\ttop: 2px;\r\n\tleft: 0;\r\n\twidth: 100%;\r\n\theight: calc(100% - 10px);\r\n\tborder-bottom: 1px solid #B9C1CA;\n}\nspan.input__label--hoshi[data-v-819b0014]::after {\r\n\tborder-bottom: none;\n}\n.input__label--hoshi[data-v-819b0014]::after {\r\n\tmargin-top: 2px;\r\n\tborder-bottom: 4px solid red;\r\n\t-webkit-transform: translate3d(-100%, 0, 0);\r\n\ttransform: translate3d(-100%, 0, 0);\r\n\t-webkit-transition: -webkit-transform 0.3s;\r\n\ttransition: -webkit-transform 0.3s;\r\n\ttransition: transform 0.3s;\r\n\ttransition: transform 0.3s, -webkit-transform 0.3s;\n}\n.input__label--hoshi-color-1[data-v-819b0014]::after {\r\n\tborder-color: hsl(200, 100%, 50%);\n}\n.input__label--hoshi-color-2[data-v-819b0014]::after {\r\n\tborder-color: hsl(160, 100%, 50%);\n}\n.input__label--hoshi-color-3[data-v-819b0014]::after {\r\n\tborder-color: hsl(20, 100%, 50%);\n}\n.input__label--hoshi-color-transparent[data-v-819b0014]::before, .input__label--hoshi-color-transparent[data-v-819b0014]::after {\r\n\tborder-color: transparent;\r\n\tborder-bottom: 0px solid transparent;\n}\n.input__field--hoshi:focus + .input__label--hoshi[data-v-819b0014]::after,\r\n.input--filled .input__label--hoshi[data-v-819b0014]::after {\r\n\t-webkit-transform: translate3d(0, 0, 0);\r\n\ttransform: translate3d(0, 0, 0);\n}\n.input__field--hoshi:focus + .input__label--hoshi .input__label-content--hoshi[data-v-819b0014],\r\n.input--filled .input__label-content--hoshi[data-v-819b0014] {\r\n\t-webkit-animation: anim-1-data-v-819b0014 0.3s forwards;\r\n\tanimation: anim-1-data-v-819b0014 0.3s forwards;\n}\n@-webkit-keyframes anim-1-data-v-819b0014 {\n50% {\r\n\t\topacity: 0;\r\n\t\t-webkit-transform: translate3d(1em, 0, 0);\r\n\t\ttransform: translate3d(1em, 0, 0);\r\n\t\tfont-size: 100%;\n}\n51% {\r\n\t\topacity: 0;\r\n\t\t-webkit-transform: translate3d(-1em, -40%, 0);\r\n\t\ttransform: translate3d(-1em, -40%, 0);\r\n\t\tfont-size: 90%;\n}\n100% {\r\n\t\topacity: 1;\r\n\t\t-webkit-transform: translate3d(0, -70%, 0);\r\n\t\ttransform: translate3d(0, -70%, 0);\r\n\t\tfont-size: 85%;\n}\n}\n@keyframes anim-1-data-v-819b0014 {\n50% {\r\n\t\topacity: 0;\r\n\t\t-webkit-transform: translate3d(1em, 0, 0);\r\n\t\ttransform: translate3d(1em, 0, 0);\r\n\t\tfont-size: 100%;\n}\n51% {\r\n\t\topacity: 0;\r\n\t\t-webkit-transform: translate3d(-1em, -40%, 0);\r\n\t\ttransform: translate3d(-1em, -40%, 0);\r\n\t\tfont-size: 90%;\n}\n100% {\r\n\t\topacity: 1;\r\n\t\t-webkit-transform: translate3d(0, -70%, 0);\r\n\t\ttransform: translate3d(0, -70%, 0);\r\n\t\tfont-size: 85%;\n}\n}\r\n", ""]);
 
 // exports
 
@@ -71907,7 +71907,7 @@ var content = __webpack_require__(340);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(6)("40d33fae", content, false, {});
+var update = __webpack_require__(6)("516d0f4e", content, false, {});
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
@@ -71931,7 +71931,7 @@ exports = module.exports = __webpack_require__(5)(false);
 
 
 // module
-exports.push([module.i, "\n.text-input[data-v-9594f7ee] {\n\tposition: relative;\n\tz-index: 1;\n\tdisplay: inline-block;\n\twidth: 100%;\n\tvertical-align: top;\n\tfont-size: 1em;\n\tmin-width: 80px;\n}\n.input__field[data-v-9594f7ee], .input__disabled[data-v-9594f7ee] {\n\tposition: relative;\n\tdisplay: block;\n\tfloat: right;\n\tpadding: 0.8em;\n\twidth: 100%;\n\tborder: none;\n\tborder-radius: 0;\n\tbackground: #f0f0f0;\n\t-webkit-appearance: none; /* for box shadows to show on iOS */\n\tfont-size: 1em;\n}\n.input__field[data-v-9594f7ee]:focus {\n\toutline: none;\n}\n.input__label[data-v-9594f7ee] {\n\tdisplay: inline-block;\n\tfloat: right;\n\tpadding: 0 1em;\n\twidth: 40%;\n\tfont-weight: bold;\n\tfont-size: 90.25%;\n\t-webkit-font-smoothing: antialiased;\n    -moz-osx-font-smoothing: grayscale;\n\t-webkit-touch-callout: none;\n\t-webkit-user-select: none;\n\t-moz-user-select: none;\n\t-ms-user-select: none;\n\tuser-select: none;\n}\n.input__label-content[data-v-9594f7ee] {\n\tposition: relative;\n\tdisplay: block;\n\tpadding: 0.4em 0;\n\twidth: 100%;\n}\n.input--hoshi[data-v-9594f7ee] {\n\toverflow: hidden;\n}\n.input__field--hoshi[data-v-9594f7ee], .input__disabled[data-v-9594f7ee] {\n\tpadding: 1em 0.15em;\n\twidth: 100%;\n\tbackground: transparent;\n\tmin-width: 120px;\n}\n.input--nolabel .input__field--hoshi[data-v-9594f7ee] {\n\tpadding: 0 1em 1em 0.15em;\n}\n.input__label--hoshi[data-v-9594f7ee] {\n\tposition: absolute;\n\tbottom: 0;\n\tleft: 0;\n\tpadding: 0 0.25em;\n\twidth: 100%;\n\theight: calc(100% - 1em);\n\ttext-align: left;\n\tpointer-events: none;\n}\n.input__label-content--hoshi[data-v-9594f7ee] {\n\tposition: absolute;\n\tleft: 2px;\n}\n.input__label--hoshi[data-v-9594f7ee]::before,\n.input__label--hoshi[data-v-9594f7ee]::after {\n\tcontent: '';\n\tposition: absolute;\n\ttop: 2px;\n\tleft: 0;\n\twidth: 100%;\n\theight: calc(100% - 10px);\n\tborder-bottom: 1px solid #B9C1CA;\n}\nspan.input__label--hoshi[data-v-9594f7ee]::after {\n\tborder-bottom: none;\n}\n.input__label--hoshi[data-v-9594f7ee]::after {\n\tmargin-top: 2px;\n\tborder-bottom: 4px solid red;\n\t-webkit-transform: translate3d(-100%, 0, 0);\n\ttransform: translate3d(-100%, 0, 0);\n\t-webkit-transition: -webkit-transform 0.3s;\n\ttransition: -webkit-transform 0.3s;\n\ttransition: transform 0.3s;\n\ttransition: transform 0.3s, -webkit-transform 0.3s;\n}\n.input__label--hoshi-color-1[data-v-9594f7ee]::after {\n\tborder-color: hsl(200, 100%, 50%);\n}\n.input__label--hoshi-color-2[data-v-9594f7ee]::after {\n\tborder-color: hsl(160, 100%, 50%);\n}\n.input__label--hoshi-color-3[data-v-9594f7ee]::after {\n\tborder-color: hsl(20, 100%, 50%);\n}\n.input__label--hoshi-color-transparent[data-v-9594f7ee]::before, .input__label--hoshi-color-transparent[data-v-9594f7ee]::after {\n\tborder-color: transparent;\n\tborder-bottom: 0px solid transparent;\n}\n.input__field--hoshi:focus + .input__label--hoshi[data-v-9594f7ee]::after,\n.input--filled .input__label--hoshi[data-v-9594f7ee]::after {\n\t-webkit-transform: translate3d(0, 0, 0);\n\ttransform: translate3d(0, 0, 0);\n}\n.input__field--hoshi:focus + .input__label--hoshi .input__label-content--hoshi[data-v-9594f7ee],\n.input--filled .input__label-content--hoshi[data-v-9594f7ee] {\n\t-webkit-animation: anim-1-data-v-9594f7ee 0.3s forwards;\n\tanimation: anim-1-data-v-9594f7ee 0.3s forwards;\n}\n@-webkit-keyframes anim-1-data-v-9594f7ee {\n50% {\n\t\topacity: 0;\n\t\t-webkit-transform: translate3d(1em, 0, 0);\n\t\ttransform: translate3d(1em, 0, 0);\n\t\tfont-size: 100%;\n}\n51% {\n\t\topacity: 0;\n\t\t-webkit-transform: translate3d(-1em, -40%, 0);\n\t\ttransform: translate3d(-1em, -40%, 0);\n\t\tfont-size: 90%;\n}\n100% {\n\t\topacity: 1;\n\t\t-webkit-transform: translate3d(0, -70%, 0);\n\t\ttransform: translate3d(0, -70%, 0);\n\t\tfont-size: 85%;\n}\n}\n@keyframes anim-1-data-v-9594f7ee {\n50% {\n\t\topacity: 0;\n\t\t-webkit-transform: translate3d(1em, 0, 0);\n\t\ttransform: translate3d(1em, 0, 0);\n\t\tfont-size: 100%;\n}\n51% {\n\t\topacity: 0;\n\t\t-webkit-transform: translate3d(-1em, -40%, 0);\n\t\ttransform: translate3d(-1em, -40%, 0);\n\t\tfont-size: 90%;\n}\n100% {\n\t\topacity: 1;\n\t\t-webkit-transform: translate3d(0, -70%, 0);\n\t\ttransform: translate3d(0, -70%, 0);\n\t\tfont-size: 85%;\n}\n}\n", ""]);
+exports.push([module.i, "\n.text-input[data-v-9594f7ee] {\r\n\tposition: relative;\r\n\tz-index: 1;\r\n\tdisplay: inline-block;\r\n\twidth: 100%;\r\n\tvertical-align: top;\r\n\tfont-size: 1em;\r\n\tmin-width: 80px;\n}\n.input__field[data-v-9594f7ee], .input__disabled[data-v-9594f7ee] {\r\n\tposition: relative;\r\n\tdisplay: block;\r\n\tfloat: right;\r\n\tpadding: 0.8em;\r\n\twidth: 100%;\r\n\tborder: none;\r\n\tborder-radius: 0;\r\n\tbackground: #f0f0f0;\r\n\t-webkit-appearance: none; /* for box shadows to show on iOS */\r\n\tfont-size: 1em;\n}\n.input__field[data-v-9594f7ee]:focus {\r\n\toutline: none;\n}\n.input__label[data-v-9594f7ee] {\r\n\tdisplay: inline-block;\r\n\tfloat: right;\r\n\tpadding: 0 1em;\r\n\twidth: 40%;\r\n\tfont-weight: bold;\r\n\tfont-size: 90.25%;\r\n\t-webkit-font-smoothing: antialiased;\r\n    -moz-osx-font-smoothing: grayscale;\r\n\t-webkit-touch-callout: none;\r\n\t-webkit-user-select: none;\r\n\t-moz-user-select: none;\r\n\t-ms-user-select: none;\r\n\tuser-select: none;\n}\n.input__label-content[data-v-9594f7ee] {\r\n\tposition: relative;\r\n\tdisplay: block;\r\n\tpadding: 0.4em 0;\r\n\twidth: 100%;\n}\n.input--hoshi[data-v-9594f7ee] {\r\n\toverflow: hidden;\n}\n.input__field--hoshi[data-v-9594f7ee], .input__disabled[data-v-9594f7ee] {\r\n\tpadding: 1em 0.15em;\r\n\twidth: 100%;\r\n\tbackground: transparent;\r\n\tmin-width: 120px;\n}\n.input--nolabel .input__field--hoshi[data-v-9594f7ee] {\r\n\tpadding: 0 1em 1em 0.15em;\n}\n.input__label--hoshi[data-v-9594f7ee] {\r\n\tposition: absolute;\r\n\tbottom: 0;\r\n\tleft: 0;\r\n\tpadding: 0 0.25em;\r\n\twidth: 100%;\r\n\theight: calc(100% - 1em);\r\n\ttext-align: left;\r\n\tpointer-events: none;\n}\n.input__label-content--hoshi[data-v-9594f7ee] {\r\n\tposition: absolute;\r\n\tleft: 2px;\n}\n.input__label--hoshi[data-v-9594f7ee]::before,\r\n.input__label--hoshi[data-v-9594f7ee]::after {\r\n\tcontent: '';\r\n\tposition: absolute;\r\n\ttop: 2px;\r\n\tleft: 0;\r\n\twidth: 100%;\r\n\theight: calc(100% - 10px);\r\n\tborder-bottom: 1px solid #B9C1CA;\n}\nspan.input__label--hoshi[data-v-9594f7ee]::after {\r\n\tborder-bottom: none;\n}\n.input__label--hoshi[data-v-9594f7ee]::after {\r\n\tmargin-top: 2px;\r\n\tborder-bottom: 4px solid red;\r\n\t-webkit-transform: translate3d(-100%, 0, 0);\r\n\ttransform: translate3d(-100%, 0, 0);\r\n\t-webkit-transition: -webkit-transform 0.3s;\r\n\ttransition: -webkit-transform 0.3s;\r\n\ttransition: transform 0.3s;\r\n\ttransition: transform 0.3s, -webkit-transform 0.3s;\n}\n.input__label--hoshi-color-1[data-v-9594f7ee]::after {\r\n\tborder-color: hsl(200, 100%, 50%);\n}\n.input__label--hoshi-color-2[data-v-9594f7ee]::after {\r\n\tborder-color: hsl(160, 100%, 50%);\n}\n.input__label--hoshi-color-3[data-v-9594f7ee]::after {\r\n\tborder-color: hsl(20, 100%, 50%);\n}\n.input__label--hoshi-color-transparent[data-v-9594f7ee]::before, .input__label--hoshi-color-transparent[data-v-9594f7ee]::after {\r\n\tborder-color: transparent;\r\n\tborder-bottom: 0px solid transparent;\n}\n.input__field--hoshi:focus + .input__label--hoshi[data-v-9594f7ee]::after,\r\n.input--filled .input__label--hoshi[data-v-9594f7ee]::after {\r\n\t-webkit-transform: translate3d(0, 0, 0);\r\n\ttransform: translate3d(0, 0, 0);\n}\n.input__field--hoshi:focus + .input__label--hoshi .input__label-content--hoshi[data-v-9594f7ee],\r\n.input--filled .input__label-content--hoshi[data-v-9594f7ee] {\r\n\t-webkit-animation: anim-1-data-v-9594f7ee 0.3s forwards;\r\n\tanimation: anim-1-data-v-9594f7ee 0.3s forwards;\n}\n@-webkit-keyframes anim-1-data-v-9594f7ee {\n50% {\r\n\t\topacity: 0;\r\n\t\t-webkit-transform: translate3d(1em, 0, 0);\r\n\t\ttransform: translate3d(1em, 0, 0);\r\n\t\tfont-size: 100%;\n}\n51% {\r\n\t\topacity: 0;\r\n\t\t-webkit-transform: translate3d(-1em, -40%, 0);\r\n\t\ttransform: translate3d(-1em, -40%, 0);\r\n\t\tfont-size: 90%;\n}\n100% {\r\n\t\topacity: 1;\r\n\t\t-webkit-transform: translate3d(0, -70%, 0);\r\n\t\ttransform: translate3d(0, -70%, 0);\r\n\t\tfont-size: 85%;\n}\n}\n@keyframes anim-1-data-v-9594f7ee {\n50% {\r\n\t\topacity: 0;\r\n\t\t-webkit-transform: translate3d(1em, 0, 0);\r\n\t\ttransform: translate3d(1em, 0, 0);\r\n\t\tfont-size: 100%;\n}\n51% {\r\n\t\topacity: 0;\r\n\t\t-webkit-transform: translate3d(-1em, -40%, 0);\r\n\t\ttransform: translate3d(-1em, -40%, 0);\r\n\t\tfont-size: 90%;\n}\n100% {\r\n\t\topacity: 1;\r\n\t\t-webkit-transform: translate3d(0, -70%, 0);\r\n\t\ttransform: translate3d(0, -70%, 0);\r\n\t\tfont-size: 85%;\n}\n}\r\n", ""]);
 
 // exports
 
@@ -76750,8 +76750,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		setBranches: function setBranches(response) {
 			this.branchesOptions = response.data.map(function (branches) {
 				var obj = {};
-				obj['label'] = branches.branch_name;
-				obj['value'] = branches.id;
+				obj['label'] = branches.name;
+				obj['value'] = branches.code;
 				return obj;
 			});
 		},
@@ -80633,7 +80633,7 @@ var content = __webpack_require__(429);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(6)("41f27a24", content, false, {});
+var update = __webpack_require__(6)("20bedae4", content, false, {});
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
@@ -80657,7 +80657,7 @@ exports = module.exports = __webpack_require__(5)(false);
 
 
 // module
-exports.push([module.i, "\n.date-input[data-v-d16e2e70] {\n\tposition: relative;\n\tz-index: 1;\n\tdisplay: inline-block;\n\twidth: 100%;\n\tvertical-align: top;\n\tfont-size: 1em;\n\tmin-width: 80px;\n}\n.input__field[data-v-d16e2e70], .input__disabled[data-v-d16e2e70] {\n\tposition: relative;\n\tdisplay: block;\n\tfloat: right;\n\tpadding: 0.8em;\n\twidth: 100%;\n\tborder: none;\n\tborder-radius: 0;\n\tbackground: #f0f0f0;\n\t-webkit-appearance: none; /* for box shadows to show on iOS */\n\tfont-size: 1em;\n}\n.input__field[data-v-d16e2e70]::-moz-placeholder {\n\tcolor: transparent;\n}\n.input__field[data-v-d16e2e70]::-webkit-input-placeholder {\n\tcolor: transparent;\n}\n.input__field[data-v-d16e2e70]:-moz-placeholder {\n\tcolor: transparent;\n}\n.input__field[data-v-d16e2e70]:-ms-input-placeholder {\n\tcolor: transparent;\n}\n.input__field[data-v-d16e2e70]:focus {\n\toutline: none;\n}\n.input__label[data-v-d16e2e70] {\n\tdisplay: inline-block;\n\tfloat: right;\n\tpadding: 0 1em;\n\twidth: 40%;\n\tfont-weight: bold;\n\tfont-size: 90.25%;\n\t-webkit-font-smoothing: antialiased;\n    -moz-osx-font-smoothing: grayscale;\n\t-webkit-touch-callout: none;\n\t-webkit-user-select: none;\n\t-moz-user-select: none;\n\t-ms-user-select: none;\n\tuser-select: none;\n}\n.input__label-content[data-v-d16e2e70] {\n\tposition: relative;\n\tdisplay: block;\n\tpadding: 0.4em 0;\n\twidth: 100%;\n}\n.input--hoshi[data-v-d16e2e70] {\n\toverflow: hidden;\n}\n.input__field--hoshi[data-v-d16e2e70], .input__disabled[data-v-d16e2e70] {\n\tpadding: 1.61em 0.15em;\n\twidth: 100%;\n\tbackground: transparent;\n\tmin-width: 120px;\n}\n.input--nolabel .input__field--hoshi[data-v-d16e2e70] {\n\tpadding: 0 1em 1em 0.15em;\n}\n.input__label--hoshi[data-v-d16e2e70] {\n\tposition: absolute;\n\tbottom: 0;\n\tleft: 0;\n\tpadding: 0 0.25em;\n\twidth: 100%;\n\theight: calc(100% - 1em);\n\ttext-align: left;\n\tpointer-events: none;\n}\n.input__label-content--hoshi[data-v-d16e2e70] {\n\tposition: absolute;\n\tleft: 2px;\n}\n.input__label--hoshi[data-v-d16e2e70]::before,\n.input__label--hoshi[data-v-d16e2e70]::after {\n\tcontent: '';\n\tposition: absolute;\n\ttop: 2px;\n\tleft: 0;\n\twidth: 100%;\n\theight: calc(100% - 10px);\n\tborder-bottom: 1px solid #B9C1CA;\n}\nspan.input__label--hoshi[data-v-d16e2e70]::after {\n\tborder-bottom: none;\n}\n.input__label--hoshi[data-v-d16e2e70]::after {\n\tmargin-top: 2px;\n\tborder-bottom: 4px solid red;\n\t-webkit-transform: translate3d(-100%, 0, 0);\n\ttransform: translate3d(-100%, 0, 0);\n\t-webkit-transition: -webkit-transform 0.3s;\n\ttransition: -webkit-transform 0.3s;\n\ttransition: transform 0.3s;\n\ttransition: transform 0.3s, -webkit-transform 0.3s;\n}\n.input__label--hoshi-color-1[data-v-d16e2e70]::after {\n\tborder-color: hsl(200, 100%, 50%);\n}\n.input__label--hoshi-color-2[data-v-d16e2e70]::after {\n\tborder-color: hsl(160, 100%, 50%);\n}\n.input__label--hoshi-color-3[data-v-d16e2e70]::after {\n\tborder-color: hsl(20, 100%, 50%);\n}\n.input__label--hoshi-color-transparent[data-v-d16e2e70]::before, .input__label--hoshi-color-transparent[data-v-d16e2e70]::after {\n\tborder-color: transparent;\n\tborder-bottom: 0px solid transparent;\n}\n.input__field--hoshi:focus + .input__label--hoshi[data-v-d16e2e70]::after,\n.input--filled .input__label--hoshi[data-v-d16e2e70]::after {\n\t-webkit-transform: translate3d(0, 0, 0);\n\ttransform: translate3d(0, 0, 0);\n}\n.input__field--hoshi:focus + .input__label--hoshi .input__label-content--hoshi[data-v-d16e2e70],\n.input--filled .input__label-content--hoshi[data-v-d16e2e70] {\n\t-webkit-animation: anim-1-data-v-d16e2e70 0.3s forwards;\n\tanimation: anim-1-data-v-d16e2e70 0.3s forwards;\n}\n@-webkit-keyframes anim-1-data-v-d16e2e70 {\n50% {\n\t\topacity: 0;\n\t\t-webkit-transform: translate3d(1em, 0, 0);\n\t\ttransform: translate3d(1em, 0, 0);\n\t\tfont-size: 100%;\n}\n51% {\n\t\topacity: 0;\n\t\t-webkit-transform: translate3d(-1em, -40%, 0);\n\t\ttransform: translate3d(-1em, -40%, 0);\n\t\tfont-size: 90%;\n}\n100% {\n\t\topacity: 1;\n\t\t-webkit-transform: translate3d(0, -70%, 0);\n\t\ttransform: translate3d(0, -70%, 0);\n\t\tfont-size: 85%;\n}\n}\n@keyframes anim-1-data-v-d16e2e70 {\n50% {\n\t\topacity: 0;\n\t\t-webkit-transform: translate3d(1em, 0, 0);\n\t\ttransform: translate3d(1em, 0, 0);\n\t\tfont-size: 100%;\n}\n51% {\n\t\topacity: 0;\n\t\t-webkit-transform: translate3d(-1em, -40%, 0);\n\t\ttransform: translate3d(-1em, -40%, 0);\n\t\tfont-size: 90%;\n}\n100% {\n\t\topacity: 1;\n\t\t-webkit-transform: translate3d(0, -70%, 0);\n\t\ttransform: translate3d(0, -70%, 0);\n\t\tfont-size: 85%;\n}\n}\n", ""]);
+exports.push([module.i, "\n.date-input[data-v-d16e2e70] {\r\n\tposition: relative;\r\n\tz-index: 1;\r\n\tdisplay: inline-block;\r\n\twidth: 100%;\r\n\tvertical-align: top;\r\n\tfont-size: 1em;\r\n\tmin-width: 80px;\n}\n.input__field[data-v-d16e2e70], .input__disabled[data-v-d16e2e70] {\r\n\tposition: relative;\r\n\tdisplay: block;\r\n\tfloat: right;\r\n\tpadding: 0.8em;\r\n\twidth: 100%;\r\n\tborder: none;\r\n\tborder-radius: 0;\r\n\tbackground: #f0f0f0;\r\n\t-webkit-appearance: none; /* for box shadows to show on iOS */\r\n\tfont-size: 1em;\n}\n.input__field[data-v-d16e2e70]::-moz-placeholder {\r\n\tcolor: transparent;\n}\n.input__field[data-v-d16e2e70]::-webkit-input-placeholder {\r\n\tcolor: transparent;\n}\n.input__field[data-v-d16e2e70]:-moz-placeholder {\r\n\tcolor: transparent;\n}\n.input__field[data-v-d16e2e70]:-ms-input-placeholder {\r\n\tcolor: transparent;\n}\n.input__field[data-v-d16e2e70]:focus {\r\n\toutline: none;\n}\n.input__label[data-v-d16e2e70] {\r\n\tdisplay: inline-block;\r\n\tfloat: right;\r\n\tpadding: 0 1em;\r\n\twidth: 40%;\r\n\tfont-weight: bold;\r\n\tfont-size: 90.25%;\r\n\t-webkit-font-smoothing: antialiased;\r\n    -moz-osx-font-smoothing: grayscale;\r\n\t-webkit-touch-callout: none;\r\n\t-webkit-user-select: none;\r\n\t-moz-user-select: none;\r\n\t-ms-user-select: none;\r\n\tuser-select: none;\n}\n.input__label-content[data-v-d16e2e70] {\r\n\tposition: relative;\r\n\tdisplay: block;\r\n\tpadding: 0.4em 0;\r\n\twidth: 100%;\n}\n.input--hoshi[data-v-d16e2e70] {\r\n\toverflow: hidden;\n}\n.input__field--hoshi[data-v-d16e2e70], .input__disabled[data-v-d16e2e70] {\r\n\tpadding: 1.61em 0.15em;\r\n\twidth: 100%;\r\n\tbackground: transparent;\r\n\tmin-width: 120px;\n}\n.input--nolabel .input__field--hoshi[data-v-d16e2e70] {\r\n\tpadding: 0 1em 1em 0.15em;\n}\n.input__label--hoshi[data-v-d16e2e70] {\r\n\tposition: absolute;\r\n\tbottom: 0;\r\n\tleft: 0;\r\n\tpadding: 0 0.25em;\r\n\twidth: 100%;\r\n\theight: calc(100% - 1em);\r\n\ttext-align: left;\r\n\tpointer-events: none;\n}\n.input__label-content--hoshi[data-v-d16e2e70] {\r\n\tposition: absolute;\r\n\tleft: 2px;\n}\n.input__label--hoshi[data-v-d16e2e70]::before,\r\n.input__label--hoshi[data-v-d16e2e70]::after {\r\n\tcontent: '';\r\n\tposition: absolute;\r\n\ttop: 2px;\r\n\tleft: 0;\r\n\twidth: 100%;\r\n\theight: calc(100% - 10px);\r\n\tborder-bottom: 1px solid #B9C1CA;\n}\nspan.input__label--hoshi[data-v-d16e2e70]::after {\r\n\tborder-bottom: none;\n}\n.input__label--hoshi[data-v-d16e2e70]::after {\r\n\tmargin-top: 2px;\r\n\tborder-bottom: 4px solid red;\r\n\t-webkit-transform: translate3d(-100%, 0, 0);\r\n\ttransform: translate3d(-100%, 0, 0);\r\n\t-webkit-transition: -webkit-transform 0.3s;\r\n\ttransition: -webkit-transform 0.3s;\r\n\ttransition: transform 0.3s;\r\n\ttransition: transform 0.3s, -webkit-transform 0.3s;\n}\n.input__label--hoshi-color-1[data-v-d16e2e70]::after {\r\n\tborder-color: hsl(200, 100%, 50%);\n}\n.input__label--hoshi-color-2[data-v-d16e2e70]::after {\r\n\tborder-color: hsl(160, 100%, 50%);\n}\n.input__label--hoshi-color-3[data-v-d16e2e70]::after {\r\n\tborder-color: hsl(20, 100%, 50%);\n}\n.input__label--hoshi-color-transparent[data-v-d16e2e70]::before, .input__label--hoshi-color-transparent[data-v-d16e2e70]::after {\r\n\tborder-color: transparent;\r\n\tborder-bottom: 0px solid transparent;\n}\n.input__field--hoshi:focus + .input__label--hoshi[data-v-d16e2e70]::after,\r\n.input--filled .input__label--hoshi[data-v-d16e2e70]::after {\r\n\t-webkit-transform: translate3d(0, 0, 0);\r\n\ttransform: translate3d(0, 0, 0);\n}\n.input__field--hoshi:focus + .input__label--hoshi .input__label-content--hoshi[data-v-d16e2e70],\r\n.input--filled .input__label-content--hoshi[data-v-d16e2e70] {\r\n\t-webkit-animation: anim-1-data-v-d16e2e70 0.3s forwards;\r\n\tanimation: anim-1-data-v-d16e2e70 0.3s forwards;\n}\n@-webkit-keyframes anim-1-data-v-d16e2e70 {\n50% {\r\n\t\topacity: 0;\r\n\t\t-webkit-transform: translate3d(1em, 0, 0);\r\n\t\ttransform: translate3d(1em, 0, 0);\r\n\t\tfont-size: 100%;\n}\n51% {\r\n\t\topacity: 0;\r\n\t\t-webkit-transform: translate3d(-1em, -40%, 0);\r\n\t\ttransform: translate3d(-1em, -40%, 0);\r\n\t\tfont-size: 90%;\n}\n100% {\r\n\t\topacity: 1;\r\n\t\t-webkit-transform: translate3d(0, -70%, 0);\r\n\t\ttransform: translate3d(0, -70%, 0);\r\n\t\tfont-size: 85%;\n}\n}\n@keyframes anim-1-data-v-d16e2e70 {\n50% {\r\n\t\topacity: 0;\r\n\t\t-webkit-transform: translate3d(1em, 0, 0);\r\n\t\ttransform: translate3d(1em, 0, 0);\r\n\t\tfont-size: 100%;\n}\n51% {\r\n\t\topacity: 0;\r\n\t\t-webkit-transform: translate3d(-1em, -40%, 0);\r\n\t\ttransform: translate3d(-1em, -40%, 0);\r\n\t\tfont-size: 90%;\n}\n100% {\r\n\t\topacity: 1;\r\n\t\t-webkit-transform: translate3d(0, -70%, 0);\r\n\t\ttransform: translate3d(0, -70%, 0);\r\n\t\tfont-size: 85%;\n}\n}\r\n", ""]);
 
 // exports
 
@@ -80805,7 +80805,7 @@ var content = __webpack_require__(433);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(6)("63cf13ff", content, false, {});
+var update = __webpack_require__(6)("1cce1c52", content, false, {});
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
@@ -91732,7 +91732,7 @@ var content = __webpack_require__(464);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(6)("24fd7455", content, false, {});
+var update = __webpack_require__(6)("3ade263c", content, false, {});
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
@@ -93606,12 +93606,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 	data: function data() {
 		return {
-			fields: [{ name: 'codename', sortField: 'codename', title: 'Code Name' }, { name: 'branch_name', sortField: 'branch_name', title: 'Branch Name' }, { name: 'branch_address', sortField: 'branch_address', title: 'Address' }, { name: '__component:branches-actions', title: 'Actions' }],
+			fields: [{ name: 'code', sortField: 'code', title: 'Code Name' }, { name: 'name', sortField: 'name', title: 'Branch Name' }, { name: 'address', sortField: 'address', title: 'Address' }, { name: '__component:branches-actions', title: 'Actions' }],
 			selectedBranches: '',
 			dialogActive: false,
 			form: new Form({
 				id: '',
-				codename: '',
+				code: '',
 				name: '',
 				phone: '',
 				address: '',
@@ -93620,7 +93620,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 				country: ''
 			}),
 			forms: new Form({
-				branch_id: '',
+				branch_code: '',
 				id: []
 			}),
 			confirmSubmit: false,
@@ -93649,7 +93649,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 				});
 
 				this.forms.id = store;
-				this.forms.branch_id = this.selectedBranches.id;
+				this.forms.branch_code = this.selectedBranches.code;
 
 				this.forms.post(this.action).then(function (data) {
 					return _this.onSuccess();
@@ -93657,7 +93657,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 					return _this.onFail(error);
 				});
 			} else if (this.type == 'Delete') {
-				axios.get('/branches/delete/' + this.selectedBranches.id).then(function (response) {
+				axios.get('/branches/delete/' + this.selectedBranches.code).then(function (response) {
 					return _this.onDeleteSuccess(response);
 				});
 			} else {
@@ -93682,19 +93682,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			this.selectedBranches = data;
 			this.type = 'Edit';
 			this.form.id = data.id;
-			this.form.codename = data.codename;
-			this.form.name = data.branch_name;
-			this.form.phone = data.branch_phone;
-			this.form.address = data.branch_address;
-			this.form.state = data.branch_state;
-			this.form.postcode = data.branch_postcode;
-			this.form.country = data.branch_country;
+			this.form.code = data.code;
+			this.form.name = data.name;
+			this.form.phone = data.contact;
+			this.form.address = data.address;
+			this.form.state = data.state;
+			this.form.postcode = data.postcode;
+			this.form.country = data.country_code;
 			this.dialogActive = true;
 		},
 		access: function access(data) {
 			this.selectedBranches = data;
 			this.type = 'Access';
-			this.getAccess(data.id);
+			this.getAccess(data.code);
 			this.dialogActive = true;
 		},
 		delete: function _delete(data) {
@@ -93725,7 +93725,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 				return obj;
 			});
-
 			this.leftItems = response.data[0].map(function (user) {
 				var obj = {};
 
@@ -93754,9 +93753,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		dialogTitle: function dialogTitle() {
 			if (this.selectedBranches) {
 				if (this.type == 'Edit') {
-					return "Edit " + this.selectedBranches.branch_name;
+					return "Edit " + this.selectedBranches.name;
 				} else if (this.type == 'Delete') {} else if (this.type == 'Access') {
-					return "Access " + this.selectedBranches.branch_name + '\'s branch';
+					return "Access " + this.selectedBranches.name + '\'s branch';
 				}
 			}
 			return "Create new Branch";
@@ -93896,7 +93895,7 @@ var render = function() {
                     [
                       _c("text-input", {
                         attrs: {
-                          defaultValue: _vm.form.codename,
+                          defaultValue: _vm.form.code,
                           label: "Code Name",
                           required: true,
                           name: "codename",
@@ -93906,11 +93905,11 @@ var render = function() {
                           focus: true
                         },
                         model: {
-                          value: _vm.form.codename,
+                          value: _vm.form.code,
                           callback: function($$v) {
-                            _vm.$set(_vm.form, "codename", $$v)
+                            _vm.$set(_vm.form, "code", $$v)
                           },
-                          expression: "form.codename"
+                          expression: "form.code"
                         }
                       })
                     ],
@@ -99448,7 +99447,7 @@ var content = __webpack_require__(507);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(6)("19ce41bd", content, false, {});
+var update = __webpack_require__(6)("513c8b6c", content, false, {});
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags

@@ -51,14 +51,15 @@ class BranchController extends Controller
 
         $this->validate($request, $this->rules);
 
-        $branch = new branch;
-        $branch->codename = $request->codename;
-        $branch->branch_name = $request->name;
-        $branch->branch_phone = $request->phone;
-        $branch->branch_address = $request->address;
-        $branch->branch_state = $request->state;
-        $branch->branch_postcode = $request->postcode;
-        $branch->branch_country = $request->country;
+        $branch = new Branch;
+        $branch->code = $request->code;
+        $branch->name = $request->name;
+        $branch->contact = $request->phone;
+        $branch->address = $request->address;
+        $branch->state = $request->state;
+        $branch->postcode = $request->postcode;
+        $branch->country_code = $request->country;
+        $branch->is_warehouse_allowed = true;
 
         $branch->save();
 
@@ -75,17 +76,26 @@ class BranchController extends Controller
      * @param  \App\Branch  $branch
      * @return \Illuminate\Http\Response
      */
-    public function show(Branch $branch)
+    public function show($code)
     {
-       $all_users = Role::where('name', 'admin')->orWhere('name', 'superadmin')->with('users')->get()->pluck('users')->flatten();
-       $branch_users = $branch->users;
-       $all_users_id = $all_users->pluck('id');
-       $branch_users_id = $branch_users->pluck('id');
-       
-       $not_in_branch_users_id = $all_users_id->diff($branch_users_id);
-       $not_in_branch_users = $all_users->whereIn('id', $not_in_branch_users_id);
+        $all_users = Role::where('name', 'admin')->orWhere('name', 'superadmin')->with('users')->get()->pluck('users')->flatten();
+        
+        $branches = Branch::where('code', $code)->get();
+        $branch_users = [];
+        foreach($branches as $branch) {
+            $accessibility = $branch->access;
+            foreach($accessibility as $access) {
+                array_push($branch_users, $access->users);
+            }
+        }
+        $branch_users = collect($branch_users);
+        $all_users_id = $all_users->pluck('id');
+        $branch_users_id = $branch_users->pluck('id');
 
-       return [$branch_users, $not_in_branch_users->values()];
+        $not_in_branch_users_id = $all_users_id->diff($branch_users_id);
+        $not_in_branch_users = $all_users->whereIn('id', $not_in_branch_users_id);
+
+        return [$branch_users, $not_in_branch_users->values()];
     }
 
     /**
@@ -96,10 +106,19 @@ class BranchController extends Controller
      */
     public function edit(Request $request)
     {
-        $branch = Branch::find($request->branch_id);
+        $branch = Branch::where('code',$request->branch_code)->first();
         $user_id = json_decode($request->id);
-
-        $branch->users()->sync($user_id);
+        //replace sync 
+        $branch->access()->delete();
+        if(!empty($user_id)) {
+            foreach($user_id as $user) {
+                Accessibility::create([
+                    'user_id' => $user,
+                    'branch_code' => $request->branch_code,
+                    'branch_id' => $branch->id
+                ]);
+            }
+        }
 
         if(request()->wantsJson())
         {   
@@ -119,14 +138,14 @@ class BranchController extends Controller
     public function update(Request $request)
     {
         $this->validate($request, $this->rules);
-        $branch = Branch::find($request->id);
-        $branch->codename = $request->codename;
-        $branch->branch_name = $request->name;
-        $branch->branch_phone = $request->phone;
-        $branch->branch_address = $request->address;
-        $branch->branch_state = $request->state;
-        $branch->branch_postcode = $request->postcode;
-        $branch->branch_country = $request->country;
+        $branch = Branch::where('code', $request->code)->first();
+        $branch->code = $request->code;
+        $branch->name = $request->name;
+        $branch->contact = $request->phone;
+        $branch->address = $request->address;
+        $branch->state = $request->state;
+        $branch->postcode = $request->postcode;
+        $branch->country_code = $request->country;
 
         $branch->save();
 
@@ -145,11 +164,11 @@ class BranchController extends Controller
      * @param  \App\Branch  $branch
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($branch_code)
     {
-        $branch = Branch::find($id);
+        $branch = Branch::where('code', $branch_code)->first();
         $branch->delete();
-        Accessibility::where('branch_id' , $id)->delete();
+        Accessibility::where('branch_code' , $branch_code)->delete();
        
         if(request()->wantsJson())
         {   
@@ -168,8 +187,8 @@ class BranchController extends Controller
             $branch = $user->branches;
         }
         else {
-            $branch = Branch::select('branches.id', 'branches.codename', 'branches.branch_name')
-                            ->leftJoin('lots' , 'lots.branch_id', '=', 'branches.id')
+            $branch = Branch::select('branches.code', 'branches.branch_name')
+                            ->leftJoin('lots' , 'lots.branch_code', '=', 'branches.code')
                             ->where('lots.user_id', $user->id)
                             ->get();
         }

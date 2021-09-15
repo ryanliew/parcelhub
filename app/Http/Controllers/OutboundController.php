@@ -90,7 +90,7 @@ class OutboundController extends Controller
                                                                     )
                                                                 ->where('outbounds.type', 'outbound')
                                                                 ->leftJoin('couriers', 'courier_id', '=', 'couriers.id')
-                                                                ->join('branches', 'outbounds.branch_id' , '=', 'branches.id')
+                                                                ->join('branches', 'outbounds.branch_code' , '=', 'branches.code')
                                                                 ->leftJoin('users', 'user_id', '=', 'users.id')
                                                                 ->orderBy('outbounds.created_at', 'desc') );
             elseif($user->hasRole('admin')) 
@@ -115,14 +115,14 @@ class OutboundController extends Controller
                     ->where('outbounds.type', 'outbound')
                     ->leftJoin('couriers', 'courier_id', '=', 'couriers.id')
                     ->leftJoin('users', 'user_id', '=', 'users.id')
-                    ->join('branches', 'branches.id', '=', 'branch_id')
-                    ->join('accessibilities', 'accessibilities.branch_id', '=', 'branches.id')
+                    ->join('branches', 'branches.code', '=', 'branch_code')
+                    ->join('accessibilities', 'accessibilities.branch_code', '=', 'branches.code')
                     ->where('accessibilities.user_id', $user->id)
                     ->orderBy('outbounds.created_at', 'desc') );
             else
 
                 $branches = Branch::select('branches.id')
-                        ->leftJoin('lots' , 'lots.branch_id', '=', 'branches.id')
+                        ->leftJoin('lots' , 'lots.branch_code', '=', 'branches.code')
                         ->where('lots.user_id', $user->id)
                         ->get();
                 $array_branch = [];
@@ -148,8 +148,8 @@ class OutboundController extends Controller
                                                                     'outbounds.type as type'
                                                                     )
                                                             ->where('outbounds.type', 'outbound')
-                                                            ->whereIn('outbounds.branch_id', $array_branch)
-                                                            ->join('branches', 'outbounds.branch_id' , '=', 'branches.id')
+                                                            ->whereIn('outbounds.branch_code', $array_branch)
+                                                            ->join('branches', 'outbounds.branch_code' , '=', 'branches.code')
                                                             ->leftJoin('couriers', 'courier_id', '=', 'couriers.id')
                                                             ->orderBy('outbounds.created_at', 'desc') );
 
@@ -215,7 +215,7 @@ class OutboundController extends Controller
                                                                          )
                                                                      ->leftJoin('couriers', 'courier_id', '=', 'couriers.id')
                                                                      ->leftJoin('users', 'user_id', '=', 'users.id')
-                                                                     ->leftJoin('accessibilities', 'outbounds.branch_id', '=' , 'accessibilities.branch_id')
+                                                                     ->leftJoin('accessibilities', 'outbounds.branch_code', '=' , 'accessibilities.branch_code')
                                                                      ->where('accessibilities.user_id', auth()->user()->id)
                                                                      ->where('outbounds.type', 'outbound')
                                                                      ->where('outbounds.process_status', '<>', 'completed')
@@ -388,7 +388,7 @@ class OutboundController extends Controller
             
             $outbound->amount_insured = $outbound->insurance ? request()->amount_insured : 0;
             $outbound->user_id = $user->id;
-            $outbound->branch_id = $request->selectedBranch;
+            $outbound->branch_code = $request->selectedBranch;
             $outbound->is_business = $request->business == "true" ? true : false;
             $outbound->status = 'true';
             $outbound->process_status = 'pending';
