@@ -34,12 +34,21 @@ class UserController extends Controller
                 ->with("countries", Country::with("states")->active()->get());
 	}
 
-    public function index(Branch $branch)
+    public function index($branch_code)
     {
-        $user = $branch->users()->join('role_user' , 'role_user.user_id' , '=' , 'users.id')
-                                ->where('role_user.role_id', '2')
-                                ->get();
-        return $user;
+        // $branch = Branch::where('code', $branch_code)->first();
+        // $accessibility = $branch->access;
+        // $users = [];
+        // foreach($accessibility as $access) {
+        //     $roles = $access->users->roles()->first();
+            
+        //     if($roles->name == 'admin') {
+        //         array_push($users, $access->users);
+        //     }
+        // }
+        $users = User::all();
+
+        return $users;
     }
 
     public function selector()

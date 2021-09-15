@@ -435,7 +435,7 @@
 			},
 
 			editOwner(data) {
-				this.fetchUsers(data.branch_id);
+				this.fetchUsers(data.branch_code);
 				this.ownerForm.reset();
 				this.selectedLot = data;
 				if(data.user_name)

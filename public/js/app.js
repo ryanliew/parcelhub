@@ -76879,7 +76879,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			//this.override = data.category_volume !== data.volume || data.category_price !== data.price;
 		},
 		editOwner: function editOwner(data) {
-			this.fetchUsers(data.branch_id);
+			this.fetchUsers(data.branch_code);
 			this.ownerForm.reset();
 			this.selectedLot = data;
 			if (data.user_name) this.selectedUser = {
