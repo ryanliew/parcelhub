@@ -261,13 +261,13 @@
 						<p class="heading">
 							Branch Code
 						</p>
-						{{ inbound.codename }}
+						{{ inbound.code }}
 						
 						<hr>
 						<p class="heading">
 							Branch Name
 						</p>
-						{{ inbound.branch_name }}
+						{{ inbound.name }}
 					</div>
 				</div>
 			</div>	
@@ -346,6 +346,7 @@
 		},
 
 		mounted() {
+			console.log(this.inbound);
 			this.getLots();
 		},
 

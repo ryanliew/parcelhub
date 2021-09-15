@@ -76,41 +76,40 @@ class InboundController extends Controller
                                                                 'type',
                                                                 'process_status',
                                                                 'inbounds.id as id',
-                                                                'branches.codename',
-                                                                'branches.branch_name',
+                                                                'branches.code',
+                                                                'branches.name',
                                                                 'users.name as customer',
                                                                 'inbounds.created_at as created_at'
                                                                 )
                                                             ->where('inbounds.type', 'inbound')
                                                             ->leftJoin('users', 'user_id', '=', 'users.id')
-                                                            ->join('branches', 'branches.code', '=', 'branch_code')
+                                                            ->join(env('DB2_DATABASE').'.branches as branches', 'branches.code', '=', 'branch_code')
                                                             ->join('accessibilities', 'accessibilities.branch_code', '=', 'branches.code')
                                                             ->where('accessibilities.user_id', $user->id)
                                                             ->orderBy('arrival_date', 'desc'));
             }
             else {
                 $branches = Branch::select('branches.code')
-                        ->leftJoin('lots' , 'lots.branch_code', '=', 'branches.code')
+                        ->leftJoin('mysql.lots as lots' , 'lots.branch_code', '=', 'branches.code')
                         ->where('lots.user_id', $user->id)
                         ->get();
                 $array_branch = [];
                 foreach($branches as $branch) {
                     array_push($array_branch, $branch->id);
                 }
-
                 return Controller::VueTableListResult($query->select('arrival_date',
                                                                 'total_carton',
                                                                 'type',
                                                                 'process_status',
                                                                 'inbounds.id as id',
-                                                                'branches.codename',
-                                                                'branches.branch_name',
+                                                                'branches.code',
+                                                                'branches.name',
                                                                 'users.name as customer',
                                                                 'inbounds.created_at as created_at'
                                                                 )
                                                             ->where('inbounds.type', 'inbound')
                                                             ->whereIn('inbounds.branch_code', $array_branch)
-                                                            ->join('branches', 'branches.code', '=', 'branch_code')
+                                                            ->join(env('DB2_DATABASE').'.branches as branches', 'branches.code', '=', 'branch_code')
                                                             ->leftJoin('users', 'user_id', '=', 'users.id')
                                                             ->orderBy('arrival_date', 'desc'));
             }
@@ -119,13 +118,13 @@ class InboundController extends Controller
                                                                 'type',
                                                                 'process_status',
                                                                 'inbounds.id as id',
-                                                                'branches.codename',
-                                                                'branches.branch_name',
+                                                                'branches.code',
+                                                                'branches.name',
                                                                 'users.name as customer',
                                                                 'inbounds.created_at as created_at'
                                                                 )
                                                             ->where('inbounds.type', 'inbound')
-                                                            ->join('branches', 'branches.code', '=', 'branch_code')
+                                                            ->join(env('DB2_DATABASE').'.branches as branches', 'branches.code', '=', 'branch_code')
                                                             ->leftJoin('users', 'user_id', '=', 'users.id')
                                                             ->orderBy('arrival_date', 'desc'));
         }

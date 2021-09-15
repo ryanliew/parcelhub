@@ -83906,6 +83906,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		};
 	},
 	mounted: function mounted() {
+		console.log(this.inbound);
 		this.getLots();
 	},
 
@@ -84664,7 +84665,7 @@ var render = function() {
               ]),
               _vm._v(
                 "\n\t\t\t\t\t\t" +
-                  _vm._s(_vm.inbound.codename) +
+                  _vm._s(_vm.inbound.code) +
                   "\n\t\t\t\t\t\t\n\t\t\t\t\t\t"
               ),
               _c("hr"),
@@ -84673,9 +84674,7 @@ var render = function() {
                 _vm._v("\n\t\t\t\t\t\t\tBranch Name\n\t\t\t\t\t\t")
               ]),
               _vm._v(
-                "\n\t\t\t\t\t\t" +
-                  _vm._s(_vm.inbound.branch_name) +
-                  "\n\t\t\t\t\t"
+                "\n\t\t\t\t\t\t" + _vm._s(_vm.inbound.name) + "\n\t\t\t\t\t"
               )
             ])
           ])
@@ -101356,7 +101355,7 @@ var render = function() {
               ]),
               _vm._v(
                 "\n\t\t\t\t\t\t" +
-                  _vm._s(_vm.outbound.codename) +
+                  _vm._s(_vm.outbound.branch_code) +
                   "\n\t\t\t\t\t\t\n\t\t\t\t\t\t"
               ),
               _c("hr"),

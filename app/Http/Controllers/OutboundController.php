@@ -75,8 +75,8 @@ class OutboundController extends Controller
                                                                     'amount_insured',
                                                                     'process_status',
                                                                     'couriers.name as courier',
-                                                                    'branches.codename',
-                                                                    'branches.branch_name',
+                                                                    'branches.code as branch_code',
+                                                                    'branches.name as branch_name',
                                                                     'outbounds.created_at',
                                                                     'outbounds.recipient_name',
                                                                     'outbounds.recipient_address',
@@ -90,7 +90,7 @@ class OutboundController extends Controller
                                                                     )
                                                                 ->where('outbounds.type', 'outbound')
                                                                 ->leftJoin('couriers', 'courier_id', '=', 'couriers.id')
-                                                                ->join('branches', 'outbounds.branch_code' , '=', 'branches.code')
+                                                                ->join(env('DB2_DATABASE').'.branches as branches', 'outbounds.branch_code' , '=', 'branches.code')
                                                                 ->leftJoin('users', 'user_id', '=', 'users.id')
                                                                 ->orderBy('outbounds.created_at', 'desc') );
             elseif($user->hasRole('admin')) 
@@ -99,8 +99,8 @@ class OutboundController extends Controller
                         'amount_insured',
                         'process_status',
                         'couriers.name as courier',
-                        'branches.codename',
-                        'branches.branch_name',
+                        'branches.code as branch_code',
+                        'branches.name as branch_name',
                         'outbounds.created_at',
                         'outbounds.recipient_name',
                         'outbounds.recipient_address',
@@ -115,7 +115,7 @@ class OutboundController extends Controller
                     ->where('outbounds.type', 'outbound')
                     ->leftJoin('couriers', 'courier_id', '=', 'couriers.id')
                     ->leftJoin('users', 'user_id', '=', 'users.id')
-                    ->join('branches', 'branches.code', '=', 'branch_code')
+                    ->join(env('DB2_DATABASE').'.branches as branches', 'branch_code' , '=', 'branches.code')
                     ->join('accessibilities', 'accessibilities.branch_code', '=', 'branches.code')
                     ->where('accessibilities.user_id', $user->id)
                     ->orderBy('outbounds.created_at', 'desc') );
@@ -135,8 +135,8 @@ class OutboundController extends Controller
                                                                     'amount_insured',
                                                                     'process_status',
                                                                     'couriers.name as courier',
-                                                                    'branches.codename',
-                                                                    'branches.branch_name',
+                                                                    'branches.code as branch_code',
+                                                                    'branches.name as branch_name',
                                                                     'outbounds.created_at',
                                                                     'outbounds.recipient_name',
                                                                     'outbounds.recipient_address',
@@ -149,7 +149,7 @@ class OutboundController extends Controller
                                                                     )
                                                             ->where('outbounds.type', 'outbound')
                                                             ->whereIn('outbounds.branch_code', $array_branch)
-                                                            ->join('branches', 'outbounds.branch_code' , '=', 'branches.code')
+                                                            ->join(env('DB2_DATABASE').'.branches as branches', 'outbounds.branch_code' , '=', 'branches.code')
                                                             ->leftJoin('couriers', 'courier_id', '=', 'couriers.id')
                                                             ->orderBy('outbounds.created_at', 'desc') );
 
