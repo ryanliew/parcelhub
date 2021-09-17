@@ -52,7 +52,7 @@ class Inbound extends Model
     }
 
     public function branch(){
-        return $this->belongsTo('App\Branch');
+        return $this->belongsTo('App\Branch', 'branch_code', 'code');
     }
 
     public function products(){
@@ -92,8 +92,13 @@ class Inbound extends Model
     }
 
     public function notify($notification, $adminNotification) {
-
-        $admins = $this->branch->users;
+        //notify admins(only admin has accessibility to the branch)
+        $accessibility = $this->branch->access;
+        $admins = [];
+        foreach($accessibility as $access) {
+            $admin = $access->users;
+            array_push($admins, $admin);
+        }
         
         foreach($admins as $admin) {
             $admin->notify($adminNotification);

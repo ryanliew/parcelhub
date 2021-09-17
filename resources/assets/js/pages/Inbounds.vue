@@ -256,8 +256,8 @@ import SelectorInput from '../components/SelectorInput.vue';
 			setBranches(response) {
 				this.branchesOptions = response.data.map(branches =>{
 					let obj = {};
-					obj['label'] = branches.branch_name;
-					obj['value'] = branches.id;
+					obj['label'] = branches.name;
+					obj['value'] = branches.code;
 					return obj;
 				});
 			},

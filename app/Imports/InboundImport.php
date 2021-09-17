@@ -43,14 +43,14 @@ class InboundImport implements ToCollection, WithStartRow, SkipsEmptyRows, WithV
                                 ->where('status', 'true')
                                 ->where('user_id', auth()->id())
                                 ->first();
-                $branch = Branch::select('branches.id', 'branches.codename', 'branches.branch_name')
-                                ->leftJoin('lots' , 'lots.branch_code', '=', 'branches.code')
+                $branch = Branch::select('branches.code', 'branches.name')
+                                ->leftJoin(env('DB_DATABASE').'.lots as lots' , 'lots.branch_code', '=', 'branches.code')
                                 ->where('lots.user_id', auth()->id())
-                                ->where('branches.codename', $excelRow[2])
+                                ->where('branches.code', $excelRow[2])
                                 ->first();
 
                 $detail['arrival'] = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($excelRow[1]);
-                $detail['branchCode'] = $branch->id;
+                $detail['branchCode'] = $branch->code;
                 $detail['carton'] = $excelRow[4];
                 $detail['product'] = $product; 
                 $detail['remark'] = $excelRow[7];
@@ -76,7 +76,7 @@ class InboundImport implements ToCollection, WithStartRow, SkipsEmptyRows, WithV
             $inbound->user_id = auth()->id();
             $inbound->arrival_date = $arrival['arrival'];
             $inbound->total_carton = $current_carton;
-            $inbound->branch_copde = $arrival['branchCode'];
+            $inbound->branch_code = $arrival['branchCode'];
             $inbound->status = "true";
             $inbound->save(); 
 

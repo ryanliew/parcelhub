@@ -74,7 +74,7 @@ class LotController extends Controller
                                 'lots.expired_at as expired_at',
                                 'users.id as user_id')
                         ->selectRaw('lots.volume - lots.left_volume as lot_usage')
-                        ->join('parcelhub_center.branches as branches', 'branches.code', '=', 'branch_code')
+                        ->join(env('DB2_DATBASE').'.branches as branches', 'branches.code', '=', 'branch_code')
                         ->join('categories', 'categories.id', '=', 'category_id')
                         ->leftJoin('users', 'users.id', '=', 'user_id')
                     );

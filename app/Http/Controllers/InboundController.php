@@ -64,7 +64,7 @@ class InboundController extends Controller
 
             $query = $user->inbounds()->with('products', 'products_with_lots.lots');
 
-            if($user->hasRole('superadmin')) {
+            if($user->hasRole('superadmin') || $user->hasRole('admin')) {
                 $query = Inbound::with('products', 'products_with_lots.lots');
             }
             elseif($user->hasRole('subuser')) {
@@ -76,8 +76,8 @@ class InboundController extends Controller
                                                                 'type',
                                                                 'process_status',
                                                                 'inbounds.id as id',
-                                                                'branches.code',
-                                                                'branches.name',
+                                                                'branches.code as branch_code',
+                                                                'branches.name as branch_name',
                                                                 'users.name as customer',
                                                                 'inbounds.created_at as created_at'
                                                                 )
@@ -90,12 +90,12 @@ class InboundController extends Controller
             }
             else {
                 $branches = Branch::select('branches.code')
-                        ->leftJoin('mysql.lots as lots' , 'lots.branch_code', '=', 'branches.code')
+                        ->leftJoin(env('DB_DATABASE').'.lots as lots' , 'lots.branch_code', '=', 'branches.code')
                         ->where('lots.user_id', $user->id)
                         ->get();
                 $array_branch = [];
                 foreach($branches as $branch) {
-                    array_push($array_branch, $branch->id);
+                    array_push($array_branch, $branch->code);
                 }
                 return Controller::VueTableListResult($query->select('arrival_date',
                                                                 'total_carton',
@@ -200,12 +200,12 @@ class InboundController extends Controller
     {
         $this->validate($request, $this->rules, ['products.required' => "Please select at least 1 product."]);
         $auth = auth()->user();
-
-        if(empty(auth()->user()->address))
+        
+        if(empty($auth->address))
         {
             return response(json_encode(array('overall' => ['You must update your contact details in the My Profile page before proceeding'])), 422);
         }
-
+        
         $now = Carbon::today();
         $compare = Carbon::parse($request->arrival_date);
         $user_lots = $auth->lots()->where('volume','>', 0)->where('status', 'approved')->get();
@@ -259,7 +259,6 @@ class InboundController extends Controller
             }
             return redirect()->back()->withErrors("Inbound must be created before ".$days_before_order." days.");
         }
-
         //Check whether selected a branch
         if($request->selectedBranch == null) {
             if(request()->wantsJson()) {
@@ -353,7 +352,7 @@ class InboundController extends Controller
             $lot->products()->attach($lot_products);
             $lot->propagate_left_volume();
         }
-        $inbound->notify(new InboundCreatedNotification($inbound), new AdminInboundCreatedNotification());
+        $inbound->notify(new InboundCreatedNotification($inbound), new AdminInboundCreatedNotification($inbound));
 
         event(new EventTrigger('inbound'));
 

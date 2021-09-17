@@ -27,8 +27,29 @@ class UserController extends Controller
     
 	public function page()
 	{
-		if(request()->wantsJson())
-			return Controller::VueTableListResult(User::with('inbounds')->with('outbounds')->with('roles'));
+        //please take note here
+		if(request()->wantsJson()) {
+            $user = auth()->user();
+            $accessibility = $user->branches()->get();
+            $branches_code = [];
+            foreach($accessibility as $access) {
+                $branch_code = $access->branch_code;
+                array_push($branches_code, $branch_code);
+            }
+            $query = User::with('inbounds')->with('outbounds')->with('roles');
+            // return Controller::VueTableListResult($query);
+			return Controller::VueTableListResult($query->select('users.name',
+                                                                'users.address',
+                                                                'users.address_2',
+                                                                'users.email',
+                                                                'users.country', 
+                                                                'users.created_at', 
+                                                                'users.phone')
+                                                                ->where('verified', true)
+                                                                ->leftJoin('lots', 'lots.user_id', '=', 'users.id')
+                                                                ->whereIn('lots.branch_code', $branches_code)
+                                                                ->distinct());
+        }
 
 		return view('user.page')
                 ->with("countries", Country::with("states")->active()->get());

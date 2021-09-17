@@ -8,7 +8,17 @@ use Illuminate\Database\Eloquent\Model;
 class Branch extends Model
 {
     protected $connection = 'centralized_mysql';
-
+    
+    protected static function boot()
+    {
+        parent::boot();
+    
+        // static::deleting(function($branch) {
+        //     $branch->access()->delete();
+        // });
+    
+        static::addGlobalScope(new BranchScope);
+    }
     public function lots() {
         return $this->hasMany('App\Lot', 'branch_code', 'code');
     }
@@ -25,14 +35,4 @@ class Branch extends Model
         return $this->hasMany('App\Inbound', 'branch_code', 'code');
     }
 
-    protected static function boot()
-    {
-        parent::boot();
-
-        // static::deleting(function($branch) {
-        //     $branch->access()->delete();
-        // });
-
-        static::addGlobalScope(new BranchScope);
-    }
 }

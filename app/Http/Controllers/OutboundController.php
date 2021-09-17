@@ -93,7 +93,7 @@ class OutboundController extends Controller
                                                                 ->join(env('DB2_DATABASE').'.branches as branches', 'outbounds.branch_code' , '=', 'branches.code')
                                                                 ->leftJoin('users', 'user_id', '=', 'users.id')
                                                                 ->orderBy('outbounds.created_at', 'desc') );
-            elseif($user->hasRole('admin')) 
+            elseif($user->hasRole('admin')){
                 return Controller::VueTableListResult( Outbound::with('tracking_numbers')
                     ->select('outbounds.id as id',
                         'amount_insured',
@@ -119,15 +119,15 @@ class OutboundController extends Controller
                     ->join('accessibilities', 'accessibilities.branch_code', '=', 'branches.code')
                     ->where('accessibilities.user_id', $user->id)
                     ->orderBy('outbounds.created_at', 'desc') );
-            else
-
-                $branches = Branch::select('branches.id')
-                        ->leftJoin('lots' , 'lots.branch_code', '=', 'branches.code')
+            } 
+            else{
+                $branches = Branch::select('branches.code')
+                        ->leftJoin(env('DB_DATABASE').'.lots as lots' , 'lots.branch_code', '=', 'code')
                         ->where('lots.user_id', $user->id)
                         ->get();
                 $array_branch = [];
                 foreach($branches as $branch) {
-                    array_push($array_branch, $branch->id);
+                    array_push($array_branch, $branch->code);
                 }
                 return Controller::VueTableListResult( $user->outbounds()
                                                             ->with('tracking_numbers')
@@ -152,7 +152,7 @@ class OutboundController extends Controller
                                                             ->join(env('DB2_DATABASE').'.branches as branches', 'outbounds.branch_code' , '=', 'branches.code')
                                                             ->leftJoin('couriers', 'courier_id', '=', 'couriers.id')
                                                             ->orderBy('outbounds.created_at', 'desc') );
-
+            }
         }
 
         if($user->hasRole('admin')) {
@@ -301,7 +301,6 @@ class OutboundController extends Controller
      */
     public function store(Request $request)
     {
-
         $this->validate($request, [
             'recipient_name' => 'required',
             'recipient_address' => 'required',
@@ -392,6 +391,7 @@ class OutboundController extends Controller
             $outbound->is_business = $request->business == "true" ? true : false;
             $outbound->status = 'true';
             $outbound->process_status = 'pending';
+            $outbound->save();
 
             if( $request->hasFile('invoice_slip') )
             {
@@ -424,7 +424,6 @@ class OutboundController extends Controller
                 $quantity = $outboundProduct['quantity']; //20
 
                 foreach ($product->lots as $lot) {
-
                     // Check if the lot have enough products supply to the outbound request
                     $sumOfQuantityAndIncomingQuantity = $lot->pivot->quantity + $lot->pivot->incoming_quantity - $lot->pivot->outgoing_product; //10
                     if($sumOfQuantityAndIncomingQuantity >= $quantity) {
@@ -438,7 +437,6 @@ class OutboundController extends Controller
                         $product->lots()->updateExistingPivot($lot->id, ['outgoing_product' => $newQuantityForOutgoingProduct]);
 
                         $outbound->products()->attach($product->id, ['quantity' => $quantity, 'lot_id' => $lot->id, 'remark' => $outboundProduct['remarks'], 'unit_value' => $outboundProduct['unit_value'], 'total_value' => $outboundProduct['total_value'], 'weight' => $outboundProduct['weight'], 'manufacture_country' => $outboundProduct['manufacture_country']]);
-
                         break;
 
                     } else if($sumOfQuantityAndIncomingQuantity > 0){
@@ -458,8 +456,7 @@ class OutboundController extends Controller
                     }
                 }
             }
-            $outbound->save();
-            $outbound->notify(new OutboundStatusUpdateNotification($outbound));
+            $outbound->notify(new OutboundCreatedNotification($outbound),  new AdminOutboundCreatedNotification($outbound));
 
         } catch (\Exception $exception) {
 

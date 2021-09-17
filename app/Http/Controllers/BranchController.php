@@ -184,12 +184,18 @@ class BranchController extends Controller
             $branch = Branch::all();
         }
         elseif($user->hasRole('admin')) {
-            $branch = $user->branches;
+            $accessibility = $user->branches;
+            $branch = [];
+            foreach($accessibility as $access) {
+                $access_branch = $access->branches;
+                array_push($branch , $access_branch);
+            }
         }
         else {
-            $branch = Branch::select('branches.code', 'branches.branch_name')
-                            ->leftJoin('lots' , 'lots.branch_code', '=', 'branches.code')
+            $branch = Branch::select('branches.code', 'branches.name')
+                            ->leftJoin(env('DB_DATABASE').'.lots as lots' , 'lots.branch_code', '=', 'branches.code')
                             ->where('lots.user_id', $user->id)
+                            ->distinct()
                             ->get();
         }
 
@@ -198,5 +204,9 @@ class BranchController extends Controller
 
     public function all_selector() {
         return Branch::all();
+    }
+
+    public function add_branch_code() {
+
     }
 }

@@ -76873,7 +76873,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			};
 			this.selected_branch = {
 				label: data.branch_name,
-				value: data.branch_id
+				value: data.branch_code
 			};
 			this.dialogActive = true;
 			//this.override = data.category_volume !== data.volume || data.category_price !== data.price;
@@ -80476,8 +80476,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		setBranches: function setBranches(response) {
 			this.branchesOptions = response.data.map(function (branches) {
 				var obj = {};
-				obj['label'] = branches.branch_name;
-				obj['value'] = branches.id;
+				obj['label'] = branches.name;
+				obj['value'] = branches.code;
 				return obj;
 			});
 		},
@@ -85942,8 +85942,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 		setBranches: function setBranches(response) {
 			this.branchesOptions = response.data.map(function (branches) {
 				var obj = {};
-				obj['label'] = branches.branch_name;
-				obj['value'] = branches.id;
+				obj['label'] = branches.name;
+				obj['value'] = branches.code;
 				return obj;
 			});
 		},

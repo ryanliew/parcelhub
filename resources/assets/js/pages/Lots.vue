@@ -427,7 +427,7 @@
 				};
 				this.selected_branch = {
 					label: data.branch_name,
-					value: data.branch_id
+					value: data.branch_code
 				}
 				this.dialogActive = true;
 				//this.override = data.category_volume !== data.volume || data.category_price !== data.price;

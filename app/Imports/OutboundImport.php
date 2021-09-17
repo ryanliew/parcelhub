@@ -50,16 +50,16 @@ class OutboundImport implements ToCollection, WithStartRow, SkipsEmptyRows, With
                             ->where('status', 'true')
                             ->where('user_id', auth()->id())
                             ->first();
-                $branch = Branch::select('branches.id')
-                            ->leftJoin('lots' , 'lots.branch_code', '=', 'branches.code')
+                $branch = Branch::select('branches.code')
+                            ->leftJoin(env('DB_DATABASE').'.lots as lots' , 'lots.branch_code', '=', 'branches.code')
                             ->where('lots.user_id', auth()->id())
-                            ->where('branches.codename', $excelRow[3])
+                            ->where('branches.code', $excelRow[3])
                             ->first();
                 $courier = Courier::where('name', 'LIKE', '%' . $excelRow[5] . '%')->first();
                 $detail['customer'] = $customer;
                 $detail['product'] = $product;
                 $detail['quantity'] = $excelRow[2];
-                $detail['branchCode'] = $branch->id;
+                $detail['branchCode'] = $branch->code;
                 $detail['courier'] = $excelRow[5];
                 $detail['no'] = $excelRow[0];
                 $detail['remark'] = $excelRow[12];

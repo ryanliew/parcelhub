@@ -122,6 +122,16 @@ class User extends Authenticatable
         return $this->hasMany('App\Accessibility');
     }
 
+    // public function accessBranch() {
+    //     $accessibility = $this->branches;
+    //     $branch_code = [];
+    //     foreach($accessibility as $access) {
+    //         array_push($branch_code, $access->branch_code);
+    //     }
+
+    //     return $branch_code;
+    // }
+
     public function scopeAdmin($query) {
         return $query->whereHas('roles', function ($query) {
             $query->where('name', '=', 'admin');
@@ -136,6 +146,13 @@ class User extends Authenticatable
 
     public function getRoleNameAttribute()
     {
+        $user = auth()->user();
+        if($user->roles()->first()) {
+            return $user->roles()->first()->name;
+        }
+
+        return null;
+       
         // return $this->roles()->first()->name;
     }
 

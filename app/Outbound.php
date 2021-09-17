@@ -80,7 +80,7 @@ class Outbound extends Model
     }
 
     public function branch(){
-        return $this->belongsTo('App\Branch');
+        return $this->belongsTo('App\Branch', 'branch_code', 'code');
     }
 
     public function courier() {
@@ -171,7 +171,13 @@ class Outbound extends Model
 
     public function notify($outboundNotification, $adminoutboundNotification) {
 
-        $admins = $this->branch->users;
+        $accessibility = $this->branch->access;
+        
+        $admins = [];
+        foreach($accessibility as $access) {
+            $admin = $access->users;
+            array_push($admins, $admin);
+        }
         
         foreach($admins as $admin) {
             $admin->notify($adminoutboundNotification);
