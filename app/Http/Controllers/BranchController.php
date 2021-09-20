@@ -206,7 +206,17 @@ class BranchController extends Controller
         return Branch::all();
     }
 
-    public function add_branch_code() {
-
+    public function add_default_branch_code($tables = []) {
+        foreach($tables as $table) {
+            $rawdata = $table::all();
+        
+            foreach($rawdata as $data) {
+                if($data->branch_code == '') {
+                    $data->branch_code = 'WHQ';
+                    $data->save();
+                }
+            }
+        }
+        return 'Successfully update table';
     }
 }

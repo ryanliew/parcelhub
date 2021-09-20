@@ -30,13 +30,19 @@ class UserController extends Controller
         //please take note here
 		if(request()->wantsJson()) {
             $user = auth()->user();
+            $role = $user->roles()->first();
+
+            $query = User::with('inbounds')->with('outbounds')->with('roles');
+            
+            if($role->name == 'superadmin') {
+                return Controller::VueTableListResult($query);
+            }
             $accessibility = $user->branches()->get();
             $branches_code = [];
             foreach($accessibility as $access) {
                 $branch_code = $access->branch_code;
                 array_push($branches_code, $branch_code);
             }
-            $query = User::with('inbounds')->with('outbounds')->with('roles');
             // return Controller::VueTableListResult($query);
 			return Controller::VueTableListResult($query->select('users.name',
                                                                 'users.address',
