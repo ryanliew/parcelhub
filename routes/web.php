@@ -124,7 +124,7 @@ Route::group(['prefix' => 'internal'], function() {
 	Route::get('branches/selector', 'BranchController@selector');
 	Route::get('branches/allselector', 'BranchController@all_selector');
 	Route::get('products/admin/selector/{id}', 'ProductController@adminProduct');
-	Route::get('products/selector', 'ProductController@selector');
+	Route::get('products/selector/{reduce}', 'ProductController@selector')->name('product_selector');
 	Route::get('products', 'ProductController@index');
 	Route::get('inbound/user', 'InboundController@index');
 	Route::get('inbounds/today', 'InboundController@indexToday');

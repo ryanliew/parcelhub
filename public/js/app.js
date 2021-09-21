@@ -80460,7 +80460,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		getProducts: function getProducts() {
 			var _this2 = this;
 
-			axios.get('internal/products/selector').then(function (response) {
+			axios.get('internal/products/selector/false').then(function (response) {
 				return _this2.setProducts(response);
 			});
 		},
@@ -85927,7 +85927,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 		getProducts: function getProducts() {
 			var _this2 = this;
 
-			axios.get('internal/products/selector').then(function (response) {
+			axios.get('internal/products/selector/false').then(function (response) {
 				return _this2.setProducts(response);
 			});
 		},
@@ -87770,7 +87770,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 		getProducts: function getProducts() {
 			var _this4 = this;
 
-			axios.get('internal/products/selector').then(function (response) {
+			axios.get('internal/products/selector/false').then(function (response) {
 				return _this4.setProducts(response);
 			});
 		},
@@ -89181,7 +89181,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 		getProducts: function getProducts() {
 			var _this4 = this;
 
-			axios.get('internal/products/selector').then(function (response) {
+			axios.get('internal/products/selector/false').then(function (response) {
 				return _this4.setProducts(response);
 			});
 		},
@@ -99660,7 +99660,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 			var error = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'No error';
 
-			axios.get('/internal/products/selector').then(function (response) {
+			axios.get('/internal/products/selector/true').then(function (response) {
 				return _this.setProducts(response);
 			}).catch(function (error) {
 				return _this.getProducts(e);

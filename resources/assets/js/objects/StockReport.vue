@@ -168,7 +168,7 @@
 			},
 
 			getProducts(error = 'No error') {
-				axios.get('/internal/products/selector')
+				axios.get('/internal/products/selector/true')
 					.then(response => this.setProducts(response))
 					.catch(error => this.getProducts(e));
 			},

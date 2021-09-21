@@ -115,8 +115,9 @@ class ProductController extends Controller
      * @return \Illuminate\Http\Response
      */
     //added reduce variable to not take inbound/outbount/lot
-    public function selector($reduce = false)
+    public function selector($reduce)
     {
+        dd($reduce);
         $query = Product::query();
         // $query = Product::where('id', 1);
         if(auth()->user()->hasRole('admin')) {
@@ -130,7 +131,7 @@ class ProductController extends Controller
         {
             $query = auth()->user()->products();
         }
-        if($reduce == true) {
+        if($reduce == 'true') {
             return $query->where('status', 'true')->get();
         }
         return $query->with(["inbounds", "lots", "outbounds"])->where('status', 'true')->get();
