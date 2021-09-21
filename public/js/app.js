@@ -76801,6 +76801,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			});
 		},
 		setUsers: function setUsers(response) {
+			console.log(response);
 			this.userOptions = response.data.map(function (user) {
 				var obj = {};
 				obj['label'] = user.name;
@@ -84665,7 +84666,7 @@ var render = function() {
               ]),
               _vm._v(
                 "\n\t\t\t\t\t\t" +
-                  _vm._s(_vm.inbound.code) +
+                  _vm._s(_vm.inbound.branch_code) +
                   "\n\t\t\t\t\t\t\n\t\t\t\t\t\t"
               ),
               _c("hr"),
@@ -84674,7 +84675,9 @@ var render = function() {
                 _vm._v("\n\t\t\t\t\t\t\tBranch Name\n\t\t\t\t\t\t")
               ]),
               _vm._v(
-                "\n\t\t\t\t\t\t" + _vm._s(_vm.inbound.name) + "\n\t\t\t\t\t"
+                "\n\t\t\t\t\t\t" +
+                  _vm._s(_vm.inbound.branch_name) +
+                  "\n\t\t\t\t\t"
               )
             ])
           ])
@@ -90501,8 +90504,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     setBranches: function setBranches(response) {
       this.branchesOptions = response.data.map(function (branches) {
         var obj = {};
-        obj['label'] = branches.branch_name;
-        obj['value'] = branches.id;
+        obj['label'] = branches.name;
+        obj['value'] = branches.code;
         return obj;
       });
     },
@@ -92061,8 +92064,8 @@ Vue.component('multiselect', __WEBPACK_IMPORTED_MODULE_2_vue_multiselect___defau
       } else {
         this.branchesOptions = response.data.map(function (branches) {
           var obj = {};
-          obj['label'] = branches.branch_name;
-          obj['value'] = branches.id;
+          obj['label'] = branches.name;
+          obj['value'] = branches.code;
           return obj;
         });
       }
@@ -99685,8 +99688,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		setBranches: function setBranches(response) {
 			this.branchesOptions = response.data.map(function (branches) {
 				var obj = {};
-				obj['label'] = branches.branch_name;
-				obj['value'] = branches.id;
+				obj['label'] = branches.name;
+				obj['value'] = branches.code;
 				return obj;
 			});
 		},

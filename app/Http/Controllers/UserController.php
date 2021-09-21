@@ -65,18 +65,10 @@ class UserController extends Controller
     {
         $branch = Branch::where('code', $branch_code)->first();
         $accessibility = $branch->access->pluck('user_id');
+
         $users = User::whereIn('id', $accessibility)->whereHas('roles', function ($query) {
-            $query->where('role_id' , 2);
+            $query->where('role_id' , 1);
         })->get();
-        dd($users);
-        // foreach($accessibility as $access) {
-        //     $roles = $access->users->roles()->first();
-            
-        //     if($roles->name == 'admin') {
-        //         array_push($users, $access->users);
-        //     }
-        // }
-        // $users = User::all();
 
         return $users;
     }
@@ -138,8 +130,7 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        $obj_branches = Branch::whereIn('id' , json_decode($request->branches))->get();
-
+        $obj_branches = Branch::whereIn('code' , json_decode($request->branches))->get();
         $this->validate($request, [
             'name' => 'required',
             'email' => 'required|email',
@@ -148,6 +139,7 @@ class UserController extends Controller
         ]);
 
         $user = User::where('email' , $request->email)->first();
+
         if(!$user) {
             $password = Str::random(8);
             $user = new User;
@@ -167,11 +159,16 @@ class UserController extends Controller
         }
         else {
             
-            $full_branch = $obj_branches->implode('branch_name', ',');
+            $full_branch = $obj_branches->implode('name', ',');
             
             $user->notify(new UserAccessBranchNotification($user, $full_branch));
         }
-        $user->branches()->attach($obj_branches);
+        $new_access = new Accessibility();
+        $new_access->user_id = $user->id;
+        $new_access->branch_code = $obj_branches[0]->code;
+        $new_access->branch_id = 1;
+        $new_access->save();
+
         return ['message' => "User $request->name has been created"];
 
     }

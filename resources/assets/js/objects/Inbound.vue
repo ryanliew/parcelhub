@@ -261,13 +261,13 @@
 						<p class="heading">
 							Branch Code
 						</p>
-						{{ inbound.code }}
+						{{ inbound.branch_code }}
 						
 						<hr>
 						<p class="heading">
 							Branch Name
 						</p>
-						{{ inbound.name }}
+						{{ inbound.branch_name }}
 					</div>
 				</div>
 			</div>	

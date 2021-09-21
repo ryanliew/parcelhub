@@ -78,8 +78,8 @@ class BranchController extends Controller
      */
     public function show($code)
     {
-        $all_users = Role::where('name', 'admin')->orWhere('name', 'superadmin')->with('users')->get()->pluck('users')->flatten();
-        
+        $all_users = Role::where('name', 'admin')->with('users')->get()->pluck('users')->flatten();
+
         $branches = Branch::where('code', $code)->get();
         $branch_users = [];
         foreach($branches as $branch) {

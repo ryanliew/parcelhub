@@ -83,7 +83,7 @@ class InboundController extends Controller
                                                                 )
                                                             ->where('inbounds.type', 'inbound')
                                                             ->leftJoin('users', 'user_id', '=', 'users.id')
-                                                            ->join('accessibilities', 'accessibilities.branch_code', '=', 'lots.branch_code')
+                                                            ->join('accessibilities', 'accessibilities.branch_code', '=', 'inbounds.branch_code')
                                                             ->where('accessibilities.user_id', $user->id)
                                                             ->orderBy('arrival_date', 'desc'));
             }

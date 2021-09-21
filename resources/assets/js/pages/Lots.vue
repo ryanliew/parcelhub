@@ -356,6 +356,7 @@
 			},
 
 			setUsers(response) {
+				console.log(response);
 				this.userOptions = response.data.map(user => {
 					let obj = {};
 					obj['label'] = user.name;

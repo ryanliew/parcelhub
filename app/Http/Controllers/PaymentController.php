@@ -53,7 +53,7 @@ class PaymentController extends Controller
             }
 
             elseif(auth()->user()->hasRole('admin')){
-                $branches = auth()->user()->branches->pluck("id");
+                $branches = auth()->user()->branches->pluck("code");
                 $lots = Lot::whereIn('branch_code', $branches)->get()->pluck('user_id');
                 $users = User::whereIn('id', $lots)->get()->pluck('id');
                 return Controller::VueTableListResult(Payment::select('users.name as name',
@@ -159,7 +159,12 @@ class PaymentController extends Controller
                 $lot->payments()->save($payment);
             }
 
-            $user->branches()->attach($request['selectedBranch']);
+            $new_access = new Accessibility();
+            $new_access->user_id = $user->id;
+            $new_access->branch_code = $request['selectedBranch'];
+            $new_access->branch_id = 1;
+            $new_access->save();
+            // $user->()->attach($request['selectedBranch']);
 
 //            $user->notify(new PaymentCreatedNotification($payment->load('user', 'lots')));
 
