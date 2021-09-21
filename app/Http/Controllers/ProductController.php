@@ -114,11 +114,13 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function selector()
+    //added reduce variable to not take inbound/outbount/lot
+    public function selector($reduce = false)
     {
         $query = Product::query();
+        // $query = Product::where('id', 1);
         if(auth()->user()->hasRole('admin')) {
-            $branches = auth()->user()->branches->pluck("code");
+            $branches = auth()->user()->branches->pluck("branch_code");
 
             $products = Inbound::with("products")->whereIn("branch_code", $branches)->where("status", 'true')->get()->pluck("products")->flatten()->unique("id");
  
@@ -128,7 +130,9 @@ class ProductController extends Controller
         {
             $query = auth()->user()->products();
         }
-
+        if($reduce == true) {
+            return $query->where('status', 'true')->get();
+        }
         return $query->with(["inbounds", "lots", "outbounds"])->where('status', 'true')->get();
     }
 

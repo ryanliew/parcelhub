@@ -211,6 +211,7 @@
 
 			onSuccess(response) {
 				window.open("/" + response.url);
+				this.selectedBranch = '';
 				this.selectedProducts = [];
 				this.close();
 			},
