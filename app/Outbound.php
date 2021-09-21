@@ -67,7 +67,7 @@ class Outbound extends Model
     
     protected $with = ['tracking_numbers'];
 
-    protected $appends = ['display_no'];
+    protected $appends = ['display_no', 'branch_name'];
 
     protected $connection = 'mysql';
     
@@ -90,6 +90,10 @@ class Outbound extends Model
     public function tracking_numbers()
     {
         return $this->hasMany('App\TrackingNumber');
+    }
+
+    public function getBranchNameAttribute() {
+        return $this->branch ? $this->branch->name : null;
     }
 
     public function getTotalProductQuantityAttribute($product_id) {

@@ -43,7 +43,7 @@ class Inbound extends Model
 
     protected $dates = ["arrival_date"];
 
-    protected $appends = ['display_no'];
+    protected $appends = ['display_no', 'branch_name'];
 
     protected $connection = 'mysql';
 	
@@ -84,6 +84,9 @@ class Inbound extends Model
         return $this->PREFIX() . sprintf("%07d", $this->id);
     }
 
+    public function getBranchNameAttribute() {
+        return $this->branch ? $this->branch->name : null;
+    }
 
     // Static methods
     public static function PREFIX()

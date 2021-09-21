@@ -43,11 +43,11 @@ class InboundImport implements ToCollection, WithStartRow, SkipsEmptyRows, WithV
                                 ->where('status', 'true')
                                 ->where('user_id', auth()->id())
                                 ->first();
-                $branch = Branch::select('branches.code', 'branches.name')
-                                ->leftJoin(env('DB_DATABASE').'.lots as lots' , 'lots.branch_code', '=', 'branches.code')
-                                ->where('lots.user_id', auth()->id())
-                                ->where('branches.code', $excelRow[2])
-                                ->first();
+                $user = auth()->user();
+                $lots_branch_code = $user->lots->pluck('branch_code')->unique();
+
+                $branches = Branch::whereIn('code', $lots_branch_code);
+                $branch = $branches->where('code', $excelRow[2])->first();
 
                 $detail['arrival'] = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($excelRow[1]);
                 $detail['branchCode'] = $branch->code;

@@ -64,35 +64,34 @@ class InboundController extends Controller
 
             $query = $user->inbounds()->with('products', 'products_with_lots.lots');
 
-            if($user->hasRole('superadmin') || $user->hasRole('admin')) {
+            if($user->hasRole('superadmin')) {
                 $query = Inbound::with('products', 'products_with_lots.lots');
             }
             elseif($user->hasRole('subuser')) {
                 $query = $user->parent->inbounds()->with('products', 'products_with_lots.lots');
             }
             elseif($user->hasRole('admin')) {
+                $query = Inbound::with('products', 'products_with_lots.lots');
                 return Controller::VueTableListResult($query->select('arrival_date',
                                                                 'total_carton',
                                                                 'type',
                                                                 'process_status',
                                                                 'inbounds.id as id',
-                                                                'branches.code as branch_code',
-                                                                'branches.name as branch_name',
+                                                                'inbounds.branch_code',
                                                                 'users.name as customer',
                                                                 'inbounds.created_at as created_at'
                                                                 )
                                                             ->where('inbounds.type', 'inbound')
                                                             ->leftJoin('users', 'user_id', '=', 'users.id')
-                                                            ->join(env('DB2_DATABASE').'.branches as branches', 'branches.code', '=', 'branch_code')
-                                                            ->join('accessibilities', 'accessibilities.branch_code', '=', 'branches.code')
+                                                            ->join('accessibilities', 'accessibilities.branch_code', '=', 'lots.branch_code')
                                                             ->where('accessibilities.user_id', $user->id)
                                                             ->orderBy('arrival_date', 'desc'));
             }
             else {
-                $branches = Branch::select('branches.code')
-                        ->leftJoin(env('DB_DATABASE').'.lots as lots' , 'lots.branch_code', '=', 'branches.code')
-                        ->where('lots.user_id', $user->id)
-                        ->get();
+                $lots_branch_code = $user->lots->pluck('branch_code')->unique();
+
+                $branches = Branch::whereIn('code', $lots_branch_code)->get();
+                
                 $array_branch = [];
                 foreach($branches as $branch) {
                     array_push($array_branch, $branch->code);
@@ -102,14 +101,12 @@ class InboundController extends Controller
                                                                 'type',
                                                                 'process_status',
                                                                 'inbounds.id as id',
-                                                                'branches.code',
-                                                                'branches.name',
+                                                                'inbounds.branch_code',
                                                                 'users.name as customer',
                                                                 'inbounds.created_at as created_at'
                                                                 )
                                                             ->where('inbounds.type', 'inbound')
                                                             ->whereIn('inbounds.branch_code', $array_branch)
-                                                            ->join(env('DB2_DATABASE').'.branches as branches', 'branches.code', '=', 'branch_code')
                                                             ->leftJoin('users', 'user_id', '=', 'users.id')
                                                             ->orderBy('arrival_date', 'desc'));
             }
@@ -118,13 +115,11 @@ class InboundController extends Controller
                                                                 'type',
                                                                 'process_status',
                                                                 'inbounds.id as id',
-                                                                'branches.code',
-                                                                'branches.name',
+                                                                'inbounds.branch_code',
                                                                 'users.name as customer',
                                                                 'inbounds.created_at as created_at'
                                                                 )
                                                             ->where('inbounds.type', 'inbound')
-                                                            ->join(env('DB2_DATABASE').'.branches as branches', 'branches.code', '=', 'branch_code')
                                                             ->leftJoin('users', 'user_id', '=', 'users.id')
                                                             ->orderBy('arrival_date', 'desc'));
         }

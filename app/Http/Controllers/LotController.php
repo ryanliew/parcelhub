@@ -68,13 +68,11 @@ class LotController extends Controller
                                 'lots.volume as volume', 
                                 'lots.price as price',
                                 'lots.left_volume as left_volume',
-                                'branches.name as branch_name',
-                                'branches.code as branch_code',
+                                'lots.branch_code',
                                 'users.name as user_name',
                                 'lots.expired_at as expired_at',
                                 'users.id as user_id')
                         ->selectRaw('lots.volume - lots.left_volume as lot_usage')
-                        ->join(env('DB2_DATBASE').'.branches as branches', 'branches.code', '=', 'branch_code')
                         ->join('categories', 'categories.id', '=', 'category_id')
                         ->leftJoin('users', 'users.id', '=', 'user_id')
                     );
@@ -92,16 +90,14 @@ class LotController extends Controller
                         'lots.volume as volume', 
                         'lots.price as price',
                         'lots.left_volume as left_volume',
-                        'branches.name as branch_name',
-                        'branches.code as branch_code',
+                        'lots.branch_code',
                         'users.name as user_name',
                         'lots.expired_at as expired_at',
                         'users.id as user_id')
                         ->selectRaw('lots.volume - lots.left_volume as lot_usage')
                         ->leftJoin('users', 'users.id', '=', 'user_id')
                         ->join('categories', 'categories.id', '=', 'category_id')
-                        ->join('parcelhub_center.branches', 'branches.code', '=', 'branch_code')
-                        ->join('accessibilities', 'accessibilities.branch_code', '=', 'branches.code')
+                        ->join('accessibilities', 'accessibilities.branch_code', '=', 'lots.branch_code')
                         ->where('accessibilities.user_id', $user->id)
                 );
             }
@@ -118,13 +114,12 @@ class LotController extends Controller
                                         'lots.volume as volume', 
                                         'lots.left_volume as left_volume',
                                         'lots.price as price',
-                                        'branches.name as branch_name',
+                                        'lots.branch_code',
                                         'users.name as user_name',
                                         'lots.expired_at as expired_at',
                                         'users.id as user_id')
                                 ->selectRaw('lots.volume - lots.left_volume as lot_usage')
                                 ->join('categories', 'categories.id', '=', 'category_id')
-                                ->join('parcelhub_center.branches as branches', 'branches.code', '=', 'branch_code')
                                 ->leftJoin('users', 'users.id', '=', 'user_id')
                     );
             }

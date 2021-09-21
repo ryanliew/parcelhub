@@ -92153,15 +92153,14 @@ Vue.component('multiselect', __WEBPACK_IMPORTED_MODULE_2_vue_multiselect___defau
     },
     submitTooltip: function submitTooltip() {
       return this.canSubmit ? "" : "Please select at least 1 branch";
+    }
+  },
+  watch: {
+    selectedCountry: function selectedCountry(newVal) {
+      this.form.country = newVal.value;
     },
-
-    watch: {
-      selectedCountry: function selectedCountry(newVal) {
-        this.form.country = newVal.value;
-      },
-      selectedState: function selectedState(newVal) {
-        this.form.state = newVal.value;
-      }
+    selectedState: function selectedState(newVal) {
+      this.form.state = newVal.value;
     }
   }
 });

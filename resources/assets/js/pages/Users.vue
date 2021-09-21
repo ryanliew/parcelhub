@@ -384,7 +384,9 @@ export default {
     submitTooltip() {
       return this.canSubmit ? "" : "Please select at least 1 branch";
     },
-    watch: {
+   
+  },
+   watch: {
 
       selectedCountry(newVal) {
         this.form.country = newVal.value;
@@ -394,7 +396,6 @@ export default {
         this.form.state = newVal.value;
       }
     }
-  }
 }
 </script>
 

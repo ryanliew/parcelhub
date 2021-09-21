@@ -63,9 +63,12 @@ class UserController extends Controller
 
     public function index($branch_code)
     {
-        // $branch = Branch::where('code', $branch_code)->first();
-        // $accessibility = $branch->access;
-        // $users = [];
+        $branch = Branch::where('code', $branch_code)->first();
+        $accessibility = $branch->access->pluck('user_id');
+        $users = User::whereIn('id', $accessibility)->whereHas('roles', function ($query) {
+            $query->where('role_id' , 2);
+        })->get();
+        dd($users);
         // foreach($accessibility as $access) {
         //     $roles = $access->users->roles()->first();
             
@@ -73,7 +76,7 @@ class UserController extends Controller
         //         array_push($users, $access->users);
         //     }
         // }
-        $users = User::all();
+        // $users = User::all();
 
         return $users;
     }

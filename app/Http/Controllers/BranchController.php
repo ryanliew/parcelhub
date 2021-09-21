@@ -192,11 +192,9 @@ class BranchController extends Controller
             }
         }
         else {
-            $branch = Branch::select('branches.code', 'branches.name')
-                            ->leftJoin(env('DB_DATABASE').'.lots as lots' , 'lots.branch_code', '=', 'branches.code')
-                            ->where('lots.user_id', $user->id)
-                            ->distinct()
-                            ->get();
+            $lots_branch_id = $user->lots->pluck('branch_code')->unique();
+
+            $branch = Branch::whereIn('code', $lots_branch_id)->get();
         }
 
        return $branch;
