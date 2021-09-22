@@ -71,46 +71,42 @@ class InboundController extends Controller
                 $query = $user->parent->inbounds()->with('products', 'products_with_lots.lots');
             }
             elseif($user->hasRole('admin')) {
+                $query = Inbound::with('products', 'products_with_lots.lots');
                 return Controller::VueTableListResult($query->select('arrival_date',
                                                                 'total_carton',
                                                                 'type',
                                                                 'process_status',
                                                                 'inbounds.id as id',
-                                                                'branches.codename',
-                                                                'branches.branch_name',
+                                                                'inbounds.branch_code',
                                                                 'users.name as customer',
                                                                 'inbounds.created_at as created_at'
                                                                 )
                                                             ->where('inbounds.type', 'inbound')
                                                             ->leftJoin('users', 'user_id', '=', 'users.id')
-                                                            ->join('branches', 'branches.id', '=', 'branch_id')
-                                                            ->join('accessibilities', 'accessibilities.branch_id', '=', 'branches.id')
+                                                            ->join('accessibilities', 'accessibilities.branch_code', '=', 'inbounds.branch_code')
                                                             ->where('accessibilities.user_id', $user->id)
                                                             ->orderBy('arrival_date', 'desc'));
             }
             else {
-                $branches = Branch::select('branches.id')
-                        ->leftJoin('lots' , 'lots.branch_id', '=', 'branches.id')
-                        ->where('lots.user_id', $user->id)
-                        ->get();
+                $lots_branch_code = $user->lots->pluck('branch_code')->unique();
+
+                $branches = Branch::whereIn('code', $lots_branch_code)->get();
+                
                 $array_branch = [];
                 foreach($branches as $branch) {
-                    array_push($array_branch, $branch->id);
+                    array_push($array_branch, $branch->code);
                 }
-
                 return Controller::VueTableListResult($query->select('arrival_date',
                                                                 'total_carton',
                                                                 'type',
                                                                 'process_status',
                                                                 'inbounds.id as id',
-                                                                'branches.codename',
-                                                                'branches.branch_name',
+                                                                'inbounds.branch_code',
                                                                 'users.name as customer',
                                                                 'inbounds.created_at as created_at'
                                                                 )
                                                             ->where('inbounds.type', 'inbound')
-                                                            ->whereIn('inbounds.branch_id', $array_branch)
-                                                            ->join('branches', 'branches.id', '=', 'branch_id')
+                                                            ->whereIn('inbounds.branch_code', $array_branch)
                                                             ->leftJoin('users', 'user_id', '=', 'users.id')
                                                             ->orderBy('arrival_date', 'desc'));
             }
@@ -119,13 +115,11 @@ class InboundController extends Controller
                                                                 'type',
                                                                 'process_status',
                                                                 'inbounds.id as id',
-                                                                'branches.codename',
-                                                                'branches.branch_name',
+                                                                'inbounds.branch_code',
                                                                 'users.name as customer',
                                                                 'inbounds.created_at as created_at'
                                                                 )
                                                             ->where('inbounds.type', 'inbound')
-                                                            ->join('branches', 'branches.id', '=', 'branch_id')
                                                             ->leftJoin('users', 'user_id', '=', 'users.id')
                                                             ->orderBy('arrival_date', 'desc'));
         }
@@ -164,7 +158,7 @@ class InboundController extends Controller
                                                                     ->where('inbounds.type', 'inbound')
                                                                     ->where('process_status', 'awaiting_arrival')
                                                                     ->leftJoin('users', 'user_id', '=', 'users.id')
-                                                                    ->leftJoin('accessibilities', 'inbounds.branch_id', '=' , 'accessibilities.branch_id')
+                                                                    ->leftJoin('accessibilities', 'inbounds.branch_code', '=' , 'accessibilities.branch_code')
                                                                     ->where('accessibilities.user_id', auth()->user()->id)
                                                                     ->orderBy('arrival_date', 'desc'));
         }
@@ -201,12 +195,12 @@ class InboundController extends Controller
     {
         $this->validate($request, $this->rules, ['products.required' => "Please select at least 1 product."]);
         $auth = auth()->user();
-
-        if(empty(auth()->user()->address))
+        
+        if(empty($auth->address))
         {
             return response(json_encode(array('overall' => ['You must update your contact details in the My Profile page before proceeding'])), 422);
         }
-
+        
         $now = Carbon::today();
         $compare = Carbon::parse($request->arrival_date);
         $user_lots = $auth->lots()->where('volume','>', 0)->where('status', 'approved')->get();
@@ -260,7 +254,6 @@ class InboundController extends Controller
             }
             return redirect()->back()->withErrors("Inbound must be created before ".$days_before_order." days.");
         }
-
         //Check whether selected a branch
         if($request->selectedBranch == null) {
             if(request()->wantsJson()) {
@@ -269,7 +262,7 @@ class InboundController extends Controller
             return redirect()->back()->withErrors("Inbound must have a branch.");
         }
         else {
-            $lots = Lot::where('branch_id', $request->selectedBranch)->get();
+            $lots = Lot::where('branch_code', $request->selectedBranch)->get();
             if(!$lots) {
                 if(request()->wantsJson()) {
                     return response(json_encode(array('selectedBranch' => ['Lot for this branch does not exist. Please select another branch.'])), 422);
@@ -282,7 +275,7 @@ class InboundController extends Controller
         $inbound->user_id = $auth->id;
         $inbound->arrival_date = $request->arrival_date;
         $inbound->total_carton = $request->total_carton;
-        $inbound->branch_id = $request->selectedBranch;
+        $inbound->branch_code = $request->selectedBranch;
         $inbound->status = "true";
         $inbound->save();
         // Insert products into many to many table
@@ -354,7 +347,7 @@ class InboundController extends Controller
             $lot->products()->attach($lot_products);
             $lot->propagate_left_volume();
         }
-        $inbound->notify(new InboundCreatedNotification($inbound), new AdminInboundCreatedNotification());
+        $inbound->notify(new InboundCreatedNotification($inbound), new AdminInboundCreatedNotification($inbound));
 
         event(new EventTrigger('inbound'));
 

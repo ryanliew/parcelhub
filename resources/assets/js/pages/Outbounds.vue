@@ -492,7 +492,7 @@
 			},
 
 			getProducts() {
-				axios.get('internal/products/selector')
+				axios.get('internal/products/selector/false')
 					.then(response => this.setProducts(response));
 			},
 			getBranches() {
@@ -508,8 +508,8 @@
 			setBranches(response) {
 				this.branchesOptions = response.data.map(branches =>{
 					let obj = {};
-					obj['label'] = branches.branch_name;
-					obj['value'] = branches.id;
+					obj['label'] = branches.name;
+					obj['value'] = branches.code;
 					return obj;
 				});
 			},

@@ -27,19 +27,50 @@ class UserController extends Controller
     
 	public function page()
 	{
-		if(request()->wantsJson())
-			return Controller::VueTableListResult(User::with('inbounds')->with('outbounds')->with('roles'));
+        //please take note here
+		if(request()->wantsJson()) {
+            $user = auth()->user();
+            $role = $user->roles()->first();
+
+            $query = User::with('inbounds')->with('outbounds')->with('roles');
+            
+            if($role->name == 'superadmin') {
+                return Controller::VueTableListResult($query);
+            }
+            $accessibility = $user->access;
+            $branches_code = [];
+            foreach($accessibility as $access) {
+                $branch_code = $access->branch_code;
+                array_push($branches_code, $branch_code);
+            }
+            // return Controller::VueTableListResult($query);
+			return Controller::VueTableListResult($query->select('users.name',
+                                                                'users.address',
+                                                                'users.address_2',
+                                                                'users.email',
+                                                                'users.country', 
+                                                                'users.created_at', 
+                                                                'users.phone')
+                                                                ->where('verified', true)
+                                                                ->leftJoin('lots', 'lots.user_id', '=', 'users.id')
+                                                                ->whereIn('lots.branch_code', $branches_code)
+                                                                ->distinct());
+        }
 
 		return view('user.page')
                 ->with("countries", Country::with("states")->active()->get());
 	}
 
-    public function index(Branch $branch)
+    public function index($branch_code)
     {
-        $user = $branch->users()->join('role_user' , 'role_user.user_id' , '=' , 'users.id')
-                                ->where('role_user.role_id', '2')
-                                ->get();
-        return $user;
+        $branch = Branch::where('code', $branch_code)->first();
+        $accessibility = $branch->access->pluck('user_id');
+
+        $users = User::whereIn('id', $accessibility)->whereHas('roles', function ($query) {
+            $query->where('role_id' , 1);
+        })->get();
+
+        return $users;
     }
 
     public function selector()
@@ -99,8 +130,7 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        $obj_branches = Branch::whereIn('id' , json_decode($request->branches))->get();
-
+        $obj_branches = Branch::whereIn('code' , json_decode($request->branches))->get();
         $this->validate($request, [
             'name' => 'required',
             'email' => 'required|email',
@@ -109,6 +139,7 @@ class UserController extends Controller
         ]);
 
         $user = User::where('email' , $request->email)->first();
+
         if(!$user) {
             $password = Str::random(8);
             $user = new User;
@@ -128,11 +159,16 @@ class UserController extends Controller
         }
         else {
             
-            $full_branch = $obj_branches->implode('branch_name', ',');
+            $full_branch = $obj_branches->implode('name', ',');
             
             $user->notify(new UserAccessBranchNotification($user, $full_branch));
         }
-        $user->branches()->attach($obj_branches);
+        $new_access = new Accessibility();
+        $new_access->user_id = $user->id;
+        $new_access->branch_code = $obj_branches[0]->code;
+        $new_access->branch_id = 1;
+        $new_access->save();
+
         return ['message' => "User $request->name has been created"];
 
     }

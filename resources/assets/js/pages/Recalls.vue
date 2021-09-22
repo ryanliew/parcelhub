@@ -348,7 +348,7 @@
 			},
 
 			getProducts() {
-				axios.get('internal/products/selector')
+				axios.get('internal/products/selector/false')
 					.then(response => this.setProducts(response));
 			},
 

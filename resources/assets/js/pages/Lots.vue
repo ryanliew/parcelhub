@@ -307,8 +307,8 @@
 			setBranches(response) {
 				this.branchesOptions = response.data.map(branches =>{
 					let obj = {};
-					obj['label'] = branches.branch_name;
-					obj['value'] = branches.id;
+					obj['label'] = branches.name;
+					obj['value'] = branches.code;
 					return obj;
 				});
 			},
@@ -356,6 +356,7 @@
 			},
 
 			setUsers(response) {
+				console.log(response);
 				this.userOptions = response.data.map(user => {
 					let obj = {};
 					obj['label'] = user.name;
@@ -427,7 +428,7 @@
 				};
 				this.selected_branch = {
 					label: data.branch_name,
-					value: data.branch_id
+					value: data.branch_code
 				}
 				this.dialogActive = true;
 				//this.override = data.category_volume !== data.volume || data.category_price !== data.price;
@@ -435,7 +436,7 @@
 			},
 
 			editOwner(data) {
-				this.fetchUsers(data.branch_id);
+				this.fetchUsers(data.branch_code);
 				this.ownerForm.reset();
 				this.selectedLot = data;
 				if(data.user_name)

@@ -68,13 +68,11 @@ class LotController extends Controller
                                 'lots.volume as volume', 
                                 'lots.price as price',
                                 'lots.left_volume as left_volume',
-                                'branches.branch_name',
-                                'branches.id as branch_id',
+                                'lots.branch_code',
                                 'users.name as user_name',
                                 'lots.expired_at as expired_at',
                                 'users.id as user_id')
                         ->selectRaw('lots.volume - lots.left_volume as lot_usage')
-                        ->join('branches', 'branches.id', '=', 'branch_id')
                         ->join('categories', 'categories.id', '=', 'category_id')
                         ->leftJoin('users', 'users.id', '=', 'user_id')
                     );
@@ -92,16 +90,14 @@ class LotController extends Controller
                         'lots.volume as volume', 
                         'lots.price as price',
                         'lots.left_volume as left_volume',
-                        'branches.branch_name',
-                        'branches.id as branch_id',
+                        'lots.branch_code',
                         'users.name as user_name',
                         'lots.expired_at as expired_at',
                         'users.id as user_id')
                         ->selectRaw('lots.volume - lots.left_volume as lot_usage')
                         ->leftJoin('users', 'users.id', '=', 'user_id')
                         ->join('categories', 'categories.id', '=', 'category_id')
-                        ->join('branches', 'branches.id', '=', 'branch_id')
-                        ->join('accessibilities', 'accessibilities.branch_id', '=', 'branches.id')
+                        ->join('accessibilities', 'accessibilities.branch_code', '=', 'lots.branch_code')
                         ->where('accessibilities.user_id', $user->id)
                 );
             }
@@ -118,13 +114,12 @@ class LotController extends Controller
                                         'lots.volume as volume', 
                                         'lots.left_volume as left_volume',
                                         'lots.price as price',
-                                        'branches.branch_name',
+                                        'lots.branch_code',
                                         'users.name as user_name',
                                         'lots.expired_at as expired_at',
                                         'users.id as user_id')
                                 ->selectRaw('lots.volume - lots.left_volume as lot_usage')
                                 ->join('categories', 'categories.id', '=', 'category_id')
-                                ->join('branches', 'branches.id', '=', 'branch_id')
                                 ->leftJoin('users', 'users.id', '=', 'user_id')
                     );
             }
@@ -181,7 +176,7 @@ class LotController extends Controller
         $lot->volume = $request->volume;
         $lot->left_volume = $lot->volume;
         $lot->category_id = $request->category;
-        $lot->branch_id = $request->selectedBranch;
+        $lot->branch_code = $request->selectedBranch;
         $lot->price = $request->price;
         $lot->status = "false";
         $lot->rental_duration = (int)$rental_duration;
@@ -231,7 +226,7 @@ class LotController extends Controller
         $lot = Lot::find($request->id);
         $lot->name = $request->name;
         $lot->category_id = $request->category;
-        $lot->branch_id = $request->selectedBranch;
+        $lot->branch_code = $request->selectedBranch;
         $lot->volume = $request->volume;
         $lot->left_volume = Utilities::convertMeterCubeToCentimeterCube($request->volume);
         $lot->price = $request->price;

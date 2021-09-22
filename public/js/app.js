@@ -76750,8 +76750,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		setBranches: function setBranches(response) {
 			this.branchesOptions = response.data.map(function (branches) {
 				var obj = {};
-				obj['label'] = branches.branch_name;
-				obj['value'] = branches.id;
+				obj['label'] = branches.name;
+				obj['value'] = branches.code;
 				return obj;
 			});
 		},
@@ -76801,6 +76801,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			});
 		},
 		setUsers: function setUsers(response) {
+			console.log(response);
 			this.userOptions = response.data.map(function (user) {
 				var obj = {};
 				obj['label'] = user.name;
@@ -76873,13 +76874,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			};
 			this.selected_branch = {
 				label: data.branch_name,
-				value: data.branch_id
+				value: data.branch_code
 			};
 			this.dialogActive = true;
 			//this.override = data.category_volume !== data.volume || data.category_price !== data.price;
 		},
 		editOwner: function editOwner(data) {
-			this.fetchUsers(data.branch_id);
+			this.fetchUsers(data.branch_code);
 			this.ownerForm.reset();
 			this.selectedLot = data;
 			if (data.user_name) this.selectedUser = {
@@ -80459,7 +80460,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		getProducts: function getProducts() {
 			var _this2 = this;
 
-			axios.get('internal/products/selector').then(function (response) {
+			axios.get('internal/products/selector/false').then(function (response) {
 				return _this2.setProducts(response);
 			});
 		},
@@ -80476,8 +80477,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		setBranches: function setBranches(response) {
 			this.branchesOptions = response.data.map(function (branches) {
 				var obj = {};
-				obj['label'] = branches.branch_name;
-				obj['value'] = branches.id;
+				obj['label'] = branches.name;
+				obj['value'] = branches.code;
 				return obj;
 			});
 		},
@@ -83906,6 +83907,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		};
 	},
 	mounted: function mounted() {
+		console.log(this.inbound);
 		this.getLots();
 	},
 
@@ -84664,7 +84666,7 @@ var render = function() {
               ]),
               _vm._v(
                 "\n\t\t\t\t\t\t" +
-                  _vm._s(_vm.inbound.codename) +
+                  _vm._s(_vm.inbound.branch_code) +
                   "\n\t\t\t\t\t\t\n\t\t\t\t\t\t"
               ),
               _c("hr"),
@@ -85925,7 +85927,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 		getProducts: function getProducts() {
 			var _this2 = this;
 
-			axios.get('internal/products/selector').then(function (response) {
+			axios.get('internal/products/selector/false').then(function (response) {
 				return _this2.setProducts(response);
 			});
 		},
@@ -85943,8 +85945,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 		setBranches: function setBranches(response) {
 			this.branchesOptions = response.data.map(function (branches) {
 				var obj = {};
-				obj['label'] = branches.branch_name;
-				obj['value'] = branches.id;
+				obj['label'] = branches.name;
+				obj['value'] = branches.code;
 				return obj;
 			});
 		},
@@ -87768,7 +87770,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 		getProducts: function getProducts() {
 			var _this4 = this;
 
-			axios.get('internal/products/selector').then(function (response) {
+			axios.get('internal/products/selector/false').then(function (response) {
 				return _this4.setProducts(response);
 			});
 		},
@@ -89179,7 +89181,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 		getProducts: function getProducts() {
 			var _this4 = this;
 
-			axios.get('internal/products/selector').then(function (response) {
+			axios.get('internal/products/selector/false').then(function (response) {
 				return _this4.setProducts(response);
 			});
 		},
@@ -90502,8 +90504,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     setBranches: function setBranches(response) {
       this.branchesOptions = response.data.map(function (branches) {
         var obj = {};
-        obj['label'] = branches.branch_name;
-        obj['value'] = branches.id;
+        obj['label'] = branches.name;
+        obj['value'] = branches.code;
         return obj;
       });
     },
@@ -92062,8 +92064,8 @@ Vue.component('multiselect', __WEBPACK_IMPORTED_MODULE_2_vue_multiselect___defau
       } else {
         this.branchesOptions = response.data.map(function (branches) {
           var obj = {};
-          obj['label'] = branches.branch_name;
-          obj['value'] = branches.id;
+          obj['label'] = branches.name;
+          obj['value'] = branches.code;
           return obj;
         });
       }
@@ -92154,15 +92156,14 @@ Vue.component('multiselect', __WEBPACK_IMPORTED_MODULE_2_vue_multiselect___defau
     },
     submitTooltip: function submitTooltip() {
       return this.canSubmit ? "" : "Please select at least 1 branch";
+    }
+  },
+  watch: {
+    selectedCountry: function selectedCountry(newVal) {
+      this.form.country = newVal.value;
     },
-
-    watch: {
-      selectedCountry: function selectedCountry(newVal) {
-        this.form.country = newVal.value;
-      },
-      selectedState: function selectedState(newVal) {
-        this.form.state = newVal.value;
-      }
+    selectedState: function selectedState(newVal) {
+      this.form.state = newVal.value;
     }
   }
 });
@@ -93606,12 +93607,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 	data: function data() {
 		return {
-			fields: [{ name: 'codename', sortField: 'codename', title: 'Code Name' }, { name: 'branch_name', sortField: 'branch_name', title: 'Branch Name' }, { name: 'branch_address', sortField: 'branch_address', title: 'Address' }, { name: '__component:branches-actions', title: 'Actions' }],
+			fields: [{ name: 'code', sortField: 'code', title: 'Code Name' }, { name: 'name', sortField: 'name', title: 'Branch Name' }, { name: 'address', sortField: 'address', title: 'Address' }, { name: '__component:branches-actions', title: 'Actions' }],
 			selectedBranches: '',
 			dialogActive: false,
 			form: new Form({
 				id: '',
-				codename: '',
+				code: '',
 				name: '',
 				phone: '',
 				address: '',
@@ -93620,7 +93621,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 				country: ''
 			}),
 			forms: new Form({
-				branch_id: '',
+				branch_code: '',
 				id: []
 			}),
 			confirmSubmit: false,
@@ -93649,7 +93650,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 				});
 
 				this.forms.id = store;
-				this.forms.branch_id = this.selectedBranches.id;
+				this.forms.branch_code = this.selectedBranches.code;
 
 				this.forms.post(this.action).then(function (data) {
 					return _this.onSuccess();
@@ -93657,7 +93658,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 					return _this.onFail(error);
 				});
 			} else if (this.type == 'Delete') {
-				axios.get('/branches/delete/' + this.selectedBranches.id).then(function (response) {
+				axios.get('/branches/delete/' + this.selectedBranches.code).then(function (response) {
 					return _this.onDeleteSuccess(response);
 				});
 			} else {
@@ -93682,19 +93683,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			this.selectedBranches = data;
 			this.type = 'Edit';
 			this.form.id = data.id;
-			this.form.codename = data.codename;
-			this.form.name = data.branch_name;
-			this.form.phone = data.branch_phone;
-			this.form.address = data.branch_address;
-			this.form.state = data.branch_state;
-			this.form.postcode = data.branch_postcode;
-			this.form.country = data.branch_country;
+			this.form.code = data.code;
+			this.form.name = data.name;
+			this.form.phone = data.contact;
+			this.form.address = data.address;
+			this.form.state = data.state;
+			this.form.postcode = data.postcode;
+			this.form.country = data.country_code;
 			this.dialogActive = true;
 		},
 		access: function access(data) {
 			this.selectedBranches = data;
 			this.type = 'Access';
-			this.getAccess(data.id);
+			this.getAccess(data.code);
 			this.dialogActive = true;
 		},
 		delete: function _delete(data) {
@@ -93725,7 +93726,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 				return obj;
 			});
-
 			this.leftItems = response.data[0].map(function (user) {
 				var obj = {};
 
@@ -93754,9 +93754,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		dialogTitle: function dialogTitle() {
 			if (this.selectedBranches) {
 				if (this.type == 'Edit') {
-					return "Edit " + this.selectedBranches.branch_name;
+					return "Edit " + this.selectedBranches.name;
 				} else if (this.type == 'Delete') {} else if (this.type == 'Access') {
-					return "Access " + this.selectedBranches.branch_name + '\'s branch';
+					return "Access " + this.selectedBranches.name + '\'s branch';
 				}
 			}
 			return "Create new Branch";
@@ -93896,7 +93896,7 @@ var render = function() {
                     [
                       _c("text-input", {
                         attrs: {
-                          defaultValue: _vm.form.codename,
+                          defaultValue: _vm.form.code,
                           label: "Code Name",
                           required: true,
                           name: "codename",
@@ -93906,11 +93906,11 @@ var render = function() {
                           focus: true
                         },
                         model: {
-                          value: _vm.form.codename,
+                          value: _vm.form.code,
                           callback: function($$v) {
-                            _vm.$set(_vm.form, "codename", $$v)
+                            _vm.$set(_vm.form, "code", $$v)
                           },
-                          expression: "form.codename"
+                          expression: "form.code"
                         }
                       })
                     ],
@@ -99660,10 +99660,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 			var error = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'No error';
 
-			axios.get('/internal/products/selector').then(function (response) {
+			axios.get('/internal/products/selector/true').then(function (response) {
 				return _this.setProducts(response);
 			}).catch(function (error) {
-				return _this.getProducts(e);
+				return _this.getProducts(error);
 			});
 		},
 		getBranches: function getBranches() {
@@ -99688,8 +99688,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		setBranches: function setBranches(response) {
 			this.branchesOptions = response.data.map(function (branches) {
 				var obj = {};
-				obj['label'] = branches.branch_name;
-				obj['value'] = branches.id;
+				obj['label'] = branches.name;
+				obj['value'] = branches.code;
 				return obj;
 			});
 		},
@@ -99707,6 +99707,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		},
 		onSuccess: function onSuccess(response) {
 			window.open("/" + response.url);
+			this.selectedBranch = '';
 			this.selectedProducts = [];
 			this.close();
 		},
@@ -101357,7 +101358,7 @@ var render = function() {
               ]),
               _vm._v(
                 "\n\t\t\t\t\t\t" +
-                  _vm._s(_vm.outbound.codename) +
+                  _vm._s(_vm.outbound.branch_code) +
                   "\n\t\t\t\t\t\t\n\t\t\t\t\t\t"
               ),
               _c("hr"),

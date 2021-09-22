@@ -75,8 +75,7 @@ class OutboundController extends Controller
                                                                     'amount_insured',
                                                                     'process_status',
                                                                     'couriers.name as courier',
-                                                                    'branches.codename',
-                                                                    'branches.branch_name',
+                                                                    'outbounds.branch_code',
                                                                     'outbounds.created_at',
                                                                     'outbounds.recipient_name',
                                                                     'outbounds.recipient_address',
@@ -90,17 +89,15 @@ class OutboundController extends Controller
                                                                     )
                                                                 ->where('outbounds.type', 'outbound')
                                                                 ->leftJoin('couriers', 'courier_id', '=', 'couriers.id')
-                                                                ->join('branches', 'outbounds.branch_id' , '=', 'branches.id')
                                                                 ->leftJoin('users', 'user_id', '=', 'users.id')
                                                                 ->orderBy('outbounds.created_at', 'desc') );
-            elseif($user->hasRole('admin')) 
+            elseif($user->hasRole('admin')){
                 return Controller::VueTableListResult( Outbound::with('tracking_numbers')
                     ->select('outbounds.id as id',
                         'amount_insured',
                         'process_status',
                         'couriers.name as courier',
-                        'branches.codename',
-                        'branches.branch_name',
+                        'outbounds.branch_code',
                         'outbounds.created_at',
                         'outbounds.recipient_name',
                         'outbounds.recipient_address',
@@ -115,19 +112,18 @@ class OutboundController extends Controller
                     ->where('outbounds.type', 'outbound')
                     ->leftJoin('couriers', 'courier_id', '=', 'couriers.id')
                     ->leftJoin('users', 'user_id', '=', 'users.id')
-                    ->join('branches', 'branches.id', '=', 'branch_id')
-                    ->join('accessibilities', 'accessibilities.branch_id', '=', 'branches.id')
+                    ->join('accessibilities', 'accessibilities.branch_code', '=', 'outbounds.branch_code')
                     ->where('accessibilities.user_id', $user->id)
                     ->orderBy('outbounds.created_at', 'desc') );
-            else
+            } 
+            else{
+                $lots_branch_id = $user->lots->pluck('branch_code')->unique();
 
-                $branches = Branch::select('branches.id')
-                        ->leftJoin('lots' , 'lots.branch_id', '=', 'branches.id')
-                        ->where('lots.user_id', $user->id)
-                        ->get();
+                $branches = Branch::whereIn('code', $lots_branch_id)->get();
+                
                 $array_branch = [];
                 foreach($branches as $branch) {
-                    array_push($array_branch, $branch->id);
+                    array_push($array_branch, $branch->code);
                 }
                 return Controller::VueTableListResult( $user->outbounds()
                                                             ->with('tracking_numbers')
@@ -135,8 +131,7 @@ class OutboundController extends Controller
                                                                     'amount_insured',
                                                                     'process_status',
                                                                     'couriers.name as courier',
-                                                                    'branches.codename',
-                                                                    'branches.branch_name',
+                                                                    'outbounds.branch_code',
                                                                     'outbounds.created_at',
                                                                     'outbounds.recipient_name',
                                                                     'outbounds.recipient_address',
@@ -148,11 +143,10 @@ class OutboundController extends Controller
                                                                     'outbounds.type as type'
                                                                     )
                                                             ->where('outbounds.type', 'outbound')
-                                                            ->whereIn('outbounds.branch_id', $array_branch)
-                                                            ->join('branches', 'outbounds.branch_id' , '=', 'branches.id')
+                                                            ->whereIn('outbounds.branch_code', $array_branch)
                                                             ->leftJoin('couriers', 'courier_id', '=', 'couriers.id')
                                                             ->orderBy('outbounds.created_at', 'desc') );
-
+            }
         }
 
         if($user->hasRole('admin')) {
@@ -215,7 +209,7 @@ class OutboundController extends Controller
                                                                          )
                                                                      ->leftJoin('couriers', 'courier_id', '=', 'couriers.id')
                                                                      ->leftJoin('users', 'user_id', '=', 'users.id')
-                                                                     ->leftJoin('accessibilities', 'outbounds.branch_id', '=' , 'accessibilities.branch_id')
+                                                                     ->leftJoin('accessibilities', 'outbounds.branch_code', '=' , 'accessibilities.branch_code')
                                                                      ->where('accessibilities.user_id', auth()->user()->id)
                                                                      ->where('outbounds.type', 'outbound')
                                                                      ->where('outbounds.process_status', '<>', 'completed')
@@ -301,7 +295,6 @@ class OutboundController extends Controller
      */
     public function store(Request $request)
     {
-
         $this->validate($request, [
             'recipient_name' => 'required',
             'recipient_address' => 'required',
@@ -388,10 +381,11 @@ class OutboundController extends Controller
             
             $outbound->amount_insured = $outbound->insurance ? request()->amount_insured : 0;
             $outbound->user_id = $user->id;
-            $outbound->branch_id = $request->selectedBranch;
+            $outbound->branch_code = $request->selectedBranch;
             $outbound->is_business = $request->business == "true" ? true : false;
             $outbound->status = 'true';
             $outbound->process_status = 'pending';
+            $outbound->save();
 
             if( $request->hasFile('invoice_slip') )
             {
@@ -424,7 +418,6 @@ class OutboundController extends Controller
                 $quantity = $outboundProduct['quantity']; //20
 
                 foreach ($product->lots as $lot) {
-
                     // Check if the lot have enough products supply to the outbound request
                     $sumOfQuantityAndIncomingQuantity = $lot->pivot->quantity + $lot->pivot->incoming_quantity - $lot->pivot->outgoing_product; //10
                     if($sumOfQuantityAndIncomingQuantity >= $quantity) {
@@ -438,7 +431,6 @@ class OutboundController extends Controller
                         $product->lots()->updateExistingPivot($lot->id, ['outgoing_product' => $newQuantityForOutgoingProduct]);
 
                         $outbound->products()->attach($product->id, ['quantity' => $quantity, 'lot_id' => $lot->id, 'remark' => $outboundProduct['remarks'], 'unit_value' => $outboundProduct['unit_value'], 'total_value' => $outboundProduct['total_value'], 'weight' => $outboundProduct['weight'], 'manufacture_country' => $outboundProduct['manufacture_country']]);
-
                         break;
 
                     } else if($sumOfQuantityAndIncomingQuantity > 0){
@@ -458,8 +450,7 @@ class OutboundController extends Controller
                     }
                 }
             }
-            $outbound->save();
-            $outbound->notify(new OutboundStatusUpdateNotification($outbound));
+            $outbound->notify(new OutboundCreatedNotification($outbound),  new AdminOutboundCreatedNotification($outbound));
 
         } catch (\Exception $exception) {
 
