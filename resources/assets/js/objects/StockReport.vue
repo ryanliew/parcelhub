@@ -170,7 +170,7 @@
 			getProducts(error = 'No error') {
 				axios.get('/internal/products/selector/true')
 					.then(response => this.setProducts(response))
-					.catch(error => this.getProducts(e));
+					.catch(error => this.getProducts(error));
 			},
 
 			getBranches() {
@@ -185,7 +185,7 @@
 					obj['label'] = product.selector_name;
 					obj['value'] = product.id;
 
-					return obj;
+					return obj;	
 				});
 
 				this.isLoading = false;

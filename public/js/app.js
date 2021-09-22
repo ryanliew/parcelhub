@@ -99663,7 +99663,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			axios.get('/internal/products/selector/true').then(function (response) {
 				return _this.setProducts(response);
 			}).catch(function (error) {
-				return _this.getProducts(e);
+				return _this.getProducts(error);
 			});
 		},
 		getBranches: function getBranches() {
