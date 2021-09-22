@@ -146,14 +146,13 @@ class User extends Authenticatable
 
     public function getRoleNameAttribute()
     {
-        $user = auth()->user();
-        if($user->roles()->first()) {
+        if($this->roles) {
+            return $this->roles()->first()->name;
+        }
+        else {
+            $user = auth()->user();
             return $user->roles()->first()->name;
         }
-
-        return null;
-       
-        // return $this->roles()->first()->name;
     }
 
     public function getCanPurchaseAttribute()
