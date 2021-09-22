@@ -117,9 +117,7 @@ class ProductController extends Controller
     //added reduce variable to not take inbound/outbount/lot
     public function selector($reduce)
     {
-        dd($reduce);
         $query = Product::query();
-        // $query = Product::where('id', 1);
         if(auth()->user()->hasRole('admin')) {
             $branches = auth()->user()->access->pluck("branch_code");
 
