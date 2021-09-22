@@ -184,7 +184,7 @@ class BranchController extends Controller
             $branch = Branch::all();
         }
         elseif($user->hasRole('admin')) {
-            $accessibility = $user->branches;
+            $accessibility = $user->access;
             $branch = [];
             foreach($accessibility as $access) {
                 $access_branch = $access->branches;

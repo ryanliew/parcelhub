@@ -118,7 +118,7 @@ class User extends Authenticatable
         return $this->belongsTo('App\User', 'parent_id');
     }
 
-    public function branches() {
+    public function access() {
         return $this->hasMany('App\Accessibility');
     }
 

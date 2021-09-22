@@ -37,7 +37,7 @@ class UserController extends Controller
             if($role->name == 'superadmin') {
                 return Controller::VueTableListResult($query);
             }
-            $accessibility = $user->branches()->get();
+            $accessibility = $user->access;
             $branches_code = [];
             foreach($accessibility as $access) {
                 $branch_code = $access->branch_code;

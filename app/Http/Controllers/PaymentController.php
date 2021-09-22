@@ -53,7 +53,7 @@ class PaymentController extends Controller
             }
 
             elseif(auth()->user()->hasRole('admin')){
-                $branches = auth()->user()->branches->pluck("code");
+                $branches = auth()->user()->access->pluck("branch_code");
                 $lots = Lot::whereIn('branch_code', $branches)->get()->pluck('user_id');
                 $users = User::whereIn('id', $lots)->get()->pluck('id');
                 return Controller::VueTableListResult(Payment::select('users.name as name',
