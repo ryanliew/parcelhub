@@ -284,8 +284,8 @@ export default {
       } else {
         this.branchesOptions = response.data.map(branches => {
           let obj = {};
-          obj['label'] = branches.branch_name;
-          obj['value'] = branches.id;
+          obj['label'] = branches.name;
+          obj['value'] = branches.code;
           return obj;
         });
       }
@@ -384,7 +384,9 @@ export default {
     submitTooltip() {
       return this.canSubmit ? "" : "Please select at least 1 branch";
     },
-    watch: {
+   
+  },
+   watch: {
 
       selectedCountry(newVal) {
         this.form.country = newVal.value;
@@ -394,7 +396,6 @@ export default {
         this.form.state = newVal.value;
       }
     }
-  }
 }
 </script>
 

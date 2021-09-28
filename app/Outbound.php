@@ -67,7 +67,9 @@ class Outbound extends Model
     
     protected $with = ['tracking_numbers'];
 
-    protected $appends = ['display_no'];
+    protected $appends = ['display_no', 'branch_name'];
+
+    protected $connection = 'mysql';
     
     public function user() {
     	return $this->belongsTo('App\User');
@@ -78,7 +80,7 @@ class Outbound extends Model
     }
 
     public function branch(){
-        return $this->belongsTo('App\Branch');
+        return $this->belongsTo('App\Branch', 'branch_code', 'code');
     }
 
     public function courier() {
@@ -88,6 +90,10 @@ class Outbound extends Model
     public function tracking_numbers()
     {
         return $this->hasMany('App\TrackingNumber');
+    }
+
+    public function getBranchNameAttribute() {
+        return $this->branch ? $this->branch->name : null;
     }
 
     public function getTotalProductQuantityAttribute($product_id) {
@@ -169,7 +175,13 @@ class Outbound extends Model
 
     public function notify($outboundNotification, $adminoutboundNotification) {
 
-        $admins = $this->branch->users;
+        $accessibility = $this->branch->access;
+        
+        $admins = [];
+        foreach($accessibility as $access) {
+            $admin = $access->users;
+            array_push($admins, $admin);
+        }
         
         foreach($admins as $admin) {
             $admin->notify($adminoutboundNotification);

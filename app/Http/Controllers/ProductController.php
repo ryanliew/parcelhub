@@ -114,19 +114,23 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function selector()
+    //added reduce variable to not take inbound/outbount/lot
+    public function selector($reduce)
     {
         $query = Product::query();
         if(auth()->user()->hasRole('admin')) {
-            $branches = auth()->user()->branches->pluck("id");
+            $branches = auth()->user()->access->pluck("branch_code");
 
-            $products = Inbound::with("products")->whereIn("branch_id", $branches)->where("status", 'true')->get()->pluck("products")->flatten()->unique("id");
- 
-            return $products;
+            $products = Inbound::with("products")->whereIn("branch_code", $branches)->where("status", 'true')->get()->pluck("products")->flatten()->unique("id");
+
+            return $products->values()->all();
         }
         if(!auth()->user()->hasRole('superadmin'))
         {
             $query = auth()->user()->products();
+        }
+        if($reduce == 'true') {
+            return $query->where('status', 'true')->get();
         }
         return $query->with(["inbounds", "lots", "outbounds"])->where('status', 'true')->get();
     }

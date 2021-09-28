@@ -47,7 +47,9 @@ class Lot extends Model
 {
 	protected $guarded = [];
 
-    protected $appends = ['usage'];
+    protected $connection = 'mysql';
+
+    protected $appends = ['usage', 'branch_name'];
 	
     public function user(){
     	return $this->belongsTo('App\User');
@@ -67,12 +69,16 @@ class Lot extends Model
     }
 
     public function branch() {
-        return $this->belongsTo('App\Branch');
+        return $this->belongsTo('App\Branch', 'branch_code', 'code');
     }
 
     public function setVolumeAttribute($value)
     {
         return $this->attributes['volume'] = Utilities::convertMeterCubeToCentimeterCube($value);
+    }
+
+    public function getBranchNameAttribute() {
+        return $this->branch ? $this->branch->name : null;
     }
 
     public function getUsageAttribute()

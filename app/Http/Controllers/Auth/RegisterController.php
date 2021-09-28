@@ -60,45 +60,47 @@ class RegisterController extends Controller
         ]);
     }
 
-    public function register(Request $request) {
+    public function register(Request $request) 
+    {
+        return $this->redirectParcelCenter($request, '/registration');
+        // Handle By Parcelhub Center
+        // $validator = $this->validator($request->all());
 
-        $validator = $this->validator($request->all());
+        // if($validator->fails()) {
+        //     return redirect()
+        //         ->back()
+        //         ->withErrors($validator)
+        //         ->withInput();
+        // }
 
-        if($validator->fails()) {
-            return redirect()
-                ->back()
-                ->withErrors($validator)
-                ->withInput();
-        }
+        // $user = User::create([
+        //     'name' => $request['name'],
+        //     'email' => $request['email'],
+        //     'password' => bcrypt($request['password']),
+        // ]);
 
-        $user = User::create([
-            'name' => $request['name'],
-            'email' => $request['email'],
-            'password' => bcrypt($request['password']),
-        ]);
+        // // Default all the registered user have user role
+        // $role = Role::where('name', 'user')->first();
 
-        // Default all the registered user have user role
-        $role = Role::where('name', 'user')->first();
+        // $user->attachRole($role);
 
-        $user->attachRole($role);
+        // // Generate token used for email verification
+        // $token = new UserToken([
+        //     'token' => str_random(60),
+        //     'expire_at' => Carbon::now()->addMinute(5)
+        // ]);
 
-        // Generate token used for email verification
-        $token = new UserToken([
-            'token' => str_random(60),
-            'expire_at' => Carbon::now()->addMinute(5)
-        ]);
-
-        $user->tokens()->save($token);
+        // $user->tokens()->save($token);
         
-        User::superadmin()->first()->notify(new UserRegisteredNotification($user));
-        // Send email verification to users email
-        $user->notify(new AccountVerificationNotification($user));
+        // User::superadmin()->first()->notify(new UserRegisteredNotification($user));
+        // // Send email verification to users email
+        // $user->notify(new AccountVerificationNotification($user));
 
-        return view('user.verify')->with([
-            'message' => trans('auth.token_not_verify'),
-            'id' => $user->id,
-            'banned' => false
-        ]);
+        // return view('user.verify')->with([
+        //     'message' => trans('auth.token_not_verify'),
+        //     'id' => $user->id,
+        //     'banned' => false
+        // ]);
     }
 
     public function resend($id) {
