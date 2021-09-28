@@ -290,7 +290,7 @@
 						<p class="heading">
 							Branch Code
 						</p>
-						{{ outbound.codename }}
+						{{ outbound.branch_code }}
 						
 						<hr>
 						<p class="heading">

@@ -26,8 +26,14 @@ Route::get('testPDF', function(){
 });
 
 Auth::routes();
+Route::get('/login', 'Auth\LoginController@login');
+Route::get('/register', 'Auth\RegisterController@register');
+Route::group(["prefix" => "/oauth"], function() {
+	Route::get("/callback", "Auth\OauthController@oauthCallback");
+	Route::get("/user", "Auth\OauthController@getAuthUser")->name("oauth.user");;
+ });
 
- Route::get('phpinfo', function() {
+Route::get('phpinfo', function() {
  	phpinfo();
  });
 
@@ -42,6 +48,7 @@ Route::group(['prefix' => 'user/account/'], function() {
 // 	return redirect("/dashboard");
 // });
 Route::group(['middleware' => 'auth'], function(){
+	Route::get('/logout', 'Auth\OauthController@logout')->name('logout');
 	// Pages route
 	Route::get('couriers', 'CourierController@page')->name('couriers');
 	Route::get('lots/categories', 'CategoryController@page')->name('lots.categories');
@@ -124,7 +131,7 @@ Route::group(['prefix' => 'internal'], function() {
 	Route::get('branches/selector', 'BranchController@selector');
 	Route::get('branches/allselector', 'BranchController@all_selector');
 	Route::get('products/admin/selector/{id}', 'ProductController@adminProduct');
-	Route::get('products/selector', 'ProductController@selector');
+	Route::get('products/selector/{reduce}', 'ProductController@selector')->name('product_selector');
 	Route::get('products', 'ProductController@index');
 	Route::get('inbound/user', 'InboundController@index');
 	Route::get('inbounds/today', 'InboundController@indexToday');

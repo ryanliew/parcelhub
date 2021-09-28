@@ -50,16 +50,18 @@ class OutboundImport implements ToCollection, WithStartRow, SkipsEmptyRows, With
                             ->where('status', 'true')
                             ->where('user_id', auth()->id())
                             ->first();
-                $branch = Branch::select('branches.id')
-                            ->leftJoin('lots' , 'lots.branch_id', '=', 'branches.id')
-                            ->where('lots.user_id', auth()->id())
-                            ->where('branches.codename', $excelRow[3])
-                            ->first();
+                
+                $user = auth()->user();
+                $lots_branch_code = $user->lots->pluck('branch_code')->unique();
+
+                $branches = Branch::whereIn('code', $lots_branch_code);
+                $branch = $branches->where('code', $excelRow[3])->first();
+                
                 $courier = Courier::where('name', 'LIKE', '%' . $excelRow[5] . '%')->first();
                 $detail['customer'] = $customer;
                 $detail['product'] = $product;
                 $detail['quantity'] = $excelRow[2];
-                $detail['branchCode'] = $branch->id;
+                $detail['branchCode'] = $branch->code;
                 $detail['courier'] = $excelRow[5];
                 $detail['no'] = $excelRow[0];
                 $detail['remark'] = $excelRow[12];
@@ -90,7 +92,7 @@ class OutboundImport implements ToCollection, WithStartRow, SkipsEmptyRows, With
             $outbound->process_status = 'pending';
 
             $outbound->recipient_name = $current_customer->customer_name;
-            $outbound->branch_id = $number['branchCode'];
+            $outbound->branch_code = $number['branchCode'];
             $outbound->recipient_address = $current_customer->customer_address;
             $outbound->recipient_address_2 = $current_customer->customer_address_2;
             $outbound->recipient_phone = $current_customer->customer_phone;

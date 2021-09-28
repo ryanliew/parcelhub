@@ -168,9 +168,9 @@
 			},
 
 			getProducts(error = 'No error') {
-				axios.get('/internal/products/selector')
+				axios.get('/internal/products/selector/true')
 					.then(response => this.setProducts(response))
-					.catch(error => this.getProducts(e));
+					.catch(error => this.getProducts(error));
 			},
 
 			getBranches() {
@@ -185,7 +185,7 @@
 					obj['label'] = product.selector_name;
 					obj['value'] = product.id;
 
-					return obj;
+					return obj;	
 				});
 
 				this.isLoading = false;
@@ -194,8 +194,8 @@
 			setBranches(response) {
 				this.branchesOptions = response.data.map(branches =>{
 					let obj = {};
-					obj['label'] = branches.branch_name;
-					obj['value'] = branches.id;
+					obj['label'] = branches.name;
+					obj['value'] = branches.code;
 					return obj;
 				});
 			},
@@ -211,6 +211,7 @@
 
 			onSuccess(response) {
 				window.open("/" + response.url);
+				this.selectedBranch = '';
 				this.selectedProducts = [];
 				this.close();
 			},

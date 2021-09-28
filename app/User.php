@@ -118,9 +118,19 @@ class User extends Authenticatable
         return $this->belongsTo('App\User', 'parent_id');
     }
 
-    public function branches() {
-        return $this->belongsToMany('App\Branch', 'accessibilities')->withTimestamps();
+    public function access() {
+        return $this->hasMany('App\Accessibility');
     }
+
+    // public function accessBranch() {
+    //     $accessibility = $this->branches;
+    //     $branch_code = [];
+    //     foreach($accessibility as $access) {
+    //         array_push($branch_code, $access->branch_code);
+    //     }
+
+    //     return $branch_code;
+    // }
 
     public function scopeAdmin($query) {
         return $query->whereHas('roles', function ($query) {
@@ -136,7 +146,13 @@ class User extends Authenticatable
 
     public function getRoleNameAttribute()
     {
-        return $this->roles()->first()->name;
+        if($this->roles) {
+            return $this->roles()->first()->name;
+        }
+        else {
+            $user = auth()->user();
+            return $user->roles()->first()->name;
+        }
     }
 
     public function getCanPurchaseAttribute()

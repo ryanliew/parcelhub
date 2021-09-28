@@ -6,6 +6,9 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\Request;
+use GuzzleHttp\Client;
+use Illuminate\Support\Str;
 
 class Controller extends BaseController
 {
@@ -55,5 +58,30 @@ class Controller extends BaseController
         }
 
     	return $result->paginate($paginate);
+    }
+
+    public function redirectParcelCenter($request, $center_target_url, $client_target_url = '/')
+    {
+        $client = new Client();
+        $url = env('PARCELHUB_CENTER_URL') . '/oauth/authenticate?';
+        $callback_url = env('APP_URL') . '/oauth/callback';
+
+        //State for callback to validate
+        $state = Str::random(40);
+        session([
+            'state' => $state, 
+            'callback_target_url' => $client_target_url  //Url to redirect if back from Parcelhub Center
+        ]);
+
+        $query = http_build_query([
+            'client_id' => env('PARCELHUB_CLIENT_ID'),
+            'redirect_uri' => $callback_url,
+            'response_type' => 'code',
+            'scope' => '',
+            'state' => $state,
+            'target_url' => $center_target_url //redirect to target url on parcelhub center system
+        ]);
+
+        return redirect($url . $query);
     }
 }
