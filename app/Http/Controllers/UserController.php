@@ -12,6 +12,7 @@ use App\Notifications\UserAccessBranchNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
+use GuzzleHttp\Client;
 
 class UserController extends Controller
 {
@@ -90,34 +91,98 @@ class UserController extends Controller
 
     public function update(Request $request)
     {
-    	$this->validate($request, [
+        $this->validate($request, [
             'name' => 'required',
             'address' => 'required',
-            'phone' => 'required',
             'postcode' => 'required',
+            'city' => 'required',
             'state' => 'required',
             'country' => 'required',
-            'id' => 'required',
             'password' => 'required_if:change_password,true|confirmed',
         ]);
-
-    	$user = User::findOrFail(request()->id);
+        
+        $user = auth()->user();
 
         $password = $request->change_password == 'true' ? bcrypt($request->password) : $user->password;
 
-    	$user->update([
-    		'name' => $request->name,
-            'address' => $request->address,
-            'phone' => $request->phone,
-            'postcode' => $request->postcode,
-            'state' => $request->state,
-            'country' => $request->country,
-            'address_2' => $request->address_2,
-            'password' => $password
-    	]);
+        $user->update(
+            ['name' => request()->name,
+                'address' => request()->address,
+                'postcode' => request()->postcode,
+                'city' => request()->city,
+                'state' => request()->state,
+                'country' => request()->country,
+                'password' => request()->has('password')? $password : $user->password,
+            ]);
 
-    	return ['message' => 'User profile updated.'];
+        $access_token = session()->get('access_token');
+
+        $url = env('PARCELHUB_CENTER_URL');
+        $client = new Client();
+    
+        try{
+			$response = $client->request('POST', $url.'/api/user/update', [
+                "headers" => [
+                    'Accept' => 'application/json',
+                    'Authorization' => "Bearer " . $access_token
+                ],
+                "form_params" => [
+                    'email' => $user->email,
+                    'name' => request()->name,
+                    'password' => $request->change_password ? $password : null,
+                ]
+            ]);
+		}
+		catch (\Exception $e) {
+			$response = $e->getResponse();
+		}
+
+        $responseContent = $response->getBody()->getContents();
+		$responseJson = json_decode($responseContent);
+
+        if(isset($responseJson->errors)) {
+            $content =  [
+                "message" => $responseJson->message,
+                "errors" => $responseJson->errors
+            ];
+        }
+        else if($responseJson->status == 1) {
+            return json_encode(['message' => $responseJson->message]);
+        }
+
+        return response($content, 422);
     }
+
+    // public function update(Request $request)
+    // {
+    // 	$this->validate($request, [
+    //         'name' => 'required',
+    //         'address' => 'required',
+    //         'phone' => 'required',
+    //         'postcode' => 'required',
+    //         'state' => 'required',
+    //         'country' => 'required',
+    //         'id' => 'required',
+    //         'password' => 'required_if:change_password,true|confirmed',
+    //     ]);
+
+    // 	$user = User::findOrFail(request()->id);
+
+    //     $password = $request->change_password == 'true' ? bcrypt($request->password) : $user->password;
+
+    // 	$user->update([
+    // 		'name' => $request->name,
+    //         'address' => $request->address,
+    //         'phone' => $request->phone,
+    //         'postcode' => $request->postcode,
+    //         'state' => $request->state,
+    //         'country' => $request->country,
+    //         'address_2' => $request->address_2,
+    //         'password' => $password
+    // 	]);
+
+    // 	return ['message' => 'User profile updated.'];
+    // }
 
     public function approval(User $user)
     {

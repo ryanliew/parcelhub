@@ -38,13 +38,14 @@
               </text-input>
             </div>
             <div class="column">
-              <text-input v-model="form.phone" :defaultValue="form.phone"
+              <text-input v-model="form.phone" :defaultValue="form.phone ? form.phone : '---'"
                           label="Phone"
-                          :required="true"
+                          :required="false"
                           name="phone"
                           type="text"
-                          :editable="true"
-                          :error="form.errors.get('phone')">
+                          :editable="false"
+                          :error="form.errors.get('phone')" 
+                          >
               </text-input>
             </div>
           </div>
@@ -59,13 +60,13 @@
             </text-input>
           </div>
           <div class="field">
-            <text-input v-model="form.address_2" :defaultValue="form.address_2"
+            <text-input v-model="form.city" :defaultValue="form.city"
                         label="City"
                         :required="true"
-                        name="address_2"
+                        name="city"
                         type="text"
                         :editable="true"
-                        :error="form.errors.get('address_2')">
+                        :error="form.errors.get('city')">
             </text-input>
           </div>
           <div class="columns">
@@ -172,6 +173,7 @@ export default {
         phone: '',
         address: '',
         address_2: '',
+        city : '',
         state: '',
         postcode: '',
         country: '',
@@ -211,9 +213,10 @@ export default {
       this.form.phone = this.profile.phone;
       this.form.address = this.profile.address;
       this.form.address_2 = this.profile.address_2;
+      this.form.city = this.profile.city;
       this.form.state = this.profile.state;
       this.form.postcode = this.profile.postcode;
-      this.form.country = this.profile.country;
+      this.form.country = this.profile.country ? this.profile.country : this.selectedCountry;
 
       this.loading = false;
 

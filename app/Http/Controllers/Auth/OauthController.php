@@ -45,7 +45,7 @@ class OauthController extends Controller
 
     public function getAuthUser(Request $request) 
     {
-        $access_token = session()->pull('access_token');
+        $access_token = session()->get('access_token');
 
         $client = new Client([
     		'base_uri' => env('PARCELHUB_CENTER_URL'),
@@ -64,13 +64,11 @@ class OauthController extends Controller
 
 		$responseContent = $response->getBody()->getContents();
 		$responseJson = json_decode($responseContent);
-        info($responseContent);
-        info(property_exists($responseJson, 'email'));
+
         if($responseJson && property_exists($responseJson, 'email')) 
         {
             $user = User::where('email', $responseJson->email)->first();
             // New User in current system, auto register
-            info($user);
             if(!$user) {
                 //Handle non-existing user in POS system
                 $user = User::create([
@@ -88,6 +86,10 @@ class OauthController extends Controller
                 $user->attachRole($role);
                 User::superadmin()->first()->notify(new UserRegisteredNotification($user));
             } else {
+                $user->update([
+                    'name' => $responseJson->name,
+                    'phone' => $responseJson->phone,
+                ]);
                 Auth::login($user, true);
             }
 

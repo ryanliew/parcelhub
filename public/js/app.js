@@ -71657,7 +71657,7 @@ exports = module.exports = __webpack_require__(5)(false);
 
 
 // module
-exports.push([module.i, "\n.text-input[data-v-819b0014] {\n\tposition: relative;\n\tz-index: 1;\n\tdisplay: inline-block;\n\twidth: 100%;\n\tvertical-align: top;\n\tfont-size: 1em;\n\tmin-width: 80px;\n}\n.input__field[data-v-819b0014], .input__disabled[data-v-819b0014] {\n\tposition: relative;\n\tdisplay: block;\n\tfloat: right;\n\tpadding: 0.8em;\n\twidth: 100%;\n\tborder: none;\n\tborder-radius: 0;\n\tbackground: #f0f0f0;\n\t-webkit-appearance: none; /* for box shadows to show on iOS */\n\tfont-size: 1em;\n}\n.input__field[data-v-819b0014]:focus {\n\toutline: none;\n}\n.input__label[data-v-819b0014] {\n\tdisplay: inline-block;\n\tfloat: right;\n\tpadding: 0 1em;\n\twidth: 40%;\n\tfont-weight: bold;\n\tfont-size: 90.25%;\n\t-webkit-font-smoothing: antialiased;\n    -moz-osx-font-smoothing: grayscale;\n\t-webkit-touch-callout: none;\n\t-webkit-user-select: none;\n\t-moz-user-select: none;\n\t-ms-user-select: none;\n\tuser-select: none;\n}\n.input__label-content[data-v-819b0014] {\n\tposition: relative;\n\tdisplay: block;\n\tpadding: 0.4em 0;\n\twidth: 100%;\n}\n.input--hoshi[data-v-819b0014] {\n\toverflow: hidden;\n}\n.input__field--hoshi[data-v-819b0014], .input__disabled[data-v-819b0014] {\n\tpadding: 1em 0.15em;\n\twidth: 100%;\n\tbackground: transparent;\n\tmin-width: 120px;\n}\n.input--nolabel .input__field--hoshi[data-v-819b0014] {\n\tpadding: 0 1em 1em 0.15em;\n}\n.input__label--hoshi[data-v-819b0014] {\n\tposition: absolute;\n\tbottom: 0;\n\tleft: 0;\n\tpadding: 0 0.25em;\n\twidth: 100%;\n\theight: calc(100% - 1em);\n\ttext-align: left;\n\tpointer-events: none;\n}\n.input__label-content--hoshi[data-v-819b0014] {\n\tposition: absolute;\n\tleft: 2px;\n}\n.input__label--hoshi[data-v-819b0014]::before,\n.input__label--hoshi[data-v-819b0014]::after {\n\tcontent: '';\n\tposition: absolute;\n\ttop: 2px;\n\tleft: 0;\n\twidth: 100%;\n\theight: calc(100% - 10px);\n\tborder-bottom: 1px solid #B9C1CA;\n}\nspan.input__label--hoshi[data-v-819b0014]::after {\n\tborder-bottom: none;\n}\n.input__label--hoshi[data-v-819b0014]::after {\n\tmargin-top: 2px;\n\tborder-bottom: 4px solid red;\n\t-webkit-transform: translate3d(-100%, 0, 0);\n\ttransform: translate3d(-100%, 0, 0);\n\t-webkit-transition: -webkit-transform 0.3s;\n\ttransition: -webkit-transform 0.3s;\n\ttransition: transform 0.3s;\n\ttransition: transform 0.3s, -webkit-transform 0.3s;\n}\n.input__label--hoshi-color-1[data-v-819b0014]::after {\n\tborder-color: hsl(200, 100%, 50%);\n}\n.input__label--hoshi-color-2[data-v-819b0014]::after {\n\tborder-color: hsl(160, 100%, 50%);\n}\n.input__label--hoshi-color-3[data-v-819b0014]::after {\n\tborder-color: hsl(20, 100%, 50%);\n}\n.input__label--hoshi-color-transparent[data-v-819b0014]::before, .input__label--hoshi-color-transparent[data-v-819b0014]::after {\n\tborder-color: transparent;\n\tborder-bottom: 0px solid transparent;\n}\n.input__field--hoshi:focus + .input__label--hoshi[data-v-819b0014]::after,\n.input--filled .input__label--hoshi[data-v-819b0014]::after {\n\t-webkit-transform: translate3d(0, 0, 0);\n\ttransform: translate3d(0, 0, 0);\n}\n.input__field--hoshi:focus + .input__label--hoshi .input__label-content--hoshi[data-v-819b0014],\n.input--filled .input__label-content--hoshi[data-v-819b0014] {\n\t-webkit-animation: anim-1-data-v-819b0014 0.3s forwards;\n\tanimation: anim-1-data-v-819b0014 0.3s forwards;\n}\n@-webkit-keyframes anim-1-data-v-819b0014 {\n50% {\n\t\topacity: 0;\n\t\t-webkit-transform: translate3d(1em, 0, 0);\n\t\ttransform: translate3d(1em, 0, 0);\n\t\tfont-size: 100%;\n}\n51% {\n\t\topacity: 0;\n\t\t-webkit-transform: translate3d(-1em, -40%, 0);\n\t\ttransform: translate3d(-1em, -40%, 0);\n\t\tfont-size: 90%;\n}\n100% {\n\t\topacity: 1;\n\t\t-webkit-transform: translate3d(0, -70%, 0);\n\t\ttransform: translate3d(0, -70%, 0);\n\t\tfont-size: 85%;\n}\n}\n@keyframes anim-1-data-v-819b0014 {\n50% {\n\t\topacity: 0;\n\t\t-webkit-transform: translate3d(1em, 0, 0);\n\t\ttransform: translate3d(1em, 0, 0);\n\t\tfont-size: 100%;\n}\n51% {\n\t\topacity: 0;\n\t\t-webkit-transform: translate3d(-1em, -40%, 0);\n\t\ttransform: translate3d(-1em, -40%, 0);\n\t\tfont-size: 90%;\n}\n100% {\n\t\topacity: 1;\n\t\t-webkit-transform: translate3d(0, -70%, 0);\n\t\ttransform: translate3d(0, -70%, 0);\n\t\tfont-size: 85%;\n}\n}\n", ""]);
+exports.push([module.i, "\n.text-input[data-v-819b0014] {\n\tposition: relative;\n\tz-index: 1;\n\tdisplay: inline-block;\n\twidth: 100%;\n\tvertical-align: top;\n\tfont-size: 1em;\n\tmin-width: 80px;\n}\n.input__field[data-v-819b0014], .input__disabled[data-v-819b0014] {\n\tposition: relative;\n\tdisplay: block;\n\tfloat: right;\n\tpadding: 0.8em;\n\twidth: 100%;\n\tborder: none;\n\tborder-radius: 0;\n\tbackground: #f0f0f0;\n\t-webkit-appearance: none; /* for box shadows to show on iOS */\n\tfont-size: 1em;\n}\n.input__field[data-v-819b0014]:focus {\n\toutline: none;\n}\n.input__label[data-v-819b0014] {\n\tdisplay: inline-block;\n\tfloat: right;\n\tpadding: 0 1em;\n\twidth: 40%;\n\tfont-weight: bold;\n\tfont-size: 90.25%;\n\t-webkit-font-smoothing: antialiased;\n    -moz-osx-font-smoothing: grayscale;\n\t-webkit-touch-callout: none;\n\t-webkit-user-select: none;\n\t-moz-user-select: none;\n\t-ms-user-select: none;\n\tuser-select: none;\n}\n.input__label-content[data-v-819b0014] {\n\tposition: relative;\n\tdisplay: block;\n\tpadding: 0.4em 0;\n\twidth: 100%;\n}\n.input--hoshi[data-v-819b0014] {\n\toverflow: hidden;\n}\n.input__field--hoshi[data-v-819b0014], .input__disabled[data-v-819b0014] {\n\tpadding: 1em 0.15em;\n\twidth: 100%;\n\tbackground: transparent;\n\tmin-width: 120px;\n}\n.input--nolabel .input__field--hoshi[data-v-819b0014] {\n\tpadding: 0 1em 1em 0.15em;\n}\n.input__label--hoshi[data-v-819b0014] {\n\tposition: absolute;\n\tbottom: 0;\n\tleft: 0;\n\tpadding: 0 0.25em;\n\twidth: 100%;\n\theight: calc(100% - 1em);\n\ttext-align: left;\n\tpointer-events: none;\n}\n.input__label-content--hoshi[data-v-819b0014] {\n\tposition: absolute;\n\tleft: 2px;\n}\n.input__label--hoshi[data-v-819b0014]::before,\n.input__label--hoshi[data-v-819b0014]::after {\n\tcontent: '';\n\tposition: absolute;\n\ttop: 2px;\n\tleft: 0;\n\twidth: 100%;\n\theight: calc(100% - 10px);\n\tborder-bottom: 1px solid #B9C1CA;\n}\nspan.input__label--hoshi[data-v-819b0014]::after {\n\tborder-bottom: none;\n}\n.input__label--hoshi[data-v-819b0014]::after {\n\tmargin-top: 2px;\n\tborder-bottom: 4px solid red;\n\t-webkit-transform: translate3d(-100%, 0, 0);\n\ttransform: translate3d(-100%, 0, 0);\n\t-webkit-transition: -webkit-transform 0.3s;\n\ttransition: -webkit-transform 0.3s;\n\ttransition: transform 0.3s;\n\ttransition: transform 0.3s, -webkit-transform 0.3s;\n}\n.input__label--hoshi-color-1[data-v-819b0014]::after {\n\tborder-color: hsl(200, 100%, 50%);\n}\n.input__label--hoshi-color-2[data-v-819b0014]::after {\n\tborder-color: hsl(160, 100%, 50%);\n}\n.input__label--hoshi-color-3[data-v-819b0014]::after {\n\tborder-color: hsl(20, 100%, 50%);\n}\n.input__label--hoshi-color-transparent[data-v-819b0014]::before, .input__label--hoshi-color-transparent[data-v-819b0014]::after {\n\tborder-color: #63b8ff;\n\tborder-bottom: 2px solid #63b8ff;\n}\n.input__field--hoshi:focus + .input__label--hoshi[data-v-819b0014]::after,\n.input--filled .input__label--hoshi[data-v-819b0014]::after {\n\t-webkit-transform: translate3d(0, 0, 0);\n\ttransform: translate3d(0, 0, 0);\n}\n.input__field--hoshi:focus + .input__label--hoshi .input__label-content--hoshi[data-v-819b0014],\n.input--filled .input__label-content--hoshi[data-v-819b0014] {\n\t-webkit-animation: anim-1-data-v-819b0014 0.3s forwards;\n\tanimation: anim-1-data-v-819b0014 0.3s forwards;\n}\n@-webkit-keyframes anim-1-data-v-819b0014 {\n50% {\n\t\topacity: 0;\n\t\t-webkit-transform: translate3d(1em, 0, 0);\n\t\ttransform: translate3d(1em, 0, 0);\n\t\tfont-size: 100%;\n}\n51% {\n\t\topacity: 0;\n\t\t-webkit-transform: translate3d(-1em, -40%, 0);\n\t\ttransform: translate3d(-1em, -40%, 0);\n\t\tfont-size: 90%;\n}\n100% {\n\t\topacity: 1;\n\t\t-webkit-transform: translate3d(0, -70%, 0);\n\t\ttransform: translate3d(0, -70%, 0);\n\t\tfont-size: 85%;\n}\n}\n@keyframes anim-1-data-v-819b0014 {\n50% {\n\t\topacity: 0;\n\t\t-webkit-transform: translate3d(1em, 0, 0);\n\t\ttransform: translate3d(1em, 0, 0);\n\t\tfont-size: 100%;\n}\n51% {\n\t\topacity: 0;\n\t\t-webkit-transform: translate3d(-1em, -40%, 0);\n\t\ttransform: translate3d(-1em, -40%, 0);\n\t\tfont-size: 90%;\n}\n100% {\n\t\topacity: 1;\n\t\t-webkit-transform: translate3d(0, -70%, 0);\n\t\ttransform: translate3d(0, -70%, 0);\n\t\tfont-size: 85%;\n}\n}\n", ""]);
 
 // exports
 
@@ -92386,6 +92386,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['canManage', 'user', 'countries'],
@@ -92398,6 +92399,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         phone: '',
         address: '',
         address_2: '',
+        city: '',
         state: '',
         postcode: '',
         country: '',
@@ -92439,9 +92441,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       this.form.phone = this.profile.phone;
       this.form.address = this.profile.address;
       this.form.address_2 = this.profile.address_2;
+      this.form.city = this.profile.city;
       this.form.state = this.profile.state;
       this.form.postcode = this.profile.postcode;
-      this.form.country = this.profile.country;
+      this.form.country = this.profile.country ? this.profile.country : this.selectedCountry;
 
       this.loading = false;
     },
@@ -92608,12 +92611,12 @@ var render = function() {
                   [
                     _c("text-input", {
                       attrs: {
-                        defaultValue: _vm.form.phone,
+                        defaultValue: _vm.form.phone ? _vm.form.phone : "---",
                         label: "Phone",
-                        required: true,
+                        required: false,
                         name: "phone",
                         type: "text",
-                        editable: true,
+                        editable: false,
                         error: _vm.form.errors.get("phone")
                       },
                       model: {
@@ -92661,20 +92664,20 @@ var render = function() {
                 [
                   _c("text-input", {
                     attrs: {
-                      defaultValue: _vm.form.address_2,
+                      defaultValue: _vm.form.city,
                       label: "City",
                       required: true,
-                      name: "address_2",
+                      name: "city",
                       type: "text",
                       editable: true,
-                      error: _vm.form.errors.get("address_2")
+                      error: _vm.form.errors.get("city")
                     },
                     model: {
-                      value: _vm.form.address_2,
+                      value: _vm.form.city,
                       callback: function($$v) {
-                        _vm.$set(_vm.form, "address_2", $$v)
+                        _vm.$set(_vm.form, "city", $$v)
                       },
-                      expression: "form.address_2"
+                      expression: "form.city"
                     }
                   })
                 ],
