@@ -91965,12 +91965,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
 
 
 
@@ -92060,18 +92054,13 @@ Vue.component('multiselect', __WEBPACK_IMPORTED_MODULE_2_vue_multiselect___defau
       });
     },
     setBranches: function setBranches(response) {
-      if (response.data.length == 1) {
-        this.branch = response.data[0].branch_name;
-        this.singlebranchid = response.data[0].id;
-        this.singleBranch = true;
-      } else {
-        this.branchesOptions = response.data.map(function (branches) {
-          var obj = {};
-          obj['label'] = branches.name;
-          obj['value'] = branches.code;
-          return obj;
-        });
-      }
+
+      this.branchesOptions = response.data.map(function (branches) {
+        var obj = {};
+        obj['label'] = branches.name;
+        obj['value'] = branches.code;
+        return obj;
+      });
     },
     getParameterByName: function getParameterByName(name, url) {
       if (!url) url = window.location.href;
@@ -93319,24 +93308,6 @@ var render = function() {
                               _vm.selectedBranches = $$v
                             },
                             expression: "selectedBranches"
-                          }
-                        })
-                      : _vm._e(),
-                    _vm._v(" "),
-                    _vm.singleBranch
-                      ? _c("text-input", {
-                          attrs: {
-                            label: "Branch",
-                            name: "branch",
-                            editable: false,
-                            type: "text"
-                          },
-                          model: {
-                            value: _vm.branch,
-                            callback: function($$v) {
-                              _vm.branch = $$v
-                            },
-                            expression: "branch"
                           }
                         })
                       : _vm._e()
