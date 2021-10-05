@@ -154,7 +154,7 @@ class UserController extends Controller
             $user->country = $request->country;
             $user->save();
 
-            $user->notify(new UserRegisteredNotification($user));
+            $user->notify(new AdminCreateUserNotification($user, $password));
         }
         else {
             
