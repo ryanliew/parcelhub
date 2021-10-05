@@ -197,6 +197,7 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $obj_branches = Branch::whereIn('code' , json_decode($request->branches))->get();
+
         $this->validate($request, [
             'name' => 'required',
             'email' => 'required|email',
@@ -208,10 +209,11 @@ class UserController extends Controller
 
         if(!$user) {
             $password = Str::random(8);
+            $encrypted_password = Hash::make($password);
             $user = new User;
             $user->name = $request->name;
             $user->email = $request->email;
-            $user->password = Hash::make($password);
+            $user->password = $encrypted_password;
             $user->address = $request->address;
             $user->address_2 = $request->address_2;
             $user->phone = $request->phone;
@@ -219,6 +221,32 @@ class UserController extends Controller
             $user->postcode = $request->postcode;
             $user->country = $request->country;
             $user->save();
+
+            $access_token = session()->get('access_token');
+
+            $url = env('PARCELHUB_CENTER_URL');
+            $client = new Client();
+        
+            try{
+                $response = $client->request('POST', $url.'/api/user/create', [
+                    "headers" => [
+                        'Accept' => 'application/json',
+                        'Authorization' => "Bearer " . $access_token
+                    ],
+                    "form_params" => [
+                        'email' => $user->email,
+                        'name' => request()->name,
+                        'phone' => 60 . request()->phone,
+                    ]
+                ]);
+            }
+            catch (\Exception $e) {
+                $response = $e->getResponse();
+            }
+
+            $responseContent = $response->getBody()->getContents();
+            $responseJson = json_decode($responseContent);
+
 
             $user->notify(new AdminCreateUserNotification($user, $password));
 
@@ -229,13 +257,55 @@ class UserController extends Controller
             
             $user->notify(new UserAccessBranchNotification($user, $full_branch));
         }
-        $new_access = new Accessibility();
-        $new_access->user_id = $user->id;
-        $new_access->branch_code = $obj_branches[0]->code;
-        $new_access->branch_id = 1;
-        $new_access->save();
-
-        return ['message' => "User $request->name has been created"];
-
+            $new_access = new Accessibility();
+            $new_access->user_id = $user->id;
+            $new_access->branch_code = $obj_branches[0]->code;
+            $new_access->branch_id = 1;
+            $new_access->save();
     }
+
+    // public function store(Request $request)
+    // {
+    //     $obj_branches = Branch::whereIn('code' , json_decode($request->branches))->get();
+    //     $this->validate($request, [
+    //         'name' => 'required',
+    //         'email' => 'required|email',
+    //         'address' => 'required',
+    //         'phone' => 'required'
+    //     ]);
+
+    //     $user = User::where('email' , $request->email)->first();
+
+    //     if(!$user) {
+    //         $password = Str::random(8);
+    //         $user = new User;
+    //         $user->name = $request->name;
+    //         $user->email = $request->email;
+    //         $user->password = Hash::make($password);
+    //         $user->address = $request->address;
+    //         $user->address_2 = $request->address_2;
+    //         $user->phone = $request->phone;
+    //         $user->state = $request->state;
+    //         $user->postcode = $request->postcode;
+    //         $user->country = $request->country;
+    //         $user->save();
+
+    //         $user->notify(new AdminCreateUserNotification($user, $password));
+
+    //     }
+    //     else {
+            
+    //         $full_branch = $obj_branches->implode('name', ',');
+            
+    //         $user->notify(new UserAccessBranchNotification($user, $full_branch));
+    //     }
+    //     $new_access = new Accessibility();
+    //     $new_access->user_id = $user->id;
+    //     $new_access->branch_code = $obj_branches[0]->code;
+    //     $new_access->branch_id = 1;
+    //     $new_access->save();
+
+    //     return ['message' => "User $request->name has been created"];
+
+    // }
 }
