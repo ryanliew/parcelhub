@@ -77,6 +77,7 @@ class OauthController extends Controller
                     'name' => $responseJson->name,
                     'email' => $responseJson->email,
                     'password' => bcrypt($responseJson->email),
+                    'phone' => $responseJson->phone,
                     'verified' => true,
                     'is_approved' => true,
                 ]);
@@ -86,7 +87,11 @@ class OauthController extends Controller
                 $role = Role::where('name', 'user')->first();
 
                 $user->attachRole($role);
-                User::superadmin()->first()->notify(new UserRegisteredNotification($user));
+                
+                $superAdmin = User::superadmin()->first();
+                if($superAdmin)  {
+                    $superAdmin->notify(new UserRegisteredNotification($user));
+                }
             } else {
                 Auth::login($user, true);
             }
