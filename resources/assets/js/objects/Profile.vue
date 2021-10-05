@@ -82,7 +82,7 @@
             </div>
             <div class="column">
               <selector-input v-model="selectedCountry"
-                              :defaultData="selectedCountry"
+                              :defaultData="form.country"
                               label="Country"
                               :hideLabel="false"
                               :required="true"
@@ -103,7 +103,7 @@
                           v-if="!selectedCountry || !selectedCountry.states.length > 0">
               </text-input>
               <selector-input v-model="selectedState"
-                              :defaultData="selectedState"
+                              :defaultData="form.state ? form.state : selectedState"
                               :hideLabel="false"
                               label="State"
                               :required="true"
@@ -180,7 +180,7 @@ export default {
         id: '',
         password: '',
         password_confirmation: '',
-        change_password: false
+        change_password: false,
       }),
       profile: '',
       confirmSubmit: false,
@@ -216,7 +216,7 @@ export default {
       this.form.city = this.profile.city;
       this.form.state = this.profile.state;
       this.form.postcode = this.profile.postcode;
-      this.form.country = this.profile.country ? this.profile.country : this.selectedCountry;
+      this.form.country = this.profile.country;
 
       this.loading = false;
 

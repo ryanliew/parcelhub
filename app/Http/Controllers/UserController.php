@@ -100,7 +100,7 @@ class UserController extends Controller
             'country' => 'required',
             'password' => 'required_if:change_password,true|confirmed',
         ]);
-        
+
         $user = auth()->user();
 
         $password = $request->change_password == 'true' ? bcrypt($request->password) : $user->password;
@@ -110,7 +110,7 @@ class UserController extends Controller
                 'address' => request()->address,
                 'postcode' => request()->postcode,
                 'city' => request()->city,
-                'state' => request()->state,
+                'state' => $request->state,
                 'country' => request()->country,
                 'password' => request()->has('password')? $password : $user->password,
             ]);
