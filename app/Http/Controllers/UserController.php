@@ -257,11 +257,14 @@ class UserController extends Controller
             
             $user->notify(new UserAccessBranchNotification($user, $full_branch));
         }
-            $new_access = new Accessibility();
-            $new_access->user_id = $user->id;
-            $new_access->branch_code = $obj_branches[0]->code;
-            $new_access->branch_id = 1;
-            $new_access->save();
+        $new_access = new Accessibility();
+        $new_access->user_id = $user->id;
+        $new_access->branch_code = $obj_branches[0]->code;
+        $new_access->branch_id = 1;
+        $new_access->save();
+
+        return ['message' => "User $request->name has been created"];
+
     }
 
     // public function store(Request $request)
