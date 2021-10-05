@@ -92444,7 +92444,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       this.form.city = this.profile.city;
       this.form.state = this.profile.state;
       this.form.postcode = this.profile.postcode;
-      this.form.country = this.profile.country;
+      this.form.country = this.countries[0].value;
 
       this.loading = false;
     },
@@ -92717,7 +92717,7 @@ var render = function() {
                   [
                     _c("selector-input", {
                       attrs: {
-                        defaultData: _vm.form.country,
+                        defaultData: _vm.countries[0],
                         label: "Country",
                         hideLabel: false,
                         required: true,

@@ -98,10 +98,11 @@ class UserController extends Controller
             'city' => 'required',
             'state' => 'required',
             'country' => 'required',
+            'id' => 'required',
             'password' => 'required_if:change_password,true|confirmed',
         ]);
 
-        $user = auth()->user();
+        $user = User::findOrFail(request()->id);
 
         $password = $request->change_password == 'true' ? bcrypt($request->password) : $user->password;
 

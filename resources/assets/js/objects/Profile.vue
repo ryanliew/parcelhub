@@ -82,7 +82,7 @@
             </div>
             <div class="column">
               <selector-input v-model="selectedCountry"
-                              :defaultData="form.country"
+                              :defaultData="countries[0]"
                               label="Country"
                               :hideLabel="false"
                               :required="true"
@@ -216,7 +216,7 @@ export default {
       this.form.city = this.profile.city;
       this.form.state = this.profile.state;
       this.form.postcode = this.profile.postcode;
-      this.form.country = this.profile.country;
+      this.form.country = this.countries[0].value;
 
       this.loading = false;
 
