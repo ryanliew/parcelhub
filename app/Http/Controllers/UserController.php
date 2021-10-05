@@ -28,7 +28,6 @@ class UserController extends Controller
     
 	public function page()
 	{
-        //please take note here
 		if(request()->wantsJson()) {
             $user = auth()->user();
             $role = $user->roles()->first();
@@ -44,14 +43,15 @@ class UserController extends Controller
                 $branch_code = $access->branch_code;
                 array_push($branches_code, $branch_code);
             }
-            // return Controller::VueTableListResult($query);
+
 			return Controller::VueTableListResult($query->select('users.name',
                                                                 'users.address',
                                                                 'users.address_2',
                                                                 'users.email',
                                                                 'users.country', 
                                                                 'users.created_at', 
-                                                                'users.phone')
+                                                                'users.phone'
+                                                                )
                                                                 ->where('verified', true)
                                                                 ->leftJoin('lots', 'lots.user_id', '=', 'users.id')
                                                                 ->whereIn('lots.branch_code', $branches_code)
