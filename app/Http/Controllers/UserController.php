@@ -32,7 +32,7 @@ class UserController extends Controller
             $user = auth()->user();
             $role = $user->roles()->first();
 
-            $query = User::with('inbounds')->with('outbounds')->with('roles');
+            $query = User::with('inbounds')->with('outbounds');
             
             if($role->name == 'superadmin') {
                 return Controller::VueTableListResult($query);
@@ -50,7 +50,8 @@ class UserController extends Controller
                                                                 'users.email',
                                                                 'users.country', 
                                                                 'users.created_at', 
-                                                                'users.phone'
+                                                                'users.phone',
+                                                                'users.id'
                                                                 )
                                                                 ->where('verified', true)
                                                                 ->leftJoin('lots', 'lots.user_id', '=', 'users.id')
