@@ -156,37 +156,6 @@ class UserController extends Controller
         return response($content, 422);
     }
 
-    // public function update(Request $request)
-    // {
-    // 	$this->validate($request, [
-    //         'name' => 'required',
-    //         'address' => 'required',
-    //         'phone' => 'required',
-    //         'postcode' => 'required',
-    //         'state' => 'required',
-    //         'country' => 'required',
-    //         'id' => 'required',
-    //         'password' => 'required_if:change_password,true|confirmed',
-    //     ]);
-
-    // 	$user = User::findOrFail(request()->id);
-
-    //     $password = $request->change_password == 'true' ? bcrypt($request->password) : $user->password;
-
-    // 	$user->update([
-    // 		'name' => $request->name,
-    //         'address' => $request->address,
-    //         'phone' => $request->phone,
-    //         'postcode' => $request->postcode,
-    //         'state' => $request->state,
-    //         'country' => $request->country,
-    //         'address_2' => $request->address_2,
-    //         'password' => $password
-    // 	]);
-
-    // 	return ['message' => 'User profile updated.'];
-    // }
-
     public function approval(User $user)
     {
         $user = $user->toggleApproval();
