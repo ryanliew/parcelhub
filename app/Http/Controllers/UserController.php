@@ -131,7 +131,7 @@ class UserController extends Controller
                 "form_params" => [
                     'email' => $user->email,
                     'name' => request()->name,
-                    'password' => $request->change_password ? $password : null,
+                    'password' => $request->change_password ? request()->password : null,
                 ]
             ]);
 		}
@@ -198,12 +198,12 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $obj_branches = Branch::whereIn('code' , json_decode($request->branches))->get();
-        info($request);
+
         $this->validate($request, [
             'name' => 'required',
             'email' => 'required|email',
             'address' => 'required',
-            'phone' => 'required|unique:users,phone|regex:/^(1)[0-46-9]*[0-9]{7,8}$/'
+            'phone' => 'required|unique:users,phone|regex:/^(60)[0-46-9]*[0-9]{7,8}$/'
         ]);
 
         $user = User::where('email' , $request->email)->first();
