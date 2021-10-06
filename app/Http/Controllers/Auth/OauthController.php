@@ -79,7 +79,7 @@ class OauthController extends Controller
                     'is_approved' => true,
                 ]);
                 
-                Auth::login($user, true);  
+                Auth::login($user);  
                 // Default all the registered user have user role
                 $role = Role::where('name', 'user')->first();
 
@@ -90,7 +90,7 @@ class OauthController extends Controller
                     'name' => $responseJson->name,
                     'phone' => $responseJson->phone,
                 ]);
-                Auth::login($user, true);
+                Auth::login($user);
             }
 
             if($user->is_approved) {
