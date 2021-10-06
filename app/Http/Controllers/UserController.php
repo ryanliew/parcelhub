@@ -107,16 +107,6 @@ class UserController extends Controller
 
         $password = $request->change_password == 'true' ? bcrypt($request->password) : $user->password;
 
-        $user->update(
-            ['name' => request()->name,
-                'address' => request()->address,
-                'postcode' => request()->postcode,
-                'city' => request()->city,
-                'state' => $request->state,
-                'country' => request()->country,
-                'password' => request()->has('password')? $password : $user->password,
-            ]);
-
         $access_token = session()->get('access_token');
 
         $url = env('PARCELHUB_CENTER_URL');
@@ -149,6 +139,17 @@ class UserController extends Controller
             ];
         }
         else if($responseJson->status == 1) {
+
+            $user->update(
+                ['name' => request()->name,
+                    'address' => request()->address,
+                    'postcode' => request()->postcode,
+                    'city' => request()->city,
+                    'state' => $request->state,
+                    'country' => request()->country,
+                    'password' => request()->has('password')? $password : $user->password,
+                ]);
+            
             return json_encode(['message' => $responseJson->message]);
         }
 
