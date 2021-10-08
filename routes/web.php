@@ -29,6 +29,7 @@ Auth::routes();
 Route::get('/login', 'Auth\LoginController@login');
 Route::get('/register', 'Auth\RegisterController@register');
 Route::group(["prefix" => "/oauth"], function() {
+	Route::get('/reset', 'Auth\OauthController@resetPassword');
 	Route::get("/callback", "Auth\OauthController@oauthCallback");
 	Route::get("/user", "Auth\OauthController@getAuthUser")->name("oauth.user");;
  });

@@ -43,9 +43,9 @@ class AdminCreateUserNotification extends Notification
     {
         return (new MailMessage)
                     ->subject('Welcome to PARCELHUB Warehouse system! '. $this->user->name)
-                    ->line('Your temporary password is ' . $this->password)
-                    ->line('Please click the button below to verify your account, we also recommend changing your password after you verify.')
-                    ->action('Verify', url('/users?name=' . $this->user->name));
+                    ->line('Your account has been created. ')
+                    ->line('Please click the button below to reset your password.')
+                    ->action('Reset', url('/oauth/reset?email=' . $this->user->email));
     }
 
      /**

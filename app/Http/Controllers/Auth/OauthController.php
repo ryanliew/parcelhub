@@ -107,6 +107,11 @@ class OauthController extends Controller
         return redirect('/');
     }
 
+    public function resetPassword(Request $request)
+    {
+        return $this->redirectParcelCenter($request, '/user/setpassword?email='.$request->email);
+    }
+
     public function logout() 
     {
         Auth::logout();
