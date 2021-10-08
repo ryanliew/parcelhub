@@ -226,6 +226,7 @@ class UserController extends Controller
                 $user->state = $request->state;
                 $user->postcode = $request->postcode;
                 $user->country = $request->country;
+                $user->city = $request->city;
                 $user->is_approved = true;
                 $user->save();
 
