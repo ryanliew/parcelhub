@@ -64,7 +64,6 @@ class OauthController extends Controller
 
 		$responseContent = $response->getBody()->getContents();
 		$responseJson = json_decode($responseContent);
-        info($responseContent);
 
         if($responseJson && property_exists($responseJson, 'email')) 
         {
