@@ -6,6 +6,7 @@ use App\Country;
 use App\User;
 use App\Accessibility;
 use App\Branch;
+use App\Role;
 use App\Notifications\Admin\AdminCreateUserNotification;
 use App\Notifications\UserRegisteredNotification;
 use App\Notifications\UserAccessBranchNotification;
@@ -225,7 +226,12 @@ class UserController extends Controller
                 $user->state = $request->state;
                 $user->postcode = $request->postcode;
                 $user->country = $request->country;
+                $user->is_approved = true;
                 $user->save();
+
+                $role = Role::where('name', 'user')->first();
+
+                $user->attachRole($role);
 
                 $user->notify(new AdminCreateUserNotification($user));
     
@@ -244,7 +250,12 @@ class UserController extends Controller
         $new_access->branch_id = 1;
         $new_access->save();
 
-        return ['message' => $responseJson->message];
+        if(isset($responseJson->message)) {
+            return ['message' => $responseJson->message];
+        }
+
+        return ['message' => 'This account has been linked!'];
+
     }
 
 }
