@@ -13,7 +13,7 @@
     @yield('css')
     
     <!-- Stylesheet -->
-    <link rel="stylesheet" href="{{ asset('css/app.css?v=' . config("app.version")) }}">
+    <link rel="stylesheet" href="{{ asset('css/app.css?v=' . config('app.version')) }}">
     <link rel="stylesheet" href="{{ asset('css/responsive-tables.css') }}">
     <link rel="stylesheet" href="{{ asset('css/font-awesome.min.css') }}">
 
@@ -49,8 +49,8 @@
     @endif
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bulma-steps@2.2.1/dist/js/bulma-steps.min.js">
     </script>
-    <script src="{{ asset('js/form.js?v=' . config("app.version")) }}"></script>
-    <script src="{{ asset('js/app.js?v=' . config("app.version")) }}"></script>
+    <script src="{{ asset('js/form.js?v=' . config('app.version')) }}"></script>
+    <script src="{{ asset('js/app.js?v=' . config('app.version')) }}"></script>
     <script src="{{ asset('js/jquery-1.7.1.min.js') }}"></script>
     <script src="{{ asset('js/responsive-tables.js') }}"></script>
     <script src="{{ asset('js/broadcast.js') }}"></script>
