@@ -216,25 +216,42 @@ class UserController extends Controller
             else if($responseJson->status == 1){
                 $password = Str::random(8);
                 $encrypted_password = Hash::make($password);
-                $user = new User;
-                $user->name = $request->name;
-                $user->email = $request->email;
-                $user->password = $encrypted_password;
-                $user->address = $request->address;
-                $user->address_2 = $request->address_2;
-                $user->phone = $request->phone;
-                $user->state = $request->state;
-                $user->postcode = $request->postcode;
-                $user->country = $request->country;
-                $user->city = $request->city;
-                $user->is_approved = true;
-                $user->save();
+                if(array_key_exists("user", $responseJson->data)) {
+                    $user = new User;
+                    $user->name = $responseJson->data->user->name;
+                    $user->email = $responseJson->data->user->email;
+                    $user->password = $encrypted_password;
+                    $user->phone = $responseJson->data->user->phone == null ? $request->phone : $responseJson->data->user->phone;
+                    $user->address = $request->address;
+                    $user->address_2 = $request->address_2;
+                    $user->state = $request->state;
+                    $user->postcode = $request->postcode;
+                    $user->country = $request->country;
+                    $user->city = $request->city;
+                    $user->is_approved = true;
+                    $user->save();
+                }
+                else {
+                    $user = new User;
+                    $user->name = $request->name;
+                    $user->email = $request->email;
+                    $user->password = $encrypted_password;
+                    $user->phone = $request->phone;
+                    $user->address = $request->address;
+                    $user->address_2 = $request->address_2;
+                    $user->state = $request->state;
+                    $user->postcode = $request->postcode;
+                    $user->country = $request->country;
+                    $user->city = $request->city;
+                    $user->is_approved = true;
+                    $user->save();
+
+                    $user->notify(new AdminCreateUserNotification($user));
+                }
 
                 $role = Role::where('name', 'user')->first();
 
-                $user->attachRole($role);
-
-                $user->notify(new AdminCreateUserNotification($user));
+                $user->attachRole($role);  
     
             }
         }
