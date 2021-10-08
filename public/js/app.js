@@ -91964,7 +91964,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
 
 
 
@@ -93261,56 +93260,47 @@ var render = function() {
                       _vm._v("Select branches")
                     ]),
                     _vm._v(" "),
-                    !_vm.singleBranch
-                      ? _c("multiselect", {
-                          attrs: {
-                            options: _vm.branchesOptions,
-                            "close-on-select": false,
-                            multiple: true,
-                            "clear-on-select": false,
-                            "custom-label": _vm.customLabel,
-                            "track-by": "value"
-                          },
-                          scopedSlots: _vm._u(
-                            [
-                              {
-                                key: "selection",
-                                fn: function(ref) {
-                                  var values = ref.values
-                                  var search = ref.search
-                                  var isOpen = ref.isOpen
-                                  return [
-                                    values.length && !isOpen
-                                      ? _c(
-                                          "span",
-                                          {
-                                            staticClass: "multiselect__single"
-                                          },
-                                          [
-                                            _vm._v(
-                                              _vm._s(values.length) +
-                                                " branches selected"
-                                            )
-                                          ]
-                                        )
-                                      : _vm._e()
-                                  ]
-                                }
-                              }
-                            ],
-                            null,
-                            false,
-                            970456564
-                          ),
-                          model: {
-                            value: _vm.selectedBranches,
-                            callback: function($$v) {
-                              _vm.selectedBranches = $$v
-                            },
-                            expression: "selectedBranches"
+                    _c("multiselect", {
+                      attrs: {
+                        options: _vm.branchesOptions,
+                        "close-on-select": false,
+                        multiple: true,
+                        "clear-on-select": false,
+                        "custom-label": _vm.customLabel,
+                        "track-by": "value"
+                      },
+                      scopedSlots: _vm._u([
+                        {
+                          key: "selection",
+                          fn: function(ref) {
+                            var values = ref.values
+                            var search = ref.search
+                            var isOpen = ref.isOpen
+                            return [
+                              values.length && !isOpen
+                                ? _c(
+                                    "span",
+                                    { staticClass: "multiselect__single" },
+                                    [
+                                      _vm._v(
+                                        _vm._s(values.length) +
+                                          " branches selected"
+                                      )
+                                    ]
+                                  )
+                                : _vm._e()
+                            ]
                           }
-                        })
-                      : _vm._e()
+                        }
+                      ]),
+                      model: {
+                        value: _vm.selectedBranches,
+                        callback: function($$v) {
+                          _vm.selectedBranches = $$v
+                        },
+                        expression: "selectedBranches"
+                      }
+                    })
                   ],
                   1
                 )

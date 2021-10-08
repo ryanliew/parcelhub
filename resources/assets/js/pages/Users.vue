@@ -142,7 +142,6 @@
           <div class="column">
             <label style="font-weight:bold">Select branches</label>
             <multiselect v-model="selectedBranches"
-                         v-if="!singleBranch"
                          :options="branchesOptions"
                          :close-on-select="false"
                          :multiple="true"
@@ -278,7 +277,6 @@ export default {
           obj['value'] = branches.code;
           return obj;
         });
-      
     },
     getParameterByName(name, url) {
       if (!url) url = window.location.href;
