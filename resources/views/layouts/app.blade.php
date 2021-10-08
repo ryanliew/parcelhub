@@ -15,6 +15,7 @@
     <!-- Stylesheet -->
     <link rel="stylesheet" href="{{ asset('css/app.css?v=' . config("app.version")) }}">
     <link rel="stylesheet" href="{{ asset('css/responsive-tables.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/font-awesome.min.css') }}">
 
     <script>
         window.App = {!! json_encode([

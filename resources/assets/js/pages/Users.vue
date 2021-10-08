@@ -154,13 +154,7 @@
                   values.length
                 }} branches selected</span></template>
             </multiselect>
-            <text-input label="Branch"
-                        v-if="singleBranch"
-                        v-model="branch"
-                        name="branch"
-                        :editable="false"
-                        type="text">
-            </text-input>
+            
           </div>
         </div>
 
@@ -277,18 +271,14 @@ export default {
     },
 
     setBranches(response) {
-      if (response.data.length == 1) {
-        this.branch = response.data[0].branch_name;
-        this.singlebranchid = response.data[0].id;
-        this.singleBranch = true;
-      } else {
+      
         this.branchesOptions = response.data.map(branches => {
           let obj = {};
           obj['label'] = branches.name;
           obj['value'] = branches.code;
           return obj;
         });
-      }
+      
     },
     getParameterByName(name, url) {
       if (!url) url = window.location.href;

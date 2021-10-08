@@ -220,8 +220,8 @@ span.input__label--hoshi::after {
 }
 
 .input__label--hoshi-color-transparent::before, .input__label--hoshi-color-transparent::after {
-	border-color: transparent;
-	border-bottom: 0px solid transparent;
+	border-color: #63b8ff;
+	border-bottom: 2px solid #63b8ff;
 }
 
 .input__field--hoshi:focus + .input__label--hoshi::after,
