@@ -29,6 +29,7 @@ Auth::routes();
 Route::get('/login', 'Auth\LoginController@login');
 Route::get('/register', 'Auth\RegisterController@register');
 Route::group(["prefix" => "/oauth"], function() {
+	Route::get('/reset', 'Auth\OauthController@resetPassword');
 	Route::get("/callback", "Auth\OauthController@oauthCallback");
 	Route::get("/user", "Auth\OauthController@getAuthUser")->name("oauth.user");;
  });
@@ -59,9 +60,9 @@ Route::group(['middleware' => 'auth'], function(){
 	Route::get('recalls', 'RecallOrderController@page')->name('recalls');
 	Route::get('outbounds', 'OutboundController@page')->name('outbounds');
 	Route::get('purchase', 'PaymentController@page')->name('payment');
-	Route::get('users', 'UserController@page')->name('users');
+	Route::get('users', 'UserController@page')->name('users')->middleware('checktoken');
 	Route::get('branches', 'BranchController@page')->name('branches')->middleware('role:superadmin');
-	Route::get('profile', 'UserController@page')->name('profile');
+	Route::get('profile', 'UserController@page')->name('profile')->middleware('checktoken');
 	Route::get('customers', 'CustomerController@page')->name('customers');
 	Route::get('dashboard', 'AdminController@page')->name('dashboard');
 	Route::get('outbounds/bulk', 'OutboundController@page_bulk')->name('outbounds.bulk');

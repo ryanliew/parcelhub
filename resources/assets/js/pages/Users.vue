@@ -277,7 +277,6 @@ export default {
           obj['value'] = branches.code;
           return obj;
         });
-    
     },
     getParameterByName(name, url) {
       if (!url) url = window.location.href;
