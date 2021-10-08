@@ -167,87 +167,84 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        // $obj_branches = Branch::whereIn('code' , json_decode($request->branches))->get();
+        $obj_branches = Branch::whereIn('code' , json_decode($request->branches))->get();
 
-        // $this->validate($request, [
-        //     'name' => 'required',
-        //     'email' => 'required|email',
-        //     'address' => 'required',
-        //     'phone' => 'required|unique:users,phone|regex:/^(60)[0-46-9]*[0-9]{7,8}$/'
-        // ]);
+        $this->validate($request, [
+            'name' => 'required',
+            'email' => 'required|email',
+            'address' => 'required',
+            'phone' => 'required|unique:users,phone|regex:/^(60)[0-46-9]*[0-9]{7,8}$/'
+        ]);
 
-        // $user = User::where('email' , $request->email)->first();
+        $user = User::where('email' , $request->email)->first();
 
-        // if(!$user) {
-        //     $password = Str::random(8);
-        //     $encrypted_password = Hash::make($password);
-        //     $user = new User;
-        //     $user->name = $request->name;
-        //     $user->email = $request->email;
-        //     $user->password = $encrypted_password;
-        //     $user->address = $request->address;
-        //     $user->address_2 = $request->address_2;
-        //     $user->phone = $request->phone;
-        //     $user->state = $request->state;
-        //     $user->postcode = $request->postcode;
-        //     $user->country = $request->country;
-        //     $user->save();
+        $access_token = session()->get('access_token');
 
-        //     $access_token = session()->get('access_token');
+        $url = env('PARCELHUB_CENTER_URL').'/api/user/create';
 
-        //     $url = env('PARCELHUB_CENTER_URL').'/api/user/create';
-        //     $client = new Client();
-        
-        //     try{
-        //         $response = $client->request('POST', $url, [
-        //             "headers" => [
-        //                 'Accept' => 'application/json',
-        //                 'Authorization' => "Bearer " . $access_token
-        //             ],
-        //             "form_params" => [
-        //                 'email' => $user->email,
-        //                 'name' => request()->name,
-        //                 'phone' => request()->phone,
-        //             ]
-        //         ]);
-        //     }
-        //     catch (\Exception $e) {
-        //         $response = $e->getResponse();
-        //     }
+        $client = new Client();
+        if(!$user) {
+            try{
+                $response = $client->request('POST', $url, [
+                    "headers" => [
+                        'Accept' => 'application/json',
+                        'Authorization' => "Bearer " . $access_token
+                    ],
+                    "form_params" => [
+                        'email' => request()->email,
+                        'name' => request()->name,
+                        'phone' => request()->phone,
+                    ]
+                ]);
+            }
+            catch (\Exception $e) {
+                $response = $e->getResponse();
+            }
+    
+            $responseContent = $response->getBody()->getContents();
+            $responseJson = json_decode($responseContent);
 
-        //     $responseContent = $response->getBody()->getContents();
-        //     $responseJson = json_decode($responseContent);
+            if(isset($responseJson->errors)) {
+                $content =  [
+                    "message" => $responseJson->message,
+                    "errors" => $responseJson->errors
+                ];
+    
+                return response($content, 422);
+            }
+            else if($responseJson->status == 1){
+                $password = Str::random(8);
+                $encrypted_password = Hash::make($password);
+                $user = new User;
+                $user->name = $request->name;
+                $user->email = $request->email;
+                $user->password = $encrypted_password;
+                $user->address = $request->address;
+                $user->address_2 = $request->address_2;
+                $user->phone = $request->phone;
+                $user->state = $request->state;
+                $user->postcode = $request->postcode;
+                $user->country = $request->country;
+                $user->save();
 
-        //     if(isset($responseJson->errors)) {
-        //         $content =  [
-        //             "message" => $responseJson->message,
-        //             "errors" => $responseJson->errors
-        //         ];
-        //     }
-            $user = User::first();
-
-            $user->notify(new AdminCreateUserNotification($user, $user->password));
-
-        // }
-        // else {
+                $user->notify(new AdminCreateUserNotification($user));
+    
+            }
+        }
+        else {
             
-        //     $full_branch = $obj_branches->implode('name', ',');
+            $full_branch = $obj_branches->implode('name', ',');
             
-        //     $user->notify(new UserAccessBranchNotification($user, $full_branch));
-        // }
+            $user->notify(new UserAccessBranchNotification($user, $full_branch));
+        }
 
-        // $new_access = new Accessibility();
-        // $new_access->user_id = $user->id;
-        // $new_access->branch_code = $obj_branches[0]->code;
-        // $new_access->branch_id = 1;
-        // $new_access->save();
-        
-        // if(isset($content)) {
-        //     return response($content, 422);
-        // }
+        $new_access = new Accessibility();
+        $new_access->user_id = $user->id;
+        $new_access->branch_code = $obj_branches[0]->code;
+        $new_access->branch_id = 1;
+        $new_access->save();
 
-        // return ['message' => $responseJson->message];
-
+        return ['message' => $responseJson->message];
     }
 
 }

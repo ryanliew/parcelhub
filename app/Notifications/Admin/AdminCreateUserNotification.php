@@ -16,10 +16,9 @@ class AdminCreateUserNotification extends Notification
      *
      * @return void
      */
-    public function __construct($user, $password)
+    public function __construct($user)
     {
         $this->user = $user;
-        $this->password = $password;
     }
 
     /**
