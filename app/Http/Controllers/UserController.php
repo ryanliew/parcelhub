@@ -33,7 +33,7 @@ class UserController extends Controller
             $user = auth()->user();
             $role = $user->roles()->first();
 
-            $query = User::with('inbounds')->with('outbounds');
+            $query = User::with('inbounds.branch', 'outbounds.branch', 'roles');
             
             if($role->name == 'superadmin') {
                 return Controller::VueTableListResult($query);
