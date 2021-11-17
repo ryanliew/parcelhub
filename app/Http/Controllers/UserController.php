@@ -195,6 +195,8 @@ class UserController extends Controller
                         'email' => request()->email,
                         'name' => request()->name,
                         'phone' => request()->phone,
+                        'admin_email' => auth()->user()->email,
+                        'client_id' => env('PARCELHUB_CLIENT_ID')
                     ]
                 ]);
             }
