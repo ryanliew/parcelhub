@@ -92733,13 +92733,14 @@ var render = function() {
                     !_vm.selectedCountry.states.length > 0
                       ? _c("text-input", {
                           attrs: {
-                            defaultValue: _vm.form.state,
+                            defaultValue: _vm.form.state
+                              ? _vm.form.state
+                              : _vm.selectedState,
                             label: "State",
                             required: true,
                             name: "state",
                             type: "text",
-                            editable: true,
-                            error: _vm.form.errors.get("state")
+                            editable: true
                           },
                           model: {
                             value: _vm.form.state,
@@ -92760,6 +92761,7 @@ var render = function() {
                             potentialData: _vm.selectedCountry.states,
                             placeholder: "Select state",
                             name: "states",
+                            error: _vm.form.errors.get("state"),
                             unclearable: true
                           },
                           model: {
