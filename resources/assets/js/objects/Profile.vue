@@ -93,16 +93,17 @@
               </selector-input>
             </div>
             <div class="column">
-              <text-input v-model="form.state" :defaultValue="form.state ? form.state : selectedState"
+              <text-input v-model="form.state" :defaultValue="form.state != ''? form.state : selectedState.value"
                           label="State"
                           :required="true"
                           name="state"
                           type="text"
                           :editable="true"
+                          :error="form.errors.get('state')"
                           v-if="!selectedCountry || !selectedCountry.states.length > 0">
               </text-input>
               <selector-input v-model="selectedState"
-                              :defaultData="form.state ? form.state : selectedState"
+                              :defaultData="form.state ? form.state : selectedState.value"
                               :hideLabel="false"
                               label="State"
                               :required="true"
@@ -279,6 +280,10 @@ export default {
 
     selectedState(newVal) {
       this.form.state = newVal.value;
+
+      if(this.form.state) {
+        this.form.errors.clear('state');
+      }
     }
   }
 }

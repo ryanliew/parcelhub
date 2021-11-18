@@ -92375,6 +92375,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['canManage', 'user', 'countries'],
@@ -92488,6 +92489,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     selectedState: function selectedState(newVal) {
       this.form.state = newVal.value;
+
+      if (this.form.state) {
+        this.form.errors.clear('state');
+      }
     }
   }
 });
@@ -92733,14 +92738,16 @@ var render = function() {
                     !_vm.selectedCountry.states.length > 0
                       ? _c("text-input", {
                           attrs: {
-                            defaultValue: _vm.form.state
-                              ? _vm.form.state
-                              : _vm.selectedState,
+                            defaultValue:
+                              _vm.form.state != ""
+                                ? _vm.form.state
+                                : _vm.selectedState.value,
                             label: "State",
                             required: true,
                             name: "state",
                             type: "text",
-                            editable: true
+                            editable: true,
+                            error: _vm.form.errors.get("state")
                           },
                           model: {
                             value: _vm.form.state,
@@ -92754,7 +92761,7 @@ var render = function() {
                           attrs: {
                             defaultData: _vm.form.state
                               ? _vm.form.state
-                              : _vm.selectedState,
+                              : _vm.selectedState.value,
                             hideLabel: false,
                             label: "State",
                             required: true,
