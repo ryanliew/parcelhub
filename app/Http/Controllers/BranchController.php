@@ -21,7 +21,13 @@ class BranchController extends Controller
     }
 
     protected $rules = [
-        'name' => 'required'
+        'name' => 'required',
+        'code' => 'required',
+        'address_line_1' => 'required',
+        'phone' => 'required',
+        'city' => 'required',
+        'state' => 'required',
+        'postcode' => 'required'
     ];
 
      public function index()
@@ -48,26 +54,27 @@ class BranchController extends Controller
      */
     public function store(Request $request)
     {
-
         $this->validate($request, $this->rules);
 
         $branch = new Branch;
         $branch->code = $request->code;
         $branch->name = $request->name;
         $branch->contact = $request->phone;
-        $branch->address = $request->address;
+        $branch->address_line_1 = $request->address_line_1;
+        $branch->address_line_2 = $request->address_line_2;
         $branch->state = $request->state;
         $branch->postcode = $request->postcode;
-        $branch->country_code = $request->country;
+        $branch->city = $request->city;
+        $branch->country_code = 'MY';
         $branch->is_warehouse_allowed = true;
 
         $branch->save();
 
         if(request()->wantsJson())
         {   
-            return ["message" => $branch->branch_name . " created successfully."];
+            return ["message" => $branch->name . " created successfully."];
         }
-        return redirect()->back()->withSuccess($branch->branch_name . " created successfully.");
+        return redirect()->back()->withSuccess($branch->name . " created successfully.");
     }
 
     /**
@@ -142,10 +149,12 @@ class BranchController extends Controller
         $branch->code = $request->code;
         $branch->name = $request->name;
         $branch->contact = $request->phone;
-        $branch->address = $request->address;
+        $branch->address_line_1 = $request->address_line_1;
+        $branch->address_line_2 = $request->address_line_2;
+        $branch->city = $request->city;
         $branch->state = $request->state;
         $branch->postcode = $request->postcode;
-        $branch->country_code = $request->country;
+        $branch->country_code = 'MY';
 
         $branch->save();
 
@@ -218,3 +227,4 @@ class BranchController extends Controller
         return 'Successfully update table';
     }
 }
+

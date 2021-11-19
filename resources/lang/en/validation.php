@@ -103,6 +103,9 @@ return [
         'selectedBranch' => [
             'required' => 'Please select a branch'
         ],
+        'code' => [
+            'required' => 'Please fill in the code input',
+        ],
         'name' => [
             'required' => 'Please fill in the name input',
         ],
@@ -112,8 +115,17 @@ return [
         'phone' => [
             'required' => 'Please fill in the phone input',
         ],
-        'address' => [
+        'address_line_1' => [
             'required' => 'Please fill in the address input',
+        ],
+        'state' => [
+            'required' => 'Please fill in the state input',
+        ],
+        'city' => [
+            'required' => 'Please fill in the city input',
+        ],
+        'postcode' => [
+            'required' => 'Please fill in the postcode input',
         ],
         'payment_slip' => [
             'required' => 'Please upload bank transfer slip',
@@ -151,3 +163,6 @@ return [
     'attributes' => [],
 
 ];
+
+
+

@@ -93574,199 +93574,223 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-	props: [''],
+    props: [''],
 
-	components: { TableView: __WEBPACK_IMPORTED_MODULE_0__components_TableView_vue___default.a },
+    components: { TableView: __WEBPACK_IMPORTED_MODULE_0__components_TableView_vue___default.a },
 
-	data: function data() {
-		return {
-			fields: [{ name: 'code', sortField: 'code', title: 'Code Name' }, { name: 'name', sortField: 'name', title: 'Branch Name' }, { name: 'address', sortField: 'address', title: 'Address' }, { name: '__component:branches-actions', title: 'Actions' }],
-			selectedBranches: '',
-			dialogActive: false,
-			form: new Form({
-				id: '',
-				code: '',
-				name: '',
-				phone: '',
-				address: '',
-				state: '',
-				postcode: '',
-				country: ''
-			}),
-			forms: new Form({
-				branch_code: '',
-				id: []
-			}),
-			confirmSubmit: false,
-			isDeleting: false,
-			leftItems: [],
-			rightItems: [],
-			leftTitle: 'Access',
-			rightTitle: 'No Access',
-			type: ''
-		};
-	},
+    data: function data() {
+        return {
+            fields: [{ name: 'code', sortField: 'code', title: 'Code Name' }, { name: 'name', sortField: 'name', title: 'Branch Name' }, { name: 'address', sortField: 'address', title: 'Address' }, { name: '__component:branches-actions', title: 'Actions' }],
+            selectedBranches: '',
+            dialogActive: false,
+            form: new Form({
+                id: '',
+                code: '',
+                name: '',
+                phone: '',
+                address_line_1: '',
+                address_line_2: '',
+                city: '',
+                state: '',
+                postcode: '',
+                country: 'MY'
+            }),
+            forms: new Form({
+                branch_code: '',
+                id: []
+            }),
+            confirmSubmit: false,
+            isDeleting: false,
+            leftItems: [],
+            rightItems: [],
+            leftTitle: 'Access',
+            rightTitle: 'No Access',
+            type: ''
+        };
+    },
 
 
-	methods: {
-		submit: function submit() {
-			this.confirmSubmit = true;
-		},
-		onSubmit: function onSubmit() {
-			var _this = this;
+    methods: {
+        submit: function submit() {
+            this.confirmSubmit = true;
+        },
+        onSubmit: function onSubmit() {
+            var _this = this;
 
-			this.confirmSubmit = false;
-			if (this.type == 'Access') {
-				var store = [];
-				this.leftItems.forEach(function (data) {
-					store.push(data.key);
-				});
+            this.confirmSubmit = false;
+            if (this.type == 'Access') {
+                var store = [];
+                this.leftItems.forEach(function (data) {
+                    store.push(data.key);
+                });
 
-				this.forms.id = store;
-				this.forms.branch_code = this.selectedBranches.code;
+                this.forms.id = store;
+                this.forms.branch_code = this.selectedBranches.code;
 
-				this.forms.post(this.action).then(function (data) {
-					return _this.onSuccess();
-				}).catch(function (error) {
-					return _this.onFail(error);
-				});
-			} else if (this.type == 'Delete') {
-				axios.get('/branches/delete/' + this.selectedBranches.code).then(function (response) {
-					return _this.onDeleteSuccess(response);
-				});
-			} else {
-				this.form.post(this.action).then(function (data) {
-					return _this.onSuccess();
-				}).catch(function (error) {
-					return _this.onFail(error);
-				});
-			}
-		},
-		onDeleteSuccess: function onDeleteSuccess(response) {
-			this.isDeleting = false;
-			this.dialogActive = false;
-			flash(response.data.message);
-			this.$refs.branches.refreshTable();
-		},
-		onSuccess: function onSuccess() {
-			this.dialogActive = false;
-			this.$refs.branches.refreshTable();
-		},
-		edit: function edit(data) {
-			this.selectedBranches = data;
-			this.type = 'Edit';
-			this.form.id = data.id;
-			this.form.code = data.code;
-			this.form.name = data.name;
-			this.form.phone = data.contact;
-			this.form.address = data.address;
-			this.form.state = data.state;
-			this.form.postcode = data.postcode;
-			this.form.country = data.country_code;
-			this.dialogActive = true;
-		},
-		access: function access(data) {
-			this.selectedBranches = data;
-			this.type = 'Access';
-			this.getAccess(data.code);
-			this.dialogActive = true;
-		},
-		delete: function _delete(data) {
-			this.selectedBranches = data;
-			this.type = 'Delete';
-			this.confirmSubmit = true;
-			this.isDeleting = true;
-		},
-		modalOpen: function modalOpen() {
-			this.form.reset();
-			this.selectedBranches = '';
-			this.type = '';
-			this.dialogActive = true;
-		},
-		getAccess: function getAccess(data) {
-			var _this2 = this;
+                this.forms.post(this.action).then(function (data) {
+                    return _this.onSuccess();
+                }).catch(function (error) {
+                    return _this.onFail(error);
+                });
+            } else if (this.type == 'Delete') {
+                axios.get('/branches/delete/' + this.selectedBranches.code).then(function (response) {
+                    return _this.onDeleteSuccess(response);
+                });
+            } else {
+                this.form.post(this.action).then(function (data) {
+                    return _this.onSuccess();
+                }).catch(function (error) {
+                    return _this.onFail(error);
+                });
+            }
+        },
+        onDeleteSuccess: function onDeleteSuccess(response) {
+            this.isDeleting = false;
+            this.dialogActive = false;
+            flash(response.data.message);
+            this.$refs.branches.refreshTable();
+        },
+        onSuccess: function onSuccess() {
+            this.dialogActive = false;
+            this.$refs.branches.refreshTable();
+        },
+        edit: function edit(data) {
+            this.selectedBranches = data;
+            this.type = 'Edit';
+            this.form.id = data.id;
+            this.form.code = data.code;
+            this.form.name = data.name;
+            this.form.phone = data.contact;
+            this.form.address_line_1 = data.address_line_1;
+            this.form.address_line_2 = data.address_line_2;
+            this.form.state = data.state;
+            this.form.city = data.city;
+            this.form.postcode = data.postcode;
+            this.dialogActive = true;
+        },
+        access: function access(data) {
+            this.selectedBranches = data;
+            this.type = 'Access';
+            this.getAccess(data.code);
+            this.dialogActive = true;
+        },
+        delete: function _delete(data) {
+            this.selectedBranches = data;
+            this.type = 'Delete';
+            this.confirmSubmit = true;
+            this.isDeleting = true;
+        },
+        modalOpen: function modalOpen() {
+            this.form.reset();
+            this.selectedBranches = '';
+            this.type = '';
+            this.dialogActive = true;
+        },
+        getAccess: function getAccess(data) {
+            var _this2 = this;
 
-			axios.get('/branches/access/' + data).then(function (response) {
-				return _this2.getSuccess(response);
-			});
-		},
-		getSuccess: function getSuccess(response) {
-			this.rightItems = response.data[1].map(function (user) {
-				var obj = {};
+            axios.get('/branches/access/' + data).then(function (response) {
+                return _this2.getSuccess(response);
+            });
+        },
+        getSuccess: function getSuccess(response) {
+            this.rightItems = response.data[1].map(function (user) {
+                var obj = {};
 
-				obj['key'] = user.id;
-				obj['content'] = user.name;
+                obj['key'] = user.id;
+                obj['content'] = user.name;
 
-				return obj;
-			});
-			this.leftItems = response.data[0].map(function (user) {
-				var obj = {};
+                return obj;
+            });
+            this.leftItems = response.data[0].map(function (user) {
+                var obj = {};
 
-				obj['key'] = user.id;
-				obj['content'] = user.name;
+                obj['key'] = user.id;
+                obj['content'] = user.name;
 
-				return obj;
-			});
-		}
-	},
-	mounted: function mounted() {
-		var _this3 = this;
+                return obj;
+            });
+        }
+    },
+    mounted: function mounted() {
+        var _this3 = this;
 
-		this.$events.on('edit', function (data) {
-			return _this3.edit(data);
-		});
-		this.$events.on('access', function (data) {
-			return _this3.access(data);
-		});
-		this.$events.on('delete', function (data) {
-			return _this3.delete(data);
-		});
-	},
+        this.$events.on('edit', function (data) {
+            return _this3.edit(data);
+        });
+        this.$events.on('access', function (data) {
+            return _this3.access(data);
+        });
+        this.$events.on('delete', function (data) {
+            return _this3.delete(data);
+        });
+    },
 
-	computed: {
-		dialogTitle: function dialogTitle() {
-			if (this.selectedBranches) {
-				if (this.type == 'Edit') {
-					return "Edit " + this.selectedBranches.name;
-				} else if (this.type == 'Delete') {} else if (this.type == 'Access') {
-					return "Access " + this.selectedBranches.name + '\'s branch';
-				}
-			}
-			return "Create new Branch";
-		},
-		action: function action() {
-			var actions = '';
+    computed: {
+        dialogTitle: function dialogTitle() {
+            if (this.selectedBranches) {
+                if (this.type == 'Edit') {
+                    return "Edit " + this.selectedBranches.name;
+                } else if (this.type == 'Delete') {} else if (this.type == 'Access') {
+                    return "Access " + this.selectedBranches.name + '\'s branch';
+                }
+            }
+            return "Create new Branch";
+        },
+        action: function action() {
+            var actions = '';
 
-			if (this.type == 'Edit') {
-				actions = "update";
-			} else if (this.type == 'Access') {
-				actions = "access/edit";
-			} else {
-				actions = 'store';
-			}
-			return "/branches/" + actions;
-		},
-		confirmationMessage: function confirmationMessage() {
-			if (this.type == 'Edit') {
-				return "Confirm branch update?";
-			} else if (this.type == '') {
-				return "Confirm adding new branch?";
-			} else if (this.type == 'Access') {
-				return "Confirm update access?";
-			} else if (this.type == 'Delete') {
-				return "Confirm delete this branch?";
-			}
-		},
-		searchables: function searchables() {
-			var searchable = "branches.codename,branch_name,branch_address";
+            if (this.type == 'Edit') {
+                actions = "update";
+            } else if (this.type == 'Access') {
+                actions = "access/edit";
+            } else {
+                actions = 'store';
+            }
+            return "/branches/" + actions;
+        },
+        confirmationMessage: function confirmationMessage() {
+            if (this.type == 'Edit') {
+                return "Confirm branch update?";
+            } else if (this.type == '') {
+                return "Confirm adding new branch?";
+            } else if (this.type == 'Access') {
+                return "Confirm update access?";
+            } else if (this.type == 'Delete') {
+                return "Confirm delete this branch?";
+            }
+        },
+        searchables: function searchables() {
+            var searchable = "branches.codename,branch_name,branch_address";
 
-			return searchable;
-		}
-	}
+            return searchable;
+        }
+    }
+
 });
 
 /***/ }),
@@ -93876,11 +93900,10 @@ var render = function() {
                           defaultValue: _vm.form.code,
                           label: "Code Name",
                           required: true,
-                          name: "codename",
+                          name: "code",
                           type: "text",
                           editable: true,
-                          error: _vm.form.errors.get("codename"),
-                          focus: true
+                          error: _vm.form.errors.get("code")
                         },
                         model: {
                           value: _vm.form.code,
@@ -93952,20 +93975,72 @@ var render = function() {
                     [
                       _c("text-input", {
                         attrs: {
-                          defaultValue: _vm.form.address,
-                          label: "Address",
+                          defaultValue: _vm.form.address_line_1,
+                          label: "Address 1",
                           required: true,
+                          name: "address_line_1",
+                          type: "text",
+                          editable: true,
+                          error: _vm.form.errors.get("address_line_1")
+                        },
+                        model: {
+                          value: _vm.form.address_line_1,
+                          callback: function($$v) {
+                            _vm.$set(_vm.form, "address_line_1", $$v)
+                          },
+                          expression: "form.address_line_1"
+                        }
+                      })
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: "field" },
+                    [
+                      _c("text-input", {
+                        attrs: {
+                          defaultValue: _vm.form.address_line_2,
+                          label: "Address 2",
+                          required: false,
                           name: "address",
                           type: "text",
                           editable: true,
-                          error: _vm.form.errors.get("address")
+                          error: _vm.form.errors.get("address_line_2")
                         },
                         model: {
-                          value: _vm.form.address,
+                          value: _vm.form.address_line_2,
                           callback: function($$v) {
-                            _vm.$set(_vm.form, "address", $$v)
+                            _vm.$set(_vm.form, "address_line_2", $$v)
                           },
-                          expression: "form.address"
+                          expression: "form.address_line_2"
+                        }
+                      })
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: "field" },
+                    [
+                      _c("text-input", {
+                        attrs: {
+                          defaultValue: _vm.form.city,
+                          label: "City",
+                          required: true,
+                          name: "city",
+                          type: "text",
+                          editable: true,
+                          error: _vm.form.errors.get("city")
+                        },
+                        model: {
+                          value: _vm.form.city,
+                          callback: function($$v) {
+                            _vm.$set(_vm.form, "city", $$v)
+                          },
+                          expression: "form.city"
                         }
                       })
                     ],
@@ -94035,7 +94110,7 @@ var render = function() {
                           required: true,
                           name: "country",
                           type: "text",
-                          editable: true,
+                          editable: false,
                           error: _vm.form.errors.get("country")
                         },
                         model: {
@@ -94101,7 +94176,7 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "level-left" }, [
       _c("div", { staticClass: "level-item" }, [
-        _vm._v("\n\t\t\t\t\t\t\tBranches\n\t\t\t\t\t\t")
+        _vm._v("\n                        Branches\n                    ")
       ])
     ])
   }
