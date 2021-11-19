@@ -16,6 +16,23 @@ class Branch extends Model
         // static::deleting(function($branch) {
         //     $branch->access()->delete();
         // });
+        static::updating(function ($branch) {
+            if($branch->address_line_2 == '') {
+                $branch->address = implode(", ", [$branch->address_line_1, $branch->city, $branch->postcode ." " . $branch->state]);
+            }
+            else {
+                $branch->address = implode(", ", [$branch->address_line_1, $branch->address_line_2, $branch->city, $branch->postcode ." " . $branch->state]);
+            }
+        });
+
+        static::creating(function ($branch) {
+            if($branch->address_line_2) {
+                $branch->address = implode(", ", [$branch->address_line_1, $branch->address_line_2, $branch->city, $branch->postcode ." " . $branch->state]);
+            }
+            else {
+                $branch->address = implode(", ", [$branch->address_line_1, $branch->city, $branch->postcode ." " . $branch->state]);
+            }
+        });
     
         static::addGlobalScope(new BranchScope);
     }
@@ -36,3 +53,4 @@ class Branch extends Model
     }
 
 }
+
