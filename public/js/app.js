@@ -93584,16 +93584,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 
@@ -94093,32 +94083,6 @@ var render = function() {
                             _vm.$set(_vm.form, "postcode", $$v)
                           },
                           expression: "form.postcode"
-                        }
-                      })
-                    ],
-                    1
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    { staticClass: "field" },
-                    [
-                      _c("text-input", {
-                        attrs: {
-                          defaultValue: _vm.form.country,
-                          label: "Country",
-                          required: true,
-                          name: "country",
-                          type: "text",
-                          editable: false,
-                          error: _vm.form.errors.get("country")
-                        },
-                        model: {
-                          value: _vm.form.country,
-                          callback: function($$v) {
-                            _vm.$set(_vm.form, "country", $$v)
-                          },
-                          expression: "form.country"
                         }
                       })
                     ],

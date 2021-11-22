@@ -21,11 +21,11 @@ class BranchController extends Controller
     }
 
     protected $rules = [
+        'code' => 'required|unique:centralized_mysql.branches,code',
+        'phone' => 'required|regex:/^(60)[0-46-9]*[0-9]{7,8}$/|unique:centralized_mysql.branches,contact',
         'name' => 'required',
-        'code' => 'required',
-        'address_line_1' => 'required',
-        'phone' => 'required',
         'city' => 'required',
+        'address_line_1' => 'required',
         'state' => 'required',
         'postcode' => 'required'
     ];
@@ -54,6 +54,7 @@ class BranchController extends Controller
      */
     public function store(Request $request)
     {
+
         $this->validate($request, $this->rules);
 
         $branch = new Branch;
@@ -227,4 +228,3 @@ class BranchController extends Controller
         return 'Successfully update table';
     }
 }
-
