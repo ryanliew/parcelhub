@@ -117,16 +117,6 @@
                                 :error="form.errors.get('postcode')">
                     </text-input>
                 </div>
-                <div class="field">
-                    <text-input v-model="form.country" :defaultValue="form.country" 
-                                label="Country" 
-                                :required="true"
-                                name="country"
-                                type="text"
-                                :editable="false"
-                                :error="form.errors.get('country')">
-                    </text-input>
-                </div>
             </form>
 
             <template v-if="type == 'Access'">
