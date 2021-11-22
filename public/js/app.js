@@ -93892,7 +93892,7 @@ var render = function() {
                           required: true,
                           name: "code",
                           type: "text",
-                          editable: true,
+                          editable: this.type == "Edit" ? false : true,
                           error: _vm.form.errors.get("code")
                         },
                         model: {

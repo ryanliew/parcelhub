@@ -41,7 +41,7 @@
                                 :required="true"
                                 name="code"
                                 type="text"
-                                :editable="true"
+                                :editable="this.type == 'Edit' ? false : true"
                                 :error="form.errors.get('code')"
                                 >
                     </text-input>

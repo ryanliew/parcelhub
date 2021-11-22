@@ -145,8 +145,18 @@ class BranchController extends Controller
      */
     public function update(Request $request)
     {
-        $this->validate($request, $this->rules);
         $branch = Branch::where('code', $request->code)->first();
+
+        $this->validate($request, [
+            'code' => 'required|unique:centralized_mysql.branches,code,' . $branch->id,
+            'phone' => 'required|regex:/^(60)[0-46-9]*[0-9]{7,8}$/|unique:centralized_mysql.branches,contact,' . $branch->id,
+            'name' => 'required',
+            'city' => 'required',
+            'address_line_1' => 'required',
+            'state' => 'required',
+            'postcode' => 'required'
+        ]);
+
         $branch->code = $request->code;
         $branch->name = $request->name;
         $branch->contact = $request->phone;
@@ -161,10 +171,10 @@ class BranchController extends Controller
 
         if(request()->wantsJson())
         {   
-            return ["message" => "Branch " . $branch->branch_name . ' updated successfully.'];
+            return ["message" => "Branch " . $branch->name . ' updated successfully.'];
         }
 
-        return redirect()->back()->withSuccess($branch->branch_name . ' updated successfully.');
+        return redirect()->back()->withSuccess($branch->name . ' updated successfully.');
 
     }
 
