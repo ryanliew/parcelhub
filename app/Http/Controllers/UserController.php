@@ -122,6 +122,9 @@ class UserController extends Controller
                 "form_params" => [
                     'email' => $user->email,
                     'name' => request()->name,
+                    "client_id" => env('PARCELHUB_CLIENT_ID'),
+                    'admin_email' => auth()->user()->email,
+                    'create' => false,
                     'password' => $request->change_password ? request()->password : null,
                 ]
             ]);
@@ -195,8 +198,9 @@ class UserController extends Controller
                         'email' => request()->email,
                         'name' => request()->name,
                         'phone' => request()->phone,
+                        "client_id" => env('PARCELHUB_CLIENT_ID'),
                         'admin_email' => auth()->user()->email,
-                        'client_id' => env('PARCELHUB_CLIENT_ID')
+                        'create' => false,
                     ]
                 ]);
             }
