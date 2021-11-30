@@ -36,11 +36,11 @@ class Branch extends Model
         });
 
         static::created(function ($branch) {
-            $this->api_createOrUpdate($branch, true)
+            $branch->api_createOrUpdate($branch, true);
         });
 
         static::updated(function ($branch) {
-            $this->api_createOrUpdate($branch, false)
+            $branch->api_createOrUpdate($branch, false);
         });
     
         static::addGlobalScope(new BranchScope);
