@@ -36,53 +36,11 @@ class Branch extends Model
         });
 
         static::created(function ($branch) {
-            $access_token = session()->get('access_token');
-
-            $url = env('PARCELHUB_CENTER_URL');
-            $client = new Client();
-
-            try{
-                $response = $client->request('POST', $url.'/api/branch/create/activityHistory', [
-                    "headers" => [
-                        'Accept' => 'application/json',
-                        'Authorization' => "Bearer " . $access_token
-                    ],
-                    "form_params" => [
-                        "email" => auth()->user()->email,
-                        "branch_code" => $branch->code,
-                        "create" => true,
-                        "client_id" => env('PARCELHUB_CLIENT_ID'),
-                    ]
-                ]);
-            }
-            catch (\Exception $e) {
-                $response = $e->getResponse();
-            }
+            $branch->api_createOrUpdate($branch, true);
         });
 
         static::updated(function ($branch) {
-            $access_token = session()->get('access_token');
-
-            $url = env('PARCELHUB_CENTER_URL');
-            $client = new Client();
-
-            try{
-                $response = $client->request('POST', $url.'/api/branch/create/activityHistory', [
-                    "headers" => [
-                        'Accept' => 'application/json',
-                        'Authorization' => "Bearer " . $access_token
-                    ],
-                    "form_params" => [
-                        "email" => auth()->user()->email,
-                        "branch_code" => $branch->code,
-                        'create' => false,
-                        "client_id" => env('PARCELHUB_CLIENT_ID'),
-                    ]
-                ]);
-            }
-            catch (\Exception $e) {
-                $response = $e->getResponse();
-            }
+            $branch->api_createOrUpdate($branch, false);
         });
     
         static::addGlobalScope(new BranchScope);
@@ -101,6 +59,31 @@ class Branch extends Model
 
     public function outbounds() {
         return $this->hasMany('App\Inbound', 'branch_code', 'code');
+    }
+
+    public function api_createOrUpdate($branch, $create) {
+        $access_token = session()->get('access_token');
+
+        $url = env('PARCELHUB_CENTER_URL');
+        $client = new Client();
+
+        try{
+            $response = $client->request('POST', $url.'/api/branch/create/activityHistory', [
+                "headers" => [
+                    'Accept' => 'application/json',
+                    'Authorization' => "Bearer " . $access_token
+                ],
+                "form_params" => [
+                    "email" => auth()->user()->email,
+                    "branch_code" => $branch->code,
+                    "create" => $create,
+                    "client_id" => env('PARCELHUB_CLIENT_ID'),
+                ]
+            ]);
+        }
+        catch (\Exception $e) {
+            $response = $e->getResponse();
+        }
     }
 
 }
